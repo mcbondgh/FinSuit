@@ -1,16 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="app.controllers.AppController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="555.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
+   <children>
+      <ImageView fitHeight="570.0" fitWidth="577.0" layoutX="-6.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/Untitled.jpg" />
+         </image>
+         <effect>
+            <GaussianBlur radius="8.03" />
+         </effect>
+      </ImageView>
+      <Pane layoutX="102.0" layoutY="66.0" prefHeight="415.0" prefWidth="339.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+         <children>
+            <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" prefHeight="89.0" prefWidth="339.0" text="FIN-SUIT GHANA" textAlignment="CENTER" textFill="#1b70c5" wrapText="true">
+               <font>
+                  <Font name="Poppins Black" size="23.0" />
+               </font>
+            </Label>
+            <MFXButton fx:id="closeButton" layoutX="34.0" layoutY="321.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #fd421c;" text="Close" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Regular" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <Label layoutX="142.0" layoutY="93.0" text="Login" textFill="#040404">
+               <font>
+                  <Font name="Roboto Black" size="23.0" />
+               </font>
+            </Label>
+            <TextField fx:id="usernameField" layoutX="34.0" layoutY="157.0" prefHeight="36.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+               <font>
+                  <Font name="Poppins Regular" size="14.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="223.0" prefHeight="36.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+               <font>
+                  <Font name="Poppins Regular" size="14.0" />
+               </font>
+            </PasswordField>
+            <Label layoutX="36.0" layoutY="137.0" text="Username" textFill="#5c5e60">
+               <font>
+                  <Font name="Roboto Medium" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="35.0" layoutY="205.0" text="Password" textFill="#5c5e60">
+               <font>
+                  <Font name="Roboto Medium" size="12.0" />
+               </font>
+            </Label>
+            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="35.0" layoutY="281.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #1b70c5;" text="Login" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Regular" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <Label fx:id="resetPasswordLink" layoutX="36.0" layoutY="378.0" text="Reset Password" />
+         </children>
+         <effect>
+            <DropShadow height="42.41" radius="20.7075" spread="0.13" width="42.42">
+               <color>
+                  <Color red="0.6929824352264404" green="0.6395115852355957" blue="0.6395115852355957" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Pane>
+   </children>
+</AnchorPane>

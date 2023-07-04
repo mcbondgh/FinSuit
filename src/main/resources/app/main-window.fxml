@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXListView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1280.0" style="-fx-background-color: #eee;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.homepage.AppController">
+   <children>
+      <BorderPane fx:id="borderPane" layoutY="42.0" prefHeight="625.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0">
+         <left>
+            <VBox fx:id="sidebarPane" cache="true" cacheHint="QUALITY" onMouseEntered="#expandSidebar" onMouseExited="#closeSidebar" prefHeight="605.0" prefWidth="170.0" spacing="5.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+               <children>
+                  <MFXButton fx:id="dashboardButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="6.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="messageBoxButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Message Box" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="customersButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customers" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="6.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="accountsButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Create Account" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="6.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="paymentsButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Payments" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="6.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="loanButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Loans" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="6.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="humanResourceButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" layoutY="280.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Human Resource" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="6.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="reportsButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Reports" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+                  <MFXButton fx:id="settingsButton" alignment="BOTTOM_LEFT" contentDisplay="CENTER" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="40.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textFill="#262525">
+                     <font>
+                        <Font name="Poppins Bold" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="10.0" left="38.0" />
+                     </padding>
+                  </MFXButton>
+               </children>
+            </VBox>
+         </left></BorderPane>
+      <ImageView fx:id="dashboardIcon" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="58.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-dashboard-50.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo13" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="155.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-customers-50.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo15" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="207.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-wallet-50.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo16" fitHeight="24.0" fitWidth="24.0" layoutX="5.0" layoutY="257.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-cash-payment-66.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo17" fitHeight="24.0" fitWidth="24.0" layoutX="5.0" layoutY="310.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-personal-loan-66.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo18" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="360.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-human-resource-100.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo181" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="406.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-accountancy-85.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo1811" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="452.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-automatic-100.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="siteLogo131" fitHeight="20.0" fitWidth="20.0" layoutX="8.0" layoutY="104.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/icons8-create-64.png" />
+         </image>
+      </ImageView>
+      <Pane fx:id="searchCustomersField" prefHeight="41.0" prefWidth="1280.0" style="-fx-background-color: #eee;">
+         <children>
+            <Circle fx:id="notificationPane" fill="WHITE" layoutX="754.0" layoutY="21.0" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+            <Circle fill="WHITE" layoutX="1181.0" layoutY="21.0" onMouseEntered="#showUserProfile" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Circle>
+            <ImageView fx:id="siteLogo" fitHeight="32.0" fitWidth="32.0" layoutX="39.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/applicationIcon-256.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="appNameLabel" layoutX="88.0" layoutY="11.0" prefHeight="20.0" prefWidth="280.0" text="FIN-SUIT GHANA" textFill="#1c5ab7">
+               <font>
+                  <Font name="Poppins Black" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="410.0" layoutY="9.0" text="🔎" textFill="#828181">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="searchField" layoutX="433.0" layoutY="6.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="Search ...." style="-fx-background-color: #fff; -fx-background-radius: 5;">
+               <font>
+                  <Font name="Poppins Regular" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <ImageView fitHeight="27.0" fitWidth="21.0" layoutX="1171.0" layoutY="9.0" mouseTransparent="true" opacity="0.28" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/user_icon.png" />
+               </image>
+               <effect>
+                  <ColorAdjust brightness="-0.94" contrast="-1.0" hue="1.0" saturation="1.0" />
+               </effect>
+            </ImageView>
+            <Label layoutX="744.0" layoutY="7.0" prefHeight="28.0" prefWidth="21.0" text="🔔" textFill="#797878">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <JFXListView fx:id="sortCustomersListView" layoutX="433.0" layoutY="36.0" prefHeight="190.0" prefWidth="286.0" showTooltip="true" style="-fx-border-radius: 5; -fx-background-radius: 5; -fx-font-size: 14px; -fx-border-color: #eee;" verticalGap="3.0" visible="false">
+               <padding>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </padding></JFXListView>
+            <Pane fx:id="userProfilePane" layoutX="1065.0" layoutY="42.0" onMouseExited="#hideUserProfile" prefHeight="125.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-background-radius: 5;" visible="false">
+               <children>
+                  <Label fx:id="activeUsername" layoutX="7.0" layoutY="1.0" mouseTransparent="true" prefHeight="19.0" prefWidth="191.0" text="Active User">
+                     <font>
+                        <Font name="Dubai Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="roleName" layoutX="7.0" layoutY="23.0" mouseTransparent="true" prefHeight="25.0" prefWidth="171.0" text="role" textFill="#d40a0a">
+                     <font>
+                        <Font name="Dubai Medium" size="14.0" />
+                     </font>
+                  </Label>
+                  <Pane fx:id="signOutButton" layoutX="-4.0" layoutY="88.0" prefHeight="32.0" prefWidth="207.0">
+                     <children>
+                        <ImageView fitHeight="28.0" fitWidth="24.0" layoutX="8.0" layoutY="7.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/icons8-logout-rounded.gif" />
+                           </image>
+                        </ImageView>
+                        <Label layoutX="41.0" layoutY="8.0" mouseTransparent="true" text="Log Out" textFill="#807c7c">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Pane>
+                  <Label fx:id="updatePasswordLabel" layoutX="7.0" layoutY="48.0" mouseTransparent="true" prefHeight="29.0" prefWidth="147.0" text="Update Password" textFill="#626262">
+                     <font>
+                        <Font name="Dubai Medium" size="14.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="-3.0" layoutY="84.0" prefWidth="200.0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <effect>
+                  <DropShadow>
+                     <color>
+                        <Color red="0.8771929740905762" green="0.8771929740905762" blue="0.8771929740905762" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Pane>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
