@@ -10,6 +10,9 @@ module app.finsuit {
     requires materialfx;
     requires controlsfx;
     requires com.jfoenix;
+    requires okhttp3;
+    requires com.google.gson;
+    requires com.squareup.moshi;
 //    requires eu.hansolo.tilesfx;
     opens app to javafx.fxml;
     exports app;

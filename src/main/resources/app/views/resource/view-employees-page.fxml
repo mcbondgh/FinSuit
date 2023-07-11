@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1207.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MFXLegacyTableView fx:id="employeesTable" layoutX="26.0" layoutY="52.0" prefHeight="483.0" prefWidth="1156.0" style="-fx-font-family: poppins; -fx-font-size: 13px;" tableMenuButtonVisible="true">
+         <columns>
+            <TableColumn prefWidth="57.33334732055664" text="ID" />
+            <TableColumn prefWidth="257.99996185302734" text="FULLNAME" />
+            <TableColumn prefWidth="134.0" text="MOBILE NUMBER" />
+            <TableColumn prefWidth="150.00003051757812" text="DIGITAL ADDRESS" />
+            <TableColumn prefWidth="159.3333740234375" text="DESIGNATION" />
+            <TableColumn prefWidth="122.66668701171875" text="SALARY" />
+            <TableColumn prefWidth="131.99993896484375" text="STATUS" />
+            <TableColumn prefWidth="160.6666259765625" text="ACTION">
+               <columns>
+                  <TableColumn prefWidth="75.0" style="-fx-font-size: 12px;" text="Update" />
+                  <TableColumn prefWidth="75.0" style="-fx-font-size: 12px;" text="Disable" />
+               </columns></TableColumn>
+         </columns>
+      </MFXLegacyTableView>
+      <Label layoutX="28.0" layoutY="14.0" text="EMPLOYEES LIST" textFill="#656464">
+         <font>
+            <Font name="Poppins Bold" size="15.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

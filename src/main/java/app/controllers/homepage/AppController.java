@@ -37,22 +37,22 @@ import java.util.ResourceBundle;
 
 public class AppController extends AppModel implements Initializable {
 
-    SpecialMethods SPECIAL_METHOD = new SpecialMethods();
+
     AppStages APP_STAGES = new AppStages();
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
-            SPECIAL_METHOD.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
-        } catch (IOException e) {
-            throw new RuntimeException(e);}
+        DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
+//        try {
+//            SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);}
         navigationHandler();
     }
 
 
     /*******************************************************************************************************************
     *********************************************** FXML NODE EJECTIONS
-     ********************************************************************************************************************/
+     *******************************************************************************************************************/
     @FXML private VBox sidebarPane;
     @FXML private TextField searchField;
     @FXML private Label appNameLabel, roleName, activeUsername;
@@ -88,12 +88,12 @@ public class AppController extends AppModel implements Initializable {
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS
-     ********************************************************************************************************************/
+     ******************************************************************************************************************/
     private void navigationHandler() {
         dashboardButton.setOnAction(action -> {
                 try {
                     DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
-                    SPECIAL_METHOD.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
+                    SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -101,7 +101,7 @@ public class AppController extends AppModel implements Initializable {
         messageBoxButton.setOnAction(action -> {
             try {
                 MessageBoxController.pageTitlePlaceHolder = messageBoxButton.getText();
-                SPECIAL_METHOD.FlipView("views/messageBox/messagebox-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/messageBox/messagebox-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -109,7 +109,7 @@ public class AppController extends AppModel implements Initializable {
         customersButton.setOnAction(action -> {
             try {
                 CustomersController.pageTitlePlaceHolder = customersButton.getText();
-                SPECIAL_METHOD.FlipView("views/customers/customers-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/customers/customers-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -117,7 +117,7 @@ public class AppController extends AppModel implements Initializable {
         accountsButton.setOnAction(action -> {
             try {
                 AccountsController.pageTitlePlaceHolder = accountsButton.getText();
-                SPECIAL_METHOD.FlipView("views/accounts/accounts-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/accounts/accounts-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -125,7 +125,7 @@ public class AppController extends AppModel implements Initializable {
         paymentsButton.setOnAction(action -> {
             try {
                 PaymentsController.pageTitlePlaceHolder = paymentsButton.getText();
-                SPECIAL_METHOD.FlipView("views/payments/payments-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/payments/payments-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -133,7 +133,7 @@ public class AppController extends AppModel implements Initializable {
         loanButton.setOnAction(action -> {
             try {
                 LoansController.pageTitlePlaceHolder = loanButton.getText();
-                SPECIAL_METHOD.FlipView("views/loans/loans-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/loans/loans-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -141,7 +141,7 @@ public class AppController extends AppModel implements Initializable {
         humanResourceButton.setOnAction(action -> {
             try {
                 HumanResourceController.pageTitlePlaceHolder = humanResourceButton.getText();
-                SPECIAL_METHOD.FlipView("views/resource/humanresource-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/resource/humanresource-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -149,7 +149,7 @@ public class AppController extends AppModel implements Initializable {
         reportsButton.setOnAction(action -> {
             try {
                 ReportsController.pageTitlePlaceHolder = reportsButton.getText();
-                SPECIAL_METHOD.FlipView("views/reports/reports-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/reports/reports-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -157,7 +157,7 @@ public class AppController extends AppModel implements Initializable {
         settingsButton.setOnAction(action -> {
             try {
                 SettingsController.pageTitlePlaceHolder = settingsButton.getText();
-                SPECIAL_METHOD.FlipView("views/settings/settings-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/settings/settings-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -173,14 +173,12 @@ public class AppController extends AppModel implements Initializable {
     }
 
 
-
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS
      ********************************************************************************************************************/
     @FXML private void expandSidebar(MouseEvent mouseEvent) {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
-        sidebarPane.setPrefWidth(200);
-
+        sidebarPane.setPrefWidth(170);
         transition.play();
         for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
             sidebarPane.getChildren().get(x).setVisible(true);
@@ -188,9 +186,10 @@ public class AppController extends AppModel implements Initializable {
             button.setCursor(Cursor.HAND);
         }
     }
+
     @FXML private void closeSidebar(MouseEvent mouseEvent) {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
-        sidebarPane.setPrefWidth(20);
+        sidebarPane.setPrefWidth(40);
         transition.play();
         for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
             sidebarPane.getChildren().get(x).setVisible(false);

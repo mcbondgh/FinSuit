@@ -5,6 +5,7 @@ import app.stages.AppStages;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ImageInput;
@@ -30,12 +31,19 @@ public class SpecialMethods {
         Image getImage = new Image(filePath.toString());
         imageViewName.setImage(getImage);
     }
-    public void FlipView(String fxmlFileName, BorderPane borderPane) throws IOException {
+    public static void FlipView(String fxmlFileName, BorderPane borderPane) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFileName));
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000),borderPane);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1.0);
         borderPane.setCenter(fxmlLoader.load());
+        fadeTransition.play();
+    }
+    public static void FlipView(Node node, BorderPane borderPane) throws IOException {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000),borderPane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1.0);
+        borderPane.setCenter(node);
         fadeTransition.play();
     }
 
