@@ -27,95 +27,99 @@
          <left>
             <VBox fx:id="sidebarPane" cache="true" cacheHint="QUALITY" onMouseEntered="#expandSidebar" onMouseExited="#closeSidebar" prefHeight="605.0" prefWidth="170.0" spacing="2.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
                <children>
-                  <MFXButton fx:id="dashboardButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textAlignment="CENTER" textFill="#262525">
+                  <Pane prefHeight="35.0" prefWidth="170.0">
+                     <children>
+                        <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" layoutX="29.0" layoutY="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="35.0" prefWidth="170.0" style="-fx-alignment: center;">
+                     <children>
+                        <MFXButton fx:id="messageBoxButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" layoutX="29.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Message Box" textAlignment="CENTER" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="35.0" prefWidth="170.0">
+                     <children>
+                        <MFXButton fx:id="customersButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="29.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customers" textAlignment="CENTER" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="35.0" prefWidth="170.0">
+                     <children>
+                        <MFXButton fx:id="accountsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="29.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Create Account" textAlignment="CENTER" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="35.0" prefWidth="170.0">
+                     <children>
+                        <MFXButton fx:id="paymentsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="29.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Deposits" textAlignment="CENTER" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="35.0" prefWidth="170.0">
+                     <children>
+                        <MFXButton fx:id="loanButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="29.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Loans" textAlignment="CENTER" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="35.0" prefWidth="170.0">
+                     <children>
+                        <MFXButton fx:id="humanResourceButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="29.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Human Resource" textAlignment="CENTER" textFill="#262525">
+                           <font>
+                              <Font name="Poppins Bold" size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </MFXButton>
+                     </children>
+                  </Pane>
+                  <MFXButton fx:id="reportsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Reports" textAlignment="CENTER" textFill="#262525">
                      <font>
                         <Font name="Poppins Bold" size="13.0" />
                      </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
                      <padding>
                         <Insets left="10.0" />
                      </padding>
-                  </MFXButton>
-                  <MFXButton fx:id="messageBoxButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Message Box" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </MFXButton>
-                  <MFXButton fx:id="customersButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customers" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </MFXButton>
-                  <MFXButton fx:id="accountsButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="174.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Create Account" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </MFXButton>
-                  <MFXButton fx:id="paymentsButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Deposits" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </MFXButton>
-                  <MFXButton fx:id="loanButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Loans" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </MFXButton>
-                  <MFXButton fx:id="humanResourceButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" layoutY="280.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Human Resource" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </MFXButton>
-                  <MFXButton fx:id="reportsButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Reports" textAlignment="CENTER" textFill="#262525">
-                     <font>
-                        <Font name="Poppins Bold" size="13.0" />
-                     </font>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </MFXButton>
-                  <MFXButton fx:id="settingsButton" contentDisplay="BOTTOM" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="200.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525">
+                  <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="141.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525">
                      <font>
                         <Font name="Poppins Bold" size="13.0" />
                      </font>
@@ -123,6 +127,8 @@
                         <Insets />
                      </VBox.margin>
                   </MFXButton>
+                  <Pane prefHeight="35.0" prefWidth="170.0" />
+                  <Pane prefHeight="35.0" prefWidth="170.0" />
                </children>
             </VBox>
          </left>
