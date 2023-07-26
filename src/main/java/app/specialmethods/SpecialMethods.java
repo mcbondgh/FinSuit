@@ -39,32 +39,40 @@ public class SpecialMethods {
         borderPane.setCenter(fxmlLoader.load());
         fadeTransition.play();
     }
-    public static void FlipView(Node node, BorderPane borderPane) throws IOException {
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000),borderPane);
+    public static void FlipView(BorderPane borderPane, String fxmlFileName) throws IOException {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500),borderPane);
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFileName));
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1.0);
-        borderPane.setCenter(node);
+        borderPane.setCenter(fxmlLoader.load());
         fadeTransition.play();
     }
 
-    public void setIdTypeParameters(ComboBox<String> comboBox) {
+    public static void setIdTypeParameters(ComboBox<String> comboBox) {
         String[] items = new String[]{"National Id", "Driving License", "SSNIT", "Voter Id", "Passport"};
         for (String x : items) {
             comboBox.getItems().add(x);
         }
     }
-    public void setGenderParameters(ComboBox<String> comboBox) {
+    public static void setGenderParameters(ComboBox<String> comboBox) {
         String[] items = {"Male", "Female", "Other"};
         for (String x : items) {
             comboBox.getItems().add(x);
         }
     }
-    public void setLoanPeriod(ComboBox<Integer> comboBox) {
+    public static void setLoanPeriod(ComboBox<Integer> comboBox) {
        int month = 120;
-       for(int x = 0; x <= 120; x+=3) {
+       for(int x = 3; x <= month; x+=3) {
            comboBox.getItems().add(x);
        }
     }
+    public static void setInterestRate(ComboBox<Integer> comboBox) {
+        int month = 100;
+        for(int x = 1; x <= month; x++) {
+            comboBox.getItems().add(x);
+        }
+    }
+
 
     public static void generateTime(Label dateLabel, Label timeLabel) {
         Timer timer = new Timer();
@@ -78,12 +86,61 @@ public class SpecialMethods {
                 DateTimeFormatter formatDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
                 Platform.runLater(()->{
                     timeLabel.setText(formatTime.format(time));
-                    dateLabel.setText(formatDate.format(date));
+                    dateLabel.setText(formatTime.format(time) + "\n" + formatDate.format(date));
                 });
             }
         };
         timer.scheduleAtFixedRate(task, 1000, 1000);
     }
 
+    public static String getTransactionId(long count) {
+        String transactionId = "";
+        if (count <=9) {transactionId = "00000000000" + count; }
+        else if(count <= 99) {transactionId = "0000000000" + count;}
+        else if (count == 100 || count <= 999) {transactionId = "000000000" + count;}//
+        else if(count == 1000 || count <= 9999) {transactionId = "00000000" + count;}
+        else if (count == 10000 || count <=99999) {transactionId = "0000000" + count;}
+        else if(count == 100000 || count <=999999) {transactionId = "000000" + count;}
+        else if (count == 10000000 || count <= 9999999) {transactionId = "00000" + count;}
+        else if (count == 100000000 || count <= 99999999) {transactionId = "0000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {transactionId = "000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {transactionId = "00" + count;}
+        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {transactionId = "0" + count;}
+        else {transactionId = String.valueOf(count);}
+        return transactionId;
+    }
+
+    public static String getAccountNumber(long count) {
+        String accountNo = "";
+        if (count <=9) {accountNo = "A00000000000" + count; }
+        else if(count <= 99) {accountNo = "A0000000000" + count;}
+        else if (count == 100 || count <= 999) {accountNo = "A000000000" + count;}//
+        else if(count == 1000 || count <= 9999) {accountNo = "A00000000" + count;}
+        else if (count == 10000 || count <=99999) {accountNo = "A0000000" + count;}
+        else if(count == 100000 || count <=999999) {accountNo = "A000000" + count;}
+        else if (count == 10000000 || count <= 9999999) {accountNo = "A00000" + count;}
+        else if (count == 100000000 || count <= 99999999) {accountNo = "A0000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {accountNo = "A000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {accountNo = "A00" + count;}
+        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {accountNo = "A0" + count;}
+        else {accountNo = String.valueOf("A" + count);}
+        return accountNo;
+    }
+    public static String getLoanIdNumber(long count) {
+        String loanId = "";
+        if (count <=9) {loanId = "L00000000000" + count; }
+        else if(count <= 99) {loanId = "L0000000000" + count;}
+        else if (count == 100 || count <= 999) {loanId = "L000000000" + count;}
+        else if(count == 1000 || count <= 9999) {loanId = "L00000000" + count;}
+        else if (count == 10000 || count <=99999) {loanId = "L0000000" + count;}
+        else if(count == 100000 || count <=999999) {loanId = "L000000" + count;}
+        else if (count == 10000000 || count <= 9999999) {loanId = "L00000" + count;}
+        else if (count == 100000000 || count <= 99999999) {loanId = "L0000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {loanId = "L000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {loanId = "L00" + count;}
+        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {loanId = "L0" + count;}
+        else {loanId = String.valueOf("L" + count);}
+        return loanId;
+    }
 
 }//end of clas

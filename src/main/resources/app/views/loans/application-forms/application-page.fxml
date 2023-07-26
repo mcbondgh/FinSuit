@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="640.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.ApplicationController">
+   <children>
+      <BorderPane fx:id="borderPane" layoutX="188.0" layoutY="5.0" prefHeight="624.0" prefWidth="1089.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" />
+      <Pane layoutX="10.0" layoutY="5.0" prefHeight="624.0" prefWidth="172.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
+         <children>
+            <Pane fx:id="customerSelectorPane" layoutX="-1.0" layoutY="262.0" prefHeight="280.0" prefWidth="169.0" visible="false">
+               <children>
+                  <GridPane fx:id="gridPane" layoutX="8.0" layoutY="122.0" prefHeight="89.0" prefWidth="160.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.66666920979817" minWidth="10.0" prefWidth="104.66666920979817" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.66668701171875" minWidth="10.0" prefWidth="73.99999745686848" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label prefHeight="29.0" prefWidth="84.0" text="Loan Status:">
+                           <font>
+                              <Font name="Poppins Regular" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="29.0" prefWidth="107.0" text="Paid Amount" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Regular" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="None" textFill="#06b33c" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="0.00" textFill="#06b33c" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="29.0" prefWidth="107.0" text="Pending Amount" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="Poppins Regular" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="0.00" textFill="#06b33c" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </GridPane>
+                  <TextField fx:id="customerSearchBox" layoutX="6.0" layoutY="17.0" onKeyReleased="#filterCustomers" prefHeight="30.0" prefWidth="160.0" promptText="eg. GHA-000010101-11" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+                     <font>
+                        <Font name="Poppins Bold" size="12.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="filterCustomerLabel" layoutX="9.0" layoutY="1.0" text="Search By Account or Id No." textFill="#8b0000">
+                     <font>
+                        <Font name="Poppins Regular" size="10.0" />
+                     </font>
+                  </Label>
+                  <MFXListView fx:id="listView" depthLevel="LEVEL0" hideScrollBars="true" layoutX="6.0" layoutY="49.0" prefHeight="60.0" prefWidth="160.0" style="-fx-border-color: #eee; -fx-border-radius: 10px; -fx-background-radius: 10px;" />
+                  <Separator layoutX="2.0" layoutY="121.0" prefHeight="2.0" prefWidth="169.0" />
+                  <ComboBox fx:id="draftSelector" layoutX="8.0" layoutY="244.0" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                  <Label layoutX="12.0" layoutY="221.0" text="Drafts">
+                     <font>
+                        <Font name="Poppins Regular" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" layoutX="113.0" layoutY="215.0" prefHeight="29.0" prefWidth="43.0" text="0" textFill="#06b33c">
+                     <font>
+                        <Font name="Poppins Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Pane>
+            <ComboBox fx:id="customerTypeSelector" layoutX="6.0" layoutY="224.0" onAction="#customerTypeSelected" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+            <Label fx:id="customerTypeLabel" layoutX="10.0" layoutY="207.0" text="Select Customer Type *" textFill="#8b0000">
+               <font>
+                  <Font name="Poppins Regular" size="10.0" />
+               </font>
+            </Label>
+            <MFXButton fx:id="nextButton" layoutX="91.0" layoutY="561.0" onAction="#nextButtonClicked" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #1880c5;" text="Next ⏭" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <MFXButton fx:id="backButton" disable="true" layoutX="11.0" layoutY="561.0" onAction="#backButtonClicked" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #1880c5; -fx-border-radius: 5;" text="⏮ Back" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="6.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/users.jpg" />
+               </image>
+            </ImageView>
+           
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

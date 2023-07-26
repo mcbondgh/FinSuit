@@ -13,7 +13,6 @@ public class AppStarter extends Application {
     public void start(Stage stage) throws IOException {
         AppStages.LoginStage();
     }
-
     public static void main() {
         launch();
     }

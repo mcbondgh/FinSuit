@@ -16,7 +16,7 @@ public class HttpClientExample {
         Gson gson = new Gson();
         try (Response response = client.newCall(request).execute()) {
             String responseBody = response.body().string();
-             gson.toJson(response);
+             gson.toJson(responseBody);
             System.out.println(gson);
 
 //            System.out.println(responseBody);

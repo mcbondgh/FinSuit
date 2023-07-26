@@ -1,4 +1,6 @@
 package app.config.sms;
+import app.fetchedData.SmsAPIObject;
+import app.models.MainModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
@@ -26,15 +28,16 @@ public class SmsAPI {
 //    109 - Invalid Schedule Time
 //    111 - SMS contains spam word. Wait for approval
 
-    private String api = "T2lVanFDcUdoR0VqYm1Zd3pyVGY";
+    private String api;
     private String checkBalanceUrl = "https://sms.arkesel.com/sms/api?action=check-balance&api_key=";
     private String sendSmsUrl = "https://sms.arkesel.com/sms/api?action=send-sms&api_key=";
-    private String senderId = "SERVER";
+    private String senderId;
     Gson gson = new Gson();
-
+    MainModel MODEL_OBJECT = new MainModel();
 
     /* CHECK SMS BALANCE */
     public String getSmsBalance() throws IOException {
+        for(SmsAPIObject item : MODEL_OBJECT.getSmsApi()) {api = item.getKey();}
         String balance = "";
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         Request request = new Request.Builder().get().url(checkBalanceUrl + api+"&response=json").build();
@@ -48,7 +51,11 @@ public class SmsAPI {
         return balance;
     }
 
-    public String sendSms(String mobileNumber, String messageBody) {
+    public String sendSms(String mobileNumber, String messageBody) throws IOException {
+        for(SmsAPIObject item : MODEL_OBJECT.getSmsApi()) {
+            api = item.getKey();
+            senderId = item.getSender_id();
+        }
         String status = "";
     //https://sms.arkesel.com/sms/api?action=send-sms&api_key=T2lVanFDcUdoR0VqYm1Zd3pyVGY&to=PhoneNumber&from=SenderID&sms=YourMessage
         OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -77,7 +84,9 @@ public class SmsAPI {
     }
     public static void main(String[] args) throws IOException {
         SmsAPI api1 = new SmsAPI();
-        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
+
+
+//        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
     }
 
 }

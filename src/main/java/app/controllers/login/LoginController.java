@@ -1,23 +1,25 @@
 package app.controllers.login;
 
+import app.controllers.homepage.AppController;
+import app.fetchedData.BusinessInfoObject;
+import app.models.MainModel;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class LoginController implements Initializable {
+public class LoginController extends MainModel implements Initializable{
 
     AppStages APP_STAGES = new AppStages();
 
@@ -29,7 +31,8 @@ public class LoginController implements Initializable {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private MFXButton loginButton, closeButton;
-
+    @FXML private Pane loginIndicator;
+    @FXML private ImageView logoViewer;
 
 
     /*******************************************************************************************************************
@@ -44,8 +47,15 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         buttonClickEvent();
+        setLoginParameters();
     }
 
+    void setLoginParameters() {
+        for (BusinessInfoObject items : getBusinessInfo()) {
+            appNameHeader.setText(items.getName());
+            logoViewer.setImage(new Image(items.getLogo()));
+        }
+    }
 
 
     /*******************************************************************************************************************
@@ -53,12 +63,13 @@ public class LoginController implements Initializable {
      ********************************************************************************************************************/
     void buttonClickEvent() {
         loginButton.setOnAction(event -> {
+            loginIndicator.setVisible(true);
             try {
+                AppController.activeUserPlaceHolder = Objects.equals(usernameField.getText(), "") ? "Admin" : usernameField.getText();                ;
                 AppStages.MainStage();
                 loginButton.getScene().getWindow().hide();
             } catch (IOException e) {throw new RuntimeException(e);}
         });
-
         closeButton.setOnAction(event -> {
             System.exit(0);
         });

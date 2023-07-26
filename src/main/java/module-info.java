@@ -7,13 +7,14 @@ module app.finsuit {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
-    requires materialfx;
-    requires controlsfx;
+    requires MaterialFX;
+//    requires controlsfx;
     requires com.jfoenix;
     requires okhttp3;
     requires com.google.gson;
     requires com.squareup.moshi;
-//    requires eu.hansolo.tilesfx;
+    requires org.controlsfx.controls;
+
     opens app to javafx.fxml;
     exports app;
     exports app.controllers.login to javafx.fxml;
@@ -24,22 +25,29 @@ module app.finsuit {
     exports app.controllers.customers;
     exports app.controllers.accounts;
     exports app.controllers.loans;
-    exports app.controllers.payments;
+    exports app.controllers.transactions;
     exports app.controllers.reports;
     exports app.controllers.resource;
     exports app.controllers.settings;
+    exports app.controllers;
+    exports app.controllers.accounting;
 
+    opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;
     opens app.controllers.dashboard to javafx.fxml;
     opens app.controllers.messages;
     opens app.controllers.customers;
     opens app.controllers.accounts;
     opens app.controllers.loans;
-    opens app.controllers.payments;
+    opens app.controllers.transactions;
     opens app.controllers.reports;
     opens app.controllers.settings;
     opens app.controllers.resource;
+    opens app.controllers.accounting;
     opens app.specialmethods to javafx.fxml;
     opens app.controllers.login;
+    exports app.controllers.loans.application;
+    opens app.controllers.loans.application;
+
 
 }

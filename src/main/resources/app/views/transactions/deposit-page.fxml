@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="549.0" prefWidth="441.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane layoutX="71.0" prefHeight="54.0" prefWidth="441.0" style="-fx-background-color: #2478b2;" AnchorPane.bottomAnchor="495.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="145.0" layoutY="10.0" text="CASH DEPOSIT" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="21.0" />
+               </font>
+            </Label>
+         </children></Pane>
+      <Pane layoutX="32.0" layoutY="65.0" prefHeight="517.0" prefWidth="542.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-color: #eee;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="60.0">
+         <children>
+            <MFXFilterComboBox floatMode="DISABLED" floatingText="enter account number" layoutX="22.0" layoutY="39.0" prefHeight="41.0" prefWidth="339.0" promptText="enter account number">
+               <font>
+                  <Font name="Poppins Bold" size="18.0" />
+               </font>
+            </MFXFilterComboBox>
+            <Label layoutX="25.0" layoutY="25.0" text="Search Account Number *" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="28.0" layoutY="98.0" text="Account  Name" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="25.0" layoutY="115.0" prefHeight="41.0" prefWidth="217.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="JAMES MENSAH ATSU SOGBOLISAH " textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <ComboBox layoutX="28.0" layoutY="185.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-font-size: 14; -fx-font-family: poppins;" />
+            <Label layoutX="33.0" layoutY="166.0" text="Payment Method *" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="252.0" layoutY="98.0" text="Mobile Number" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="249.0" layoutY="115.0" prefHeight="41.0" prefWidth="109.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="+233 246453922" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Pane disable="true" layoutX="28.0" layoutY="234.0" prefHeight="152.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+               <children>
+                  <TextField alignment="CENTER" layoutX="14.0" layoutY="29.0" prefHeight="41.0" prefWidth="141.0">
+                     <font>
+                        <Font name="Poppins SemiBold" size="16.0" />
+                     </font>
+                  </TextField>
+                  <Label layoutX="19.0" layoutY="14.0" text="Cash *" textFill="#605e5e">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="15.0" layoutY="82.0" text="Transaction Id" textFill="#605e5e">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                  </Label>
+                  <TextField alignment="CENTER" layoutX="15.0" layoutY="97.0" prefHeight="41.0" prefWidth="294.0">
+                     <font>
+                        <Font name="Poppins ExtraBold" size="13.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" layoutX="167.0" layoutY="29.0" prefHeight="41.0" prefWidth="141.0">
+                     <font>
+                        <Font name="Poppins SemiBold" size="16.0" />
+                     </font>
+                  </TextField>
+                  <Label layoutX="168.0" layoutY="14.0" text="E-Cash *" textFill="#605e5e">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <MFXButton layoutX="63.0" layoutY="412.0" prefHeight="41.0" prefWidth="256.0" style="-fx-background-color: #2478b2;" text="💾 Save" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="13.0" />
+               </font>
+            </MFXButton>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

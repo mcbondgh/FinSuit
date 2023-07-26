@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1207.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.resource.ManageUsersController">
+<Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1207.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.resource.ManageUsersController">
    <children>
       <Pane layoutX="27.0" layoutY="44.0" prefHeight="474.0" prefWidth="347.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;">
          <children>

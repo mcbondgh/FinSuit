@@ -1,9 +1,9 @@
 package app.config.db;
 
  class Variables {
-     protected int PORT_NUMBER = 3308;
-     protected  String DATABASE = "finsuit";
-     protected String URL = "jdbc:mysql://127.0.0.1:"+ PORT_NUMBER +"/" + DATABASE;
-     protected  String DB_USERNAME = "finsuit";
-     protected  String DB_PASSWORD = "finsuit";
+     protected int PORT_NUMBER = 3306;
+     protected  String DATABASE = "kwegyira_finsuit"; //kwegyira_finsuit
+     protected String URL = "jdbc:mysql://104.238.222.166:"+ PORT_NUMBER +"/" + DATABASE; //104.238.222.166
+     protected  String DB_USERNAME = "kwegyira_finsuit";//kweghira_finsuit
+     protected  String DB_PASSWORD = "finsuit1234"; //finsuit1234
 }

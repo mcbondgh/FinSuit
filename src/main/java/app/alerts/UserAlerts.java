@@ -1,12 +1,13 @@
 package app.alerts;
 
+import javafx.beans.NamedArg;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 public class UserAlerts {
 
     private String title, header, content;
-    public UserAlerts(String title, String header, String content) {
+    public UserAlerts(@NamedArg("title") String title, @NamedArg("header") String header, @NamedArg("body") String content) {
         this.title = title;
         this.header = header;
         this.content = content;

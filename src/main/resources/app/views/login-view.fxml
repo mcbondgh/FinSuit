@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -14,12 +15,22 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="555.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="578.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#04074a" height="546.0" layoutX="-1.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="562.0" />
-      <Pane layoutX="108.0" layoutY="128.0" prefHeight="385.0" prefWidth="339.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1b70c5" height="586.0" layoutX="-6.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="504.0" />
+      <Pane layoutX="78.0" layoutY="117.0" prefHeight="400.0" prefWidth="339.0" style="-fx-background-color: white; -fx-background-radius: 10;">
          <children>
-            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="35.0" layoutY="223.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #1b70c5;" text="Login" textFill="WHITE">
+            <Pane fx:id="loginIndicator" layoutX="34.0" layoutY="353.0" prefHeight="36.0" prefWidth="272.0" style="-fx-background-color: lightgreen;" visible="false">
+               <children>
+                  <MFXProgressSpinner layoutX="4.0" layoutY="3.0" prefHeight="29.0" prefWidth="43.0" />
+                  <Label layoutX="71.0" layoutY="10.0" prefHeight="17.0" prefWidth="126.0" text="Authenticating User" textFill="#007918">
+                     <font>
+                        <Font name="Roboto Medium" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="231.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #1b70c5;" text="Login" textFill="WHITE">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
@@ -27,7 +38,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="closeButton" layoutX="34.0" layoutY="263.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #fd421c;" text="Close" textFill="WHITE">
+            <MFXButton fx:id="closeButton" layoutX="31.0" layoutY="271.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #fd421c;" text="Close" textFill="WHITE">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
@@ -35,32 +46,32 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <Label layoutX="142.0" layoutY="18.0" text="Login" textFill="#04074a">
+            <Label layoutX="139.0" layoutY="17.0" text="Login" textFill="#04074a">
                <font>
                   <Font name="Roboto Black" size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameField" layoutX="34.0" layoutY="99.0" prefHeight="36.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+            <TextField fx:id="usernameField" layoutX="34.0" layoutY="88.0" prefHeight="43.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="165.0" prefHeight="36.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="154.0" prefHeight="43.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
             </PasswordField>
-            <Label layoutX="36.0" layoutY="79.0" text="Username" textFill="#5c5e60">
+            <Label layoutX="36.0" layoutY="68.0" text="Username" textFill="#5c5e60">
                <font>
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="35.0" layoutY="147.0" text="Password" textFill="#5c5e60">
+            <Label layoutX="35.0" layoutY="136.0" text="Password" textFill="#5c5e60">
                <font>
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="resetPasswordLink" layoutX="36.0" layoutY="320.0" text="Reset Password" />
+            <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="328.0" text="Reset Password" />
          </children>
          <effect>
             <DropShadow height="42.42" radius="20.71" spread="0.13" width="42.42">
@@ -70,15 +81,20 @@
             </DropShadow>
          </effect>
       </Pane>
-      <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" layoutX="4.0" layoutY="66.0" prefHeight="43.0" prefWidth="547.0" text="FINANCIAL SUIT - GHANA" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+      <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" layoutY="66.0" prefHeight="43.0" prefWidth="497.0" text="FINANCIAL SUIT - GHANA" textAlignment="CENTER" textFill="WHITE" wrapText="true">
          <font>
-            <Font name="Poppins Black" size="23.0" />
+            <Font name="Poppins Black" size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="43.0" fitWidth="53.0" layoutX="251.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="logoViewer" fitHeight="43.0" fitWidth="53.0" layoutX="222.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/applicationIcon-256.png" />
          </image>
       </ImageView>
+      <Label layoutX="199.0" layoutY="556.0" text="2023 | finsuit ghana" textFill="#b3b3b3">
+         <font>
+            <Font name="Arial Bold" size="10.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

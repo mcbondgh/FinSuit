@@ -3,8 +3,10 @@ package app.controllers.messages;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckListView;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -33,12 +35,19 @@ public class MessageBoxController implements Initializable {
     @FXML
     private BorderPane borderPane;
     @FXML private TabPane tabPane;
+    @FXML private CheckBox customerCheckBox;
+    @FXML private MFXFilterComboBox<String> customerNameSelector;
+
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
      ********************************************************************************************************************/
-
-
+    boolean isCustomerCheckBoxSelected() {
+        return customerCheckBox.isSelected();
+    }
+    boolean isMobileNumberFieldEmpty() {
+        return numberField.getText().isEmpty();
+    }
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
@@ -49,7 +58,9 @@ public class MessageBoxController implements Initializable {
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
-
+    @FXML void validateNumberField() {
+        addButton.setDisable(isMobileNumberFieldEmpty());
+    }
 
 
 
@@ -57,6 +68,7 @@ public class MessageBoxController implements Initializable {
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
     @FXML private void addButtonClicked() {
+        addButton.setDisable(isMobileNumberFieldEmpty());
         String number = numberField.getText();
         listView.getItems().add(number);
         int increment = listView.getItems().size();
@@ -70,6 +82,9 @@ public class MessageBoxController implements Initializable {
         String fxmlFile = "views/messageBox/notifications-page.fxml";
         tabPane.setVisible(false);
         SpecialMethods.FlipView(fxmlFile, borderPane);
+    }
+    @FXML void customerCheckBoxChecked() {
+        customerNameSelector.setDisable(!isCustomerCheckBoxSelected());
     }
 
 }//END OF CLASS

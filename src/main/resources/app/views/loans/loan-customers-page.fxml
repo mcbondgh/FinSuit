@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="1220.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanCustomersController">
+   <children>
+      <HBox layoutX="892.0" layoutY="8.0" prefHeight="47.0" prefWidth="318.0" spacing="5.0">
+         <children>
+            <MFXButton fx:id="filterButton" prefHeight="35.0" prefWidth="105.0" style="-fx-background-color: #1880c5;" text="   Filter Table" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <MFXButton fx:id="addNewLoanButton" onAction="#newLoanButtonClicked" prefHeight="35.0" prefWidth="105.0" style="-fx-background-color: #1880c5;" text="➕ Add New " textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <MFXButton fx:id="payLoanButton" prefHeight="35.0" prefWidth="105.0" style="-fx-background-color: #1880c5;" text="   Pay Loan" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+         </children>
+      </HBox>
+      <MFXLegacyTableView fx:id="loanApplicantsTable" blendMode="MULTIPLY" cacheHint="SPEED" cacheShape="false" centerShape="false" depthTest="ENABLE" fixedCellSize="35.0" layoutX="5.0" layoutY="54.0" prefHeight="499.0" prefWidth="1022.0" scaleShape="false" style="-fx-font-family: poppins; -fx-font-size: 12; -fx-alignment: center; -fx-background-color: #fff;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="54.0">
+         <columns>
+            <TableColumn prefWidth="64.00003290176392" text="NO." />
+            <TableColumn prefWidth="222.6667251586914" text="FULLNAME" />
+            <TableColumn prefWidth="137.33331298828125" text="LOAN ID" />
+            <TableColumn prefWidth="109.99996948242188" text="RELEASE DATE" />
+            <TableColumn prefWidth="118.666748046875" text="MATURITY DATE" />
+            <TableColumn prefWidth="84.0" text="PRINCIPAL" />
+            <TableColumn prefWidth="67.3333740234375" text="PAID" />
+            <TableColumn prefWidth="80.6666259765625" text="BALANCE" />
+            <TableColumn prefWidth="118.66656494140625" text="LAST PAYMENT" />
+            <TableColumn prefWidth="81.99993896484375" style="-fx-pref-height: 4px;" text="STATUS" />
+            <TableColumn prefWidth="60.0" text="A" />
+            <TableColumn prefWidth="66.6666259765625" text="B" />
+         </columns>
+      </MFXLegacyTableView>
+      <Label fx:id="applicantNameLabel" layoutX="28.0" layoutY="12.0" text="LOAN APPLICANTS">
+         <font>
+            <Font name="Roboto Black" size="16.0" />
+         </font>
+      </Label>
+      <Pane layoutX="234.0" layoutY="6.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
+         <children>
+            <Label layoutX="6.0" layoutY="4.0" text="🔎" textFill="#828181">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="searchField" layoutX="29.0" layoutY="2.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="Search By Loan Id or National Id No" style="-fx-background-color: #fff; -fx-background-radius: 5;">
+               <font>
+                  <Font name="Poppins Regular" size="11.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+         </children>
+      </Pane>
+      <Pane fx:id="filterTable" layoutX="783.0" layoutY="43.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 5; -fx-border-radius: 5;" visible="false">
+         <effect>
+            <DropShadow height="26.84" radius="7.567499999999999" width="5.43">
+               <color>
+                  <Color opacity="0.1446700394153595" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="34.0" layoutY="14.0" text="FILER LOANS TABLE">
+               <font>
+                  <Font name="Roboto Black" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="1117.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/payIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="898.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/filter.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

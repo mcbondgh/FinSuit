@@ -1,25 +1,23 @@
 package app.controllers.homepage;
 
+import app.controllers.accounting.AccountingController;
 import app.controllers.accounts.AccountsController;
 import app.controllers.customers.CustomersController;
 import app.controllers.dashboard.DashboardController;
 import app.controllers.loans.LoansController;
 import app.controllers.messages.MessageBoxController;
-import app.controllers.payments.PaymentsController;
+import app.controllers.transactions.TransactionController;
 import app.controllers.reports.ReportsController;
 import app.controllers.resource.HumanResourceController;
 import app.controllers.settings.SettingsController;
 import app.models.homepage.AppModel;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
-import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -39,15 +37,9 @@ public class AppController extends AppModel implements Initializable {
 
 
     AppStages APP_STAGES = new AppStages();
+    public static String activeUserPlaceHolder;
 
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
-//        try {
-//            SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);}
-        navigationHandler();
-    }
+
 
 
     /*******************************************************************************************************************
@@ -60,7 +52,7 @@ public class AppController extends AppModel implements Initializable {
     @FXML private Pane signOutButton, userProfilePane;
     @FXML private ImageView siteLogo;
     @FXML private BorderPane borderPane;
-    @FXML private MFXButton dashboardButton, customersButton, accountsButton, paymentsButton;
+    @FXML private MFXButton dashboardButton, customersButton, accountsButton, transactionButton, accountingButton;
     @FXML private MFXButton messageBoxButton, settingsButton, reportsButton, humanResourceButton, loanButton;
     @FXML private JFXListView<String> sortCustomersListView;
 
@@ -89,6 +81,20 @@ public class AppController extends AppModel implements Initializable {
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS
      ******************************************************************************************************************/
+
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
+        activeUsername.setText(activeUserPlaceHolder);
+        setVariables(appNameLabel, siteLogo);
+
+//        try {
+//            SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);}
+        navigationHandler();
+    }
+
+
     private void navigationHandler() {
         dashboardButton.setOnAction(action -> {
                 try {
@@ -97,6 +103,14 @@ public class AppController extends AppModel implements Initializable {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+        });
+        accountingButton.setOnAction(event -> {
+            try {
+                AccountingController.pageTitlePlaceHolder = accountingButton.getText();
+                SpecialMethods.FlipView("views/accounting/accounting-page.fxml", borderPane);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         messageBoxButton.setOnAction(action -> {
             try {
@@ -122,10 +136,10 @@ public class AppController extends AppModel implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-        paymentsButton.setOnAction(action -> {
+        transactionButton.setOnAction(action -> {
             try {
-                PaymentsController.pageTitlePlaceHolder = paymentsButton.getText();
-                SpecialMethods.FlipView("views/payments/payments-page.fxml", borderPane);
+                TransactionController.pageTitlePlaceHolder = transactionButton.getText();
+                SpecialMethods.FlipView("views/transactions/transaction-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -182,8 +196,7 @@ public class AppController extends AppModel implements Initializable {
         transition.play();
         for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
             sidebarPane.getChildren().get(x).setVisible(true);
-            MFXButton button = (MFXButton) sidebarPane.getChildren().get(x);
-            button.setCursor(Cursor.HAND);
+
         }
     }
 
