@@ -12,10 +12,15 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 
 public class DbConnection extends Variables{
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, DB_USERNAME, DB_PASSWORD);
+        String URL = loadConfiguration().getProperty("connection_path");
+        String USERNAME = loadConfiguration().getProperty("db_username");
+        String PASSWORD = loadConfiguration().getProperty("db_password");
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        //London Billionaire marketing Association certificate
     }
 
     protected ResultSet resultSet;

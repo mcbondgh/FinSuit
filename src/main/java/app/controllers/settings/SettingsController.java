@@ -18,16 +18,19 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
+import net.synedra.validatorfx.Validator;
 
 public class SettingsController extends SettingModel implements Initializable{
 
     Logger logger = Logger.getLogger("error");
+    Validator validator = new Validator();
     MainModel MODEL_OBJECT = new MainModel();
     UserAlerts  ALERT_OBJECT;
 
@@ -83,7 +86,7 @@ public class SettingsController extends SettingModel implements Initializable{
             String filePath = selectedFile.getPath();
             imageName.setText(filePath);
             Image logo = new Image(filePath);
-            logoViewer.setImage(logo);
+//            logoViewer.setImage(logo);
         }catch (NullPointerException e) {
             logger.info(e.getLocalizedMessage());
         }

@@ -14,6 +14,7 @@ module app.finsuit {
     requires com.google.gson;
     requires com.squareup.moshi;
     requires org.controlsfx.controls;
+    requires net.synedra.validatorfx;
 
     opens app to javafx.fxml;
     exports app;

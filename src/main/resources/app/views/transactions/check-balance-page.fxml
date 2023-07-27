@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="549.0" prefWidth="441.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane layoutX="71.0" prefHeight="54.0" prefWidth="441.0" style="-fx-background-color: #2478b2;" AnchorPane.bottomAnchor="495.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="114.0" layoutY="12.0" text="ACCOUNT BALANCE" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="21.0" />
+               </font>
+            </Label>
+            <ImageView blendMode="MULTIPLY" fitHeight="24.0" fitWidth="41.0" layoutX="83.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: #2478b2;">
+               <image>
+                  <Image url="@../../images/icons8-topup-payment-100.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane layoutX="32.0" layoutY="65.0" prefHeight="517.0" prefWidth="542.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-color: #eee;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="60.0">
+         <children>
+            <MFXFilterComboBox floatMode="DISABLED" floatingText="enter account number" layoutX="21.0" layoutY="40.0" prefHeight="41.0" prefWidth="339.0" promptText="enter account number">
+               <font>
+                  <Font name="Poppins Bold" size="18.0" />
+               </font>
+            </MFXFilterComboBox>
+            <Label layoutX="24.0" layoutY="26.0" text="Search Account Number *" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="88.0" text="Account  Name" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="21.0" layoutY="105.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="JAMES MENSAH ATSU SOGBOLISAH " textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label layoutX="21.0" layoutY="170.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #b4ffd0; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Ghc 00.00" textFill="#118a3f">
+               <font>
+                  <Font name="Poppins Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label layoutX="24.0" layoutY="156.0" text="Current Balance" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="21.0" layoutY="238.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Ghc 00.00" textFill="#118a3f">
+               <font>
+                  <Font name="Poppins Bold" size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label layoutX="24.0" layoutY="224.0" text="Available Balance" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="21.0" layoutY="308.0" prefHeight="41.0" prefWidth="163.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Ghc 00.00" textFill="#db2525">
+               <font>
+                  <Font name="Poppins Bold" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label layoutX="24.0" layoutY="294.0" text="Last Withdral Amount" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="203.0" layoutY="308.0" prefHeight="41.0" prefWidth="163.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Sun July 18, 1990" textFill="#db2525">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label layoutX="203.0" layoutY="294.0" text="Last Withdral Date" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Pane layoutX="24.0" layoutY="414.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+               <children>
+                  <Label layoutX="19.0" layoutY="14.0" text="Export Data As:" textFill="#605e5e">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                  </Label>
+                  <Hyperlink layoutX="111.0" layoutY="10.0" text="Excel">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink layoutX="150.0" layoutY="10.0" text="Word">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+            </Pane>
+            <Separator layoutX="23.0" layoutY="400.0" prefHeight="7.0" prefWidth="339.0" />
+            <Label layoutX="24.0" layoutY="358.0" text="Cashier" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="70.0" layoutY="358.0" text="Kofi Mensah Atsu Issah" textFill="#726e6e">
+               <font>
+                  <Font name="Poppins Regular" size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

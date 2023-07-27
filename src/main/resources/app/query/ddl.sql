@@ -1,0 +1,6 @@
+-- 25th July 2023
+ALTER TABLE business_info
+ADD COLUMN logoPath VARCHAR(255) AFTER location;  
+
+INSERT INTO sms_api
+VALUES("T2lVanFDcUdoR0VqYm1Zd3pyVGY", "FINSUIT-GH", DEFAULT)

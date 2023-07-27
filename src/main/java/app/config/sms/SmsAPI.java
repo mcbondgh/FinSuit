@@ -59,21 +59,17 @@ public class SmsAPI {
         String status = "";
     //https://sms.arkesel.com/sms/api?action=send-sms&api_key=T2lVanFDcUdoR0VqYm1Zd3pyVGY&to=PhoneNumber&from=SenderID&sms=YourMessage
         OkHttpClient client = new OkHttpClient().newBuilder().build();
-        Map<String, String> mappedValues = new LinkedHashMap<>();
-        mappedValues.put("sender", senderId);
-        mappedValues.put("message", messageBody);
-        mappedValues.put("recipients", mobileNumber);
+//        Map<String, String> mappedValues = new LinkedHashMap<>();
+//        mappedValues.put("sender", senderId);
+//        mappedValues.put("message", messageBody);
+//        mappedValues.put("recipients", mobileNumber);
 
-        RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(mappedValues));
-        System.out.println(jsonRequestBody.toString());
+////        RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(mappedValues));
+//        RequestBody jsonRequestBody = RequestBody.create(gson.toJson(mappedValues), MediaType.parse("application/json; charset=utf-8"));
+//        System.out.println(jsonRequestBody.toString());
 
         Request request = new Request.Builder()
-//                .url("https://sms.arkesel.com/api/v2/sms/send")
-                .url(sendSmsUrl + api + "&to=" + mobileNumber + "&from="+senderId + "&sms=" + messageBody)
-                .addHeader("api-key", "T2lVanFDcUdoR0VqYm1Zd3pyVGY")
-                .addHeader("Content-Type", "application/json")
-                .post(jsonRequestBody)
-                .build();
+                .url(sendSmsUrl + api + "&to=" + mobileNumber + "&from="+senderId + "&sms=" + messageBody) .build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             status = response.body().string();
@@ -84,9 +80,10 @@ public class SmsAPI {
     }
     public static void main(String[] args) throws IOException {
         SmsAPI api1 = new SmsAPI();
-
-
-//        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
+//        System.out.println(api1.getSmsBalance());
+        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
     }
+
+
 
 }

@@ -1,9 +1,30 @@
 package app.config.db;
 
- class Variables {
-     protected int PORT_NUMBER = 3306;
-     protected  String DATABASE = "kwegyira_finsuit"; //kwegyira_finsuit
-     protected String URL = "jdbc:mysql://104.238.222.166:"+ PORT_NUMBER +"/" + DATABASE; //104.238.222.166
-     protected  String DB_USERNAME = "kwegyira_finsuit";//kweghira_finsuit
-     protected  String DB_PASSWORD = "finsuit1234"; //finsuit1234
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+class Variables {
+   private final Properties variables = new Properties();
+   protected Properties loadConfiguration() {
+      String PATH = "config.properties";
+      try(InputStream inputStream = Variables.class.getClassLoader().getResourceAsStream(PATH)) {
+         variables.load(inputStream);
+      }catch (Exception e) {e.printStackTrace();}
+      return variables;
+   }
+
+
+//  public static Properties loadConfiguration() {
+//   Properties config = new Properties();
+//   protected String URL = config.getProperty();
+//   try (InputStream inputStream = Variables.class.getClassLoader().getResourceAsStream(PATH)) {
+//    config.load(inputStream);
+//   } catch (IOException e) {
+//    e.printStackTrace();
+//   }
+//   return config;
+//  }
+
 }
