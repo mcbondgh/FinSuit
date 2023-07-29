@@ -181,7 +181,7 @@
                      </VBox.margin></Pane>
                   <Pane prefHeight="35.0" prefWidth="140.0">
                      <children>
-                        <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="-7.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="154.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525">
+                        <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" layoutX="-7.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="147.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525">
                            <font>
                               <Font name="Poppins Bold" size="13.0" />
                            </font>
@@ -260,7 +260,7 @@
                   <Image url="@images/applicationIcon-256.png" />
                </image>
             </ImageView>
-            <Label fx:id="appNameLabel" layoutX="88.0" layoutY="11.0" prefHeight="20.0" prefWidth="297.0" text="FIN-SUIT GHANA" textFill="#1c5ab7">
+            <Label fx:id="appNameLabel" layoutX="75.0" layoutY="11.0" prefHeight="20.0" prefWidth="310.0" text="BUSINESS NAME" textFill="#1c5ab7">
                <font>
                   <Font name="Poppins Black" size="14.0" />
                </font>

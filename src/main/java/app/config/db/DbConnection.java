@@ -1,28 +1,24 @@
 package app.config.db;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.squareup.moshi.Json;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import app.stages.AppStages;
 
-import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
 
 public class DbConnection extends Variables{
-    public Connection getConnection() throws SQLException {
-        String URL = loadConfiguration().getProperty("connection_path");
-        String USERNAME = loadConfiguration().getProperty("db_username");
-        String PASSWORD = loadConfiguration().getProperty("db_password");
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    public DbConnection() {}
+    public Connection getConnection()  {
+        Connection connection = null;
+        try {
+            String LINK = loadProperties().getProperty("connection_path");
+            String DB_USERNAME = loadProperties().getProperty("db_username");
+            String DB_PASSWORD = loadProperties().getProperty("db_password");
+            connection = DriverManager.getConnection(LINK, DB_USERNAME, DB_PASSWORD);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            AppStages.databaseFailedStage();
+        }
+        return connection;
         //London Billionaire marketing Association certificate
     }
-
     protected ResultSet resultSet;
     protected PreparedStatement preparedStatement;
     protected Statement statement;

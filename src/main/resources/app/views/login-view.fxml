@@ -2,9 +2,11 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -30,7 +32,7 @@
                   </Label>
                </children>
             </Pane>
-            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="231.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #1b70c5;" text="Login" textFill="WHITE">
+            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="226.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #1b70c5;" text="Login" textFill="WHITE">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
@@ -51,27 +53,28 @@
                   <Font name="Roboto Black" size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameField" layoutX="34.0" layoutY="88.0" prefHeight="43.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+            <TextField fx:id="usernameField" layoutX="34.0" layoutY="93.0" prefHeight="40.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
                <font>
-                  <Font name="Poppins Regular" size="14.0" />
+                  <Font name="Poppins Bold" size="14.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="154.0" prefHeight="43.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="168.0" prefHeight="40.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
             </PasswordField>
-            <Label layoutX="36.0" layoutY="68.0" text="Username" textFill="#5c5e60">
+            <Label layoutX="36.0" layoutY="73.0" text="Username" textFill="#5c5e60">
                <font>
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="35.0" layoutY="136.0" text="Password" textFill="#5c5e60">
+            <Label layoutX="35.0" layoutY="150.0" text="Password" textFill="#5c5e60">
                <font>
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="328.0" text="Reset Password" />
+            <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="343.0" text="Reset Password" />
+            <Separator layoutY="332.0" prefHeight="4.0" prefWidth="339.0" />
          </children>
          <effect>
             <DropShadow height="42.42" radius="20.71" spread="0.13" width="42.42">
@@ -81,10 +84,13 @@
             </DropShadow>
          </effect>
       </Pane>
-      <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" layoutY="66.0" prefHeight="43.0" prefWidth="497.0" text="FINANCIAL SUIT - GHANA" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+      <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" layoutY="66.0" prefHeight="43.0" prefWidth="497.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
          <font>
             <Font name="Poppins Black" size="20.0" />
          </font>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </Label>
       <ImageView fx:id="logoViewer" fitHeight="43.0" fitWidth="53.0" layoutX="222.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
          <image>

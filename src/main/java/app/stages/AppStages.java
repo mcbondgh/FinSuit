@@ -37,7 +37,7 @@ public class AppStages {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("test-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
-        stage.setTitle("Login");
+        stage.setTitle("Test Page");
         stage.setScene(scene);
         stage.show();
     }
@@ -112,7 +112,20 @@ public class AppStages {
         stage.centerOnScreen();
         return  stage;
     }
+    public static Stage databaseFailedStage() {
+        Stage stage = new Stage();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("database-failed-page.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Database Connection");
+            stage.setScene(scene);
+            stage.centerOnScreen();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        return  stage;
+    }
 
 
 }//end of class...
