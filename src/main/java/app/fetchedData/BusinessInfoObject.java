@@ -7,15 +7,17 @@ public class BusinessInfoObject{
     String mobileNumber;
     String otherNumber;
     String email;
+    String accountPassword;
     String digital;
     String location;
     String logo;
 
-    public BusinessInfoObject(String name, String mobileNumber, String otherNumber, String email, String digital, String location, String logo) {
+    public BusinessInfoObject(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo) {
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.otherNumber = otherNumber;
         this.email = email;
+        this.accountPassword = accountPassword;
         this.digital = digital;
         this.location = location;
         this.logo = logo;
@@ -51,6 +53,14 @@ public class BusinessInfoObject{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAccountPassword() {
+        return accountPassword;
+    }
+
+    public void setAccountPassword(String accountPassword) {
+        this.accountPassword = accountPassword;
     }
 
     public String getDigital() {

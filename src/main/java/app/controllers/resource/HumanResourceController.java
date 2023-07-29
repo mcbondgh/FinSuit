@@ -1,23 +1,17 @@
 package app.controllers.resource;
 
 import app.specialmethods.SpecialMethods;
-import com.jfoenix.animation.alert.VerticalTransition;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
+import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.dialogs.AbstractMFXDialog;
-import io.github.palexdev.materialfx.dialogs.MFXStageDialogBuilder;
-import io.github.palexdev.materialfx.utils.AnimationUtils;
-import io.github.palexdev.materialfx.utils.DragResizer;
-import javafx.animation.*;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +23,7 @@ public class HumanResourceController implements Initializable {
      *********************************************** FXML NODE EJECTIONS
      ********************************************************************************************************************/
     @FXML
-    private Label pageTitle;
+    private Label pageTitle, empIdLabel;
     public static String pageTitlePlaceHolder;
     @FXML private BorderPane borderPane;
     @FXML private VBox menuContainer;
@@ -37,10 +31,24 @@ public class HumanResourceController implements Initializable {
     Pane menuIcon, addEmployeePane;
     @FXML
     MFXButton manageUsersButton, viewEmployeesButton, addEmployeeButton, saveButton, cancelButton;
+    @FXML private TextField firstNameField, lastNameField, otherNameField, mobileNumberField, otherNumberField;
+    @FXML private TextField emailField, digitalAddressField, addressField, landMarkField, idNumberField, workingExperienceField;
+    @FXML private  TextField salaryField, bankNameField, accountNameField, accountNumberField;
+    @FXML private TextArea commentsField;
+
+    @FXML private TextField c_nameField, c_mobileNumberField, c_digitalAddressField, c_addressField, c_landMarkField, c_placeOfWorkField, c_organizationNumberField, c_organizationAddressField;
+    @FXML private DatePicker dobSelector, employmentDateSelector;
+    @FXML private ComboBox<String> maritalStatusField, genderSelector, qualificationSelector, idSelector, designationSelector;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
      ********************************************************************************************************************/
+     boolean isFirstnameEmpty() {return firstNameField.getText().isEmpty();}
+     boolean isLastnameEmpty() {return lastNameField.getText().isEmpty();}
+    boolean isMobileNumberEmpty() {return mobileNumberField.getText().isEmpty();}
+    boolean isGenderEmpty() {return genderSelector.getValue() == null;}
+    boolean isDobEmpty(){return dobSelector.getValue() == null;}
+    boolean isEmailEmpty() {return emailField.getText().isEmpty();}
 
 
     /*******************************************************************************************************************
@@ -52,8 +60,18 @@ public class HumanResourceController implements Initializable {
         setAddEmployeeButtonClicked();
         setViewEmployeesButtonClicked();
         setManageUsersButtonClicked();
+        fillSelectors();
 
-        ;}
+        }
+    void fillSelectors() {
+        SpecialMethods.setGenderParameters(genderSelector);
+        SpecialMethods.setDesignation(designationSelector);
+        SpecialMethods.setIdTypeParameters(idSelector);
+        SpecialMethods.setMaritalStatus(maritalStatusField);
+        SpecialMethods.setQualification(qualificationSelector);
+
+    }
+
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
@@ -73,7 +91,6 @@ public class HumanResourceController implements Initializable {
     @FXML void HideMenuContainer() {
         menuContainer.setVisible(false);
     }
-
     void setViewEmployeesButtonClicked() {
         viewEmployeesButton.setOnAction(event ->  {
             try {
@@ -85,7 +102,9 @@ public class HumanResourceController implements Initializable {
     }
     void setAddEmployeeButtonClicked() {
         addEmployeeButton.setOnAction(event -> {
+            try{
                borderPane.setCenter(addEmployeePane);
+            }catch (IllegalArgumentException e) {}
         });
     }
     void setManageUsersButtonClicked() {
@@ -96,6 +115,13 @@ public class HumanResourceController implements Initializable {
                 throw new RuntimeException(e);
             }
         });
+    }
+    @FXML
+    private void validateSalaryInput(KeyEvent event) {
+        if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().equals(KeyCode.PERIOD) || event.getCode().isArrowKey())) {
+            salaryField.deletePreviousChar();
+            salaryField.deleteNextChar();
+        }
     }
 
 }//end of class....

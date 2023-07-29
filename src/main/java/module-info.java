@@ -8,13 +8,14 @@ module app.finsuit {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires MaterialFX;
-//    requires controlsfx;
     requires com.jfoenix;
     requires okhttp3;
     requires com.google.gson;
     requires com.squareup.moshi;
     requires org.controlsfx.controls;
     requires net.synedra.validatorfx;
+    requires jbcrypt;
+    requires java.mail;
 
     opens app to javafx.fxml;
     exports app;

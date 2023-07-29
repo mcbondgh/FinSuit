@@ -10,7 +10,8 @@ public class AppModel extends MainModel {
     protected void setVariables(Label appName, ImageView logo) {
         for (BusinessInfoObject items : getBusinessInfo()) {
             appName.setText(items.getName());
-            logo.setImage(new Image(items.getLogo()));
+            String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + items.getLogo();
+            logo.setImage(new Image(getImageSource));
         }
     }
 

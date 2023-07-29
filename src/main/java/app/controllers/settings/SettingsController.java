@@ -2,16 +2,18 @@ package app.controllers.settings;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.encryptDecryp.EncryptToDecrypt;
 import app.errorLogger.ErrorLogger;
 import app.fetchedData.BusinessInfoObject;
 import app.fetchedData.SmsAPIObject;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
+import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,21 +21,27 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import net.synedra.validatorfx.Validator;
 
-public class SettingsController extends SettingModel implements Initializable{
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
 
+public class SettingsController extends SettingModel implements Initializable{
     Logger logger = Logger.getLogger("error");
     Validator validator = new Validator();
     MainModel MODEL_OBJECT = new MainModel();
     UserAlerts  ALERT_OBJECT;
-
     UserNotification NOTIFICATION_OBJECT = new UserNotification();;
     
 
@@ -46,11 +54,14 @@ public class SettingsController extends SettingModel implements Initializable{
     public static String pageTitlePlaceHolder;
     @FXML
     private TextField institutionNameField,emailField, numberField, otherNumberField, digitalAddField, locationField;
-    @FXML private TextField senderIdField;
+    @FXML private TextField senderIdField, senderMailField;
     @FXML private MFXButton updateButton, uploadButton, updateSenderIdButton;
-    @FXML private Pane systemInfoPane;
+    @FXML private Pane systemInfoPane, apiPane, warningPane;
     @FXML private ImageView logoViewer;
     @FXML private Label imageName, apiKeyField;
+    @FXML private CheckBox modifyButton;
+    @FXML private PasswordField accountPasswordField, passwordField;
+    Tooltip tooltip;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -60,6 +71,10 @@ public class SettingsController extends SettingModel implements Initializable{
     boolean isEmailFieldEmpty() {return emailField.getText().isEmpty();}
     boolean isDigitalFieldEmpty() {return digitalAddField.getText().isEmpty();}
     boolean isSenderIdEmpty() {return senderIdField.getText().isEmpty();}
+    boolean isAccountFieldEmpty(){return accountPasswordField.getText().isEmpty();}
+    boolean isSenderMailFieldEmpty() {return senderMailField.getText().isEmpty();}
+    boolean isPasswordFieldEmpty() {return passwordField.getText().isEmpty();}
+    boolean isModifyButtonChecked() {return modifyButton.isSelected();}
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
      ********************************************************************************************************************/
@@ -80,16 +95,31 @@ public class SettingsController extends SettingModel implements Initializable{
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose File");
-            FileChooser.ExtensionFilter extension = fileChooser.getSelectedExtensionFilter();
             fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter("mage Files", "*.png", "*.jpg"));
             File selectedFile = fileChooser.showOpenDialog(uploadButton.getScene().getWindow());
             String filePath = selectedFile.getPath();
-            imageName.setText(filePath);
+            imageName.setText(selectedFile.getName());
             Image logo = new Image(filePath);
-//            logoViewer.setImage(logo);
+            logoViewer.setImage(logo);
         }catch (NullPointerException e) {
             logger.info(e.getLocalizedMessage());
         }
+    }
+
+    void saveImageToDestination(){
+        String destinationFolder = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\";
+        String fileName = imageName.getText();
+        Image selectedImage = logoViewer.getImage();
+        File saveToDestination = new File(destinationFolder);
+
+        if (selectedImage != null) {
+            if (!saveToDestination.exists()) {saveToDestination.mkdirs();}
+            try {
+                File filePath = new File(destinationFolder + fileName);
+                ImageIO.write(SwingFXUtils.fromFXImage(selectedImage, null), "png", filePath);
+            }catch (Exception e){e.printStackTrace();}
+        }
+
     }
     void fillFields() throws IOException {
         for (BusinessInfoObject item : MODEL_OBJECT.getBusinessInfo()) {
@@ -100,11 +130,16 @@ public class SettingsController extends SettingModel implements Initializable{
               locationField.setText(item.getLocation());
               digitalAddField.setText(item.getDigital());
               imageName.setText(item.getLogo());
-              logoViewer.setImage(new Image(item.getLogo()));
+              accountPasswordField.setText(item.getAccountPassword());
+              String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
+              logoViewer.setImage(new Image(getImageSource));
         }
         for (SmsAPIObject items : MODEL_OBJECT.getSmsApi()) {
             apiKeyField.setText(items.getKey());
             senderIdField.setText(items.getSender_id());
+            emailField.setText(items.getEmailAddress());
+            passwordField.setText(items.getPassword());
+            senderMailField.setText(items.getEmailAddress());
         }
     }
 
@@ -136,16 +171,19 @@ public class SettingsController extends SettingModel implements Initializable{
             });
 
             systemInfoPane.setOnMouseMoved(mouseEvent -> {
-                updateButton.setDisable(isNameFieldEmpty() || isNumberFieldEmpty() || isEmailFieldEmpty() || isDigitalFieldEmpty());
+                updateButton.setDisable(isNameFieldEmpty() || isNumberFieldEmpty() || isEmailFieldEmpty() || isDigitalFieldEmpty() || isAccountFieldEmpty());
+            });
+            apiPane.setOnMouseMoved(mouseEvent -> {
+                updateSenderIdButton.setDisable(isSenderIdEmpty() || isSenderMailFieldEmpty()  || isPasswordFieldEmpty());
             });
 
             senderIdField.setOnKeyPressed(event -> {
-                updateSenderIdButton.setDisable(isSenderIdEmpty());
                 if (senderIdField.getText().length() > 10) {
                     senderIdField.deleteNextChar();
                     senderIdField.deletePreviousChar();
                 }
             });
+
     }
 
     /*******************************************************************************************************************
@@ -169,11 +207,13 @@ public class SettingsController extends SettingModel implements Initializable{
             String digital = digitalAddField.getText();
             String location = locationField.getText();
             String imageUrl = imageName.getText();
+            String hashedValue = EncryptToDecrypt.hashPlainText(accountPasswordField.getText());
 
             ALERT_OBJECT = new UserAlerts("UPDATE SYSTEM CONFIG", "ARE YOU SURE YOU WANT TO UPDATE SYSTEM PARAMETERS?",
                     "please confirm your action to proceed else CANCEL to abort");
             if (ALERT_OBJECT.confirmationAlert()) {
-                flag.set(updateBusinessInfo(name, number, otherNumber, email, digital, location, imageUrl));
+                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, imageUrl));
+                saveImageToDestination();
                 if (flag.get() > 0) {
                     NOTIFICATION_OBJECT.successNotification("UPDATE SUCCESSFUL", "System parameters successfully update");
                 }
@@ -182,13 +222,20 @@ public class SettingsController extends SettingModel implements Initializable{
 
         updateSenderIdButton.setOnAction(event -> {
             String senderId = senderIdField.getText();
+            String email = senderMailField.getText();
+            String password = passwordField.getText();
             ALERT_OBJECT = new UserAlerts("UPDATE SMS VARIABLE", "ARE YOU SURE YOU WANT TO UPDATE SMS SENDER ID?", "proceed to update else CANCEL to abort.");
             if (ALERT_OBJECT.confirmationAlert()) {
-                flag.set(updateSenderId(senderId));
+                flag.set(updateSenderId(senderId, email, password));
                 if (flag.get() > 0) {
                     NOTIFICATION_OBJECT.successNotification("SENDER ID UPDATE", "You have successfully updated SMS Sender Id.");
                 }
             }
+        });
+        modifyButton.setOnAction(event -> {
+            senderMailField.setDisable(!isModifyButtonChecked());
+            passwordField.setDisable(!isModifyButtonChecked());
+            warningPane.setVisible(isModifyButtonChecked());
         });
 
     }

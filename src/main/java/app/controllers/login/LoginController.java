@@ -53,7 +53,8 @@ public class LoginController extends MainModel implements Initializable{
     void setLoginParameters() {
         for (BusinessInfoObject items : getBusinessInfo()) {
             appNameHeader.setText(items.getName());
-            logoViewer.setImage(new Image(items.getLogo()));
+            String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + items.getLogo();
+            logoViewer.setImage(new Image(getImageSource));
         }
     }
 

@@ -1,6 +1,5 @@
 package app.alerts;
 
-import impl.org.controlsfx.skin.NotificationBar;
 import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;

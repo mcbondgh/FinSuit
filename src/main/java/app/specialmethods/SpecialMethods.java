@@ -48,18 +48,40 @@ public class SpecialMethods {
         fadeTransition.play();
     }
 
-    public static void setIdTypeParameters(ComboBox<String> comboBox) {
+    public static <Strings> void setIdTypeParameters(ComboBox<String> comboBox) {
         String[] items = new String[]{"National Id", "Driving License", "SSNIT", "Voter Id", "Passport"};
+        Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);
         }
     }
     public static void setGenderParameters(ComboBox<String> comboBox) {
         String[] items = {"Male", "Female", "Other"};
+        Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);
         }
     }
+    public static void setMaritalStatus(ComboBox<String> comboBox) {
+        String[] items = {"Single", "Married", "Divorced"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+    public static void setDesignation(ComboBox<String> comboBox) {
+        String[] items = {"G.Manager", "C.F.O", "Finance Department", "Accounts Department", "Security & Sanitation", "Sales Department"};
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+    public static void setQualification(ComboBox<String> comboBox) {
+        String[] items = {"JHS Level", "SHS Level", "Tertiary Level", "Unspecified"};
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+
     public static void setLoanPeriod(ComboBox<Integer> comboBox) {
        int month = 120;
        for(int x = 3; x <= month; x+=3) {
@@ -72,8 +94,6 @@ public class SpecialMethods {
             comboBox.getItems().add(x);
         }
     }
-
-
     public static void generateTime(Label dateLabel, Label timeLabel) {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -92,7 +112,6 @@ public class SpecialMethods {
         };
         timer.scheduleAtFixedRate(task, 1000, 1000);
     }
-
     public static String getTransactionId(long count) {
         String transactionId = "";
         if (count <=9) {transactionId = "00000000000" + count; }
@@ -110,11 +129,11 @@ public class SpecialMethods {
         return transactionId;
     }
 
-    public static String getAccountNumber(long count) {
+    public static String generateAccountNumber(long count) {
         String accountNo = "";
         if (count <=9) {accountNo = "A00000000000" + count; }
         else if(count <= 99) {accountNo = "A0000000000" + count;}
-        else if (count == 100 || count <= 999) {accountNo = "A000000000" + count;}//
+        else if (count >= 100 || count <= 999) {accountNo = "A000000000" + count;}//
         else if(count == 1000 || count <= 9999) {accountNo = "A00000000" + count;}
         else if (count == 10000 || count <=99999) {accountNo = "A0000000" + count;}
         else if(count == 100000 || count <=999999) {accountNo = "A000000" + count;}
@@ -126,12 +145,12 @@ public class SpecialMethods {
         else {accountNo = String.valueOf("A" + count);}
         return accountNo;
     }
-    public static String getLoanIdNumber(long count) {
+    public static String generateLoanNumber(long count) {
         String loanId = "";
         if (count <=9) {loanId = "L00000000000" + count; }
         else if(count <= 99) {loanId = "L0000000000" + count;}
-        else if (count == 100 || count <= 999) {loanId = "L000000000" + count;}
-        else if(count == 1000 || count <= 9999) {loanId = "L00000000" + count;}
+        else if (count >= 100 && count <= 999) {loanId = "L000000000" + count;}
+        else if(count >= 1000 && count <= 9999) {loanId = "L00000000" + count;}
         else if (count == 10000 || count <=99999) {loanId = "L0000000" + count;}
         else if(count == 100000 || count <=999999) {loanId = "L000000" + count;}
         else if (count == 10000000 || count <= 9999999) {loanId = "L00000" + count;}
@@ -141,6 +160,16 @@ public class SpecialMethods {
         else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {loanId = "L0" + count;}
         else {loanId = String.valueOf("L" + count);}
         return loanId;
+    }
+
+    public static String generateEmployeeId(long count) {
+        String empId = "";
+        if (count <=9) {empId = "100000" + count; }
+        if (count >=10 && count <=99) {empId = "1000" + count;}
+        if (count >=100 && count <=999) {empId = "100" + count;}
+        if (count >=1000 && count <=9999) {empId = "10" + count;}
+        else {empId = String.valueOf(count);}
+        return empId;
     }
 
 }//end of clas
