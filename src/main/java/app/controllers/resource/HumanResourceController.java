@@ -49,7 +49,9 @@ public class HumanResourceController implements Initializable {
     boolean isGenderEmpty() {return genderSelector.getValue() == null;}
     boolean isDobEmpty(){return dobSelector.getValue() == null;}
     boolean isEmailEmpty() {return emailField.getText().isEmpty();}
-
+    boolean isDigitalAddressEmpty() {return digitalAddressField.getText().isEmpty();}
+    boolean isAddressEmpty() {return addressField.getText().isEmpty();}
+    boolean isLandmarkEmpty() {return landMarkField.getText().isEmpty();}
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
