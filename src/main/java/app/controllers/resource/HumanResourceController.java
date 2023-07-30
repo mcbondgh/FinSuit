@@ -1,5 +1,7 @@
 package app.controllers.resource;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -18,6 +20,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class HumanResourceController implements Initializable {
+
+    UserAlerts ALERT_OBJECT;
+    UserNotification NOTIFICATION_OBJECT = new UserNotification();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -83,6 +88,7 @@ public class HumanResourceController implements Initializable {
         setManageUsersButtonClicked();
         fillSelectors();
         checkForEmptyFields();
+        cancelButtonClicked();
     }
     void fillSelectors() {
         SpecialMethods.setGenderParameters(genderSelector);
@@ -90,6 +96,39 @@ public class HumanResourceController implements Initializable {
         SpecialMethods.setIdTypeParameters(idSelector);
         SpecialMethods.setMaritalStatus(maritalStatusField);
         SpecialMethods.setQualification(qualificationSelector);
+    }
+    void resetFields() {
+        firstNameField.clear();
+        lastNameField.clear();
+        otherNameField.clear();
+        dobSelector.setValue(null);
+        mobileNumberField.clear();
+        otherNumberField.clear();
+        genderSelector.setValue(null);
+        emailField.clear();
+        digitalAddressField.clear();
+        addressField.clear();
+        landMarkField.clear();
+        idSelector.setValue(null);
+        idNumberField.clear();
+        maritalStatusField.setValue(null);
+        designationSelector.setValue(null);
+        qualificationSelector.setValue(null);
+        workingExperienceField.clear();
+        employmentDateSelector.setValue(null);
+        salaryField.clear();
+        bankNameField.clear();
+        accountNameField.clear();
+        accountNumberField.clear();
+        c_nameField.clear();
+        c_mobileNumberField.clear();
+        c_digitalAddressField.clear();
+        c_landMarkField.clear();
+        c_addressField.clear();
+        c_placeOfWorkField.clear();
+        c_organizationAddressField.clear();
+        c_organizationNumberField.clear();
+        commentsField.clear();
     }
 
 
@@ -104,7 +143,6 @@ public class HumanResourceController implements Initializable {
             salaryField.deleteNextChar();
         }
     }
-
     void checkForEmptyFields() {
         addEmployeePane.setOnMouseMoved(event -> {
             saveButton.setDisable(
@@ -116,9 +154,6 @@ public class HumanResourceController implements Initializable {
             );
         });
     }
-
-
-
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
@@ -154,5 +189,16 @@ public class HumanResourceController implements Initializable {
             }
         });
     }
+    void cancelButtonClicked() {
+        cancelButton.setOnAction(event -> {
+            ALERT_OBJECT = new UserAlerts("CLEAR FIELDS", "Are you certain you want to cancel and clear the form fields?", "please confirm your action else CANCEL to abort.");
+            if (ALERT_OBJECT.confirmationAlert()) {
+                resetFields();
+            }
+        });
+    }
+            
+
+            
 
 }//end of class....

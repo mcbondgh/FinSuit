@@ -77,5 +77,3 @@ CREATE TABLE IF NOT EXISTS employees_account_details(
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
 );
 
-
-
