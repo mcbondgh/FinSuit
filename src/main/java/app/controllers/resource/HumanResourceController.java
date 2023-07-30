@@ -52,6 +52,25 @@ public class HumanResourceController implements Initializable {
     boolean isDigitalAddressEmpty() {return digitalAddressField.getText().isEmpty();}
     boolean isAddressEmpty() {return addressField.getText().isEmpty();}
     boolean isLandmarkEmpty() {return landMarkField.getText().isEmpty();}
+    boolean isIdSelectorEmpty() {return idSelector.getValue() == null;}
+    boolean isIdNumberEmpty() {return idNumberField.getText().isEmpty();}
+    boolean isMaritalStateEmpty() {return maritalStatusField.getValue().isEmpty();}
+    boolean isQualificationEmpty() {return qualificationSelector.getValue() == null;}
+    boolean isWorkingExpEmpty() {return workingExperienceField.getText().isEmpty();}
+    boolean isEmploymentDateEmpty() {return employmentDateSelector.getValue() == null;}
+    boolean isSalaryEmpty() {return salaryField.getText().isEmpty();}
+    boolean isBankNameEmpty() {return bankNameField.getText().isEmpty();}
+    boolean isAccountNameEmpty() {return accountNameField.getText().isEmpty();}
+    boolean isAccountNumber() {return accountNumberField.getText().isEmpty();}
+    boolean isContactNameEmpty() {return c_nameField.getText().isEmpty();}
+    boolean isContactMobileNumberEmpty() {return c_mobileNumberField.getText().isEmpty();}
+    boolean isContactDigitalAddEmpty() {return c_digitalAddressField.getText().isEmpty();}
+    boolean isContactLandMarkEmpty() {return c_landMarkField.getText().isEmpty();}
+    boolean isContactAddress(){return c_addressField.getText().isEmpty();}
+    boolean isPlaceOfWorkEmpty() {return c_placeOfWorkField.getText().isEmpty();}
+    boolean isOrgNumberEmpty() {return c_organizationNumberField.getText().isEmpty();}
+    boolean isOrgAddressEmpty() {return c_organizationAddressField.getText().isEmpty();}
+
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
@@ -63,23 +82,40 @@ public class HumanResourceController implements Initializable {
         setViewEmployeesButtonClicked();
         setManageUsersButtonClicked();
         fillSelectors();
-
-        }
+        checkForEmptyFields();
+    }
     void fillSelectors() {
         SpecialMethods.setGenderParameters(genderSelector);
         SpecialMethods.setDesignation(designationSelector);
         SpecialMethods.setIdTypeParameters(idSelector);
         SpecialMethods.setMaritalStatus(maritalStatusField);
         SpecialMethods.setQualification(qualificationSelector);
-
     }
 
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
+    @FXML
+    private void validateSalaryInput(KeyEvent event) {
+        if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) ||
+                event.getCode().equals(KeyCode.PERIOD) || event.getCode().isArrowKey())) {
+            salaryField.deletePreviousChar();
+            salaryField.deleteNextChar();
+        }
+    }
 
-
+    void checkForEmptyFields() {
+        addEmployeePane.setOnMouseMoved(event -> {
+            saveButton.setDisable(
+                    isFirstnameEmpty() || isLastnameEmpty() || isMobileNumberEmpty() || isGenderEmpty() || isDobEmpty() || isEmailEmpty() ||
+                    isDigitalAddressEmpty() || isAddressEmpty() || isLandmarkEmpty() || isIdNumberEmpty() || isIdSelectorEmpty() ||
+                    isMaritalStateEmpty() || isQualificationEmpty() || isWorkingExpEmpty() || isEmploymentDateEmpty() || isSalaryEmpty() ||
+                    isBankNameEmpty() || isAccountNameEmpty() || isAccountNumber() || isContactNameEmpty() || isContactAddress() || isPlaceOfWorkEmpty() ||
+                    isContactMobileNumberEmpty() || isContactDigitalAddEmpty() || isContactLandMarkEmpty() || isOrgAddressEmpty()
+            );
+        });
+    }
 
 
 
@@ -117,13 +153,6 @@ public class HumanResourceController implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-    }
-    @FXML
-    private void validateSalaryInput(KeyEvent event) {
-        if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().equals(KeyCode.PERIOD) || event.getCode().isArrowKey())) {
-            salaryField.deletePreviousChar();
-            salaryField.deleteNextChar();
-        }
     }
 
 }//end of class....
