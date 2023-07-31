@@ -74,5 +74,18 @@ CREATE TABLE IF NOT EXISTS employees_account_details(
     modified_by INT,
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
 );
-
+CREATE TABLE IF NOT EXISTS users(
+	user_id INT AUTO_INCREMENT PRIMARY KEY,
+    emp_id INT ,
+    role_id INT NOT NULL,
+    user_name VARCHAR(100) NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT 1,
+    is_deleted BOOLEAN DEFAULT 0,
+	date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    added_by INT,
+    date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_by INT,
+    FOREIGN KEY(emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
+)
 
