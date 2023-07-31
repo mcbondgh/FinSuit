@@ -2,6 +2,8 @@ package app.controllers.resource;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.controllers.homepage.AppController;
+import app.models.humanResource.HumanResourceModel;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -17,12 +19,14 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class HumanResourceController implements Initializable {
+public class HumanResourceController extends HumanResourceModel implements Initializable{
 
     UserAlerts ALERT_OBJECT;
     UserNotification NOTIFICATION_OBJECT = new UserNotification();
+    static String getActiveUserName = AppController.activeUserPlaceHolder;
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -59,7 +63,7 @@ public class HumanResourceController implements Initializable {
     boolean isLandmarkEmpty() {return landMarkField.getText().isEmpty();}
     boolean isIdSelectorEmpty() {return idSelector.getValue() == null;}
     boolean isIdNumberEmpty() {return idNumberField.getText().isEmpty();}
-    boolean isMaritalStateEmpty() {return maritalStatusField.getValue().isEmpty();}
+    boolean isMaritalStateEmpty() {return maritalStatusField.getValue() ==null;}
     boolean isQualificationEmpty() {return qualificationSelector.getValue() == null;}
     boolean isWorkingExpEmpty() {return workingExperienceField.getText().isEmpty();}
     boolean isEmploymentDateEmpty() {return employmentDateSelector.getValue() == null;}
@@ -83,12 +87,16 @@ public class HumanResourceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
+        String empCount = SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1);
+        empIdLabel.setText(empCount);
+
         setAddEmployeeButtonClicked();
         setViewEmployeesButtonClicked();
         setManageUsersButtonClicked();
         fillSelectors();
         checkForEmptyFields();
         cancelButtonClicked();
+        saveButtonClicked();
     }
     void fillSelectors() {
         SpecialMethods.setGenderParameters(genderSelector);
@@ -153,6 +161,15 @@ public class HumanResourceController implements Initializable {
                     isContactMobileNumberEmpty() || isContactDigitalAddEmpty() || isContactLandMarkEmpty() || isOrgAddressEmpty()
             );
         });
+        emailField.setOnKeyTyped(keyevent -> {
+            String invalid = "-fx-border-color:#ff0000; -fx-border-radius: 5px; -fx-border-width:2px;";
+            String valid = "-fx-border-color:#ddd; -fx-border-radius: 5px; ";
+            String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3,}$";
+
+            if (!emailField.getText().matches(emailRegex)) {
+                emailField.setStyle(invalid);
+            } else emailField.setStyle(valid);
+        });
     }
 
     /*******************************************************************************************************************
@@ -168,6 +185,7 @@ public class HumanResourceController implements Initializable {
         viewEmployeesButton.setOnAction(event ->  {
             try {
                 SpecialMethods.FlipView("views/resource/view-employees-page.fxml", borderPane);
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -175,9 +193,9 @@ public class HumanResourceController implements Initializable {
     }
     void setAddEmployeeButtonClicked() {
         addEmployeeButton.setOnAction(event -> {
-            try{
-               borderPane.setCenter(addEmployeePane);
-            }catch (IllegalArgumentException e) {}
+            try {
+                borderPane.setCenter(addEmployeePane);
+            }catch (Exception e){}
         });
     }
     void setManageUsersButtonClicked() {
@@ -197,7 +215,52 @@ public class HumanResourceController implements Initializable {
             }
         });
     }
-            
+
+    void saveButtonClicked() {
+        saveButton.setOnAction(event -> {
+            int empId = Integer.parseInt(empIdLabel.getText());
+            try {
+                String firstname = firstNameField.getText();
+                String lastname = lastNameField.getText();
+                String otherName = otherNameField.getText();
+                String gender = genderSelector.getValue();
+                LocalDate dob = dobSelector.getValue();
+                String mobileNumber = mobileNumberField.getText();
+                String otherNumber = otherNumberField.getText();
+                String email = emailField.getText();
+                String digitalAdd = digitalAddressField.getText();
+                String address = addressField.getText();
+                String landmark = landMarkField.getText();
+                String idType = idSelector.getValue();
+                String idNumber = idNumberField.getText();
+                String maritalStatus = maritalStatusField.getValue();
+                String qualification = qualificationSelector.getValue();
+                String designation = designationSelector.getValue();
+                String workingExp = workingExperienceField.getText();
+                LocalDate empDate = employmentDateSelector.getValue();
+                double salary = Double.parseDouble(salaryField.getText());
+                String bankName = bankNameField.getText();
+                String accountName = accountNameField.getText();
+                String accountNo = accountNumberField.getText();
+                String c_fullname = c_nameField.getText();
+                String c_mobileNumber = c_mobileNumberField.getText();
+                String c_digitalAdd = c_digitalAddressField.getText();
+                String c_address = c_addressField.getText();
+                String c_landmark = c_landMarkField.getText();
+                String c_placeOfWork = c_placeOfWorkField.getText();
+                String c_orgNumber = c_organizationNumberField.getText();
+                String c_orgAddress = c_organizationAddressField.getText();
+                String comments = commentsField.getText();
+
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        });
+    }
+
 
             
 
