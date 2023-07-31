@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS finsuit;
+
 CREATE TABLE IF NOT EXISTS business_info(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     business_name VARCHAR(100) NOT NULL,
@@ -75,6 +77,7 @@ CREATE TABLE IF NOT EXISTS employees_account_details(
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
 );
 
+
 CREATE TABLE IF NOT EXISTS users(
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
     emp_id INT ,
@@ -89,5 +92,4 @@ CREATE TABLE IF NOT EXISTS users(
     modified_by INT,
     FOREIGN KEY(emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
 )
-
 

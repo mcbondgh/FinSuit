@@ -165,11 +165,12 @@ public class SpecialMethods {
     public static String generateEmployeeId(long count) {
         String empId = "";
         if (count <=9) {empId = "100000" + count; }
-        if (count >=10 && count <=99) {empId = "1000" + count;}
-        if (count >=100 && count <=999) {empId = "100" + count;}
-        if (count >=1000 && count <=9999) {empId = "10" + count;}
+        else if (count >=10 && count <=99) {empId = "1000" + count;}
+        else if (count >=100 && count <=999) {empId = "100" + count;}
+        else if (count >=1000 && count <=9999) {empId = "10" + count;}
         else {empId = String.valueOf(count);}
         return empId;
     }
+
 
 }//end of clas

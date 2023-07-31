@@ -8,4 +8,10 @@ VALUES("T2lVanFDcUdoR0VqYm1Zd3pyVGY", "FINSUIT-GH", "princemcbond33@gmail.com", 
 ALTER TABLE business_info 
 ADD COLUMN account_password VARCHAR(255) NOT NULL AFTER email;
 
-DROP TABLE sms_api;
+ALTER TABLE employees
+CHANGE COLUMN contact_person_digiital_address contact_person_digital_address VARCHAR(50);
+
+
+
+
+-- DROP TABLE sms_api;
