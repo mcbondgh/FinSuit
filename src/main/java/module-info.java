@@ -16,6 +16,7 @@ module app.finsuit {
     requires net.synedra.validatorfx;
     requires jbcrypt;
     requires java.mail;
+    requires annotations;
 
     opens app to javafx.fxml;
     exports app;

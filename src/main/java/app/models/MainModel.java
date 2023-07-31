@@ -51,7 +51,10 @@ public class MainModel extends DbConnection {
         }catch (SQLException e) {e.printStackTrace();}
         return data;
     }
-
+    public int getUserIdByName(String username) {
+        int userId = 0;
+        return userId;
+    }
 
 
 
