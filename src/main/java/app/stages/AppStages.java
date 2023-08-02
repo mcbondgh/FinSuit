@@ -2,10 +2,13 @@ package app.stages;
 
 import app.AppStarter;
 import app.alerts.UserAlerts;
+import app.specialmethods.SpecialMethods;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.WatchEvent;
 
@@ -16,6 +19,8 @@ public class AppStages {
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Homepage");
+        Image icon = SpecialMethods.setLogoImage();
+        stage.getIcons().add(icon);
         stage.setScene(scene);
         stage.show();
         stage.getScene().getWindow().setOnCloseRequest(windowEvent -> {

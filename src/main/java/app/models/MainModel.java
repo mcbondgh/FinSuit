@@ -53,7 +53,38 @@ public class MainModel extends DbConnection {
     }
     public int getUserIdByName(String username) {
         int userId = 0;
+        try {
+            String query = "SELECT user_id FROM users WHERE(username = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                userId = resultSet.getInt(1);
+            }
+        }catch (Exception e) {e.printStackTrace();}
         return userId;
+    }
+    public int getTotalEmployeesCount() {
+        int count = 0;
+        try {
+            String query = "SELECT count(*) FROM employees";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }catch (SQLException e) {e.printStackTrace();}
+        return count;
+    }
+    protected int getLastEmployeeId() {
+        int flag = 0;
+        try {
+            String query = "SELECT COUNT(*) FROM employees ORDER BY emp_id DESC LIMIT 1;";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {flag = resultSet.getInt(1);}
+        }catch (Exception ignored){}
+        return flag;
     }
 
 

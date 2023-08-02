@@ -50,7 +50,7 @@ public class AppController extends AppModel implements Initializable {
     @FXML private Label appNameLabel, roleName, activeUsername;
     @FXML private Circle notificationPane;
     @FXML private Pane signOutButton, userProfilePane;
-    @FXML private ImageView siteLogo;
+    @FXML private ImageView siteLogo, logoImage;
     @FXML private BorderPane borderPane;
     @FXML private MFXButton dashboardButton, customersButton, accountsButton, transactionButton, accountingButton;
     @FXML private MFXButton messageBoxButton, settingsButton, reportsButton, humanResourceButton, loanButton;

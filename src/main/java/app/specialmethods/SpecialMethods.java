@@ -1,6 +1,8 @@
 package app.specialmethods;
 
 import app.AppStarter;
+import app.fetchedData.BusinessInfoObject;
+import app.models.MainModel;
 import app.stages.AppStages;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -24,12 +26,16 @@ import java.util.*;
 
 public class SpecialMethods {
 
+    static MainModel MODEL = new MainModel();
+
 
     //THIS METHOD WHEN INVOKED SHALL TAKE THE NAME OF THE IMAGE AND THEN DISPLAY IT TO THE IMAGE-VIEW...
-    public void setLogoImage(String imageName, ImageView imageViewName) {
-        File filePath = new File(imageName);
-        Image getImage = new Image(filePath.toString());
-        imageViewName.setImage(getImage);
+    public static Image setLogoImage() {
+        String filePath = "";
+        for(BusinessInfoObject item : MODEL.getBusinessInfo()) {
+            filePath = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
+        }
+        return new Image(filePath);
     }
     public static void FlipView(String fxmlFileName, BorderPane borderPane) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFileName));

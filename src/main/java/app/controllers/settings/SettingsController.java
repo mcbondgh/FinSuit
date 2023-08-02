@@ -150,12 +150,12 @@ public class SettingsController extends SettingModel implements Initializable{
         int inputLength = 10;
             numberField.setOnKeyReleased(keyEvent ->{
                 if (!(keyEvent.getCode().isDigitKey() || keyEvent.getCode().isArrowKey() || keyEvent.getCode().equals(KeyCode.BACK_SPACE))) {
-                    numberField.deleteNextChar();
                     numberField.deletePreviousChar();
+                    numberField.deleteNextChar();
                 }
                 if (numberField.getText().length() > inputLength) {
-                    numberField.deleteNextChar();
                     numberField.deletePreviousChar();
+                    numberField.deleteNextChar();
                 }
             });
 

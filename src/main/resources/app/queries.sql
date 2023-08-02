@@ -28,40 +28,44 @@ CREATE TABLE IF NOT EXISTS sms_and_email_api(
     date_added DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS employees(
-	emp_id INT AUTO_INCREMENT,
-    firstname VARCHAR(50) NOT NULL,
-    lastname VARCHAR(50) NOT NULL,
-    othername VARCHAR(50),
-    email VARCHAR(100),
-    mobile_number VARCHAR(20) NOT NULL,
-    other_number VARCHAR(20),
-    gender VARCHAR(10) NOT NULL,
-    dbo DATE NOT NULL,
-    digital_address VARCHAR(50) NOT NULL,
-    residential_address VARCHAR(100) NOT NULL,
-    landmark VARCHAR(100) NOT NULL,
-    id_type VARCHAR(50) NOT NULL,
-    id_number VARCHAR(20) NOT NULL,
-    marital_status VARCHAR(20) NOT NULL,
-    qualification VARCHAR(100) NOT NULL,
-    designation VARCHAR(100),
-    working_experience VARCHAR(100) NOT NULL,
-    employment_date DATE,
-    contact_person_name VARCHAR(100) NOT NULL,
-    contact_person_number VARCHAR(20) NOT NULL,
-    contact_person_digiital_address VARCHAR(50) NOT NULL,
-    contact_person_address VARCHAR(100) NOT NULL,
-    contact_person_landmark VARCHAR(100) NOT NULL,
-    contact_person_place_of_work VARCHAR(100) NOT NULL,
-    contact_person_org_number VARCHAR(20),
-    contact_person_org_address VARCHAR(100),
-    additional_information TEXT,
-    date_added DATETIME DEFAULT CURRENT_TIMESTAMP,
-    date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-    added_by INT,
-    modified_by INT,
-    PRIMARY KEY (emp_id)
+CREATE TABLE `employees` (
+  `emp_id` int NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(50) NOT NULL,
+  `lastname` varchar(50) NOT NULL,
+  `othername` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `mobile_number` varchar(20) NOT NULL,
+  `other_number` varchar(20) DEFAULT NULL,
+  `gender` varchar(10) NOT NULL,
+  `dbo` date NOT NULL,
+  `digital_address` varchar(50) NOT NULL,
+  `residential_address` varchar(100) NOT NULL,
+  `landmark` varchar(100) NOT NULL,
+  `id_type` varchar(50) NOT NULL,
+  `id_number` varchar(20) NOT NULL,
+  `marital_status` varchar(20) NOT NULL,
+  `qualification` varchar(100) NOT NULL,
+  `designation` varchar(100) DEFAULT NULL,
+  `working_experience` varchar(100) NOT NULL,
+  `employment_date` date DEFAULT NULL,
+  `contact_person_name` varchar(100) NOT NULL,
+  `contact_person_number` varchar(20) NOT NULL,
+  `contact_person_digital_address` varchar(50) DEFAULT NULL,
+  `contact_person_address` varchar(100) NOT NULL,
+  `contact_person_landmark` varchar(100) NOT NULL,
+  `contact_person_place_of_work` varchar(100) NOT NULL,
+  `contact_person_org_number` varchar(20) DEFAULT NULL,
+  `contact_person_org_address` varchar(100) DEFAULT NULL,
+  `additional_information` text,
+  `is_active` tinyint DEFAULT '1',
+  `is_deleted` tinyint DEFAULT '0',
+  `date_added` datetime DEFAULT CURRENT_TIMESTAMP,
+  `date_modified` datetime DEFAULT CURRENT_TIMESTAMP,
+  `added_by` int DEFAULT '1',
+  `modified_by` int DEFAULT '1',
+  `work_id` varchar(45) NOT NULL,
+  PRIMARY KEY (`emp_id`),
+  UNIQUE KEY `work_id_UNIQUE` (`work_id`)
 );
 
 CREATE TABLE IF NOT EXISTS employees_account_details(
@@ -81,8 +85,8 @@ CREATE TABLE IF NOT EXISTS employees_account_details(
 CREATE TABLE IF NOT EXISTS users(
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
     emp_id INT ,
-    role_id INT NOT NULL,
-    user_name VARCHAR(100) NOT NULL,
+    role_id INT,
+    usernane VARCHAR(100) NOT NULL,
     user_password VARCHAR(255) NOT NULL,
     is_active BOOLEAN DEFAULT 1,
     is_deleted BOOLEAN DEFAULT 0,
@@ -90,6 +94,14 @@ CREATE TABLE IF NOT EXISTS users(
     added_by INT,
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     modified_by INT,
-    FOREIGN KEY(emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
-)
+    FOREIGN KEY(emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL,
+    FOREIGN KEY(role_id) REFERENCES roles(role_id) ON DELETE CASCADE ON UPDATE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS roles(
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(20),
+    date_added DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 

@@ -3,6 +3,7 @@ package app.controllers.resource;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
+import app.fetchedData.human_resources.EmployeesData;
 import app.models.humanResource.HumanResourceModel;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
@@ -87,9 +88,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
-        String empCount = SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1);
-        empIdLabel.setText(empCount);
-
+        empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1));
         setAddEmployeeButtonClicked();
         setViewEmployeesButtonClicked();
         setManageUsersButtonClicked();
@@ -97,7 +96,9 @@ public class HumanResourceController extends HumanResourceModel implements Initi
         checkForEmptyFields();
         cancelButtonClicked();
         saveButtonClicked();
+        validateMobileNumberFields();
     }
+
     void fillSelectors() {
         SpecialMethods.setGenderParameters(genderSelector);
         SpecialMethods.setDesignation(designationSelector);
@@ -152,23 +153,69 @@ public class HumanResourceController extends HumanResourceModel implements Initi
         }
     }
     void checkForEmptyFields() {
+        String invalid = "-fx-border-color:#ff0000; -fx-border-radius: 5px; -fx-border-width:2px;";
+        String valid = "-fx-border-color:#ddd; -fx-border-radius: 5px; ";
+        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3,}$";
         addEmployeePane.setOnMouseMoved(event -> {
             saveButton.setDisable(
                     isFirstnameEmpty() || isLastnameEmpty() || isMobileNumberEmpty() || isGenderEmpty() || isDobEmpty() || isEmailEmpty() ||
                     isDigitalAddressEmpty() || isAddressEmpty() || isLandmarkEmpty() || isIdNumberEmpty() || isIdSelectorEmpty() ||
                     isMaritalStateEmpty() || isQualificationEmpty() || isWorkingExpEmpty() || isEmploymentDateEmpty() || isSalaryEmpty() ||
                     isBankNameEmpty() || isAccountNameEmpty() || isAccountNumber() || isContactNameEmpty() || isContactAddress() || isPlaceOfWorkEmpty() ||
-                    isContactMobileNumberEmpty() || isContactDigitalAddEmpty() || isContactLandMarkEmpty() || isOrgAddressEmpty()
+                    isContactMobileNumberEmpty() || isContactDigitalAddEmpty() || isContactLandMarkEmpty() || isOrgAddressEmpty() || !emailField.getStyle().equals(valid)
             );
         });
-        emailField.setOnKeyTyped(keyevent -> {
-            String invalid = "-fx-border-color:#ff0000; -fx-border-radius: 5px; -fx-border-width:2px;";
-            String valid = "-fx-border-color:#ddd; -fx-border-radius: 5px; ";
-            String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3,}$";
-
+        emailField.setOnKeyTyped(keyEvent -> {
             if (!emailField.getText().matches(emailRegex)) {
                 emailField.setStyle(invalid);
             } else emailField.setStyle(valid);
+
+        });
+    }
+    void validateMobileNumberFields() {
+        mobileNumberField.setOnKeyReleased(event -> {
+            if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().isArrowKey()) ||
+                    event.getCode().equals(KeyCode.TAB)) {
+                mobileNumberField.deletePreviousChar();
+                mobileNumberField.deleteNextChar();
+            }
+            if (mobileNumberField.getText().length() > 10) {
+                mobileNumberField.deletePreviousChar();
+                mobileNumberField.deleteNextChar();
+            }
+        });
+        otherNumberField.setOnKeyReleased(event -> {
+            if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().isArrowKey()) ||
+                    event.getCode().equals(KeyCode.TAB)) {
+                otherNumberField.deletePreviousChar();
+                otherNumberField.deleteNextChar();
+            }
+            if (otherNumberField.getText().length() > 10) {
+                otherNumberField.deletePreviousChar();
+                otherNumberField.deleteNextChar();
+            }
+        });
+        c_organizationNumberField.setOnKeyReleased(event -> {
+            if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) ||
+                    event.getCode().isArrowKey()) || event.getCode().equals(KeyCode.TAB)) {
+                c_organizationNumberField.deletePreviousChar();
+                c_organizationNumberField.deleteNextChar();
+            }
+            if (c_organizationNumberField.getText().length() > 10) {
+                c_organizationNumberField.deletePreviousChar();
+                c_organizationNumberField.deleteNextChar();
+            }
+        });
+        c_mobileNumberField.setOnKeyReleased(event -> {
+            if (!(event.getCode().isDigitKey() || event.getCode().equals(KeyCode.BACK_SPACE) || event.getCode().isArrowKey()) ||
+                    event.getCode().equals(KeyCode.TAB)) {
+                c_mobileNumberField.deletePreviousChar();
+                c_mobileNumberField.deleteNextChar();
+            }
+            if (c_mobileNumberField.getText().length() > 10) {
+                c_mobileNumberField.deletePreviousChar();
+                c_mobileNumberField.deleteNextChar();
+            }
         });
     }
 
@@ -195,7 +242,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
         addEmployeeButton.setOnAction(event -> {
             try {
                 borderPane.setCenter(addEmployeePane);
-            }catch (Exception e){}
+            }catch (Exception ignored){}
         });
     }
     void setManageUsersButtonClicked() {
@@ -218,41 +265,55 @@ public class HumanResourceController extends HumanResourceModel implements Initi
 
     void saveButtonClicked() {
         saveButton.setOnAction(event -> {
-            int empId = Integer.parseInt(empIdLabel.getText());
+            EmployeesData data = new EmployeesData();
+            int activeUserId = getUserIdByName(getActiveUserName);
             try {
-                String firstname = firstNameField.getText();
-                String lastname = lastNameField.getText();
-                String otherName = otherNameField.getText();
-                String gender = genderSelector.getValue();
-                LocalDate dob = dobSelector.getValue();
-                String mobileNumber = mobileNumberField.getText();
-                String otherNumber = otherNumberField.getText();
-                String email = emailField.getText();
-                String digitalAdd = digitalAddressField.getText();
-                String address = addressField.getText();
-                String landmark = landMarkField.getText();
-                String idType = idSelector.getValue();
-                String idNumber = idNumberField.getText();
-                String maritalStatus = maritalStatusField.getValue();
-                String qualification = qualificationSelector.getValue();
-                String designation = designationSelector.getValue();
-                String workingExp = workingExperienceField.getText();
-                LocalDate empDate = employmentDateSelector.getValue();
-                double salary = Double.parseDouble(salaryField.getText());
-                String bankName = bankNameField.getText();
-                String accountName = accountNameField.getText();
-                String accountNo = accountNumberField.getText();
-                String c_fullname = c_nameField.getText();
-                String c_mobileNumber = c_mobileNumberField.getText();
-                String c_digitalAdd = c_digitalAddressField.getText();
-                String c_address = c_addressField.getText();
-                String c_landmark = c_landMarkField.getText();
-                String c_placeOfWork = c_placeOfWorkField.getText();
-                String c_orgNumber = c_organizationNumberField.getText();
-                String c_orgAddress = c_organizationAddressField.getText();
-                String comments = commentsField.getText();
+                data.setWork_id(empIdLabel.getText());
+                data.setFirstname(firstNameField.getText());
+                data.setLastname(lastNameField.getText());
+                data.setOthername(otherNameField.getText());
+                data.setEmail(emailField.getText());
+                data.setMobile_number(mobileNumberField.getText());
+                data.setOther_number(otherNumberField.getText());
+                data.setGender(genderSelector.getValue());
+                data.setDbo(dobSelector.getValue());
+                data.setDigital_address(digitalAddressField.getText());
+                data.setResidential_address(addressField.getText());//11
+                data.setLandmark(landMarkField.getText());
+                data.setId_type(idSelector.getValue());
+                data.setId_number(idNumberField.getText());
+                data.setMarital_status(maritalStatusField.getValue());
+                data.setQualification(qualificationSelector.getValue());
+                data.setDesignation(designationSelector.getValue());
+                data.setWorking_experience(workingExperienceField.getText());
+                data.setEmployment_date(employmentDateSelector.getValue());//19
+                data.setContact_person_name(c_nameField.getText());//20
+                data.setContact_person_number(c_mobileNumberField.getText());//21
+                data.setContact_person_digital_address(c_digitalAddressField.getText());//22
+                data.setContact_person_address(c_addressField.getText());//23
+                data.setContact_person_landmark(c_landMarkField.getText());
+                data.setContact_person_place_of_work(c_placeOfWorkField.getText());//25
+                data.setContact_person_org_number(c_organizationNumberField.getText());
+                data.setContact_person_org_address(c_organizationAddressField.getText());
+                data.setAdditional_information(commentsField.getText());
+                data.setSalary(Double.parseDouble(salaryField.getText()));
+                data.setBank_name(bankNameField.getText());
+                data.setAccount_name(accountNameField.getText());
+                data.setAccount_number(accountNumberField.getText());
+                data.setAdded_by(activeUserId);
+                data.setModified_by(activeUserId);
 
-
+                ALERT_OBJECT = new UserAlerts("ADD EMPLOYEE", "Are you sure you want to add '" + lastNameField.getText() + "' to your list of employees?",
+                        "please check and be sure all entries are correct and confirm your action to save else CANCEL to abort.");
+                if (ALERT_OBJECT.confirmationAlert()) {
+                    int flag = addNewEmployee(data);
+                    flag += addEmployeeAccountDetails(data);
+                    if (flag > 1) {
+                        NOTIFICATION_OBJECT.successNotification("EMPLOYEES SAVED", "Perfect, you have successfully saved employee's data.");
+                        resetFields();
+                        empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1));
+                    }
+                }
             }catch (Exception e) {
                 e.printStackTrace();
             }

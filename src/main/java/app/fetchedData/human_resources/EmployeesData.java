@@ -1,5 +1,8 @@
 package app.fetchedData.human_resources;
 
+import com.jfoenix.controls.JFXCheckBox;
+import javafx.scene.control.Label;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,6 +11,8 @@ import java.time.format.FormatStyle;
 public class EmployeesData {
 
     private int emp_id;
+    private String work_id;
+    private String full_name;
     private String firstname;
     private String lastname;
     private String othername, email, mobile_number, other_number, gender;
@@ -21,14 +26,18 @@ public class EmployeesData {
     int added_by, modified_by;
     double salary;
     private String bank_name, account_name, account_number;
+    private Label statusLabel;
+    private JFXCheckBox actionCheckBox;
 
     private DateTimeFormatter formattedBirthdate = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private DateTimeFormatter formattedEmploymentDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
-    public EmployeesData(int emp_id, String firstname, String lastname, String othername, String email, String mobile_number, String other_number, String gender, LocalDate dbo, String digital_address, String residential_address, String landmark, String id_type, String id_number, String marital_status, String qualification, String designation, String working_experience,
+    public EmployeesData() {}
+    public EmployeesData(int emp_id, String work_id, String firstname, String lastname, String othername, String email, String mobile_number, String other_number, String gender, LocalDate dbo, String digital_address, String residential_address, String landmark, String id_type, String id_number, String marital_status, String qualification, String designation, String working_experience,
                          LocalDate employment_date, String contact_person_name, String contact_person_number, String contact_person_digital_address, String contact_person_address, String contact_person_landmark, String contact_person_place_of_work, String contact_person_org_number, String contact_person_org_address, String additional_information, LocalDate date_added,
                          LocalDate date_modified, int added_by, int modified_by, double salary, String bank_name, String account_name, String account_number) {
         this.emp_id = emp_id;
+        this.work_id = work_id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.othername = othername;
@@ -68,6 +77,29 @@ public class EmployeesData {
         this.formattedEmploymentDate.format(employment_date);
     }
 
+    public EmployeesData(String work_id, String full_name, String gender, String mobile_number, LocalDate employment_date, String designation, double salary, int is_active) {
+        this.work_id = work_id;
+        this.full_name = full_name;
+        this.gender = gender;
+        this.mobile_number = mobile_number;
+        this.designation = designation;
+        this.salary = salary;
+        switch (is_active) {
+            case 1 -> {
+                actionCheckBox.setSelected(true);
+                statusLabel.setText("active");
+                statusLabel.setStyle("-fx-background-color: ");
+            }
+            case  0 -> {
+                actionCheckBox.setSelected(false);
+                statusLabel.setText("inactive");
+            }
+        }
+
+
+        this.formattedEmploymentDate.format(employment_date);
+    }
+
     public int getEmp_id() {
         return emp_id;
     }
@@ -102,6 +134,30 @@ public class EmployeesData {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getWork_id() {
+        return work_id;
+    }
+
+    public void setWork_id(String work_id) {
+        this.work_id = work_id;
+    }
+
+    public DateTimeFormatter getFormattedBirthdate() {
+        return formattedBirthdate;
+    }
+
+    public void setFormattedBirthdate(DateTimeFormatter formattedBirthdate) {
+        this.formattedBirthdate = formattedBirthdate;
+    }
+
+    public DateTimeFormatter getFormattedEmploymentDate() {
+        return formattedEmploymentDate;
+    }
+
+    public void setFormattedEmploymentDate(DateTimeFormatter formattedEmploymentDate) {
+        this.formattedEmploymentDate = formattedEmploymentDate;
     }
 
     public void setEmail(String email) {

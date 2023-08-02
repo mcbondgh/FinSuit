@@ -200,9 +200,14 @@
             </VBox>
          </left>
          <center>
-            <Pane prefHeight="605.0" prefWidth="767.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="605.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label alignment="CENTER" layoutX="154.0" layoutY="173.0" prefHeight="237.0" prefWidth="829.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="FIN-SUIT GHANA">
+                  <ImageView fitHeight="472.0" fitWidth="1280.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@uploads/1140X400-articles-picture-final1632021%20copy.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" layoutX="174.0" layoutY="173.0" prefHeight="237.0" prefWidth="829.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="FIN-SUIT GHANA">
                      <font>
                         <Font name="Poppins Bold" size="60.0" />
                      </font>
@@ -214,33 +219,33 @@
                         </DropShadow>
                      </effect>
                      <textFill>
-                        <LinearGradient endX="1.0" endY="1.0">
+                        <LinearGradient endX="1.0" endY="1.0" startY="0.3312302831595629">
                            <stops>
                               <Stop>
                                  <color>
-                                    <Color red="0.17219999432563782" green="0.38477784395217896" blue="0.8199999928474426" />
+                                    <Color red="0.17842425405979156" green="0.08959999680519104" blue="0.6399999856948853" />
                                  </color>
                               </Stop>
                               <Stop offset="1.0">
                                  <color>
-                                    <Color red="0.3929651379585266" green="0.08250000327825546" blue="0.75" />
+                                    <Color red="0.1812865436077118" green="0.4366471767425537" blue="0.9473684430122375" />
                                  </color>
                               </Stop>
                            </stops>
                         </LinearGradient>
                      </textFill>
                   </Label>
-                  <Label layoutX="399.0" layoutY="340.0" text="All In One Financial Suit For Your Business." textFill="#808080">
+                  <Label layoutX="467.0" layoutY="324.0" text="All In One Financial Suit For Your Business." textFill="#808080">
                      <font>
                         <Font name="Arial" size="16.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="83.0" fitWidth="96.0" layoutX="527.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="logoImage" fitHeight="83.0" fitWidth="96.0" layoutX="527.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/applicationIcon-256.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="522.0" layoutY="376.0" text="2023 | finsuit ghana" textFill="#b3b3b3">
+                  <Label layoutX="547.0" layoutY="356.0" text="2023 | finsuit ghana" textFill="#1f1f1f">
                      <font>
                         <Font name="Arial Bold" size="10.0" />
                      </font>
