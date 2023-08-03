@@ -12,17 +12,17 @@
    <children>
       <Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1207.0" style="-fx-border-radius: 10; -fx-background-color: #f6fbff;">
          <children>
-            <MFXLegacyTableView fx:id="employeesTable" fixedCellSize="35.0" layoutX="26.0" layoutY="52.0" prefHeight="483.0" prefWidth="1156.0" style="-fx-font-family: poppins; -fx-font-size: 13px;" tableMenuButtonVisible="true">
+            <MFXLegacyTableView fx:id="employeesTable" fixedCellSize="35.0" layoutX="26.0" layoutY="52.0" prefHeight="483.0" prefWidth="1169.0" style="-fx-font-family: poppins; -fx-font-size: 13px;" tableMenuButtonVisible="true">
                <columns>
                   <TableColumn fx:id="idColumn" prefWidth="97.33333778381348" text="EMPLOYEE ID" />
                   <TableColumn fx:id="fullNameColumn" prefWidth="219.33335876464844" text="FULL NAME" />
                   <TableColumn fx:id="genderColumn" prefWidth="110.0" text="GENDER" />
                   <TableColumn fx:id="mobileNumberColumn" prefWidth="134.66665649414062" text="MOBILE NUMBER" />
                   <TableColumn fx:id="employmentDateColumn" prefWidth="160.0" text="EMPLOYMENT DATE" />
-                  <TableColumn fx:id="designationColumn" prefWidth="151.3333740234375" text="DESIGNATION" />
-                  <TableColumn fx:id="salaryColumn" prefWidth="118.0" text="SALARY" />
-                  <TableColumn fx:id="statusColumn" prefWidth="80.6666259765625" text="STATUS" />
-                  <TableColumn fx:id="actionColumn" prefWidth="78.666748046875" text="ACTION" />
+                  <TableColumn fx:id="designationColumn" prefWidth="140.0" text="DESIGNATION" />
+                  <TableColumn fx:id="salaryColumn" prefWidth="136.6666259765625" style="-fx-font-weight: bold; -fx-font-family: poppins; -fx-text-fill: #5498c5; -fx-alignment: CENTER;" text="SALARY" />
+                  <TableColumn fx:id="statusColumn" prefWidth="118.666748046875" style="-fx-alignment: CENTER; -fx-font-size: 12px;" text="STATUS" />
+                  <TableColumn fx:id="actionColumn" prefWidth="46.0001220703125" style="-fx-alignment: CENTER;" text="A" />
                </columns>
             </MFXLegacyTableView>
             <Label layoutX="28.0" layoutY="14.0" text="EMPLOYEES LIST" textFill="#656464">

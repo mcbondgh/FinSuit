@@ -2,6 +2,7 @@ package app.models.humanResource;
 
 import app.fetchedData.human_resources.EmployeesData;
 import app.models.MainModel;
+import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -68,5 +69,6 @@ public class HumanResourceModel extends MainModel {
         }catch (Exception e) {e.printStackTrace();}
         return flag;
     }
+
 
 }//end of class....

@@ -22,10 +22,10 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1b70c5" height="586.0" layoutX="-6.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="504.0" />
       <Pane layoutX="78.0" layoutY="117.0" prefHeight="400.0" prefWidth="339.0" style="-fx-background-color: white; -fx-background-radius: 10;">
          <children>
-            <Pane fx:id="loginIndicator" layoutX="34.0" layoutY="353.0" prefHeight="36.0" prefWidth="272.0" style="-fx-background-color: lightgreen;" visible="false">
+            <Pane fx:id="loginIndicator" layoutX="34.0" layoutY="360.0" prefHeight="29.0" prefWidth="272.0" style="-fx-background-color: lightgreen;" visible="false">
                <children>
-                  <MFXProgressSpinner layoutX="4.0" layoutY="3.0" prefHeight="29.0" prefWidth="43.0" />
-                  <Label layoutX="71.0" layoutY="10.0" prefHeight="17.0" prefWidth="126.0" text="Authenticating User" textFill="#007918">
+                  <MFXProgressSpinner layoutX="19.0" layoutY="6.0" prefHeight="17.0" prefWidth="43.0" />
+                  <Label layoutX="71.0" layoutY="7.0" prefHeight="17.0" prefWidth="126.0" text="Authenticating User" textFill="#007918">
                      <font>
                         <Font name="Roboto Medium" size="12.0" />
                      </font>
@@ -73,7 +73,7 @@
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="343.0" text="Reset Password" />
+            <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="336.0" text="Reset Password" />
             <Separator layoutY="332.0" prefHeight="4.0" prefWidth="339.0" />
          </children>
          <effect>

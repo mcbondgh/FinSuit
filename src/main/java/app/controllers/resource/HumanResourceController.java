@@ -34,13 +34,10 @@ public class HumanResourceController extends HumanResourceModel implements Initi
      ********************************************************************************************************************/
     @FXML
     private Label pageTitle, empIdLabel;
-    public static String pageTitlePlaceHolder;
-    @FXML private BorderPane borderPane;
-    @FXML private VBox menuContainer;
     @FXML
-    Pane menuIcon, addEmployeePane;
+    Pane addEmployeePane;
     @FXML
-    MFXButton manageUsersButton, viewEmployeesButton, addEmployeeButton, saveButton, cancelButton;
+    MFXButton saveButton, cancelButton;
     @FXML private TextField firstNameField, lastNameField, otherNameField, mobileNumberField, otherNumberField;
     @FXML private TextField emailField, digitalAddressField, addressField, landMarkField, idNumberField, workingExperienceField;
     @FXML private  TextField salaryField, bankNameField, accountNameField, accountNumberField;
@@ -87,18 +84,13 @@ public class HumanResourceController extends HumanResourceModel implements Initi
      ********************************************************************************************************************/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        pageTitle.setText(pageTitlePlaceHolder);
         empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1));
-        setAddEmployeeButtonClicked();
-        setViewEmployeesButtonClicked();
-        setManageUsersButtonClicked();
         fillSelectors();
         checkForEmptyFields();
         cancelButtonClicked();
         saveButtonClicked();
         validateMobileNumberFields();
     }
-
     void fillSelectors() {
         SpecialMethods.setGenderParameters(genderSelector);
         SpecialMethods.setDesignation(designationSelector);
@@ -222,38 +214,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
-    @FXML void menuIconClicked() {
-        menuContainer.setVisible(!menuContainer.isVisible());
-    }
-    @FXML void HideMenuContainer() {
-        menuContainer.setVisible(false);
-    }
-    void setViewEmployeesButtonClicked() {
-        viewEmployeesButton.setOnAction(event ->  {
-            try {
-                SpecialMethods.FlipView("views/resource/view-employees-page.fxml", borderPane);
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-    void setAddEmployeeButtonClicked() {
-        addEmployeeButton.setOnAction(event -> {
-            try {
-                borderPane.setCenter(addEmployeePane);
-            }catch (Exception ignored){}
-        });
-    }
-    void setManageUsersButtonClicked() {
-        manageUsersButton.setOnAction(event -> {
-            try {
-                SpecialMethods.FlipView("views/resource/manage-users-page.fxml", borderPane);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
     void cancelButtonClicked() {
         cancelButton.setOnAction(event -> {
             ALERT_OBJECT = new UserAlerts("CLEAR FIELDS", "Are you certain you want to cancel and clear the form fields?", "please confirm your action else CANCEL to abort.");
@@ -317,8 +278,6 @@ public class HumanResourceController extends HumanResourceModel implements Initi
             }catch (Exception e) {
                 e.printStackTrace();
             }
-
-
         });
     }
 

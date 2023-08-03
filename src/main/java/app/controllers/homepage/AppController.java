@@ -6,6 +6,7 @@ import app.controllers.customers.CustomersController;
 import app.controllers.dashboard.DashboardController;
 import app.controllers.loans.LoansController;
 import app.controllers.messages.MessageBoxController;
+import app.controllers.resource.FrontController;
 import app.controllers.transactions.TransactionController;
 import app.controllers.reports.ReportsController;
 import app.controllers.resource.HumanResourceController;
@@ -154,7 +155,7 @@ public class AppController extends AppModel implements Initializable {
         });
         humanResourceButton.setOnAction(action -> {
             try {
-                HumanResourceController.pageTitlePlaceHolder = humanResourceButton.getText();
+                FrontController.pageTitlePlaceHolder = humanResourceButton.getText();
                 SpecialMethods.FlipView("views/resource/humanresource-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);

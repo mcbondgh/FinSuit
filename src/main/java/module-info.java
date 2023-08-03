@@ -34,6 +34,8 @@ module app.finsuit {
     exports app.controllers.settings;
     exports app.controllers;
     exports app.controllers.accounting;
+    exports app.controllers.loans.application;
+    exports app.fetchedData.human_resources;
 
     opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;
@@ -49,7 +51,6 @@ module app.finsuit {
     opens app.controllers.accounting;
     opens app.specialmethods to javafx.fxml;
     opens app.controllers.login;
-    exports app.controllers.loans.application;
     opens app.controllers.loans.application;
 
 

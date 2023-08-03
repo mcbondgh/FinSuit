@@ -117,6 +117,17 @@ public class AppStages {
         stage.centerOnScreen();
         return  stage;
     }
+
+    public static Stage updateEmployeeDetailsStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/resource/updateEmployee-popup.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Update Employee Data");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        return  stage;
+    }
     public static Stage databaseFailedStage() {
         Stage stage = new Stage();
         try {

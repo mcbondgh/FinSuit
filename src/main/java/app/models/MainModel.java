@@ -4,9 +4,13 @@ import app.config.db.DbConnection;
 import app.errorLogger.ErrorLogger;
 import app.fetchedData.BusinessInfoObject;
 import app.fetchedData.SmsAPIObject;
+import app.fetchedData.human_resources.EmployeesData;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class MainModel extends DbConnection {
@@ -87,6 +91,32 @@ public class MainModel extends DbConnection {
         return flag;
     }
 
+    protected ObservableList<EmployeesData> fetchEmployeeSummaryData() {
+        ObservableList<EmployeesData> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT  work_id , concat(firstname, \" \", othername, \" \", lastname) AS fullname,\n" +
+                    "gender, mobile_number, employment_date, designation, salary, is_active FROM employees as emp\n" +
+                    "INNER JOIN employees_account_details as acd \n" +
+                    "ON emp.work_id = acd.emp_id;";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String work_id = resultSet.getString("work_id");
+                String fullname = resultSet.getNString("fullname");
+                String gender= resultSet.getNString("gender");
+                String mobile_number = resultSet.getString("mobile_number");
+                LocalDate employment_date = resultSet.getDate("employment_date").toLocalDate();
+                String designation = resultSet.getString("designation");
+                double salary = resultSet.getDouble("salary");
+                byte is_active = resultSet.getByte("is_active");
+                data.add(new EmployeesData(work_id, fullname, gender, mobile_number, employment_date, designation, salary, is_active));
+            }
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
+        }catch (Exception e){e.printStackTrace();}
+        return data;
+    }
 
 
 
