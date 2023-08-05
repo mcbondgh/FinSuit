@@ -132,7 +132,6 @@ public class HumanResourceController extends HumanResourceModel implements Initi
         commentsField.clear();
     }
 
-
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
@@ -214,7 +213,6 @@ public class HumanResourceController extends HumanResourceModel implements Initi
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
-
     void cancelButtonClicked() {
         cancelButton.setOnAction(event -> {
             ALERT_OBJECT = new UserAlerts("CLEAR FIELDS", "Are you certain you want to cancel and clear the form fields?", "please confirm your action else CANCEL to abort.");
@@ -280,6 +278,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
             }
         });
     }
+
 
 
             

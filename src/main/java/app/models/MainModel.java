@@ -9,8 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainModel extends DbConnection {
@@ -94,10 +97,10 @@ public class MainModel extends DbConnection {
     protected ObservableList<EmployeesData> fetchEmployeeSummaryData() {
         ObservableList<EmployeesData> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT  work_id , concat(firstname, \" \", othername, \" \", lastname) AS fullname,\n" +
+            String query = "SELECT work_id , concat(firstname, \" \", othername, \" \", lastname) AS fullname,\n" +
                     "gender, mobile_number, employment_date, designation, salary, is_active FROM employees as emp\n" +
                     "INNER JOIN employees_account_details as acd \n" +
-                    "ON emp.work_id = acd.emp_id;";
+                    "ON emp.work_id = acd.emp_id WHERE(is_deleted = 0);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -115,6 +118,65 @@ public class MainModel extends DbConnection {
             resultSet.close();
             getConnection().close();
         }catch (Exception e){e.printStackTrace();}
+        return data;
+    }
+
+    protected ObservableList<EmployeesData> fetchAllEmployees() {
+        ObservableList<EmployeesData> data = FXCollections.observableArrayList();
+
+
+        try {
+            String query = "SELECT * FROM employees FULL JOIN employees_account_details as em ON work_id = em.emp_id;";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                int emp_id = resultSet.getInt("emp_id");
+                String work_id = resultSet.getString("work_id");
+                String firstname = resultSet.getString("firstname");
+                String lastname = resultSet.getString("lastname");
+                String othername = resultSet.getString("othername");
+                String email = resultSet.getString("email");
+                String mobileNumber = resultSet.getString("mobile_number");
+                String otherNumber = resultSet.getString("other_number");
+                String gender = resultSet.getNString("gender");
+                LocalDate dob = resultSet.getDate("dob").toLocalDate();
+                String digitalAddress = resultSet.getString("digital_address");
+                String residentialAddress = resultSet.getString("residential_address");
+                String landMark = resultSet.getString("landmark");
+                String idType = resultSet.getString("id_type");
+                String idNumber = resultSet.getString("id_number");
+                String maritalStatus = resultSet.getString("marital_status");
+                String qualification = resultSet.getString("qualification");
+                String designation = resultSet.getString("designation");
+                String workingExperience = resultSet.getString("working_experience");
+                LocalDate employmentDate = resultSet.getDate("employment_date").toLocalDate();
+                String contactPersonName = resultSet.getString("contact_person_name");
+                String contactPersonNumber = resultSet.getString("contact_person_number");
+                String contactPersonDigitalAddress = resultSet.getString("contact_person_digital_address");
+                String contactPersonAddress = resultSet.getString("contact_person_address");
+                String contactPersonLandmark = resultSet.getString("contact_person_landmark");
+                String placeOfWork = resultSet.getString("contact_person_place_of_work");
+                String organizationNumber = resultSet.getString("contact_person_org_number");
+                String organizationAddress = resultSet.getString("contact_person_org_address");
+                String additionalInfo = resultSet.getString("additional_information");
+                byte activeStatus = resultSet.getByte("is_active");
+                byte deletedStatus = resultSet.getByte("is_deleted");
+                LocalDateTime dateAdded = resultSet.getTimestamp("date_added").toLocalDateTime();
+                LocalDateTime dateModified = resultSet.getTimestamp("date_modified").toLocalDateTime();
+                int addedBy = resultSet.getInt("added_by");
+                int modifiedBy = resultSet.getInt("modified_by");
+                double salary = resultSet.getDouble("salary");
+                String bankName = resultSet.getString("bank_name");
+                String accountNumber = resultSet.getString("account_number");
+                String accountName = resultSet.getString("account_name");
+                data.add(new EmployeesData(
+                        emp_id, work_id, firstname, lastname, othername, email, mobileNumber, otherNumber,gender, dob,digitalAddress, residentialAddress, landMark,
+                        idType, idNumber, maritalStatus, qualification, designation, workingExperience,employmentDate, contactPersonName, contactPersonNumber,
+                        contactPersonDigitalAddress, contactPersonAddress, contactPersonLandmark, placeOfWork, organizationNumber,
+                        organizationAddress, additionalInfo, dateAdded, dateModified, activeStatus, deletedStatus ,addedBy, modifiedBy,
+                        salary, bankName, accountName, accountNumber));
+            }
+        }catch (Exception e) {e.printStackTrace();}
         return data;
     }
 

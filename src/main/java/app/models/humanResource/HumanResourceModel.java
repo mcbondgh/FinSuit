@@ -70,5 +70,15 @@ public class HumanResourceModel extends MainModel {
         return flag;
     }
 
+    protected void updateEmployeeStatus(String empId, byte statusValue) {
+        try {
+            String query = "UPDATE employees SET is_active = ? WHERE(work_id = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setByte(1, statusValue);
+            preparedStatement.setString(2, empId);
+            preparedStatement.execute();
+        }catch (SQLException ignored) {}
+
+    }
 
 }//end of class....

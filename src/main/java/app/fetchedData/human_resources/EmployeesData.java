@@ -3,7 +3,9 @@ package app.fetchedData.human_resources;
 import com.jfoenix.controls.JFXCheckBox;
 import javafx.scene.control.Label;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -21,21 +23,22 @@ public class EmployeesData {
     LocalDate employment_date;
     private String contact_person_name, contact_person_number, contact_person_digital_address, contact_person_address, contact_person_landmark;
     private String contact_person_place_of_work, contact_person_org_number, contact_person_org_address, additional_information;
-    private LocalDate date_added, date_modified;
-    int added_by, modified_by;
+    private LocalDateTime date_added, date_modified;
+    int added_by, modified_by, is_active, is_deleted;
     double salary;
     private String bank_name, account_name, account_number;
     private Label statusLabel = new Label();
     private JFXCheckBox actionCheckBox = new JFXCheckBox();
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+    private final DateTimeFormatter formatDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private String formattedBirthdate;
     private String formattedEmploymentDate;
 
     public EmployeesData() {}
     public EmployeesData(int emp_id, String work_id, String firstname, String lastname, String othername, String email, String mobile_number, String other_number, String gender, LocalDate dbo, String digital_address, String residential_address, String landmark, String id_type, String id_number, String marital_status, String qualification, String designation, String working_experience,
-                         LocalDate employment_date, String contact_person_name, String contact_person_number, String contact_person_digital_address, String contact_person_address, String contact_person_landmark, String contact_person_place_of_work, String contact_person_org_number, String contact_person_org_address, String additional_information, LocalDate date_added,
-                         LocalDate date_modified, int added_by, int modified_by, double salary, String bank_name, String account_name, String account_number) {
+                         LocalDate employment_date, String contact_person_name, String contact_person_number, String contact_person_digital_address, String contact_person_address, String contact_person_landmark, String contact_person_place_of_work, String contact_person_org_number, String contact_person_org_address, String additional_information, LocalDateTime date_added,
+                         LocalDateTime date_modified, byte is_active, byte is_deleted, int added_by, int modified_by, double salary, String bank_name, String account_name, String account_number) {
         this.emp_id = emp_id;
         this.work_id = work_id;
         this.firstname = firstname;
@@ -65,6 +68,8 @@ public class EmployeesData {
         this.contact_person_org_number = contact_person_org_number;
         this.contact_person_org_address = contact_person_org_address;
         this.additional_information = additional_information;
+        this.is_active = is_active;
+        this.is_deleted = is_deleted;
         this.date_added = date_added;
         this.date_modified = date_modified;
         this.added_by = added_by;
@@ -74,7 +79,7 @@ public class EmployeesData {
         this.account_name = account_name;
         this.account_number = account_number;
         this.formattedBirthdate = dateTimeFormatter.format(date_added);
-        this.formattedEmploymentDate = dateTimeFormatter.format(employment_date);
+        this.formattedEmploymentDate = formatDate.format(employment_date);
     }
 
     public EmployeesData(String work_id, String full_name, String gender, String mobile_number, LocalDate employment_date, String designation, double salary, int is_active) {
@@ -96,7 +101,7 @@ public class EmployeesData {
                 statusLabel.setStyle("-fx-background-color: #ffdbdb; -fx-font-family:poppins; -fx-padding: 3px 14px; -fx-text-fill: #ff0000; -fx-background-radius: 30px");
             }
         }
-        this.formattedEmploymentDate = dateTimeFormatter.format(employment_date);
+        this.formattedEmploymentDate = formatDate.format(employment_date);
     }
 
     public int getEmp_id() {
@@ -165,6 +170,22 @@ public class EmployeesData {
 
     public void setWork_id(String work_id) {
         this.work_id = work_id;
+    }
+
+    public int getIs_active() {
+        return is_active;
+    }
+
+    public void setIs_active(int is_active) {
+        this.is_active = is_active;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
     }
 
     public void setEmail(String email) {
@@ -371,16 +392,16 @@ public class EmployeesData {
         this.additional_information = additional_information;
     }
 
-    public LocalDate getDate_added() {
+    public LocalDateTime getDate_added() {
         return date_added;
     }
-    public void setDate_added(LocalDate date_added) {
+    public void setDate_added(LocalDateTime date_added) {
         this.date_added = date_added;
     }
-    public LocalDate getDate_modified() {
+    public LocalDateTime getDate_modified() {
         return date_modified;
     }
-    public void setDate_modified(LocalDate date_modified) {
+    public void setDate_modified(LocalDateTime date_modified) {
         this.date_modified = date_modified;
     }
     public int getAdded_by() {
