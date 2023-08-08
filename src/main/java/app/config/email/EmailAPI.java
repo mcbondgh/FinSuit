@@ -16,7 +16,6 @@ public class EmailAPI extends MainModel {
     private final String messageHeader;
     private final String messageFooter;
 
-
     public EmailAPI(String receiverMail,  String messageHeader, String messageBody, String messageFooter) {
         this.receiverMail = receiverMail;
         this.messageHeader = messageHeader;
@@ -29,6 +28,7 @@ public class EmailAPI extends MainModel {
         for (SmsAPIObject items : getSmsApi()) {
             senderMail = items.getEmailAddress();
             senderPassword = items.getPassword();
+
         }
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
