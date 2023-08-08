@@ -12,7 +12,7 @@
    <children>
       <Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1207.0" style="-fx-border-radius: 10; -fx-background-color: #f6fbff;">
          <children>
-            <MFXLegacyTableView fx:id="employeesTable" fixedCellSize="35.0" layoutX="26.0" layoutY="42.0" prefHeight="506.0" prefWidth="1169.0" style="-fx-font-family: poppins; -fx-font-size: 13px;" tableMenuButtonVisible="true">
+            <MFXLegacyTableView fx:id="employeesTable" layoutX="26.0" layoutY="42.0" prefHeight="506.0" prefWidth="1169.0" style="-fx-font-family: poppins; -fx-font-size: 13px;" tableMenuButtonVisible="true">
                <columns>
                   <TableColumn fx:id="idColumn" prefWidth="97.33333778381348" text="EMPLOYEE ID" />
                   <TableColumn fx:id="fullNameColumn" prefWidth="219.33335876464844" text="FULL NAME" />

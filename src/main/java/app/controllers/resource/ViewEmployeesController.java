@@ -8,6 +8,8 @@ import app.stages.AppStages;
 import com.jfoenix.controls.JFXCheckBox;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -53,7 +55,6 @@ public class ViewEmployeesController extends HumanResourceModel implements Initi
         getSelectedEmployee();
         updateStatusButtonClicked();
     }
-
     void populateTableFields() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("work_id"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("full_name"));

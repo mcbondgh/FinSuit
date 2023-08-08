@@ -3,7 +3,9 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Separator?>
@@ -14,80 +16,104 @@
 
 <Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1207.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.resource.ManageUsersController">
    <children>
-      <Pane layoutX="27.0" layoutY="44.0" prefHeight="474.0" prefWidth="347.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;">
+      <Pane layoutX="75.0" layoutY="21.0" prefHeight="487.0" prefWidth="347.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;">
          <children>
-            <Pane layoutX="1.0" layoutY="1.0" prefHeight="37.0" prefWidth="345.0" style="-fx-background-color: dodgerblue; -fx-background-radius: 5 5 0 0;">
+            <Pane layoutX="1.0" layoutY="1.0" prefHeight="50.0" prefWidth="345.0" style="-fx-background-color: #2478b2; -fx-background-radius: 5 5 0 0;">
                <children>
-                  <Label layoutX="120.0" layoutY="7.0" text="Add New User" textFill="WHITE">
+                  <Label layoutX="114.0" layoutY="12.0" text="MANAGE USERS" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="15.0" />
                      </font>
                   </Label>
                </children></Pane>
-            <Label layoutX="20.0" layoutY="63.0" prefHeight="19.0" prefWidth="115.0" text="Select Employee *">
+            <Label layoutX="19.0" layoutY="57.0" prefHeight="19.0" prefWidth="115.0" text="Select Employee *" textFill="#777474">
                <font>
-                  <Font name="Poppins Regular" size="12.0" />
+                  <Font name="Poppins Regular" size="11.0" />
                </font>
             </Label>
-            <MFXFilterComboBox floatMode="DISABLED" layoutX="19.0" layoutY="87.0" prefHeight="37.0" prefWidth="302.0" scrollOnOpen="true" selectable="true" style="-fx-background-color: #eee; -fx-border-color: #ddd;">
+            <MFXFilterComboBox fx:id="employeeSelector" floatMode="DISABLED" layoutX="19.0" layoutY="76.0" prefHeight="37.0" prefWidth="302.0" scrollOnOpen="true" selectable="true" style="-fx-background-color: #eee; -fx-border-color: #ddd;">
                <font>
-                  <Font name="Poppins Regular" size="14.0" />
+                  <Font name="Poppins Bold" size="13.0" />
                </font></MFXFilterComboBox>
-            <TextField layoutX="20.0" layoutY="152.0" prefHeight="37.0" prefWidth="302.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+            <Label layoutX="19.0" layoutY="122.0" text="Username *" textFill="#777474">
                <font>
-                  <Font name="Poppins Medium" size="14.0" />
+                  <Font name="Poppins Regular" size="11.0" />
+               </font>
+            </Label>
+            <Label layoutX="19.0" layoutY="189.0" text="Password *" textFill="#777474">
+               <font>
+                  <Font name="Poppins Regular" size="11.0" />
+               </font>
+            </Label>
+            <Label layoutX="19.0" layoutY="246.0" text="Confirm Password *" textFill="#777474">
+               <font>
+                  <Font name="Poppins Regular" size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="notificationIndicator" alignment="CENTER" layoutX="19.0" layoutY="409.0" prefHeight="17.0" prefWidth="302.0" style="-fx-background-color: red;" text="Password fields do not match, check both fields again" textAlignment="CENTER" textFill="WHITE" visible="false" wrapText="true">
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+               <font>
+                  <Font name="Poppins Bold" size="9.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets top="-4.0" />
+               </opaqueInsets></Label>
+            <Separator layoutX="1.0" layoutY="439.0" prefHeight="0.0" prefWidth="345.0" />
+            <MFXButton fx:id="saveButton" depthLevel="LEVEL1" layoutX="70.0" layoutY="451.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="➕ ADD USER" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="9.0" />
+               </font>
+            </MFXButton>
+            <MFXButton fx:id="cancelButton" depthLevel="LEVEL1" layoutX="169.0" layoutY="451.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #eee; -fx-border-color: #ddd; -fx-border-radius: 5;" text="❌ CANCEL">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="Poppins Bold" size="9.0" />
+               </font>
+            </MFXButton>
+            <TextField fx:id="usernameField" layoutX="19.0" layoutY="141.0" prefHeight="37.0" prefWidth="302.0" promptText="eg Kofi" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+               <font>
+                  <Font name="Poppins SemiBold" size="13.0" />
                </font>
             </TextField>
-            <Label layoutX="19.0" layoutY="133.0" text="Username *">
+            <PasswordField fx:id="passwordField" layoutX="19.0" layoutY="205.0" prefHeight="37.0" prefWidth="302.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
                <font>
-                  <Font name="Poppins Regular" size="12.0" />
+                  <Font size="13.0" />
+               </font></PasswordField>
+            <PasswordField fx:id="confirmPasswordField" layoutX="19.0" layoutY="263.0" prefHeight="37.0" prefWidth="302.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+               <font>
+                  <Font size="13.0" />
+               </font></PasswordField>
+            <Label fx:id="uppercaseChecker" layoutX="30.0" layoutY="369.0" text="*Password must contain at least an Uppercase letter" textFill="#9f0808">
+               <font>
+                  <Font name="Poppins Regular" size="10.0" />
                </font>
             </Label>
-            <PasswordField layoutX="20.0" layoutY="232.0" prefHeight="37.0" prefWidth="302.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" />
-            <PasswordField layoutX="20.0" layoutY="305.0" prefHeight="37.0" prefWidth="302.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" />
-            <Label layoutX="20.0" layoutY="212.0" text="Password *">
+            <Label fx:id="numberChecker" layoutX="30.0" layoutY="385.0" text="*Password must contain at least a number" textFill="#9f0808">
                <font>
-                  <Font name="Poppins Regular" size="12.0" />
+                  <Font name="Poppins Regular" size="10.0" />
                </font>
             </Label>
-            <Label layoutX="21.0" layoutY="284.0" text="Confirm Password *">
+            <ComboBox fx:id="roleSelector" layoutX="19.0" layoutY="324.0" prefHeight="37.0" prefWidth="302.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weigh: semibold;" />
+            <Label layoutX="19.0" layoutY="308.0" text="User Role *" textFill="#777474">
                <font>
-                  <Font name="Poppins Regular" size="12.0" />
+                  <Font name="Poppins Regular" size="11.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="21.0" layoutY="351.0" prefHeight="17.0" prefWidth="302.0" text="Password fields do not match, check both fields again" textAlignment="CENTER" textFill="RED" wrapText="true" />
-            <Separator layoutX="1.0" layoutY="401.0" prefHeight="0.0" prefWidth="345.0" />
-            <MFXButton fx:id="saveButton" buttonType="RAISED" depthLevel="LEVEL0" disable="true" layoutX="68.0" layoutY="420.0" prefHeight="25.0" prefWidth="100.0" rippleColor="#a5ff9d" style="-fx-background-color: #55ce4a;" text="💾 Save" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="14.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <MFXButton fx:id="cancelButton" layoutX="179.0" layoutY="420.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #eee;" text="❌ Cancel">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <font>
-                  <Font name="Poppins Regular" size="14.0" />
-               </font>
-            </MFXButton>
          </children></Pane>
-      <Pane layoutX="398.0" layoutY="45.0" prefHeight="474.0" prefWidth="780.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;">
+      <Pane layoutX="446.0" layoutY="22.0" prefHeight="487.0" prefWidth="687.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;">
          <children>
-            <MFXLegacyTableView fx:id="usersTable" fixedCellSize="30.0" layoutX="22.0" layoutY="15.0" prefHeight="445.0" prefWidth="736.0" style="-fx-background-color: #fff; -FX-FONT-SIZE: 13;" tableMenuButtonVisible="true">
+            <MFXLegacyTableView fx:id="usersTable" fixedCellSize="30.0" layoutX="12.0" layoutY="15.0" prefHeight="462.0" prefWidth="666.0" style="-fx-background-color: #fff; -FX-FONT-SIZE: 13; -fx-border-color: #fff; -fx-font-family: poppins; -fx-font-weight: bold; -fx-font-color: orange;">
                <columns>
-                  <TableColumn prefWidth="62.000030517578125" text="NO." />
-                  <TableColumn prefWidth="218.66668701171875" text="USERNAME" />
-                  <TableColumn prefWidth="182.0" text="USER ROLE" />
-                  <TableColumn prefWidth="139.3333740234375" text="STATUS" />
-                  <TableColumn prefWidth="121.33331298828125" text="ACTION">
-                     <columns>
-                        <TableColumn prefWidth="63.3333740234375" text="Update" />
-                        <TableColumn prefWidth="66.0" text="Disable" />
-                     </columns>
-                  </TableColumn>
+                  <TableColumn fx:id="userIdColumn" prefWidth="94.66668701171875" text="EMPLOYEE ID" />
+                  <TableColumn fx:id="usernameColumn" prefWidth="188.66668701171875" text="USERNAME" />
+                  <TableColumn fx:id="userRoleColumn" prefWidth="160.0" text="USER ROLE" />
+                  <TableColumn fx:id="statusColumn" prefWidth="131.3333740234375" text="STATUS" />
+                  <TableColumn fx:id="updateColumn" prefWidth="42.0" style="-fx-text-fill: #2478b2;" text="U" />
+                  <TableColumn fx:id="removeColumn" prefWidth="47.3333740234375" style="-fx-text-fill: #be0606;" text="R" />
                </columns>
             </MFXLegacyTableView>
          </children>

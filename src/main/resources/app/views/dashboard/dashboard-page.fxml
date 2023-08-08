@@ -161,7 +161,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="654.0" layoutY="52.0" prefHeight="550.0" prefWidth="548.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-border-width: 1; -fx-background-color: #fff;">
+      <Pane layoutX="654.0" layoutY="52.0" prefHeight="425.0" prefWidth="548.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-border-width: 1; -fx-background-color: #fff;">
          <children>
             <Pane prefHeight="34.0" prefWidth="548.0" style="-fx-border-color: p; -fx-border-radius: 10 10 0 0; -fx-border-width: 1; -fx-background-color: orange;">
                <children>
@@ -172,7 +172,7 @@
                   </Label>
                </children>
             </Pane>
-            <MFXLegacyTableView layoutX="8.0" layoutY="41.0" prefHeight="500.0" prefWidth="532.0" style="-fx-font-size: 14;" tableMenuButtonVisible="true">
+            <MFXLegacyTableView layoutX="8.0" layoutY="41.0" prefHeight="372.0" prefWidth="532.0" style="-fx-font-size: 14; -fx-border-color: #fff;" tableMenuButtonVisible="true">
                <columns>
                   <TableColumn prefWidth="47.333343505859375" text="No." />
                   <TableColumn prefWidth="197.3333511352539" text="Transaction Type" />

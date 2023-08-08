@@ -26,3 +26,17 @@ VALUES('1001', 'MCBND', 'AIDIA', 'FASDFA', 'ISFIFJ@GMGO.COM','1001', 'MCBND', 'A
 
 -- 3RD AUGUST 2023
 SELECT * FROM employees FULL JOIN employees_account_details as em ON work_id = em.emp_id;
+SELECT * FROM employees_account_details;
+
+-- 05-08-2023
+DROP TABLE employees_account_details;
+
+
+
+-- 06-08-2023
+SELECT * FROM finsuit.users;
+SELECT user_id, emp_id, role_name, username, user_password, is_active FROM users AS u
+JOIN roles AS r 
+ON  u.role_id = r.role_id;
+
+

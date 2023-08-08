@@ -2,6 +2,7 @@ package app.specialmethods;
 
 import app.AppStarter;
 import app.fetchedData.BusinessInfoObject;
+import app.fetchedData.roles.UserRolesData;
 import app.models.MainModel;
 import app.stages.AppStages;
 import javafx.animation.FadeTransition;
@@ -54,7 +55,19 @@ public class SpecialMethods {
         fadeTransition.play();
     }
 
-    public static <Strings> void setIdTypeParameters(ComboBox<String> comboBox) {
+
+    public static void setUserRoleParameters(ComboBox<String> comboBox) {
+        List<String> x = new ArrayList<>();
+        for (UserRolesData items :MODEL.getUserRoles()) {
+            x.add(items.getRole_name());
+            Collections.sort(x);
+        }
+        for (String var : x) {
+            comboBox.getItems().add(var);
+        }
+
+    }
+    public static  void setIdTypeParameters(ComboBox<String> comboBox) {
         String[] items = new String[]{"National Id", "Driving License", "SSNIT", "Voter Id", "Passport"};
         Arrays.sort(items);
         for (String x : items) {
@@ -76,7 +89,7 @@ public class SpecialMethods {
         }
     }
     public static void setDesignation(ComboBox<String> comboBox) {
-        String[] items = {"G.Manager", "C.F.O", "Finance Department", "Accounts Department", "Security & Sanitation", "Sales Department"};
+        String[] items = {"G. Manager", "C.F.O", "Finance Department", "Accounts Department", "Security & Sanitation", "Sales Department"};
         for (String x : items) {
             comboBox.getItems().add(x);
         }

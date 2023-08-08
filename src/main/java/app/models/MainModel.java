@@ -5,6 +5,10 @@ import app.errorLogger.ErrorLogger;
 import app.fetchedData.BusinessInfoObject;
 import app.fetchedData.SmsAPIObject;
 import app.fetchedData.human_resources.EmployeesData;
+import app.fetchedData.roles.UserRolesData;
+import app.fetchedData.users.UsersData;
+import io.github.palexdev.materialfx.collections.ObservableStack;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainModel extends DbConnection {
     public ArrayList<BusinessInfoObject> getBusinessInfo() {
@@ -98,9 +103,7 @@ public class MainModel extends DbConnection {
         ObservableList<EmployeesData> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT work_id , concat(firstname, \" \", othername, \" \", lastname) AS fullname,\n" +
-                    "gender, mobile_number, employment_date, designation, salary, is_active FROM employees as emp\n" +
-                    "INNER JOIN employees_account_details as acd \n" +
-                    "ON emp.work_id = acd.emp_id WHERE(is_deleted = 0);";
+                    "gender, mobile_number, employment_date, designation, salary, is_active FROM employees as emp WHERE(is_deleted = 0);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -123,10 +126,8 @@ public class MainModel extends DbConnection {
 
     protected ObservableList<EmployeesData> fetchAllEmployees() {
         ObservableList<EmployeesData> data = FXCollections.observableArrayList();
-
-
         try {
-            String query = "SELECT * FROM employees FULL JOIN employees_account_details as em ON work_id = em.emp_id;";
+            String query = "SELECT * FROM employees WHERE(is_deleted = 0);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -176,7 +177,44 @@ public class MainModel extends DbConnection {
                         organizationAddress, additionalInfo, dateAdded, dateModified, activeStatus, deletedStatus ,addedBy, modifiedBy,
                         salary, bankName, accountName, accountNumber));
             }
+            preparedStatement.close();
+            getConnection().close();
         }catch (Exception e) {e.printStackTrace();}
+        return data;
+    }
+    public ObservableList<UserRolesData> getUserRoles() {
+        ObservableList<UserRolesData> roles  = new ObservableStack<>();
+            try {
+                String query  = "SELECT role_id, role_name FROM roles";
+                preparedStatement = getConnection().prepareStatement(query);
+                resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("role_id");
+                    String role_name = resultSet.getString("role_name");
+                    roles.add(new UserRolesData(id, role_name));
+                }
+                preparedStatement.close();
+                resultSet.close();
+                getConnection().close();
+            }catch (SQLException e){e.printStackTrace();}
+        return roles;
+    }
+
+    public ObservableList<UsersData> getActiveUsersOnly() {
+        ObservableList<UsersData> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT user_id, emp_id, role_name, username, user_password, is_active FROM users AS u\n" +
+                    "JOIN roles AS r \n" +
+                    "ON  u.role_id = r.role_id\n" +
+                    "WHERE is_deleted = 0;";
+
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+
+            }
+        }catch (Exception ignore){}
+
         return data;
     }
 

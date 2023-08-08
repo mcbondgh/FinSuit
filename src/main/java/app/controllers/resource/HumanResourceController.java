@@ -265,9 +265,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
                 ALERT_OBJECT = new UserAlerts("ADD EMPLOYEE", "Are you sure you want to add '" + lastNameField.getText() + "' to your list of employees?",
                         "please check and be sure all entries are correct and confirm your action to save else CANCEL to abort.");
                 if (ALERT_OBJECT.confirmationAlert()) {
-                    int flag = addNewEmployee(data);
-                    flag += addEmployeeAccountDetails(data);
-                    if (flag > 1) {
+                    if (addNewEmployee(data)  > 0) {
                         NOTIFICATION_OBJECT.successNotification("EMPLOYEES SAVED", "Perfect, you have successfully saved employee's data.");
                         resetFields();
                         empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1));

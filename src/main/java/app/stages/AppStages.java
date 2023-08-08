@@ -9,16 +9,13 @@ import javafx.scene.image.Image;
 import javafx.stage.*;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.nio.file.WatchEvent;
-
 public class AppStages {
     UserAlerts ALERTS;
     public static void MainStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("main-window.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+//        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Homepage");
         Image icon = SpecialMethods.setLogoImage();
@@ -43,7 +40,6 @@ public class AppStages {
     public static void testPage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("test-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Test Page");
         stage.setScene(scene);
@@ -52,7 +48,6 @@ public class AppStages {
     public static void loanScheduleStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-schedule-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Customer Loan Schedule");
         stage.setScene(scene);
@@ -62,7 +57,6 @@ public class AppStages {
     public static Stage loanApplicationStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/application-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Loan Application");
         stage.setScene(scene);
@@ -72,7 +66,6 @@ public class AppStages {
     public static Stage depositStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/deposit-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Make Deposit");
         stage.setScene(scene);
@@ -84,7 +77,6 @@ public class AppStages {
     public static Stage accountBalanceStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/check-balance-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Make Deposit");
         stage.setScene(scene);
@@ -96,7 +88,6 @@ public class AppStages {
     public static Stage withdrawalStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/withdrawal-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Make Deposit");
         stage.setScene(scene);
@@ -108,7 +99,6 @@ public class AppStages {
     public static Stage loanPaymentStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-payment-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Collect Loan Payment");
         stage.setScene(scene);
@@ -120,7 +110,6 @@ public class AppStages {
     public static Stage createAccountStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/accounts/accounts-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Create Account");
         stage.setScene(scene);
@@ -149,7 +138,6 @@ public class AppStages {
         }catch (IOException e) {
             e.printStackTrace();
         }
-
         return  stage;
     }
 
