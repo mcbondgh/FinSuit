@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -185,7 +186,7 @@ public class MainModel extends DbConnection {
     public ObservableList<UserRolesData> getUserRoles() {
         ObservableList<UserRolesData> roles  = new ObservableStack<>();
             try {
-                String query  = "SELECT role_id, role_name FROM roles";
+                String query  = "SELECT role_id, role_name FROM roles WHERE(is_default = 0)";
                 preparedStatement = getConnection().prepareStatement(query);
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
@@ -200,20 +201,24 @@ public class MainModel extends DbConnection {
         return roles;
     }
 
-    public ObservableList<UsersData> getActiveUsersOnly() {
+    public ObservableList<UsersData> fetchAssignedUsersOnly() {
         ObservableList<UsersData> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT user_id, emp_id, role_name, username, user_password, is_active FROM users AS u\n" +
+            String query = "SELECT emp_id, role_name, username, " +
+                    "is_active FROM users AS u\n" +
                     "JOIN roles AS r \n" +
                     "ON  u.role_id = r.role_id\n" +
-                    "WHERE is_deleted = 0;";
-
+                    "WHERE( is_deleted = 0);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-
+                String emp_id = resultSet.getString("emp_id");
+                String role_name = resultSet.getString("role_name");
+                String username = resultSet.getString("username");
+                byte active = resultSet.getByte("is_active");
+                data.add(new UsersData(emp_id, username, role_name, active));
             }
-        }catch (Exception ignore){}
+        }catch (Exception exception){exception.printStackTrace();}
 
         return data;
     }

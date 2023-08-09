@@ -65,7 +65,6 @@ public class SpecialMethods {
         for (String var : x) {
             comboBox.getItems().add(var);
         }
-
     }
     public static  void setIdTypeParameters(ComboBox<String> comboBox) {
         String[] items = new String[]{"National Id", "Driving License", "SSNIT", "Voter Id", "Passport"};

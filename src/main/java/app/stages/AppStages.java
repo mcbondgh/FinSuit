@@ -15,7 +15,7 @@ public class AppStages {
     public static void MainStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("main-window.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-//        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Homepage");
         Image icon = SpecialMethods.setLogoImage();

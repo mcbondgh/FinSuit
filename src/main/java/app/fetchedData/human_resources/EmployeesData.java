@@ -93,7 +93,7 @@ public class EmployeesData {
             case 1 -> {
                 actionCheckBox.setSelected(true);
                 statusLabel.setText("active");
-                statusLabel.setStyle("-fx-background-color: #d0ffdc; -fx-font-family:poppins; -fx-padding: 3px 14px; -fx-text-fill: #36882d; -fx-background-radius: 30px");
+                statusLabel.setStyle("-fx-background-color:#36d800; -fx-font-family:poppins; -fx-padding: 3px 14px; -fx-text-fill: #fff; -fx-background-radius: 30px");
             }
             case  0 -> {
                 actionCheckBox.setSelected(false);
