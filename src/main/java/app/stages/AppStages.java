@@ -15,7 +15,7 @@ public class AppStages {
     public static void MainStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("main-window.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+//        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Homepage");
         Image icon = SpecialMethods.setLogoImage();
@@ -141,5 +141,15 @@ public class AppStages {
         return  stage;
     }
 
+    public static Stage previewApplicantStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/accounts/preview-customer-details.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Update Employee Data");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        return  stage;
+    }
 
 }//end of class...

@@ -1,26 +1,21 @@
 package app.models;
 
 import app.config.db.DbConnection;
-import app.errorLogger.ErrorLogger;
 import app.fetchedData.BusinessInfoObject;
 import app.fetchedData.SmsAPIObject;
 import app.fetchedData.human_resources.EmployeesData;
 import app.fetchedData.roles.UserRolesData;
 import app.fetchedData.users.UsersData;
 import io.github.palexdev.materialfx.collections.ObservableStack;
-import javafx.beans.Observable;
+import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainModel extends DbConnection {
     public ArrayList<BusinessInfoObject> getBusinessInfo() {
@@ -77,7 +72,7 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {e.printStackTrace();}
         return userId;
     }
-    public int getTotalEmployeesCount() {
+    public int getTotalEmployees() {
         int count = 0;
         try {
             String query = "SELECT count(*) FROM employees";
@@ -89,6 +84,20 @@ public class MainModel extends DbConnection {
         }catch (SQLException e) {e.printStackTrace();}
         return count;
     }
+
+    public int getTotalAccountNumbers() {
+        int count = 0;
+        try {
+            String query = "SELECT count(*) FROM employees";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        }catch (SQLException e) {e.printStackTrace();}
+        return count;
+    }
+
     protected int getLastEmployeeId() {
         int flag = 0;
         try {
@@ -221,6 +230,21 @@ public class MainModel extends DbConnection {
         }catch (Exception exception){exception.printStackTrace();}
 
         return data;
+    }
+
+
+    protected int getRoleIdByName(@NamedArg("role Name")String role_name) {
+        int flag = 0;
+            try {
+                String query = "SELECT role_id FROM roles WHERE role_name = ?;";
+                preparedStatement = getConnection().prepareStatement(query);
+                preparedStatement.setString(1, role_name);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    flag = resultSet.getInt(1);
+                }
+            }catch (SQLException ignored){}
+        return flag;
     }
 
 

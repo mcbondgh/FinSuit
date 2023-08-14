@@ -35,8 +35,13 @@ DROP TABLE employees_account_details;
 
 -- 06-08-2023
 SELECT * FROM finsuit.users;
-SELECT user_id, emp_id, role_name, username, user_password, is_active FROM users AS u
-JOIN roles AS r 
-ON  u.role_id = r.role_id;
+
+SELECT emp_id, role_name, username,is_active FROM users AS u
+JOIN roles AS r ON  u.role_id = r.role_id WHERE is_deleted = 0;
+
+-- 10-08-2023
+ALTER TABLE users 
+MODIFY COLUMN user_password VARCHAR(255) COMMENT 'default password is SUIT1234';
+;
 
 

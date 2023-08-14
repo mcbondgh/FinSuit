@@ -1,5 +1,9 @@
 package app.controllers.resource;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
+import app.config.encryptDecryp.EncryptDecrypt;
+import app.controllers.homepage.AppController;
 import app.fetchedData.human_resources.EmployeesData;
 import app.fetchedData.users.UsersData;
 import app.models.users.UsersModel;
@@ -8,7 +12,6 @@ import com.jfoenix.controls.JFXCheckBox;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -22,6 +25,10 @@ import java.util.*;
 public class ManageUsersController extends UsersModel implements Initializable {
 
     EmployeesData EMPLOYEES_OBJECT = new EmployeesData();
+    UserNotification NOTIFICATION = new UserNotification();
+
+    UserAlerts ALERT;
+    int currentUser = getUserIdByName(AppController.activeUserPlaceHolder);
 
     /*******************************************************************************************************************
      *FXML FILE EJECTIONS
@@ -38,7 +45,6 @@ public class ManageUsersController extends UsersModel implements Initializable {
     private TableColumn<UsersData, String> statusColumn;
     @FXML
     private TableColumn<UsersData, JFXCheckBox> updateColumn, removeColumn;
-
     @FXML
     private MFXFilterComboBox<String> employeeSelector;
     @FXML
@@ -78,7 +84,6 @@ public class ManageUsersController extends UsersModel implements Initializable {
         populateTableView();
         loadEmployeesSelector();
         actionEventMethods();
-
     }
 
     private void resetFields() {
@@ -91,7 +96,6 @@ public class ManageUsersController extends UsersModel implements Initializable {
         employeeSelector.setDisable(!usersTable.getSelectionModel().isEmpty());
 
     }
-
     void populateTableView() {
         userIdColumn.setCellValueFactory(new PropertyValueFactory<>("emp_id"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -105,6 +109,7 @@ public class ManageUsersController extends UsersModel implements Initializable {
         populateTableView();
     }
     void loadEmployeesSelector() {
+        employeeSelector.getItems().clear();
         List<String> listItem = new ArrayList<>();
         for (EmployeesData epm : fetchEmployeeSummaryData()) {
             listItem.add(epm.getWork_id());
@@ -124,9 +129,8 @@ public class ManageUsersController extends UsersModel implements Initializable {
 
 
     /*******************************************************************************************************************
-     *INPUT FIELD VALIDATIONS
+     ****** INPUT FIELD VALIDATIONS
      *******************************************************************************************************************/
-
     void passwordFieldsValidation() {
        passwordField.setOnKeyTyped(event -> {
            boolean passLength = passwordField.getLength() < 4;
@@ -161,13 +165,14 @@ public class ManageUsersController extends UsersModel implements Initializable {
     void checkAllRequiredFields(){
         usersPanel.setOnMouseMoved(mouseEvent -> {
             saveButton.setDisable(isUsersTableEmpty());
+            try {
             String passValue = passwordField.getText();
             String confirmPassValue = confirmPasswordField.getText();
             addNewUserButton.setDisable(isUserRoleEmpty() || isPasswordEmpty() ||
                     !hasDigit() || !hasUpper() || isUsernameEmpty() ||
                     isEmployeeFieldEmpty() || notificationIndicator.isVisible() ||!Objects.equals(passValue, confirmPassValue));
             roleSelector.setDisable(roleSelector.getValue().equals("Super Admin"));
-
+            }catch (NullPointerException ignore){}
         });
     }
 
@@ -190,10 +195,10 @@ public class ManageUsersController extends UsersModel implements Initializable {
 
         cancelButton.setOnAction(e -> {
             resetFields();
+            addNewUserButton.setText("➕ADD");
         });
 
         usersTable.setOnMouseClicked(mouseEvent -> {
-            int tableSize = usersTable.getItems().size();
             if (!isUsersTableEmpty()) {
                 try {
                     String selectedItem = usersTable.getSelectionModel().getSelectedItem().getEmp_id();
@@ -202,6 +207,7 @@ public class ManageUsersController extends UsersModel implements Initializable {
                             employeeSelector.setValue(item.getEmp_id());
                             usernameField.setText(item.getUsername());
                             roleSelector.setValue(item.getRole());
+                            addNewUserButton.setText("🔄UPDATE");
                             break;
                         }
                     }
@@ -212,15 +218,47 @@ public class ManageUsersController extends UsersModel implements Initializable {
 
         saveButton.setOnAction(event -> {
             for (UsersData item : usersTable.getItems()) {
+                    String user_id = item.getEmp_id();
+                    boolean isChecked = item.getCheckBox().isSelected();
                 if (item.getCheckBox().isSelected()) {
-
+                    updateStatusOnly(user_id, (byte) 1);
                 }else {
+                    updateStatusOnly(user_id, (byte) 0);
+                }
+            }
+            refreshTable();
+        });
 
+        addNewUserButton.setOnAction(action -> {
+            String buttonText = addNewUserButton.getText();
+
+            String empId = employeeSelector.getValue();
+            String username = usernameField.getText();
+            int role = getRoleIdByName(roleSelector.getValue());
+            String password = passwordField.getText();
+            String hashPlainText = EncryptDecrypt.hashPlainText(password);
+            if (Objects.equals(buttonText, "➕ADD")) {
+                ALERT = new UserAlerts("ADD USER", "ARE YOU SURE YOU WANT TO ADD SELECTED EMPLOYEE AS A USER?", "Please confirm your action to add this new user, else CANCEL to abort.");
+                if (ALERT.confirmationAlert()) {
+                    if(addNewUser(empId, role, username,hashPlainText, currentUser)> 0) {
+                        NOTIFICATION.successNotification("ADD SUCCESSFUL", "You have successfully added " + username +" to users list");
+                        refreshTable();
+                        resetFields();
+                        loadEmployeesSelector();
+                    }else NOTIFICATION.errorNotification("OPERATION FAILED", "Operation to add " + username +
+                            " to your list of users failed. Contact system admin for assistance");}
+            }else {
+                ALERT = new UserAlerts("ADD USER", "ARE YOU SURE YOU WANT TO ADD SELECTED EMPLOYEE AS A USER?", "Please confirm your action to add this new user, else CANCEL to abort.");
+                if (ALERT.confirmationAlert()) {
+                    if (updateUserLogins(empId, username, role, hashPlainText, currentUser) > 0) {
+                        NOTIFICATION.successNotification("UPDATE SUCCESSFUL", "You have successfully updated " + username + " login details");
+                        refreshTable();
+                        resetFields();
+                    } else
+                        NOTIFICATION.errorNotification("UPDATE FAILED", "Operation to updates selected user failed, contact system admin for assistance");
                 }
             }
         });
-
-
     }
 
 

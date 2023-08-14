@@ -2,14 +2,13 @@ package app.controllers.settings;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
-import app.config.encryptDecryp.EncryptToDecrypt;
+import app.config.encryptDecryp.EncryptDecrypt;
 import app.errorLogger.ErrorLogger;
 import app.fetchedData.BusinessInfoObject;
 import app.fetchedData.SmsAPIObject;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,21 +20,15 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import net.synedra.validatorfx.Validator;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageWriter;
 
 public class SettingsController extends SettingModel implements Initializable{
     Logger logger = Logger.getLogger("error");
@@ -207,7 +200,7 @@ public class SettingsController extends SettingModel implements Initializable{
             String digital = digitalAddField.getText();
             String location = locationField.getText();
             String imageUrl = imageName.getText();
-            String hashedValue = EncryptToDecrypt.hashPlainText(accountPasswordField.getText());
+            String hashedValue = EncryptDecrypt.hashPlainText(accountPasswordField.getText());
 
             ALERT_OBJECT = new UserAlerts("UPDATE SYSTEM CONFIG", "ARE YOU SURE YOU WANT TO UPDATE SYSTEM PARAMETERS?",
                     "please confirm your action to proceed else CANCEL to abort");

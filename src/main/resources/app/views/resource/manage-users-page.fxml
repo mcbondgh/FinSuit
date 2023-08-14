@@ -56,7 +56,7 @@
                   <Insets top="-4.0" />
                </opaqueInsets></Label>
             <Separator layoutX="1.0" layoutY="439.0" prefHeight="0.0" prefWidth="345.0" />
-            <MFXButton fx:id="addNewUserButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="70.0" layoutY="455.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="➕ ADD" textFill="WHITE" wrapText="true">
+            <MFXButton fx:id="addNewUserButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="70.0" layoutY="455.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="➕ADD" textFill="WHITE" wrapText="true">
                <font>
                   <Font name="Poppins Bold" size="9.0" />
                </font>
@@ -115,7 +115,7 @@
                   <TableColumn fx:id="removeColumn" prefWidth="78.6666259765625" style="-fx-text-fill: #be0606; -fx-alignment: center;" text="ACTION" />
                </columns>
             </MFXLegacyTableView>
-            <MFXButton fx:id="saveButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="551.0" layoutY="454.0" prefHeight="30.0" prefWidth="108.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="🔄 SAVE STATUS" textFill="WHITE" wrapText="true">
+            <MFXButton fx:id="saveButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="551.0" layoutY="454.0" prefHeight="30.0" prefWidth="108.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="🔄 UPDATE" textFill="WHITE" wrapText="true">
                <font>
                   <Font name="Poppins Bold" size="9.0" />
                </font>

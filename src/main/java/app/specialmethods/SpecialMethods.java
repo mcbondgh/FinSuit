@@ -130,6 +130,20 @@ public class SpecialMethods {
         };
         timer.scheduleAtFixedRate(task, 1000, 1000);
     }
+    public static void setAccountType(ComboBox<String> comboBox) {
+        String[] items = {"Savings", "Susu", "Current", "Other"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+    public static void setRelationshipTypes(ComboBox<String> comboBox) {
+        String[] items = {"Father", "Mother", "Brother", "Sister", "Uncle", "Aunty", "Friend", "Cousin", "Other", "Guardian", "Relative"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
     public static String getTransactionId(long count) {
         String transactionId = "";
         if (count <=9) {transactionId = "00000000000" + count; }

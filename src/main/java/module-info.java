@@ -38,6 +38,7 @@ module app.finsuit {
     exports app.fetchedData.human_resources;
     exports app.fetchedData.users;
 
+
     opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;
     opens app.controllers.dashboard to javafx.fxml;

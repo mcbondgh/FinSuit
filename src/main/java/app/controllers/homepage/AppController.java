@@ -1,7 +1,7 @@
 package app.controllers.homepage;
 
 import app.controllers.accounting.AccountingController;
-import app.controllers.accounts.AccountsController;
+import app.controllers.accounts.CreateAccountController;
 import app.controllers.customers.CustomersController;
 import app.controllers.dashboard.DashboardController;
 import app.controllers.loans.LoansController;
@@ -9,7 +9,6 @@ import app.controllers.messages.MessageBoxController;
 import app.controllers.resource.FrontController;
 import app.controllers.transactions.TransactionController;
 import app.controllers.reports.ReportsController;
-import app.controllers.resource.HumanResourceController;
 import app.controllers.settings.SettingsController;
 import app.models.homepage.AppModel;
 import app.specialmethods.SpecialMethods;
@@ -131,7 +130,7 @@ public class AppController extends AppModel implements Initializable {
         });
         accountsButton.setOnAction(action -> {
             try {
-                AccountsController.pageTitlePlaceHolder = accountsButton.getText();
+                CreateAccountController.pageTitlePlaceHolder = accountsButton.getText();
                 SpecialMethods.FlipView("views/accounts/accounts-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);

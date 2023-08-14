@@ -6,21 +6,15 @@ import app.controllers.homepage.AppController;
 import app.fetchedData.human_resources.EmployeesData;
 import app.models.humanResource.HumanResourceModel;
 import app.specialmethods.SpecialMethods;
-import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.WindowEvent;
 
-import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class HumanResourceController extends HumanResourceModel implements Initializable{
@@ -84,7 +78,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
      ********************************************************************************************************************/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1));
+        empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployees() + 1));
         fillSelectors();
         checkForEmptyFields();
         cancelButtonClicked();
@@ -268,7 +262,7 @@ public class HumanResourceController extends HumanResourceModel implements Initi
                     if (addNewEmployee(data)  > 0) {
                         NOTIFICATION_OBJECT.successNotification("EMPLOYEES SAVED", "Perfect, you have successfully saved employee's data.");
                         resetFields();
-                        empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployeesCount() + 1));
+                        empIdLabel.setText(SpecialMethods.generateEmployeeId(getTotalEmployees() + 1));
                     }
                 }
             }catch (Exception e) {
