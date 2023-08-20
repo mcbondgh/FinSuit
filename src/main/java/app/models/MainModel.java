@@ -88,7 +88,7 @@ public class MainModel extends DbConnection {
     public int getTotalAccountNumbers() {
         int count = 0;
         try {
-            String query = "SELECT count(*) FROM employees";
+            String query = "SELECT count(*) FROM customer_accounts";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {

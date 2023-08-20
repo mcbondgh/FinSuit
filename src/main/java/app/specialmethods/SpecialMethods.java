@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -100,6 +99,12 @@ public class SpecialMethods {
         }
     }
 
+    public static void setInitialDepositAmount(ComboBox<Double> comboBox) {
+        double [] amountValue = {10.00, 20.00, 30.00, 40.00, 50.00};
+        for (double var : amountValue) {
+            comboBox.getItems().add(var);
+        }
+    }
     public static void setLoanPeriod(ComboBox<Integer> comboBox) {
        int month = 120;
        for(int x = 3; x <= month; x+=3) {
@@ -131,7 +136,7 @@ public class SpecialMethods {
         timer.scheduleAtFixedRate(task, 1000, 1000);
     }
     public static void setAccountType(ComboBox<String> comboBox) {
-        String[] items = {"Savings", "Susu", "Current", "Other"};
+        String[] items = {"Savings Account", "Susu Account", "Current Account", "Other Account"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);
@@ -161,35 +166,36 @@ public class SpecialMethods {
         return transactionId;
     }
 
+
     public static String generateAccountNumber(long count) {
         String accountNo = "";
-        if (count <=9) {accountNo = "A00000000000" + count; }
-        else if(count <= 99) {accountNo = "A0000000000" + count;}
-        else if (count >= 100 || count <= 999) {accountNo = "A000000000" + count;}//
-        else if(count == 1000 || count <= 9999) {accountNo = "A00000000" + count;}
-        else if (count == 10000 || count <=99999) {accountNo = "A0000000" + count;}
-        else if(count == 100000 || count <=999999) {accountNo = "A000000" + count;}
-        else if (count == 10000000 || count <= 9999999) {accountNo = "A00000" + count;}
-        else if (count == 100000000 || count <= 99999999) {accountNo = "A0000" + count;}
-        else if (count == 1000000000 || count <= 999999999) {accountNo = "A000" + count;}
-        else if (count == 1000000000 || count <= 999999999) {accountNo = "A00" + count;}
-        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {accountNo = "A0" + count;}
+        if (count <=9) {accountNo = "100000000000" + count; }
+        else if(count <= 99) {accountNo = "10000000000" + count;}
+        else if (count >= 100 || count <= 999) {accountNo = "1000000000" + count;}//
+        else if(count == 1000 || count <= 9999) {accountNo = "100000000" + count;}
+        else if (count == 10000 || count <=99999) {accountNo = "10000000" + count;}
+        else if(count == 100000 || count <=999999) {accountNo = "1000000" + count;}
+        else if (count == 10000000 || count <= 9999999) {accountNo = "100000" + count;}
+        else if (count == 100000000 || count <= 99999999) {accountNo = "10000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {accountNo = "1000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {accountNo = "100" + count;}
+        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {accountNo = "10" + count;}
         else {accountNo = String.valueOf("A" + count);}
         return accountNo;
     }
     public static String generateLoanNumber(long count) {
         String loanId = "";
-        if (count <=9) {loanId = "L00000000000" + count; }
-        else if(count <= 99) {loanId = "L0000000000" + count;}
-        else if (count >= 100 && count <= 999) {loanId = "L000000000" + count;}
-        else if(count >= 1000 && count <= 9999) {loanId = "L00000000" + count;}
-        else if (count == 10000 || count <=99999) {loanId = "L0000000" + count;}
-        else if(count == 100000 || count <=999999) {loanId = "L000000" + count;}
-        else if (count == 10000000 || count <= 9999999) {loanId = "L00000" + count;}
-        else if (count == 100000000 || count <= 99999999) {loanId = "L0000" + count;}
-        else if (count == 1000000000 || count <= 999999999) {loanId = "L000" + count;}
-        else if (count == 1000000000 || count <= 999999999) {loanId = "L00" + count;}
-        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {loanId = "L0" + count;}
+        if (count <=9) {loanId = "200000000000" + count; }
+        else if(count <= 99) {loanId = "20000000000" + count;}
+        else if (count >= 100 && count <= 999) {loanId = "2000000000" + count;}
+        else if(count >= 1000 && count <= 9999) {loanId = "200000000" + count;}
+        else if (count == 10000 || count <=99999) {loanId = "20000000" + count;}
+        else if(count == 100000 || count <=999999) {loanId = "2000000" + count;}
+        else if (count == 10000000 || count <= 9999999) {loanId = "200000" + count;}
+        else if (count == 100000000 || count <= 99999999) {loanId = "20000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {loanId = "2000" + count;}
+        else if (count == 1000000000 || count <= 999999999) {loanId = "200" + count;}
+        else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {loanId = "20" + count;}
         else {loanId = String.valueOf("L" + count);}
         return loanId;
     }

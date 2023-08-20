@@ -1,6 +1,7 @@
 package app.controllers.homepage;
 
 import app.controllers.accounting.AccountingController;
+import app.controllers.accounts.AccountsController;
 import app.controllers.accounts.CreateAccountController;
 import app.controllers.customers.CustomersController;
 import app.controllers.dashboard.DashboardController;
@@ -130,7 +131,7 @@ public class AppController extends AppModel implements Initializable {
         });
         accountsButton.setOnAction(action -> {
             try {
-                CreateAccountController.pageTitlePlaceHolder = accountsButton.getText();
+                AccountsController.pageTitlePlaceHolder = accountsButton.getText();
                 SpecialMethods.FlipView("views/accounts/accounts-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -33,8 +33,8 @@ public class EmailAPI extends MainModel {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com"); // Replace with your SMTP host
-        props.put("mail.smtp.port", "587"); // Replace with your SMTP port
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP host
+        props.put("mail.smtp.port", "587"); // SMTP port
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -50,8 +50,8 @@ public class EmailAPI extends MainModel {
             message.setSubject(messageHeader);
 
             String header = "<h1 style='color:#fff; background-color:#0677e0; text-align:center;'>" + messageHeader + "</h1>";
-            String body = "<p style='font-size:18px'>" + messageBody + "</p>";
-            String footer = "<h5>" + messageFooter + "</h5>";
+            String body = "<p style='font-size:18px; padding:5%; background:color:#fff; border-radius: 10px 10px 0 0;'>" + messageBody + "</p>";
+            String footer = "<h5 style='background:color:#fff; border-radius: 10px 10px 0 0'>" + messageFooter + "</h5>";
             String hr = "<hr>";
             String fullMessage = header + body + hr + footer;
 

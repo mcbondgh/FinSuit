@@ -45,6 +45,7 @@ public class CustomersController implements Initializable {
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
     public void searchCustomerMethod(KeyEvent event) {
+
     }
 
 
@@ -52,5 +53,6 @@ public class CustomersController implements Initializable {
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
+
 
 }//end of class...
