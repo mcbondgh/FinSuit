@@ -7,8 +7,6 @@ import java.time.format.FormatStyle;
 
 public class CreateAccountDataModel {
     private long account_Id;
-    private String account_type;
-    private String account_number;
     private String firstname;
     private String lastname, othername, gender;
     private Date dob;
@@ -19,7 +17,8 @@ public class CreateAccountDataModel {
     private String key_landmark, marital_status, name_of_spouse;
     private String id_type, id_number, educational_background;
     private String additional_comment, contact_person_fullname;
-    private String contact_person_dob, contact_person_number;
+    private String contact_person_number;
+    private Date contact_person_dob;
     private String contact_person_gender, contact_person_landmark;
     private String contact_person_education_level, contact_person_digital_address, contact_person_id_type;
     private String contact_person_id_number, contact_person_place_of_work, institution_address;
@@ -30,10 +29,10 @@ public class CreateAccountDataModel {
     private int modified_by;
     private String formatted_date_created;
 
-    public CreateAccountDataModel(long account_Id, String account_type, String account_number, String firstname, String lastname, String othername, String gender, Date dob, int age, String place_of_birth, String mobile_number, String other_number, String email, String digital_address, String residential_address, String key_landmark, String marital_status, String name_of_spouse, String id_type, String id_number, String educational_background, String additional_comment, String contact_person_fullname, String contact_person_dob, String contact_person_number, String contact_person_gender, String contact_person_landmark, String contact_person_education_level, String contact_person_digital_address, String contact_person_id_type, String contact_person_id_number, String contact_person_place_of_work, String institution_address, String institution_number, String relationship_to_applicant, Timestamp date_created, int created_by, Timestamp date_modified, int modified_by) {
+    public CreateAccountDataModel() {}
+
+    public CreateAccountDataModel(long account_Id, String firstname, String lastname, String othername, String gender, Date dob, int age, String place_of_birth, String mobile_number, String other_number, String email, String digital_address, String residential_address, String key_landmark, String marital_status, String name_of_spouse, String id_type, String id_number, String educational_background, String additional_comment, String contact_person_fullname, Date contact_person_dob, String contact_person_number, String contact_person_gender, String contact_person_landmark, String contact_person_education_level, String contact_person_digital_address, String contact_person_id_type, String contact_person_id_number, String contact_person_place_of_work, String institution_address, String institution_number, String relationship_to_applicant, Timestamp date_created, int created_by, Timestamp date_modified, int modified_by) {
         this.account_Id = account_Id;
-        this.account_type = account_type;
-        this.account_number = account_number;
         this.firstname = firstname;
         this.lastname = lastname;
         this.othername = othername;
@@ -80,22 +79,6 @@ public class CreateAccountDataModel {
 
     public void setAccount_Id(long account_Id) {
         this.account_Id = account_Id;
-    }
-
-    public String getAccount_type() {
-        return account_type;
-    }
-
-    public void setAccount_type(String account_type) {
-        this.account_type = account_type;
-    }
-
-    public String getAccount_number() {
-        return account_number;
-    }
-
-    public void setAccount_number(String account_number) {
-        this.account_number = account_number;
     }
 
     public String getFirstname() {
@@ -258,11 +241,11 @@ public class CreateAccountDataModel {
         this.contact_person_fullname = contact_person_fullname;
     }
 
-    public String getContact_person_dob() {
+    public Date getContact_person_dob() {
         return contact_person_dob;
     }
 
-    public void setContact_person_dob(String contact_person_dob) {
+    public void setContact_person_dob(Date contact_person_dob) {
         this.contact_person_dob = contact_person_dob;
     }
 

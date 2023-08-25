@@ -30,15 +30,15 @@
       </Pane>
       <MFXLegacyTableView fx:id="customersTable" layoutX="13.0" layoutY="51.0" prefHeight="510.0" prefWidth="1203.0" style="-fx-font-family: poppins; -fx-font-size: 12px;">
          <columns>
-            <TableColumn prefWidth="75.0" text="NO." />
-            <TableColumn prefWidth="200.0" text="FULL NAME" />
-            <TableColumn prefWidth="58.0" text="AGE" />
-            <TableColumn prefWidth="147.33331298828125" text="ID NUMBER" />
-            <TableColumn maxWidth="250.0" prefWidth="130.0" text="MOBILE NUMBER" />
-            <TableColumn prefWidth="156.66668701171875" text="ACCOUNT NO." />
-            <TableColumn prefWidth="130.0" text="ACC STATUS" />
-            <TableColumn prefWidth="130.0" text="LOAN STATUS" />
-            <TableColumn prefWidth="130.0" text="DATE REGISTERED" />
+            <TableColumn fx:id="fullNameColumn" prefWidth="200.0" text="FULL NAME" />
+            <TableColumn fx:id="genderColumn" prefWidth="130.0" text="GENDER " />
+            <TableColumn fx:id="ageColumn" prefWidth="58.0" text="AGE" />
+            <TableColumn fx:id="mobileNumberColumn" maxWidth="250.0" prefWidth="130.0" text="MOBILE NUMBER" />
+            <TableColumn fx:id="accountTypeColumn" prefWidth="147.33331298828125" text="ACCOUNT TYPE" />
+            <TableColumn fx:id="accountNumberColumn" prefWidth="156.66668701171875" text="ACCOUNT NO." />
+            <TableColumn fx:id="loanStatusColumn" prefWidth="130.0" text="LOAN STATUS" />
+            <TableColumn fx:id="registrationDateColumn" prefWidth="143.3333740234375" text="DATE REGISTERED" />
+            <TableColumn fx:id="actionColumn" prefWidth="96.0" text="UPDATE" />
          </columns>
       </MFXLegacyTableView>
    </children>

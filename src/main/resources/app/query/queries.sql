@@ -78,10 +78,8 @@ CREATE TABLE IF NOT EXISTS employees(
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
 ); */
  
-CREATE TABLE IF NOT EXISTS customer_accounts(
-	account_Id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    account_type VARCHAR(50) NOT NULL,
-    account_number VARCHAR(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS customer_data(
+	customer_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     firstname VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
     othername VARCHAR(50) NOT NULL,
@@ -120,12 +118,38 @@ CREATE TABLE IF NOT EXISTS customer_accounts(
     modified_by INT
 );
 
-CREATE TABLE IF NOT EXISTS account_balance(
-	balance_id INT PRIMARY KEY AUTO_INCREMENT,
-    account_id BIGINT NOT NULL,
+CREATE TABLE IF NOT EXISTS customer_account_data(
+	account_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id BIGINT NOT NULL,
+	account_type VARCHAR(50) NOT NULL,
+    account_number VARCHAR(50) NOT NULL,
     current_balance DECIMAL(10,2) COMMENT 'Current balance displays the actual amount of money left in the customers account after all dedactions',
     previous_balance DECIMAL(10,2) COMMENT 'This balance shows the previous amount in the customers account before total dedaction.',
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     modified_by INT NOT NULL,
-    FOREIGN KEY(account_id) REFERENCES customer_accounts(account_Id)
+    FOREIGN KEY(customer_id) REFERENCES customer_data(customer_id)
+);
+
+CREATE TABLE customer_document(
+	doc_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id BIGINT NOT NULL,
+    document_type VARCHAR(10),
+    document_name BLOB not null,
+    reason_for_upload TEXT NOT NULL,
+    date_uploaded DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_modified DATETIME DEFAULT NOW(),
+    uploaded_by INT NOT NULL,
+    modified_by INT NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer_data(customer_id)
+);
+
+CREATE TABLE IF NOT EXISTS group_supervisors(
+	group_id INT PRIMARY KEY AUTO_INCREMENT,
+    emp_id VARCHAR(50) NOT NULL,
+    loan_id VARCHAR(50),
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+    added_by INT, 
+    modified_by INT,
+    FOREIGN KEY(added_by) REFERENCES employees(emp_id)
 );

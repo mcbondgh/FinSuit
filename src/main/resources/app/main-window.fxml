@@ -202,7 +202,7 @@
          <center>
             <Pane prefHeight="605.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fitHeight="472.0" fitWidth="1280.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="390.0" fitWidth="1114.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@uploads/1140X400-articles-picture-final1632021%20copy.jpg" />
                      </image>
@@ -223,19 +223,19 @@
                            <stops>
                               <Stop>
                                  <color>
-                                    <Color red="0.17842425405979156" green="0.08959999680519104" blue="0.6399999856948853" />
+                                    <Color red="0.41999998688697815" green="0.03359999880194664" blue="0.36300668120384216" />
                                  </color>
                               </Stop>
                               <Stop offset="1.0">
                                  <color>
-                                    <Color red="0.1812865436077118" green="0.4366471767425537" blue="0.9473684430122375" />
+                                    <Color red="0.6822070479393005" green="0.03259692341089249" blue="0.7543859481811523" />
                                  </color>
                               </Stop>
                            </stops>
                         </LinearGradient>
                      </textFill>
                   </Label>
-                  <Label layoutX="467.0" layoutY="324.0" text="All In One Financial Suit For Your Business." textFill="#808080">
+                  <Label layoutX="467.0" layoutY="324.0" text="All In One Financial Suit For Your Business." textFill="#660569">
                      <font>
                         <Font name="Arial" size="16.0" />
                      </font>
@@ -253,7 +253,7 @@
                </children>
             </Pane>
          </center></BorderPane>
-      <Pane fx:id="searchCustomersField" layoutX="2.0" prefHeight="41.0" prefWidth="1280.0" style="-fx-background-color: #eee;">
+      <Pane fx:id="searchCustomersField" layoutX="2.0" prefHeight="41.0" prefWidth="1280.0" style="-fx-background-color: #510559;">
          <children>
             <Circle fx:id="notificationPane" fill="WHITE" layoutX="754.0" layoutY="21.0" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <Circle fill="WHITE" layoutX="1181.0" layoutY="21.0" onMouseClicked="#showUserProfile" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE">
@@ -265,7 +265,7 @@
                   <Image url="@images/applicationIcon-256.png" />
                </image>
             </ImageView>
-            <Label fx:id="appNameLabel" layoutX="75.0" layoutY="11.0" prefHeight="20.0" prefWidth="310.0" text="BUSINESS NAME" textFill="#1c5ab7">
+            <Label fx:id="appNameLabel" layoutX="75.0" layoutY="11.0" prefHeight="20.0" prefWidth="310.0" text="BUSINESS NAME" textFill="WHITE">
                <font>
                   <Font name="Poppins Black" size="14.0" />
                </font>

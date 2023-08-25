@@ -5,18 +5,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 public class AccountBalanceDataModel {
-    private long balance_id;
     private long account_id;
+    private long customer_id;
+
+    private String account_number, account_type;
     private double current_balance;
     private double previous_balance;
     private Timestamp date_modified;
     private String formatted_date_modified;
     private int modified_by;
 
+    public AccountBalanceDataModel() {
+    }
 
-    public AccountBalanceDataModel(long balance_id, long account_id, double current_balance, double previous_balance, Timestamp date_modified, int modified_by) {
-        this.balance_id = balance_id;
-        this.account_id = account_id;
+    public AccountBalanceDataModel(long account_id, double current_balance, double previous_balance, Timestamp date_modified, int modified_by) {
+        this.customer_id = account_id;
         this.current_balance = current_balance;
         this.previous_balance = previous_balance;
         this.date_modified = date_modified;
@@ -25,20 +28,36 @@ public class AccountBalanceDataModel {
         this.formatted_date_modified = date_modified.toLocalDateTime().format(dateTimeFormatter);
     }
 
-    public long getBalance_id() {
-        return balance_id;
-    }
-
-    public void setBalance_id(long balance_id) {
-        this.balance_id = balance_id;
-    }
-
     public long getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(long account_id) {
+    private void setAccount_id(long account_id) {
         this.account_id = account_id;
+    }
+
+    public long getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public String getAccount_number() {
+        return account_number;
+    }
+
+    public void setAccount_number(String account_number) {
+        this.account_number = account_number;
+    }
+
+    public String getAccount_type() {
+        return account_type;
+    }
+
+    public void setAccount_type(String account_type) {
+        this.account_type = account_type;
     }
 
     public double getCurrent_balance() {

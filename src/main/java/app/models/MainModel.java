@@ -72,6 +72,20 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {e.printStackTrace();}
         return userId;
     }
+
+    public String getEmployeeIdByUsername(String username) {
+        String emp_id = "";
+        try {
+            String query = "SELECT emp_id FROM users WHERE(username = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                emp_id = resultSet.getString(1);
+            }
+        }catch (Exception e) {e.printStackTrace();}
+        return emp_id;
+    }
     public int getTotalEmployees() {
         int count = 0;
         try {
@@ -85,10 +99,24 @@ public class MainModel extends DbConnection {
         return count;
     }
 
+    public String getFullNameByUserId(String userId) {
+        try {
+            String query = "SELECT concat(firstname, \" \", lastname) AS fullname FROM employees AS emp \n" +
+                    "INNER JOIN users AS u ON emp.work_id = u.emp_id\n" +
+                    "WHERE u.emp_id = ?;";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("fullname");
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return "not found";
+    }
     public int getTotalAccountNumbers() {
         int count = 0;
         try {
-            String query = "SELECT count(*) FROM customer_accounts";
+            String query = "SELECT customer_id from customer_data order by customer_id desc limit 1;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -97,6 +125,7 @@ public class MainModel extends DbConnection {
         }catch (SQLException e) {e.printStackTrace();}
         return count;
     }
+
 
     protected int getLastEmployeeId() {
         int flag = 0;

@@ -3,7 +3,9 @@ package app.controllers.accounts;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
-import app.models.manageAccounts.CreateAccountModel;
+import app.fetchedData.accounts.AccountBalanceDataModel;
+import app.fetchedData.accounts.CreateAccountDataModel;
+import app.models.accounts.CreateAccountModel;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import com.jfoenix.controls.JFXToggleButton;
@@ -12,27 +14,24 @@ import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Currency;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.spi.CurrencyNameProvider;
 
 public class CreateAccountController extends CreateAccountModel implements Initializable {
 
     UserAlerts ALERTS;
     UserNotification NOTIFICATION = new UserNotification();
+    CreateAccountDataModel createAccountDataModel = new CreateAccountDataModel();
+    AccountBalanceDataModel balanceDataModel = new AccountBalanceDataModel();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -322,8 +321,9 @@ public class CreateAccountController extends CreateAccountModel implements Initi
             sendNotificationButton.setDisable(isSaveButtonEnabled());
         });
 
-
         saveButton.setOnAction(event -> {
+            int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+
             String accountType = accountTypeSelector.getValue();
             String accountNumber = accountNumberLabel.getText();
             String firstname = firstNameField.getText();
@@ -332,7 +332,7 @@ public class CreateAccountController extends CreateAccountModel implements Initi
             String mobileNumber = customerMobileNumberField.getText();
             String otherNumber = customerOtherNumberField.getText();
             String gender = genderSelector.getValue();
-            String age = ageField.getText();
+            int age = Integer.parseInt(ageField.getText());
             LocalDate customerDob = customerDobSelector.getValue();
             String placeOfBirth = placeOfBirthField.getText();
             String email = customerEmailAddressField.getText();
@@ -363,9 +363,55 @@ public class CreateAccountController extends CreateAccountModel implements Initi
 
             ALERTS = new UserAlerts("CREATE ACCOUNT", "ARE YOU SURE YOU WANT TO CREATE NEW ACCOUNT WITH ACCOUNT TYPE AS '" +  accountType + "'", "please confirm your action to create this account else CANCEL to abort process.");
             if (ALERTS.confirmationAlert()) {
+                createAccountDataModel.setFirstname(firstname);
+                createAccountDataModel.setLastname(lastname);
+                createAccountDataModel.setOthername(otherName);
+                createAccountDataModel.setGender(gender);
+                createAccountDataModel.setDob(Date.valueOf(customerDob));//7
+                createAccountDataModel.setAge(age);//8
+                createAccountDataModel.setPlace_of_birth(placeOfBirth);//9
+                createAccountDataModel.setMobile_number(mobileNumber);//10
+                createAccountDataModel.setOther_number(otherNumber);
+                createAccountDataModel.setEmail(email);
+                createAccountDataModel.setDigital_address(digitalAddress);
+                createAccountDataModel.setResidential_address(residentialAddress);
+                createAccountDataModel.setKey_landmark(landmark);//15
+                createAccountDataModel.setMarital_status(maritalStatus);
+                createAccountDataModel.setName_of_spouse(spouseName);//17
+                createAccountDataModel.setId_type(idType);
+                createAccountDataModel.setId_number(idNumber);
+                createAccountDataModel.setEducational_background(qualification);
+                createAccountDataModel.setAdditional_comment(comments);
+                createAccountDataModel.setContact_person_fullname(fullname);
+                createAccountDataModel.setContact_person_dob(Date.valueOf(c_dob));//23
+                createAccountDataModel.setContact_person_number(c_mobileNumber);//24
+                createAccountDataModel.setContact_person_gender(c_gender);//25
+                createAccountDataModel.setContact_person_landmark(c_landMark);//26
+                createAccountDataModel.setContact_person_education_level(c_qualification);
+                createAccountDataModel.setContact_person_digital_address(c_digitalAddress);//28
+                createAccountDataModel.setContact_person_id_type(c_idType);
+                createAccountDataModel.setContact_person_id_number(c_idNumber);//30
+                createAccountDataModel.setContact_person_place_of_work(placeOfWOrk);
+                createAccountDataModel.setInstitution_address(institutionAddress);
+                createAccountDataModel.setInstitution_number(institutionNumber);//33
+                createAccountDataModel.setRelationship_to_applicant(relationshipType);//34
+                createAccountDataModel.setCreated_by(currentUserId);//35
+                int flat = createNewAccount(createAccountDataModel);
 
+                balanceDataModel.setCustomer_id(getTotalAccountNumbers());
+                balanceDataModel.setAccount_type(accountType);
+                balanceDataModel.setAccount_number(accountNumber);
+                balanceDataModel.setCurrent_balance(depositAmount);
+                balanceDataModel.setPrevious_balance(depositAmount);
+                balanceDataModel.setModified_by(currentUserId);
+
+                flat += createAccountBalance(balanceDataModel);
+                if (flat == 2) {
+                    NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");
+                    resetFields();
+                    setAccountNumber();
+                }else NOTIFICATION.errorNotification("ACCOUNT CREATION FAILED", "Filed to create this account, please contact your system admin.");
             }
-
         });
 
     }//end of action event methods implementation

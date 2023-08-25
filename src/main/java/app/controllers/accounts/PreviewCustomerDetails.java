@@ -1,5 +1,9 @@
 package app.controllers.accounts;
 
+import app.alerts.UserNotification;
+import app.controllers.homepage.AppController;
+import app.fetchedData.BusinessInfoObject;
+import app.models.MainModel;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,14 +11,23 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
-import org.intellij.lang.annotations.JdkConstants;
-import org.intellij.lang.annotations.PrintFormat;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+
 public class PreviewCustomerDetails implements Initializable {
+
+    MainModel MODEL_OBJ = new MainModel();
+    UserNotification NOTIFICATION = new UserNotification();
 
     @FXML // fx:id="accountNumberLabel"
     private Label accountNumberLabel; // Value injected by FXMLLoader
@@ -177,7 +190,87 @@ public class PreviewCustomerDetails implements Initializable {
 
     @FXML
     void exportButtonClicked(ActionEvent event) {
+        try {
+            exportButton.setDisable(true);
+            //CREATE FILE DIRECTORY ON DESKTOP TO SAVE THE DOCUMENT.
+            String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
+            String directoryPath = desktopPath + File.separator + "Finsuit Document";
+            File directory = new File(directoryPath);
 
+            //check if the directory exists, if true save file else create the folder and save the document within.
+            if (!directory.exists()) {
+                directory.mkdirs();
+                return;
+            }
+            String fileName = applicantFullnameLabel.getText()+ ".pdf";
+            String documentPath = directoryPath + File.separator + fileName;
+
+            createMiniDocument().save(documentPath);
+            createMiniDocument().close();
+            Thread.sleep(3000);
+            exportButton.setDisable(false);
+            NOTIFICATION.successNotification("Export Successful", "Document Successfully Exported to desktop.");
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    String getFullName() {
+        String username = AppController.activeUserPlaceHolder;
+        String emp_id = MODEL_OBJ.getEmployeeIdByUsername(username);
+        return MODEL_OBJ.getFullNameByUserId(emp_id);
+    }
+
+    // Create a Document object
+     @NotNull
+     private PDDocument createMiniDocument() throws IOException {
+        // Create a new Word document
+         PDDocument document = new PDDocument();
+         PDPage documentPage = new PDPage();
+         document.addPage(documentPage);
+
+
+
+         //SETUP THE PAGE CONTENT
+         PDPageContentStream pageHeader = new PDPageContentStream(document, documentPage);
+         pageHeader.setLineWidth(18);
+
+         pageHeader.close();
+
+
+         String businessName = "";
+         String mobileNumber = "";
+         String otherNumber = "";
+         String email = "";
+         String digitalAddress = "";
+
+         for (BusinessInfoObject info :MODEL_OBJ.getBusinessInfo()) {
+             businessName = info.getName();
+             mobileNumber = info.getMobileNumber();
+             otherNumber = info.getOtherNumber();
+             email = info.getEmail();
+             digitalAddress = info.getDigital();
+         }
+
+         //parse the value and table data as key value pairs
+         Map<String, String> tableContent = new HashMap<>();
+         tableContent.put("FULL NAME", applicantFullnameLabel.getText());
+         tableContent.put("ACCOUNT TYPE", applicantAccountType);
+         tableContent.put("ACCOUNT NUMBER", applicantAccountNumber);
+         tableContent.put("INITIAL DEPOSIT", applicantDepositAmount.toString());
+         tableContent.put("EMAIL ADDRESS", applicantEmail);
+         tableContent.put("MOBILE NUMBER", applicantFullName);
+         tableContent.put("REGISTRATION OFFICER ID", getFullName());
+
+         //populate table
+         for (String mapKeys : tableContent.keySet()) {
+
+         }
+         return document;
     }
 
 

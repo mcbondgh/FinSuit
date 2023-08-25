@@ -1,8 +1,6 @@
 module app.finsuit {
     requires javafx.controls;
-    requires javafx.fxml;
     requires javafx.web;
-
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
@@ -17,6 +15,9 @@ module app.finsuit {
     requires jbcrypt;
     requires java.mail;
     requires annotations;
+    requires org.apache.poi.poi;
+    requires debugger.app;
+
 
     opens app to javafx.fxml;
     exports app;
@@ -37,7 +38,6 @@ module app.finsuit {
     exports app.controllers.loans.application;
     exports app.fetchedData.human_resources;
     exports app.fetchedData.users;
-
 
     opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;

@@ -23,7 +23,6 @@ INSERT INTO employees(work_id, firstname, lastname, othername, email, mobile_num
 VALUES('1001', 'MCBND', 'AIDIA', 'FASDFA', 'ISFIFJ@GMGO.COM','1001', 'MCBND', 'AIDIA', '2020-10-10', 'DAFADFAF','1001', 'MCBND', 'AIDIA', 'FASDFA', 'DAFADFAF','1001', 'MCBND', 'AIDIA', '2020-10-10', 'DAFADFAF','1001', 'MCBND', 'AIDIA', 'FASDFA', 'DAFADFAF','1001', 'MCBND', 'AIDIA', 1, 1);
 
 
-
 -- 3RD AUGUST 2023
 SELECT * FROM employees FULL JOIN employees_account_details as em ON work_id = em.emp_id;
 SELECT * FROM employees_account_details;
@@ -42,6 +41,19 @@ JOIN roles AS r ON  u.role_id = r.role_id WHERE is_deleted = 0;
 -- 10-08-2023
 ALTER TABLE users 
 MODIFY COLUMN user_password VARCHAR(255) COMMENT 'default password is SUIT1234';
-;
+
+SELECT customer_id from customer_data order by customer_id desc limit 1;
+
+alter table customer_data
+MODIFY COLUMN name_of_spouse VARCHAR(50) DEFAULT 'null'; 
+
+SELECT concat(firstname, " ", lastname) AS fullname FROM employees AS emp 
+INNER JOIN users AS u ON emp.work_id = u.emp_id
+WHERE u.emp_id = "1000003";
+
+
+-- SET foreign_key_checks = 0;
+
+
 
 

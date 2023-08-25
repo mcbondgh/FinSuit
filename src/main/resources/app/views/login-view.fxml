@@ -14,12 +14,35 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="578.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1b70c5" height="586.0" layoutX="-6.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="504.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="586.0" layoutX="-6.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="504.0">
+         <fill>
+            <LinearGradient endX="0.5772870903135474" endY="0.9526813880126183" startX="0.5804416644460395" startY="0.4353311941826757">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.30174896121025085" green="0.017489712685346603" blue="0.3333333432674408" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="0.30174896121025085" green="0.017489712685346603" blue="0.3333333432674408" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.4833333194255829" blue="0.5" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill></Rectangle>
       <Pane layoutX="78.0" layoutY="117.0" prefHeight="400.0" prefWidth="339.0" style="-fx-background-color: white; -fx-background-radius: 10;">
          <children>
             <Pane fx:id="loginIndicator" layoutX="34.0" layoutY="360.0" prefHeight="29.0" prefWidth="272.0" style="-fx-background-color: lightgreen;" visible="false">
@@ -32,7 +55,7 @@
                   </Label>
                </children>
             </Pane>
-            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="226.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #1b70c5;" text="Login" textFill="WHITE">
+            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="226.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #278c8f;" text="Login" textFill="WHITE">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
                </font>
@@ -97,7 +120,7 @@
             <Image url="@../images/applicationIcon-256.png" />
          </image>
       </ImageView>
-      <Label layoutX="199.0" layoutY="556.0" text="2023 | finsuit ghana" textFill="#b3b3b3">
+      <Label layoutX="202.0" layoutY="552.0" text="2023 | finsuit ghana" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="10.0" />
          </font>
