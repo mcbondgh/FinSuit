@@ -11,17 +11,18 @@ import java.io.IOException;
 
 public class AppStarter extends Application {
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage) throws IOException {
         try {
-            AppStages.LoginStage();
+            AppStages.PayrollStage().show();
         }catch (Exception e) {
             e.printStackTrace();
-           AppStages.databaseFailedStage().show();
+           AppStages.PayrollStage().show();
         }
     }
     public static void main() {
         launch();
     }
+    
     public void closeButton(ActionEvent event) {
         System.exit(0);
     }

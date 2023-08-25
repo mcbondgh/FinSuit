@@ -112,6 +112,17 @@ public class AppStages {
         stage.centerOnScreen();
         return  stage;
     }
+    public static Stage PayrollStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/payroll/Payroll-page.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Make Deposit");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return  stage;
+    }
     public static Stage databaseFailedStage() {
         Stage stage = new Stage();
         try {

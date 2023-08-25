@@ -50,7 +50,9 @@ module app.finsuit {
     opens app.specialmethods to javafx.fxml;
     opens app.controllers.login;
     exports app.controllers.loans.application;
+    exports app.controllers.payroll;
     opens app.controllers.loans.application;
+    opens app.controllers.payroll;
 
 
 }

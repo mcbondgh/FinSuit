@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS finsuit;
-
 CREATE TABLE IF NOT EXISTS business_info(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     business_name VARCHAR(100) NOT NULL,
@@ -76,8 +74,6 @@ CREATE TABLE IF NOT EXISTS employees_account_details(
     modified_by INT,
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
 );
-
-<<<<<<<<< Temporary merge branch 1
 CREATE TABLE IF NOT EXISTS users(
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
     emp_id INT ,
@@ -91,8 +87,109 @@ CREATE TABLE IF NOT EXISTS users(
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     modified_by INT,
     FOREIGN KEY(emp_id) REFERENCES employees(emp_id) ON DELETE CASCADE ON UPDATE SET NULL
-)
+);
+CREATE TABLE IF NOT EXISTS loan_customer(
+loan_customer_id INT auto_increment primary KEY,
+firstname varchar(100) NOT NULL,
+lastname varchar(100) not NULL,
+otherName varchar(100),
+date_of_birth date NOT NULL,
+gender varchar(50) not null,
+mobileNumber varchar(100) not null,
+otherNumber varchar (100) ,
+email varchar (100) not null,
+digital_address varchar (100) not null,
+resedential_address varchar (100) NOT NULL,
+key_landmark varchar(100) not null,
+qualification varchar(100) not null,
+marital_status varchar(100) not null,
+id_type varchar (100) not null,
+id_number varchar(100) not null,
+company_name varchar (100) not null,
+contact_number varchar (100) not null,
+emp_digital_address varchar (100) not null,
+staff_id varchar (100) not null,
+occupation varchar (100) not null,
+employment_date Date not null,
+relative_fullname varchar (100) not null,
+relative_mobileNumber varchar (100) not null,
+relative_digital_address varchar (100) not null,
+relative_residential_address varchar (100) not null,
+relation_type varchar (100) not null,
+relative_id_type varchar (100) not null,
+relative_id_number varchar (100) not null,
+place_of_work varchar (100) not null,
+institution_address varchar(100) not null
 
 
-=========
->>>>>>>>> Temporary merge branch 2
+);
+CREATE TABLE IF NOT EXISTS loan_customer(
+loan_customer_id INT auto_increment primary KEY,
+firstname varchar(100) NOT NULL,
+lastname varchar(100) not NULL,
+otherName varchar(100),
+date_of_birth date NOT NULL,
+gender varchar(50) not null,
+mobileNumber varchar(100) not null,
+otherNumber varchar (100) ,
+email varchar (100) not null,
+digital_address varchar (100) not null,
+resedential_address varchar (100) NOT NULL,
+key_landmark varchar(100) not null,
+qualification varchar(100) not null,
+marital_status varchar(100) not null,
+id_type varchar (100) not null,
+id_number varchar(100) not null,
+company_name varchar (100) not null,
+contact_number varchar (100) not null,
+emp_digital_address varchar (100) not null,
+staff_id varchar (100) not null,
+occupation varchar (100) not null,
+employment_date Date not null,
+relative_fullname varchar (100) not null,
+relative_mobileNumber varchar (100) not null,
+relative_digital_address varchar (100) not null,
+relative_residential_address varchar (100) not null,
+relation_type varchar (100) not null,
+relative_id_type varchar (100) not null,
+relative_id_number varchar (100) not null,
+place_of_work varchar (100) not null,
+institution_address varchar(100) not null
+
+
+);
+create table if not exists loan_payment(
+loan_payment_id int AUTO_INCREMENT PRIMARY KEY,
+fullName varchar (100) not null,
+mobileNumber varchar (100) not null,
+digital_address varchar(100) not null,
+residential_address varchar(100) not null,
+reletionship_type varchar (100) not null,
+id_type varchar (100) not null,
+id_number varchar (100) not null,
+place_of_work varchar (100) not null,
+institution_address varchar (100) not null,
+occupation varchar(100) not null,
+netIncome decimal(10,2) not null,
+basic_salary decimal(10,2) not null,
+gross_salary decimal (10,2) not null,
+total_decuction decimal(10,2) not null,
+netSalary decimal(10,2) not null,
+loan_amount decimal (10,2) not null,
+interest_rate decimal (10,2) not null,
+processing_rate decimal (10,2) not null,
+loan_period tinyint,
+start_date date,
+laon_reason varchar(500)
+
+);
+rename table customer_laon to loan_customer;
+
+
+
+
+
+
+
+
+

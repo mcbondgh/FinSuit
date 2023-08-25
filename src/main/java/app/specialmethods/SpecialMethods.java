@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.effect.ImageInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -170,6 +171,12 @@ public class SpecialMethods {
         else if (count >=1000 && count <=9999) {empId = "10" + count;}
         else {empId = String.valueOf(count);}
         return empId;
+    }
+    public  static  void  loadMonth(ListView<String> listView){
+        String[] months ={"JANUARY", "FEBRUARY", "MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"};
+            for(String item : months){
+                listView.getItems().add(item);
+            }
     }
 
 
