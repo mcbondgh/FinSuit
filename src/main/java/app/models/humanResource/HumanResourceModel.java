@@ -1,8 +1,7 @@
 package app.models.humanResource;
 
-import app.fetchedData.human_resources.EmployeesData;
+import app.repositories.human_resources.EmployeesData;
 import app.models.MainModel;
-import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.sql.SQLException;

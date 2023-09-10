@@ -3,7 +3,7 @@ package app.controllers.resource;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
-import app.fetchedData.human_resources.EmployeesData;
+import app.repositories.human_resources.EmployeesData;
 import app.models.humanResource.HumanResourceModel;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -13,12 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.WindowEvent;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.ResourceBundle;
 

@@ -2,17 +2,14 @@ package app.controllers.resource;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
-import app.fetchedData.human_resources.EmployeesData;
+import app.repositories.human_resources.EmployeesData;
 import app.models.humanResource.HumanResourceModel;
 import app.stages.AppStages;
 import com.jfoenix.controls.JFXCheckBox;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -85,9 +82,6 @@ public class ViewEmployeesController extends HumanResourceModel implements Initi
            }
         });
     }
-
-
-
     private void updateStatusButtonClicked() {
         employeesTable.setOnMouseEntered(mouseEvent -> {
             boolean isTableEmpty = employeesTable.getItems().isEmpty();
@@ -103,7 +97,6 @@ public class ViewEmployeesController extends HumanResourceModel implements Initi
             }
             refreshTable();
         });
-
     }
 
 

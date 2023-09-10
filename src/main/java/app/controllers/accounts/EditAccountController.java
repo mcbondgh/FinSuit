@@ -6,18 +6,20 @@ import app.controllers.homepage.AppController;
 import app.models.accounts.CreateAccountModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.accounts.CustomersDocumentRepository;
 import app.specialmethods.SpecialMethods;
-import app.stages.AppStages;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXToggleButton;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -27,47 +29,51 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class CreateAccountController extends CreateAccountModel implements Initializable {
-
+public class EditAccountController extends CreateAccountModel implements Initializable {
     UserAlerts ALERTS;
     UserNotification NOTIFICATION = new UserNotification();
     CustomersDataRepository customersDataRepository = new CustomersDataRepository();
     CustomerAccountsDataRepository balanceDataModel = new CustomerAccountsDataRepository();
+    CustomersDocumentRepository documentRepository = new CustomersDocumentRepository();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
      ********************************************************************************************************************/
+
+
     @FXML
-    private Label accountNumberLabel,absoluteFilePathLabel;
-    @FXML private MFXButton previewButton, saveButton, cancelButton;
+    private Label accountNumberLabel, absoluteFilePathLabel;
+    @FXML private MFXButton uploadButton, saveButton, cancelButton;
+    @FXML private JFXButton previewItemButton;
     @FXML private MFXScrollPane scrollPane;
     @FXML private AnchorPane anchorPane;
-    @FXML private Pane contactPersonPane, politicallyExposedPane,applicantPane, filePane;
+    @FXML private Pane contactPersonPane, filePane, applicantPane;
     @FXML private TextField firstNameField, lastNameField, otherNameField;
     @FXML private TextField placeOfBirthField, customerMobileNumberField, customerOtherNumberField, customerEmailAddressField;
     @FXML private TextField customerDigitalAddressField, customerResidentialField, customerLandmarkField, nameOfSpouseField, customerIdNumberField;
     @FXML private ComboBox<String> genderSelector, maritalStatusSelector, customerIdSelector, customerEducationalBackground;
     @FXML private DatePicker customerDobSelector, c_DobSelector;
-    @FXML private TextArea commentsField;
+    @FXML private TextArea commentsField, reasonField;
     @FXML private TextField fullNameField, ageField, c_numberField, institutionNumberField,  c_landmarkField, c_digitalAddressField;
     @FXML private TextField c_idNumberField, placeOfWorkField, institutionAddressField;
     @FXML private ComboBox<String> c_genderSelector, accountTypeSelector, c_idSelector, relationshipSelector, c_educationalBackgroundSelector;
-
-    @FXML private MFXButton uploadButton, previewFileButton;
-    @FXML private TextField fileNameField;
-    @FXML private TextArea reasonField;
-
-    @FXML private CheckBox attachFileButton;
-
+    public JFXCheckBox editCheckBox, attachFileButton;
     @FXML private JFXToggleButton sendNotificationButton;
     @FXML private ComboBox<Double> initialDepositSelector;
+    public ImageView imageView;
+
+    @FXML
+    private  TextField fileNameField;
+
+    private long selectedCustomerId = 0;
+
     int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+
+
 
 
 
@@ -99,27 +105,26 @@ public class CreateAccountController extends CreateAccountModel implements Initi
     boolean isGurantorIdTypeEmpty() {return c_idSelector.getValue() == null;}
     boolean isGurantorIdNumberEmpty() {return c_idNumberField.getText().isEmpty();}
     boolean isGurantorRelationshipTypeEmpty() {return relationshipSelector.getValue() == null;}
-
     boolean isSaveButtonEnabled() {return saveButton.isDisabled();}
-    boolean isAttachFileButtonChecked(){return attachFileButton.isSelected();}
-    boolean isFileNameFiledEmpty(){return fileNameField.getText().isEmpty();}
-    boolean isPreviewButtonClicked() {return previewFileButton.isPressed();}
+    boolean isEditButtonChecked() {return editCheckBox.isSelected();}
+    boolean isFileNameFieldEmpty() {return fileNameField.getText().isEmpty();}
+    boolean isReasonFieldEmpty() {return reasonField.getText().isEmpty();}
 
+    boolean isAttachFileButtonSelected() {
+        return attachFileButton.isSelected();
+    }
 
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
      *******************************************************************************************************************/
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        try {
-            actionEventMethodsImplementation();
-            populateFields();
-            inputFieldValidationMethods();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        actionEventMethodsImplementation();
+        populateFields();
+        inputFieldValidationMethods();
+        populateTextFields();
     }
 
     void populateFields() {
@@ -132,15 +137,64 @@ public class CreateAccountController extends CreateAccountModel implements Initi
         SpecialMethods.setGenderParameters(c_genderSelector);
         SpecialMethods.setQualification(customerEducationalBackground);
         SpecialMethods.setQualification(c_educationalBackgroundSelector);
-        SpecialMethods.setInitialDepositAmount(initialDepositSelector);
-        setAccountNumber();
+//        SpecialMethods.setInitialDepositAmount(initialDepositSelector);
+        accountNumberLabel.setText(ViewAccountController.selectedCustomerAccountNumber);
     }
+    void populateTextFields() {
+        String accountNumber = accountNumberLabel.getText();
+        for (CustomerAccountsDataRepository value : fetchCustomersAccountData()){
+            if (Objects.equals(value.getAccount_number(), accountNumber)) {
+                selectedCustomerId = value.getCustomer_id();
+                accountTypeSelector.setValue(value.getAccount_type());
+            }
+        }
 
-    void setAccountNumber() {
-        String totalCount = SpecialMethods.generateAccountNumber(getTotalAccountNumbers() + 1);
-        accountNumberLabel.setText(totalCount);
-    }
+        for (CustomersDataRepository item : fetchCustomersData()) {
+            if (Objects.equals(item.getAccount_Id(), selectedCustomerId)) {
+                firstNameField.setText(item.getFirstname());
+                lastNameField.setText(item.getLastname());
+                otherNameField.setText(item.getOthername());
+                genderSelector.setValue(item.getGender());
+                customerDobSelector.setValue(item.getDob().toLocalDate());
+                ageField.setText(String.valueOf(item.getAge()));
+                placeOfBirthField.setText(item.getPlace_of_birth());
+                customerMobileNumberField.setText(item.getMobile_number());
+                customerOtherNumberField.setText(item.getOther_number());
+                customerEmailAddressField.setText(item.getEmail());
+                customerDigitalAddressField.setText(item.getDigital_address());
+                customerResidentialField.setText(item.getResidential_address());
+                customerLandmarkField.setText(item.getKey_landmark());
+                maritalStatusSelector.setValue(item.getMarital_status());
+                nameOfSpouseField.setText(item.getName_of_spouse());
+                customerIdSelector.setValue(item.getId_type());
+                customerIdNumberField.setText(item.getId_number());
+                customerEducationalBackground.setValue(item.getEducational_background());
+                commentsField.setText(item.getAdditional_comment());
+                fullNameField.setText(item.getContact_person_fullname());
+                c_DobSelector.setValue(item.getContact_person_dob().toLocalDate());
+                c_numberField.setText(item.getContact_person_number());
+                c_genderSelector.setValue(item.getContact_person_gender());
+                c_landmarkField.setText(item.getContact_person_landmark());
+                c_educationalBackgroundSelector.setValue(item.getContact_person_education_level());
+                c_digitalAddressField.setText(item.getContact_person_digital_address());
+                c_idSelector.setValue(item.getContact_person_id_type());
+                c_idNumberField.setText(item.getContact_person_id_number());
+                placeOfWorkField.setText(item.getContact_person_place_of_work());
+                institutionAddressField.setText(item.getInstitution_address());
+                institutionNumberField.setText(item.getInstitution_number());
+                relationshipSelector.setValue(item.getRelationship_to_applicant());
 
+
+            }
+        }
+
+        for (CustomersDocumentRepository item : fetchCustomerDocuments()){
+            if (Objects.equals(item.getCustomer_id(), selectedCustomerId)) {
+                System.out.println(item.getDoc_id());
+            }
+        }
+
+    }//enf of method.
     void resetFields() {
         accountTypeSelector.setValue(null);
         firstNameField.clear();
@@ -176,54 +230,20 @@ public class CreateAccountController extends CreateAccountModel implements Initi
         institutionAddressField.clear();
         institutionNumberField.clear();
         relationshipSelector.setValue(null);
+        fileNameField.clear();
     }
 
-    void sendMailAndSMSNotification() {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                return null;
-            }
-        };
-    }
-
-
-    private byte[] getFileStream(String filePath) {
-        byte[] bytes = new byte[0];
-        try(FileInputStream stream = new FileInputStream(filePath)) {
-           bytes = new byte[(byte) filePath.length()];
-           stream.read(bytes);
-        }catch (Exception e){e.printStackTrace();}
-        return bytes;
-    }
-
-    String getUploadedDocument() {
-        String fileName = "";
-        String filePath = "";
-        // Create a file Chooser to allow you to choose a file.
-        FileChooser fileChooser = new FileChooser();
-
-        //Create File Extensions
-        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf");
-        FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("JPEG Files (*.jpg)", "*.jpg");
-        FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG Files (*.png)", "*.png");
-        fileChooser.getExtensionFilters().addAll(pdfFilter, jpgFilter, pngFilter);
-
-        //Create a file to allow you store the selected into a file
-        File selectedFile = fileChooser.showOpenDialog(uploadButton.getScene().getWindow());
-
-        //Check if a file was selected...
-        if (!(selectedFile == null)) {
-            fileName = selectedFile.getName();
-            filePath = selectedFile.getPath();
-
-            fileNameField.setText(fileName);
-        } else {
-            NOTIFICATION.informationNotification("EMPTY SELECTION ", "You made no selection after clicking the upload button.");
+    private byte[] readFileContent (String filePath) {
+        try(FileInputStream inputStream = new FileInputStream(filePath)) {
+           byte[] fileInByte = new byte[(int)filePath.length()];
+           inputStream.read(fileInByte);
+           return fileInByte;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return filePath;
     }
+
+
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
@@ -239,7 +259,7 @@ public class CreateAccountController extends CreateAccountModel implements Initi
             }
         });
         c_numberField.setOnKeyTyped(event -> {
-            if (!event.getCharacter().matches("[0-9.]")) {
+            if (!event.getCharacter().matches("[0-9]")) {
                 c_numberField.deletePreviousChar();
             }
             if (c_numberField.getText().length() >= 11) {
@@ -248,7 +268,7 @@ public class CreateAccountController extends CreateAccountModel implements Initi
         });
 
         institutionNumberField.setOnKeyTyped(event -> {
-            if (!event.getCharacter().matches("[0-9.]")) {
+            if (!event.getCharacter().matches("[0-9]")) {
                 institutionNumberField.deletePreviousChar();
             }
             if (institutionNumberField.getText().length() >= 11) {
@@ -278,62 +298,16 @@ public class CreateAccountController extends CreateAccountModel implements Initi
     }//end of input fields validation
 
 
-
-
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
 
-
-
-    void actionEventMethodsImplementation() throws IOException {
-
-        previewButton.setOnAction(event -> {
-            try {
-                PreviewCustomerDetails.applicantAccountType = accountTypeSelector.getValue();
-                PreviewCustomerDetails.applicantDepositAmount = initialDepositSelector.getValue();
-                PreviewCustomerDetails.applicantFullName = firstNameField.getText() + " " + otherNameField.getText() + " " + lastNameField.getText();
-                PreviewCustomerDetails.applicantAccountNumber = accountNumberLabel.getText();
-                PreviewCustomerDetails.applicantGender = genderSelector.getValue();
-                PreviewCustomerDetails.applicantAge = ageField.getText();
-                PreviewCustomerDetails.applicantDob = String.valueOf(customerDobSelector.getValue());
-                PreviewCustomerDetails.applicantPlaceOfBirth = placeOfBirthField.getText();
-                PreviewCustomerDetails.applicantNumber = customerMobileNumberField.getText();
-                PreviewCustomerDetails.applicantOtherNumber = customerOtherNumberField.getText();
-                PreviewCustomerDetails.applicantEmail = customerEmailAddressField.getText();
-                PreviewCustomerDetails.applicantDigitalAddress = customerDigitalAddressField.getText();
-                PreviewCustomerDetails.applicantResidentialAddress = customerResidentialField.getText();
-                PreviewCustomerDetails.applicantLandmark = customerLandmarkField.getText();
-                PreviewCustomerDetails.applicantMaritalStatus = maritalStatusSelector.getValue();
-                PreviewCustomerDetails.applicantSpouseName = nameOfSpouseField.getText();
-                PreviewCustomerDetails.applicantIdType = customerIdSelector.getValue();
-                PreviewCustomerDetails.applicantIdNumber = customerIdNumberField.getText();
-                PreviewCustomerDetails.applicantEducationalBackground = customerEducationalBackground.getValue();
-                PreviewCustomerDetails.applicantDepositAmount = initialDepositSelector.getValue();
-                PreviewCustomerDetails.applicantExtraInfo = commentsField.getText();
-                PreviewCustomerDetails.contactFullName = fullNameField.getText();
-                PreviewCustomerDetails.contactDob = String.valueOf(c_DobSelector.getValue());
-                PreviewCustomerDetails.contactMobileNumber = c_numberField.getText();
-                PreviewCustomerDetails.contactGender = c_genderSelector.getValue();
-                PreviewCustomerDetails.contactLandmark = c_landmarkField.getText();
-                PreviewCustomerDetails.contactEducationStatus = c_educationalBackgroundSelector.getValue();
-                PreviewCustomerDetails.contactDigitalAddress = c_digitalAddressField.getText();
-                PreviewCustomerDetails.contactIdType = c_idSelector.getValue();
-                PreviewCustomerDetails.contactIdNumber = c_idNumberField.getText();
-                PreviewCustomerDetails.contactPlaceOfWork = placeOfWorkField.getText();
-                PreviewCustomerDetails.contactInstitutionAddress = institutionAddressField.getText();
-                PreviewCustomerDetails.contactInstitutionNumber = institutionNumberField.getText();
-                PreviewCustomerDetails.relationshipType = relationshipSelector.getValue();
-                AppStages.previewApplicantStage().show();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+    void actionEventMethodsImplementation() {
+        editCheckBox.setOnAction(event -> {
+            applicantPane.setDisable(!isEditButtonChecked());
+            filePane.setDisable(!isEditButtonChecked());
+            contactPersonPane.setDisable(!isEditButtonChecked());
         });
-
-//        politicallyExposedButton.setOnAction(event -> {
-//            politicallyExposedPane.setDisable(!politicallyExposedButton.isSelected());
-//        });
 
         customerDobSelector.setOnAction(action -> {
             LocalDate currentDate = LocalDate.now();
@@ -348,38 +322,30 @@ public class CreateAccountController extends CreateAccountModel implements Initi
         });
 
         cancelButton.setOnAction(event -> {
-            ALERTS = new UserAlerts("RESET FIELDS", "DO YOU WISH TO CLEAR ALL FIELDS TO RESTART THE ACCOUNT CREATING PROCESS?", "please confirm your decision to reset all fields else CANCEL to abort");
-            if (ALERTS.confirmationAlert()) {
-                resetFields();
-            }
+            cancelButton.getScene().getWindow().hide();
         });
 
         scrollPane.setOnMouseMoved(mouseEvent -> {
             String invalid = "-fx-border-color:#ff0000; -fx-border-radius: 5px; -fx-border-width:2px;";
             saveButton.setDisable(isFirstNameEmpty() || isLastNameEmpty() || isGenderEmpty() || isDobEmpty()
-            || isPlaceOfBirthEmpty() || isMobileNumberEmpty() || isDigitalAddressEmpty() || isResidentialAddressEmpty()||
-                    isLandMarkEmpty() || isMaritalStatusEmpty() || isIdTypeEmpty() || isIdNumberEmpty() || isEducationalStatusEmpty() ||
-                    isDepositEmpty() || isFullNameEmpty() || isGurantorDobEmpty() || isGurantorNumberEmpty() || isGurantorGenderEmpty() ||
-                    isGurantorLandmarkEmpty() || isGurantorDigitalAddressEmpty() || isGurantorIdTypeEmpty() || isGurantorIdNumberEmpty() ||
-                    isGurantorRelationshipTypeEmpty() || customerEmailAddressField.getStyle().equals(invalid) ||
-                    (isFileNameFiledEmpty() && isAttachFileButtonChecked())
-            );
-
-
-            
-            previewButton.setDisable(isFirstNameEmpty() || isLastNameEmpty() || isGenderEmpty() || isDobEmpty()
                     || isPlaceOfBirthEmpty() || isMobileNumberEmpty() || isDigitalAddressEmpty() || isResidentialAddressEmpty()||
                     isLandMarkEmpty() || isMaritalStatusEmpty() || isIdTypeEmpty() || isIdNumberEmpty() || isEducationalStatusEmpty() ||
-                    isDepositEmpty() || isFullNameEmpty() || isGurantorDobEmpty() || isGurantorNumberEmpty() || isGurantorGenderEmpty() ||
+                    isFullNameEmpty() || isGurantorDobEmpty() || isGurantorNumberEmpty() || isGurantorGenderEmpty() ||
                     isGurantorLandmarkEmpty() || isGurantorDigitalAddressEmpty() || isGurantorIdTypeEmpty() || isGurantorIdNumberEmpty() ||
-                    isGurantorRelationshipTypeEmpty() || customerEmailAddressField.getStyle().equals(invalid)
+                    isGurantorRelationshipTypeEmpty() || customerEmailAddressField.getStyle().equals(invalid) ||
+                    !isEditButtonChecked()
             );
+            if (isAttachFileButtonSelected()) {
+                saveButton.setDisable(isFileNameFieldEmpty() || isReasonFieldEmpty());
+            }
             sendNotificationButton.setDisable(isSaveButtonEnabled());
+            previewItemButton.setDisable(isFileNameFieldEmpty());
+
+
         });
 
         saveButton.setOnAction(event -> {
             int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
-
             String accountType = accountTypeSelector.getValue();
             String accountNumber = accountNumberLabel.getText();
             String firstname = firstNameField.getText();
@@ -400,7 +366,6 @@ public class CreateAccountController extends CreateAccountModel implements Initi
             String idType = customerIdSelector.getValue();
             String idNumber = customerIdNumberField.getText();
             String qualification = customerEducationalBackground.getValue();
-            Double depositAmount = initialDepositSelector.getValue();
             String comments = commentsField.getText();
 
             String fullname = fullNameField.getText();
@@ -417,87 +382,64 @@ public class CreateAccountController extends CreateAccountModel implements Initi
             String institutionNumber = institutionNumberField.getText();
             String relationshipType = relationshipSelector.getValue();
 
-            // check if the file upload check box is checked...
-            if (isAttachFileButtonChecked()) {
-
-            } else System.out.println("unchecked...");
-
-            ALERTS = new UserAlerts("CREATE ACCOUNT", "ARE YOU SURE YOU WANT TO CREATE NEW ACCOUNT WITH ACCOUNT TYPE AS '" +  accountType + "'", "please confirm your action to create this account else CANCEL to abort process.");
+            ALERTS = new UserAlerts("UPDATE ACCOUNT", "ARE YOU SURE YOU WANT TO UPDATE CUSTOMER ACCOUNT DETAILS?", "please confirm your action to create this account else CANCEL to abort process.");
             if (ALERTS.confirmationAlert()) {
-                customersDataRepository.setFirstname(firstname);
-                customersDataRepository.setLastname(lastname);
-                customersDataRepository.setOthername(otherName);
-                customersDataRepository.setGender(gender);
-                customersDataRepository.setDob(Date.valueOf(customerDob));//7
-                customersDataRepository.setAge(age);//8
-                customersDataRepository.setPlace_of_birth(placeOfBirth);//9
-                customersDataRepository.setMobile_number(mobileNumber);//10
-                customersDataRepository.setOther_number(otherNumber);
-                customersDataRepository.setEmail(email);
-                customersDataRepository.setDigital_address(digitalAddress);
-                customersDataRepository.setResidential_address(residentialAddress);
-                customersDataRepository.setKey_landmark(landmark);//15
-                customersDataRepository.setMarital_status(maritalStatus);
-                customersDataRepository.setName_of_spouse(spouseName);//17
-                customersDataRepository.setId_type(idType);
-                customersDataRepository.setId_number(idNumber);
-                customersDataRepository.setEducational_background(qualification);
-                customersDataRepository.setAdditional_comment(comments);
-                customersDataRepository.setContact_person_fullname(fullname);
-                customersDataRepository.setContact_person_dob(Date.valueOf(c_dob));//23
-                customersDataRepository.setContact_person_number(c_mobileNumber);//24
-                customersDataRepository.setContact_person_gender(c_gender);//25
-                customersDataRepository.setContact_person_landmark(c_landMark);//26
-                customersDataRepository.setContact_person_education_level(c_qualification);
-                customersDataRepository.setContact_person_digital_address(c_digitalAddress);//28
-                customersDataRepository.setContact_person_id_type(c_idType);
-                customersDataRepository.setContact_person_id_number(c_idNumber);//30
-                customersDataRepository.setContact_person_place_of_work(placeOfWOrk);
-                customersDataRepository.setInstitution_address(institutionAddress);
-                customersDataRepository.setInstitution_number(institutionNumber);//33
-                customersDataRepository.setRelationship_to_applicant(relationshipType);//34
-                customersDataRepository.setCreated_by(currentUserId);//35
-                int flat = createNewAccount(customersDataRepository);
-
-                balanceDataModel.setCustomer_id(getTotalAccountNumbers());
-                balanceDataModel.setAccount_type(accountType);
-                balanceDataModel.setAccount_number(accountNumber);
-                balanceDataModel.setAccount_balance(depositAmount);
-                balanceDataModel.setPrevious_balance(depositAmount);
-                balanceDataModel.setModified_by(currentUserId);
-
-                flat += createAccountBalance(balanceDataModel);
-                if (flat == 2) {
-                    NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");
-                    resetFields();
-                    setAccountNumber();
-                }else NOTIFICATION.errorNotification("ACCOUNT CREATION FAILED", "Filed to create this account, please contact your system admin.");
-            }
-        });
-
-        attachFileButton.setOnAction(checkEvent-> {
-            uploadButton.setDisable(!isAttachFileButtonChecked());
-            reasonField.setDisable(!isAttachFileButtonChecked());
-        });
-
-        uploadButton.setOnAction(uploadAction -> {
-            previewFileButton.setDisable(!isFileNameFiledEmpty());
-            absoluteFilePathLabel.setText(getUploadedDocument());
-
-        });
-
-        previewFileButton.setOnAction(action -> {
-            try {
-                String file = absoluteFilePathLabel.getText();
-                if (file.isEmpty()) {
-                    return;
+                if (isAttachFileButtonSelected()) {
+                    try {
+                        documentRepository.setCustomer_id(selectedCustomerId);
+                        documentRepository.setDocument_name(fileNameField.getText());
+                        documentRepository.setFile_content(readFileContent(absoluteFilePathLabel.getText()));
+                        documentRepository.setReason_for_upload(reasonField.getText());
+                        documentRepository.setUploaded_by(currentUserId);
+                        saveDocument(documentRepository);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                Desktop.getDesktop().browse(new File(file).toURI());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+                updateAccountType(accountType, accountNumber);
+
+            }//end of confirmation checker...
+        });
+
+        uploadButton.setOnAction(action -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choose Your File");
+            FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf");
+            FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("JPEG Files (*.jpg)", "*.jpg");
+            FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG Files (*.png)", "*.png");
+
+            fileChooser.getExtensionFilters().addAll(pdfFilter, jpgFilter, pngFilter);
+            File selectedFile =  fileChooser.showOpenDialog(uploadButton.getScene().getWindow());
+
+            //check if the user SELECTED A FILE
+            if (!(selectedFile == null)){
+                fileNameField.setText(selectedFile.getName());
+                absoluteFilePathLabel.setText(selectedFile.getPath());
+            } else {
+                NOTIFICATION.informationNotification("EMPTY SELECTION ", "You made no selection after clicking the upload button.");
+            }
+
+        });
+
+        previewItemButton.setOnAction(event -> {
+            if (!absoluteFilePathLabel.getText().isEmpty()) {
+                String filePathString = absoluteFilePathLabel.getText();
+                try {
+                    Desktop.getDesktop().browse(new File(filePathString).toURI());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
+        attachFileButton.setOnAction(action -> {
+           fileNameField.setDisable(!isAttachFileButtonSelected());
+           reasonField.setDisable(!isAttachFileButtonSelected());
+           uploadButton.setDisable(!isAttachFileButtonSelected());
+        });
     }//end of action event methods implementation
 
-}//end of class
+
+
+}//end of class...

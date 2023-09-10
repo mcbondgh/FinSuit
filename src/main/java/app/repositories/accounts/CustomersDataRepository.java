@@ -1,11 +1,11 @@
-package app.fetchedData.accounts;
+package app.repositories.accounts;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-public class CreateAccountDataModel {
+public class CustomersDataRepository {
     private long account_Id;
     private String firstname;
     private String lastname, othername, gender;
@@ -29,9 +29,9 @@ public class CreateAccountDataModel {
     private int modified_by;
     private String formatted_date_created;
 
-    public CreateAccountDataModel() {}
+    public CustomersDataRepository() {}
 
-    public CreateAccountDataModel(long account_Id, String firstname, String lastname, String othername, String gender, Date dob, int age, String place_of_birth, String mobile_number, String other_number, String email, String digital_address, String residential_address, String key_landmark, String marital_status, String name_of_spouse, String id_type, String id_number, String educational_background, String additional_comment, String contact_person_fullname, Date contact_person_dob, String contact_person_number, String contact_person_gender, String contact_person_landmark, String contact_person_education_level, String contact_person_digital_address, String contact_person_id_type, String contact_person_id_number, String contact_person_place_of_work, String institution_address, String institution_number, String relationship_to_applicant, Timestamp date_created, int created_by, Timestamp date_modified, int modified_by) {
+    public CustomersDataRepository(long account_Id, String firstname, String lastname, String othername, String gender, Date dob, int age, String place_of_birth, String mobile_number, String other_number, String email, String digital_address, String residential_address, String key_landmark, String marital_status, String name_of_spouse, String id_type, String id_number, String educational_background, String additional_comment, String contact_person_fullname, Date contact_person_dob, String contact_person_number, String contact_person_gender, String contact_person_landmark, String contact_person_education_level, String contact_person_digital_address, String contact_person_id_type, String contact_person_id_number, String contact_person_place_of_work, String institution_address, String institution_number, String relationship_to_applicant, Timestamp date_created, int created_by, Timestamp date_modified, int modified_by) {
         this.account_Id = account_Id;
         this.firstname = firstname;
         this.lastname = lastname;

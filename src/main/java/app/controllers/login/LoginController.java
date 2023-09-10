@@ -1,7 +1,7 @@
 package app.controllers.login;
 
 import app.controllers.homepage.AppController;
-import app.fetchedData.BusinessInfoObject;
+import app.repositories.BusinessInfoEntity;
 import app.models.MainModel;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -51,7 +51,7 @@ public class LoginController extends MainModel implements Initializable{
     }
 
     void setLoginParameters() {
-        for (BusinessInfoObject items : getBusinessInfo()) {
+        for (BusinessInfoEntity items : getBusinessInfo()) {
             appNameHeader.setText(items.getName());
             String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + items.getLogo();
             logoViewer.setImage(new Image(getImageSource));

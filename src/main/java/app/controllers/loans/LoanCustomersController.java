@@ -23,7 +23,7 @@ public class LoanCustomersController implements Initializable {
      *********************************************** FXML FILE EJECTIONS.
      ********************************************************************************************************************/
     @FXML
-    private MFXButton addNewLoanButton, payLoanButton, filterButton;
+    private MFXButton addNewLoanButton, payLoanButton, filterButton, loanRequestsButton;
     @FXML private MFXLegacyTableView loanApplicantsTable;
     @FXML private AnchorPane anchorPage;
 
@@ -47,6 +47,7 @@ public class LoanCustomersController implements Initializable {
         addNewLoanButton.setDisable(loanApplicationStage.isShowing());
         payLoanButtonClicked();
         filterButtonClicked();
+
     }
 
     /*******************************************************************************************************************
@@ -74,6 +75,17 @@ public class LoanCustomersController implements Initializable {
             }
         });
     }
+    @FXML
+    private void setLoanRequestsButtonClicked() {
+            try {
+                AppStages.loanCalculatorStage().show();
+                loanRequestsButton.setDisable(AppStages.loanCalculatorStage().isShowing());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+    }
+
+
 
 
 

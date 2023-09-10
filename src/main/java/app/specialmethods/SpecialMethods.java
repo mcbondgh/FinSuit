@@ -1,22 +1,18 @@
 package app.specialmethods;
 
 import app.AppStarter;
-import app.fetchedData.BusinessInfoObject;
-import app.fetchedData.roles.UserRolesData;
+import app.repositories.BusinessInfoEntity;
+import app.repositories.roles.UserRolesData;
 import app.models.MainModel;
-import app.stages.AppStages;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.effect.ImageInput;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-import java.io.File;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,7 +28,7 @@ public class SpecialMethods {
     //THIS METHOD WHEN INVOKED SHALL TAKE THE NAME OF THE IMAGE AND THEN DISPLAY IT TO THE IMAGE-VIEW...
     public static Image setLogoImage() {
         String filePath = "";
-        for(BusinessInfoObject item : MODEL.getBusinessInfo()) {
+        for(BusinessInfoEntity item : MODEL.getBusinessInfo()) {
             filePath = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
         }
         return new Image(filePath);

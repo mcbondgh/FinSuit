@@ -1,6 +1,6 @@
 package app.config.email;
 
-import app.fetchedData.SmsAPIObject;
+import app.repositories.SmsAPIEntity;
 import app.models.MainModel;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class EmailAPI extends MainModel {
 
     public void sendEmail() throws IOException {
 
-        for (SmsAPIObject items : getSmsApi()) {
+        for (SmsAPIEntity items : getSmsApi()) {
             senderMail = items.getEmailAddress();
             senderPassword = items.getPassword();
         }

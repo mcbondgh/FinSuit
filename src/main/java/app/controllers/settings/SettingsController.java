@@ -4,8 +4,8 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.errorLogger.ErrorLogger;
-import app.fetchedData.BusinessInfoObject;
-import app.fetchedData.SmsAPIObject;
+import app.repositories.BusinessInfoEntity;
+import app.repositories.SmsAPIEntity;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -115,7 +115,7 @@ public class SettingsController extends SettingModel implements Initializable{
 
     }
     void fillFields() throws IOException {
-        for (BusinessInfoObject item : MODEL_OBJECT.getBusinessInfo()) {
+        for (BusinessInfoEntity item : MODEL_OBJECT.getBusinessInfo()) {
               institutionNameField.setText(item.getName());
               numberField.setText(item.getMobileNumber());
               otherNumberField.setText(item.getOtherNumber());
@@ -127,7 +127,7 @@ public class SettingsController extends SettingModel implements Initializable{
               String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
               logoViewer.setImage(new Image(getImageSource));
         }
-        for (SmsAPIObject items : MODEL_OBJECT.getSmsApi()) {
+        for (SmsAPIEntity items : MODEL_OBJECT.getSmsApi()) {
             apiKeyField.setText(items.getKey());
             senderIdField.setText(items.getSender_id());
             emailField.setText(items.getEmailAddress());

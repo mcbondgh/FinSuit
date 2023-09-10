@@ -1,5 +1,5 @@
 package app.config.sms;
-import app.fetchedData.SmsAPIObject;
+import app.repositories.SmsAPIEntity;
 import app.models.MainModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,10 +9,6 @@ import okhttp3.Request;
 
 import java.io.IOException;
 import java.util.*;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-
-
 
 
 public class SmsAPI {
@@ -37,7 +33,7 @@ public class SmsAPI {
 
     /* CHECK SMS BALANCE */
     public String getSmsBalance() throws IOException {
-        for(SmsAPIObject item : MODEL_OBJECT.getSmsApi()) {api = item.getKey();}
+        for(SmsAPIEntity item : MODEL_OBJECT.getSmsApi()) {api = item.getKey();}
         String balance = "";
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         Request request = new Request.Builder().get().url(checkBalanceUrl + api+"&response=json").build();
@@ -52,7 +48,7 @@ public class SmsAPI {
     }
 
     public String sendSms(String mobileNumber, String messageBody) throws IOException {
-        for(SmsAPIObject item : MODEL_OBJECT.getSmsApi()) {
+        for(SmsAPIEntity item : MODEL_OBJECT.getSmsApi()) {
             api = item.getKey();
             senderId = item.getSender_id();
         }
@@ -80,8 +76,8 @@ public class SmsAPI {
     }
     public static void main(String[] args) throws IOException {
         SmsAPI api1 = new SmsAPI();
-//        System.out.println(api1.getSmsBalance());
-        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
+        System.out.println(api1.getSmsBalance());
+//        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
     }
 
 

@@ -1,8 +1,6 @@
-package app.fetchedData;
+package app.repositories;
 
-import app.models.MainModel;
-
-public class BusinessInfoObject{
+public class BusinessInfoEntity {
     private String name;
     String mobileNumber;
     String otherNumber;
@@ -12,7 +10,7 @@ public class BusinessInfoObject{
     String location;
     String logo;
 
-    public BusinessInfoObject(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo) {
+    public BusinessInfoEntity(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo) {
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.otherNumber = otherNumber;

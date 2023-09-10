@@ -8,8 +8,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -18,27 +16,35 @@
 
 <AnchorPane fx:id="anchorPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="1220.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanCustomersController">
    <children>
-      <HBox layoutX="892.0" layoutY="8.0" prefHeight="47.0" prefWidth="318.0" spacing="5.0">
+      <HBox layoutX="767.0" layoutY="8.0" prefHeight="35.0" prefWidth="443.0" spacing="5.0">
          <children>
-            <MFXButton fx:id="filterButton" prefHeight="35.0" prefWidth="105.0" style="-fx-background-color: #1880c5;" text="   Filter Table" textFill="WHITE">
+            <MFXButton fx:id="filterButton" prefHeight="30.0" prefWidth="79.0" style="-fx-background-color: #278c8f;" text="   Filter Table" textFill="WHITE">
                <font>
-                  <Font name="Poppins Bold" size="11.0" />
+                  <Font name="Poppins Bold" size="10.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="addNewLoanButton" onAction="#newLoanButtonClicked" prefHeight="35.0" prefWidth="105.0" style="-fx-background-color: #1880c5;" text="➕ Add New " textFill="WHITE">
+            <MFXButton fx:id="addNewLoanButton" onAction="#newLoanButtonClicked" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: #278c8f;" text="➕ Add New " textFill="WHITE">
                <font>
-                  <Font name="Poppins Bold" size="11.0" />
+                  <Font name="Poppins Bold" size="10.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="payLoanButton" prefHeight="35.0" prefWidth="105.0" style="-fx-background-color: #1880c5;" text="   Pay Loan" textFill="WHITE">
+            <MFXButton fx:id="payLoanButton" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: #278c8f;" text="   Pay Loan" textFill="WHITE">
                <font>
-                  <Font name="Poppins Bold" size="11.0" />
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <MFXButton fx:id="loanRequestsButton" onAction="#setLoanRequestsButtonClicked" prefHeight="30.0" prefWidth="112.0" style="-fx-background-color: #278c8f;" text="Loan Requests (0)" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -100,15 +106,5 @@
             </Label>
          </children>
       </Pane>
-      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="1117.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/payIcon.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="898.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/filter.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

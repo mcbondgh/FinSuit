@@ -4,8 +4,8 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.controllers.homepage.AppController;
-import app.fetchedData.human_resources.EmployeesData;
-import app.fetchedData.users.UsersData;
+import app.repositories.human_resources.EmployeesData;
+import app.repositories.users.UsersData;
 import app.models.users.UsersModel;
 import app.specialmethods.SpecialMethods;
 import com.jfoenix.controls.JFXCheckBox;
@@ -47,6 +47,7 @@ public class ManageUsersController extends UsersModel implements Initializable {
     private TableColumn<UsersData, JFXCheckBox> updateColumn, removeColumn;
     @FXML
     private MFXFilterComboBox<String> employeeSelector;
+
     @FXML
     private TextField usernameField;
     @FXML
@@ -124,7 +125,6 @@ public class ManageUsersController extends UsersModel implements Initializable {
             employeeSelector.getItems().add(value);
         }
     }
-
 
 
 

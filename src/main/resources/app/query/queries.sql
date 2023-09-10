@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS customer_data(
     institution_address VARCHAR(50),
     institution_number VARCHAR(50),
     relationship_to_applicant VARCHAR(50),
+    is_active TINYINT(1) COMMENT '0 means account closed | 1 means account open',
     date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_by INT, 
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -123,7 +124,7 @@ CREATE TABLE IF NOT EXISTS customer_account_data(
     customer_id BIGINT NOT NULL,
 	account_type VARCHAR(50) NOT NULL,
     account_number VARCHAR(50) NOT NULL,
-    current_balance DECIMAL(10,2) COMMENT 'Current balance displays the actual amount of money left in the customers account after all dedactions',
+    account_balance DECIMAL(10,2) COMMENT 'Current balance displays the actual amount of money left in the customers account after all dedactions',
     previous_balance DECIMAL(10,2) COMMENT 'This balance shows the previous amount in the customers account before total dedaction.',
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     modified_by INT NOT NULL,
@@ -134,7 +135,8 @@ CREATE TABLE customer_document(
 	doc_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
     document_type VARCHAR(10),
-    document_name BLOB not null,
+    document_name VARCHAR(100) not null,
+    file_content BLOB NOT NULL,
     reason_for_upload TEXT NOT NULL,
     date_uploaded DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modified DATETIME DEFAULT NOW(),
@@ -152,4 +154,11 @@ CREATE TABLE IF NOT EXISTS group_supervisors(
     added_by INT, 
     modified_by INT,
     FOREIGN KEY(added_by) REFERENCES employees(emp_id)
+);
+
+CREATE TABLE IF NOT EXISTS loans_data(
+	load_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    load_no VARCHAR(50) NOT NULL,
+    customer_id INT NOT NULL,
+    loan_count INT
 );

@@ -17,6 +17,8 @@ module app.finsuit {
     requires annotations;
     requires org.apache.poi.poi;
     requires debugger.app;
+    requires kernel;
+    requires layout;
 
 
     opens app to javafx.fxml;
@@ -36,8 +38,9 @@ module app.finsuit {
     exports app.controllers;
     exports app.controllers.accounting;
     exports app.controllers.loans.application;
-    exports app.fetchedData.human_resources;
-    exports app.fetchedData.users;
+    exports app.repositories.human_resources;
+    exports app.repositories.users;
+    exports app.repositories.loans;
 
     opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;
@@ -54,6 +57,7 @@ module app.finsuit {
     opens app.specialmethods to javafx.fxml;
     opens app.controllers.login;
     opens app.controllers.loans.application;
-
+    opens app.repositories.accounts;
+    opens app.repositories.loans;
 
 }

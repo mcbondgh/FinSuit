@@ -1,13 +1,13 @@
-package app.fetchedData;
+package app.repositories;
 
-public class SmsAPIObject{
+public class SmsAPIEntity {
 
     String key;
     String sender_id;
     String emailAddress;
     String password;
 
-    public SmsAPIObject(String key, String sender_id, String emailAddress, String password) {
+    public SmsAPIEntity(String key, String sender_id, String emailAddress, String password) {
         this.key = key;
         this.sender_id = sender_id;
         this.emailAddress = emailAddress;

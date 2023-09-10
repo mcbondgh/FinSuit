@@ -39,7 +39,7 @@ SELECT emp_id, role_name, username,is_active FROM users AS u
 JOIN roles AS r ON  u.role_id = r.role_id WHERE is_deleted = 0;
 
 -- 10-08-2023
-ALTER TABLE users 
+ALTER TABLE users
 MODIFY COLUMN user_password VARCHAR(255) COMMENT 'default password is SUIT1234';
 
 SELECT customer_id from customer_data order by customer_id desc limit 1;
@@ -51,6 +51,18 @@ SELECT concat(firstname, " ", lastname) AS fullname FROM employees AS emp
 INNER JOIN users AS u ON emp.work_id = u.emp_id
 WHERE u.emp_id = "1000003";
 
+
+-- 25-08-2023
+SELECT concat(firstname, " ", lastname, " ", othername) AS fullname, gender, age, mobile_number,
+	id_type, account_type, account_number, date_created FROM customer_data AS cd 
+    INNER JOIN customer_account_data AS cad ON cd.customer_id = cad.customer_id;
+
+SELECT loan_count FROM loans_data WHERE customer_id = 1;
+
+
+    
+-- 26/08/2023
+ALTER TABLE customer_data ADD COLUMN is_active TINYINT DEFAULT 1 AFTER date_created;
 
 -- SET foreign_key_checks = 0;
 

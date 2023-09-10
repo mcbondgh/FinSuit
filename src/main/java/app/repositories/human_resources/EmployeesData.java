@@ -1,9 +1,8 @@
-package app.fetchedData.human_resources;
+package app.repositories.human_resources;
 
 import com.jfoenix.controls.JFXCheckBox;
 import javafx.scene.control.Label;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

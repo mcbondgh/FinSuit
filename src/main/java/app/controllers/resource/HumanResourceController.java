@@ -3,7 +3,7 @@ package app.controllers.resource;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
-import app.fetchedData.human_resources.EmployeesData;
+import app.repositories.human_resources.EmployeesData;
 import app.models.humanResource.HumanResourceModel;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;

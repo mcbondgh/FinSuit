@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
@@ -12,15 +13,17 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<MFXScrollPane fx:id="scrollPane" prefHeight="640.0" prefWidth="1225.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.CreateAccountController">
+<MFXScrollPane fx:id="scrollPane" pannable="true" prefHeight="640.0" prefWidth="1225.0" style="-fx-background-color: #f6fbff;" thumbHoverColor="#f3ffff" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.EditAccountController">
    <content>
-      <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1409.0" prefWidth="1208.0" style="-fx-background-color: #f6fbff;">
+      <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1477.0" prefWidth="1203.0" style="-fx-background-color: #f6fbff;">
          <children>
-            <Pane fx:id="applicantPane" layoutX="17.0" layoutY="14.0" prefHeight="573.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">
+            <Pane fx:id="applicantPane" disable="true" layoutX="10.0" layoutY="94.0" prefHeight="573.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">
                <children>
                   <Label layoutX="330.0" layoutY="63.0" prefHeight="17.0" prefWidth="78.0" text="Firstname *">
                      <font>
@@ -168,12 +171,6 @@
                      </font>
                   </TextField>
                   <ComboBox fx:id="customerEducationalBackground" layoutX="330.0" layoutY="381.0" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins; -fx-font-weight: semibold;" />
-                  <Label layoutX="590.0" layoutY="360.0" text="Initial Deposit(Ghc) *">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="initialDepositSelector" layoutX="590.0" layoutY="380.0" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins; -fx-font-weight: bold;" />
                   <Label layoutX="330.0" layoutY="360.0" text="Educational Background *">
                      <font>
                         <Font name="Poppins Regular" size="12.0" />
@@ -199,14 +196,14 @@
                               <Font name="Poppins Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Pane layoutX="860.0" layoutY="9.0" prefHeight="28.0" prefWidth="280.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
+                        <Pane layoutX="895.0" layoutY="11.0" prefHeight="28.0" prefWidth="205.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
                            <children>
-                              <Label layoutX="8.0" layoutY="6.0" text="Account Number[auto]" textFill="#2b5ea1">
+                              <Label layoutX="8.0" layoutY="6.0" text="Account Number" textFill="#2b5ea1">
                                  <font>
                                     <Font name="Poppins Bold" size="11.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="accountNumberLabel" layoutX="145.0" layoutY="5.0" prefHeight="19.0" prefWidth="131.0" textFill="#bc0101">
+                              <Label fx:id="accountNumberLabel" layoutX="108.0" layoutY="5.0" prefHeight="19.0" prefWidth="92.0" textFill="#bc0101">
                                  <font>
                                     <Font name="Poppins Bold" size="11.0" />
                                  </font>
@@ -232,7 +229,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="contactPersonPane" layoutX="20.0" layoutY="605.0" prefHeight="421.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">
+            <Pane fx:id="contactPersonPane" disable="true" layoutX="13.0" layoutY="675.0" prefHeight="421.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">
                <children>
                   <Pane prefHeight="50.0" prefWidth="1173.0" style="-fx-background-color: #d8ecff; -fx-background-radius: 10 10 0 0;">
                      <children>
@@ -355,7 +352,7 @@
                   <ComboBox fx:id="relationshipSelector" layoutX="330.0" layoutY="315.0" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins; -fx-font-weight: semibold;" />
                </children>
             </Pane>
-            <MFXButton fx:id="saveButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="859.0" layoutY="1329.0" prefHeight="30.0" prefWidth="100.0" rippleAnimateShadow="true" style="-fx-background-color: #2478b2;" text="💾 Save" textFill="WHITE">
+            <MFXButton fx:id="saveButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="854.0" layoutY="1403.0" prefHeight="30.0" prefWidth="100.0" rippleAnimateShadow="true" style="-fx-background-color: #2478b2;" text="🔄 Update" textFill="WHITE">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -363,7 +360,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="cancelButton" cancelButton="true" layoutX="1072.0" layoutY="1329.0" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #eee;" text="❌ Cancel">
+            <MFXButton fx:id="cancelButton" cancelButton="true" layoutX="1076.0" layoutY="1403.0" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #eee;" text="❌ Cancel">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -371,15 +368,7 @@
                   <Font name="Poppins Regular" size="14.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="previewButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="966.0" layoutY="1329.0" prefHeight="30.0" prefWidth="100.0" rippleAnimateShadow="true" style="-fx-background-color: #38abe4;" text="📰Preview" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <JFXToggleButton fx:id="sendNotificationButton" blendMode="MULTIPLY" disable="true" graphicTextGap="1.0" layoutX="644.0" layoutY="1323.0" lineSpacing="1.0" maxHeight="-Infinity" prefHeight="41.0" prefWidth="205.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px;" text="Send Notification To Client" textAlignment="CENTER" toggleColor="#008f6a" toggleLineColor="#5fe657" unToggleColor="RED" unToggleLineColor="#ffb4b4" wrapText="true">
+            <JFXToggleButton fx:id="sendNotificationButton" blendMode="MULTIPLY" disable="true" graphicTextGap="1.0" layoutX="635.0" layoutY="1397.0" lineSpacing="1.0" maxHeight="-Infinity" prefHeight="41.0" prefWidth="205.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px;" text="Send Notification To Client" textAlignment="CENTER" toggleColor="#008f6a" toggleLineColor="#5fe657" unToggleColor="RED" unToggleLineColor="#ffb4b4" wrapText="true">
                <font>
                   <Font name="Poppins Medium" size="10.0" />
                </font>
@@ -387,7 +376,7 @@
                   <Insets bottom="-20.0" left="-20.0" right="-20.0" top="-20.0" />
                </padding>
             </JFXToggleButton>
-            <Pane fx:id="filePane" layoutX="20.0" layoutY="1041.0" prefHeight="252.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">
+            <Pane fx:id="filePane" disable="true" layoutX="10.0" layoutY="1107.0" prefHeight="252.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">
                <children>
                   <Pane prefHeight="50.0" prefWidth="1173.0" style="-fx-background-color: #d8ecff; -fx-background-radius: 10 10 0 0;">
                      <children>
@@ -408,7 +397,7 @@
                         <Font name="Poppins SemiBold" size="10.0" />
                      </font>
                   </TextField>
-                  <Label layoutX="423.0" layoutY="65.0" text="Reason For Data Update">
+                  <Label layoutX="423.0" layoutY="65.0" text="Reason For Data Update *">
                      <font>
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
@@ -430,18 +419,69 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </TextArea>
-                  <Label fx:id="absoluteFilePathLabel" layoutX="27.0" layoutY="221.0" text="Label" visible="false">
-                     <font>
-                        <Font size="9.0" />
-                     </font>
-                  </Label>
-                  <MFXButton fx:id="previewFileButton" buttonType="RAISED" disable="true" layoutX="150.0" layoutY="170.0" prefHeight="32.0" prefWidth="75.0" style="-fx-background-color: #eee;" text="Preview">
+                  <JFXButton fx:id="previewItemButton" buttonType="RAISED" layoutX="153.0" layoutY="174.0" prefHeight="29.0" prefWidth="76.0" style="-fx-background-color: #eee;" text="Preview">
                      <font>
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
-                  </MFXButton>
+                  </JFXButton>
+                  <Label fx:id="absoluteFilePathLabel" layoutX="27.0" layoutY="221.0" text="Label" visible="false">
+                     <font>
+                        <Font size="9.0" />
+                     </font></Label>
                </children>
             </Pane>
+            <Pane layoutX="11.0" layoutY="23.0" prefHeight="48.0" prefWidth="1173.0" style="-fx-background-color: #feee; -fx-background-radius: 10 10 0 0;">
+               <children>
+                  <JFXCheckBox fx:id="editCheckBox" checkedColor="#f40000" layoutX="34.0" layoutY="12.0" text="ENABLE EDIT" textFill="#f00000">
+                     <font>
+                        <Font name="Poppins Bold" size="15.0" />
+                     </font>
+                  </JFXCheckBox>
+                  <Pane layoutX="784.0" layoutY="10.0" prefHeight="28.0" prefWidth="182.0" style="-fx-background-color: #FFF; -fx-background-radius: 4;">
+                     <children>
+                        <Label layoutX="11.0" layoutY="6.0" text="ACCOUNT STATUS" textFill="#278c8f">
+                           <font>
+                              <Font name="Poppins Bold" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="accountStatusLabel" layoutX="120.0" layoutY="5.0" prefHeight="19.0" prefWidth="54.0" text="OPEN" textFill="#26a64c">
+                           <font>
+                              <Font name="Poppins Bold" size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane layoutX="971.0" layoutY="10.0" prefHeight="28.0" prefWidth="135.0" style="-fx-background-color: #FFF; -fx-background-radius: 4;">
+                     <children>
+                        <Label layoutX="8.0" layoutY="6.0" text="ACTIVE LOANS" textFill="#278c8f">
+                           <font>
+                              <Font name="Poppins Bold" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="activeLoanLabel" layoutX="92.0" layoutY="5.0" prefHeight="19.0" prefWidth="43.0" text="10000" textFill="#eb9500">
+                           <font>
+                              <Font name="Poppins Bold" size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+               </children>
+               <effect>
+                  <DropShadow blurType="ONE_PASS_BOX" height="15.16" offsetX="1.0" offsetY="3.0" radius="5.7225" spread="0.13" width="9.73">
+                     <color>
+                        <Color red="0.699999988079071" green="0.699999988079071" blue="0.699999988079071" opacity="0.527918815612793" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Pane>
+            <MFXButton fx:id="closeAccountButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="965.0" layoutY="1403.0" prefHeight="30.0" prefWidth="99.0" rippleAnimateShadow="true" style="-fx-background-color: #ff0000;" text="⛔ Close " textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
          </children>
       </AnchorPane>
    </content>

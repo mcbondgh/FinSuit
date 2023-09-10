@@ -6,8 +6,9 @@ import app.specialmethods.SpecialMethods;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.*;
-import org.kordamp.bootstrapfx.BootstrapFX;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 public class AppStages {
@@ -63,6 +64,18 @@ public class AppStages {
         stage.centerOnScreen();
         return  stage;
     }
+
+    public static Stage loanCalculatorStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/calculator.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Loan Calculator");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.DECORATED);
+        return  stage;
+    }
     public static Stage depositStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/deposit-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
@@ -107,13 +120,14 @@ public class AppStages {
         stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
-    public static Stage createAccountStage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/accounts/accounts-page.fxml"));
+    public static Stage editCustomerDataStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/accounts/edit-customer-details-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
-        stage.setTitle("Create Account");
+        stage.setTitle("Edit Customer Data");
         stage.setScene(scene);
         stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
 

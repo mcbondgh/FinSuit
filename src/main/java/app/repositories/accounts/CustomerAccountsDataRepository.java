@@ -1,26 +1,27 @@
-package app.fetchedData.accounts;
+package app.repositories.accounts;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-public class AccountBalanceDataModel {
+public class CustomerAccountsDataRepository {
     private long account_id;
     private long customer_id;
-
     private String account_number, account_type;
-    private double current_balance;
+    private double account_balance;
     private double previous_balance;
     private Timestamp date_modified;
     private String formatted_date_modified;
     private int modified_by;
 
-    public AccountBalanceDataModel() {
-    }
+    public CustomerAccountsDataRepository() {}
 
-    public AccountBalanceDataModel(long account_id, double current_balance, double previous_balance, Timestamp date_modified, int modified_by) {
+    public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String account_type, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
         this.customer_id = account_id;
-        this.current_balance = current_balance;
+        this.customer_id = customer_id;
+        this.account_number = account_number;
+        this.account_type = account_type;
+        this.account_balance = account_balance;
         this.previous_balance = previous_balance;
         this.date_modified = date_modified;
         this.modified_by = modified_by;
@@ -60,12 +61,12 @@ public class AccountBalanceDataModel {
         this.account_type = account_type;
     }
 
-    public double getCurrent_balance() {
-        return current_balance;
+    public double getAccount_balance() {
+        return account_balance;
     }
 
-    public void setCurrent_balance(double current_balance) {
-        this.current_balance = current_balance;
+    public void setAccount_balance(double account_balance) {
+        this.account_balance = account_balance;
     }
 
     public double getPrevious_balance() {

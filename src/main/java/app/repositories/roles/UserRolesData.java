@@ -1,4 +1,4 @@
-package app.fetchedData.roles;
+package app.repositories.roles;
 
 public class UserRolesData {
     int role_id;

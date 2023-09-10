@@ -39,14 +39,14 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="857.0" style="-fx-background-color: #fff;">
                <children>
-                  <MFXScrollPane layoutX="160.0" layoutY="49.0" prefHeight="531.0" prefWidth="857.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <MFXScrollPane layoutX="160.0" layoutY="49.0" prefHeight="527.0" prefWidth="866.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-9.0" AnchorPane.topAnchor="0.0">
                      <padding>
                         <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <content>
-                        <AnchorPane prefHeight="829.0" prefWidth="825.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+                        <AnchorPane prefHeight="829.0" prefWidth="832.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px; -fx-background-radius: 10px;">
                            <children>
-                              <GridPane fx:id="gripView" alignment="CENTER" layoutX="38.0" layoutY="45.0" prefHeight="408.0" prefWidth="769.0">
+                              <GridPane fx:id="gripView" alignment="CENTER" layoutX="38.0" layoutY="45.0" prefHeight="408.0" prefWidth="761.0">
                                 <columnConstraints>
                                     <ColumnConstraints halignment="LEFT" maxWidth="267.6666564941406" minWidth="10.0" prefWidth="131.66664632161456" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="281.33335367838544" />
@@ -328,7 +328,7 @@
                                     </TextArea>
                                  </children>
                               </GridPane>
-                              <GridPane fx:id="gridView2" alignment="CENTER" layoutX="38.0" layoutY="516.0" prefHeight="290.0" prefWidth="779.0">
+                              <GridPane fx:id="gridView2" alignment="CENTER" layoutX="38.0" layoutY="516.0" prefHeight="290.0" prefWidth="761.0">
                                  <columnConstraints>
                                     <ColumnConstraints halignment="LEFT" maxWidth="267.6666564941406" minWidth="10.0" prefWidth="128.33333333333334" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="294.33331298828125" />

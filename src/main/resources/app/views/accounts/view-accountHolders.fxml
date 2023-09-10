@@ -28,7 +28,7 @@
             </TextField>
          </children>
       </Pane>
-      <MFXLegacyTableView fx:id="customersTable" layoutX="13.0" layoutY="51.0" prefHeight="510.0" prefWidth="1203.0" style="-fx-font-family: poppins; -fx-font-size: 12px;">
+      <MFXLegacyTableView fx:id="customersTable" fixedCellSize="35.0" layoutX="13.0" layoutY="51.0" prefHeight="510.0" prefWidth="1203.0" style="-fx-font-family: poppins; -fx-font-size: 14px; -fx-alignment: center;">
          <columns>
             <TableColumn fx:id="fullNameColumn" prefWidth="200.0" text="FULL NAME" />
             <TableColumn fx:id="genderColumn" prefWidth="130.0" text="GENDER " />
@@ -36,9 +36,9 @@
             <TableColumn fx:id="mobileNumberColumn" maxWidth="250.0" prefWidth="130.0" text="MOBILE NUMBER" />
             <TableColumn fx:id="accountTypeColumn" prefWidth="147.33331298828125" text="ACCOUNT TYPE" />
             <TableColumn fx:id="accountNumberColumn" prefWidth="156.66668701171875" text="ACCOUNT NO." />
-            <TableColumn fx:id="loanStatusColumn" prefWidth="130.0" text="LOAN STATUS" />
-            <TableColumn fx:id="registrationDateColumn" prefWidth="143.3333740234375" text="DATE REGISTERED" />
-            <TableColumn fx:id="actionColumn" prefWidth="96.0" text="UPDATE" />
+            <TableColumn fx:id="idTypeColumn" prefWidth="130.0" text="ID TYPE" />
+            <TableColumn fx:id="registrationDateColumn" prefWidth="186.0" text="DATE REGISTERED" />
+            <TableColumn fx:id="actionColumn" prefWidth="62.6666259765625" style="-fx-alignment: center;" text="VIEW" />
          </columns>
       </MFXLegacyTableView>
    </children>

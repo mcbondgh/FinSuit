@@ -1,25 +1,30 @@
 package app.models;
 
 import app.config.db.DbConnection;
-import app.fetchedData.BusinessInfoObject;
-import app.fetchedData.SmsAPIObject;
-import app.fetchedData.human_resources.EmployeesData;
-import app.fetchedData.roles.UserRolesData;
-import app.fetchedData.users.UsersData;
+import app.repositories.BusinessInfoEntity;
+import app.repositories.SmsAPIEntity;
+import app.repositories.accounts.CustomerAccountsDataRepository;
+import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.accounts.CustomersDocumentRepository;
+import app.repositories.human_resources.EmployeesData;
+import app.repositories.roles.UserRolesData;
+import app.repositories.users.UsersData;
 import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainModel extends DbConnection {
-    public ArrayList<BusinessInfoObject> getBusinessInfo() {
-        ArrayList<BusinessInfoObject> data = new ArrayList<>();
+    public ArrayList<BusinessInfoEntity> getBusinessInfo() {
+        ArrayList<BusinessInfoEntity> data = new ArrayList<>();
         try {
             String query = "SELECT * FROM business_info;";
             preparedStatement = getConnection().prepareStatement(query);
@@ -33,7 +38,7 @@ public class MainModel extends DbConnection {
                 String digital = resultSet.getString("digital_address"); //5
                 String location = resultSet.getString("location"); //6
                 String logo = resultSet.getString("logoPath");//7
-                data.add(new BusinessInfoObject(name, number, otherNumber, email, accountPassword, digital, location, logo));
+                data.add(new BusinessInfoEntity(name, number, otherNumber, email, accountPassword, digital, location, logo));
             }
             preparedStatement.close();
             resultSet.close();
@@ -43,8 +48,8 @@ public class MainModel extends DbConnection {
         }
         return data;
     }
-    public ArrayList<SmsAPIObject> getSmsApi() throws IOException {
-        ArrayList<SmsAPIObject> data = new ArrayList<SmsAPIObject>();
+    public ArrayList<SmsAPIEntity> getSmsApi() throws IOException {
+        ArrayList<SmsAPIEntity> data = new ArrayList<SmsAPIEntity>();
         try {
             String query = "SELECT * FROM sms_and_email_api;";
             preparedStatement = getConnection().prepareStatement(query);
@@ -54,7 +59,7 @@ public class MainModel extends DbConnection {
                 String sender_id = resultSet.getString("sender_id");
                 String email_address = resultSet.getString("email_address");
                 String email_password = resultSet.getString("email_password");
-                data.add(new SmsAPIObject(key, sender_id, email_address, email_password));
+                data.add(new SmsAPIEntity(key, sender_id, email_address, email_password));
             }
         }catch (SQLException e) {e.printStackTrace();}
         return data;
@@ -72,6 +77,7 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {e.printStackTrace();}
         return userId;
     }
+
 
     public String getEmployeeIdByUsername(String username) {
         String emp_id = "";
@@ -137,7 +143,6 @@ public class MainModel extends DbConnection {
         }catch (Exception ignored){}
         return flag;
     }
-
     protected ObservableList<EmployeesData> fetchEmployeeSummaryData() {
         ObservableList<EmployeesData> data = FXCollections.observableArrayList();
         try {
@@ -239,6 +244,112 @@ public class MainModel extends DbConnection {
         return roles;
     }
 
+    public ArrayList<CustomersDataRepository> fetchCustomersData() {
+        ArrayList<CustomersDataRepository> data = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM customer_data";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+
+                int id = resultSet.getInt("customer_id");
+                String firstname = resultSet.getNString("firstname");
+                String lastname = resultSet.getString("lastname");
+                String othername = resultSet.getNString("othername");
+                String gender = resultSet.getString("gender");
+                Date dob = resultSet.getDate("dob");
+                int age = resultSet.getInt("age");
+                String place_of_birth = resultSet.getNString("place_of_birth");
+                String  mobile_number = resultSet.getString("mobile_number");
+                String other_number = resultSet.getNString("other_number");
+                String email = resultSet.getString("email");
+                String digital_address = resultSet.getNString("digital_address");
+                String residential_address = resultSet.getString("residential_address");
+                String key_landmark = resultSet.getNString("key_landmark");
+                String marital_status = resultSet.getString("marital_status");
+                String name_of_spouse = resultSet.getNString("name_of_spouse");
+                String id_type = resultSet.getString("id_type");
+                String id_number = resultSet.getNString("id_number");
+                String educational_background = resultSet.getString("educational_background");
+                String additional_comment = resultSet.getString("additional_comment");
+                String contact_person_fullname = resultSet.getNString("contact_person_fullname");
+                Date contact_person_dob = resultSet.getDate("contact_person_dob");
+                String contact_person_number = resultSet.getNString("contact_person_number");
+                String contact_person_gender = resultSet.getString("contact_person_gender");
+                String contact_person_landmark = resultSet.getString("contact_person_landmark");
+                String contact_person_education_level = resultSet.getNString("contact_person_education_level");
+                String contact_person_digital_address = resultSet.getString("contact_person_digital_address");
+                String contact_person_id_type = resultSet.getNString("contact_person_id_type");
+                String contact_person_id_number = resultSet.getString("contact_person_id_number");
+                String contact_person_place_of_work = resultSet.getNString("contact_person_place_of_work");
+                String institution_address = resultSet.getString("institution_address");
+                String institution_number = resultSet.getString("institution_number");
+                String relationship_to_applicant = resultSet.getNString("relationship_to_applicant");
+                byte is_active = resultSet.getByte("is_active");
+                Timestamp date_created = resultSet.getTimestamp("date_created");
+                int created_by = resultSet.getInt("created_by");
+                Timestamp date_modified = resultSet.getTimestamp("date_modified");
+                int modified_by = resultSet.getInt("modified_by");
+
+                data.add(new CustomersDataRepository(
+                        id,firstname, lastname, othername, gender, dob, age, place_of_birth, mobile_number, other_number,
+                        email, digital_address, residential_address, key_landmark, marital_status, name_of_spouse, id_type,
+                        id_number, educational_background, additional_comment, contact_person_fullname, contact_person_dob, contact_person_number,
+                        contact_person_gender, contact_person_landmark, contact_person_education_level, contact_person_digital_address, contact_person_id_type,
+                        contact_person_id_number, contact_person_place_of_work, institution_address, institution_number,relationship_to_applicant,date_created,
+                        created_by, date_modified, modified_by
+                ));
+            }
+        }catch (Exception ignore) {}return data;
+    }
+    public ObservableList<CustomerAccountsDataRepository> fetchCustomersAccountData() {
+        ObservableList<CustomerAccountsDataRepository> data = FXCollections.observableArrayList();
+        try{
+            String query = "SELECT * FROM customer_account_data";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+//            account_id, customer_id, account_type, account_number, current_balance, previous_balance, date_modified, modified_by
+            while (resultSet.next()) {
+                int account_id = resultSet.getInt("account_id");
+                int customer_id = resultSet.getInt("customer_id");
+                String account_type = resultSet.getString("account_type");
+                String account_number = resultSet.getString("account_number");
+                Double current_balance = resultSet.getDouble("account_balance");
+                Double previous_balance = resultSet.getDouble("previous_balance");
+                Timestamp date_modified = resultSet.getTimestamp("date_modified");
+                int modified_by = resultSet.getInt("modified_by");
+
+                data.add(new CustomerAccountsDataRepository(account_id, customer_id, account_number, account_type, current_balance, previous_balance, date_modified, modified_by));
+            }
+        }catch (Exception ignore){}return data;
+    }
+
+    public ObservableList<CustomersDocumentRepository> fetchCustomerDocuments() {
+        ObservableList<CustomersDocumentRepository> data = FXCollections.observableArrayList();
+//        doc_id, customer_id, document_type, document_name, file_content, reason_for_upload, date_uploaded, date_modified, uploaded_by, modified_by
+        try {
+            String query = "SELECT * FROM customer_document";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                int doc_id = resultSet.getInt("doc_id");
+                int customer_id  = resultSet.getInt("customer_id");
+                String document_type = resultSet.getString("document_type");
+                String document_name = resultSet.getString("document_name");
+                byte[] document_content = resultSet.getBytes("file_content");
+                String reason_for_upload = resultSet.getString("reason_for_upload");
+                Timestamp date_uploaded = resultSet.getTimestamp("date_uploaded");
+                Timestamp date_modified = resultSet.getTimestamp("date_modified");
+                int uploaded_by = resultSet.getInt("uploaded_by");
+                int modified_by = resultSet.getInt("modified");
+                data.add(new CustomersDocumentRepository(
+                        doc_id, customer_id, document_type, document_name, document_content,
+                        reason_for_upload, date_uploaded, date_modified, uploaded_by, modified_by
+                ));
+            }
+        }catch (Exception ignore){}return data;
+    }
+
     public ObservableList<UsersData> fetchAssignedUsersOnly() {
         ObservableList<UsersData> data = FXCollections.observableArrayList();
         try {
@@ -257,10 +368,8 @@ public class MainModel extends DbConnection {
                 data.add(new UsersData(emp_id, username, role_name, active));
             }
         }catch (Exception exception){exception.printStackTrace();}
-
         return data;
     }
-
 
     protected int getRoleIdByName(@NamedArg("role Name")String role_name) {
         int flag = 0;
@@ -275,6 +384,8 @@ public class MainModel extends DbConnection {
             }catch (SQLException ignored){}
         return flag;
     }
+
+
 
 
 

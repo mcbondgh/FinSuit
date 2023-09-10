@@ -1,4 +1,4 @@
-package app.fetchedData.users;
+package app.repositories.users;
 
 
 import com.jfoenix.controls.JFXCheckBox;

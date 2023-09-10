@@ -2,8 +2,20 @@ package app.controllers.accounts;
 
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
-import app.fetchedData.BusinessInfoObject;
+import app.repositories.BusinessInfoEntity;
 import app.models.MainModel;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.BorderRadius;
+import com.itextpdf.layout.property.TextAlignment;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,14 +23,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -192,6 +202,7 @@ public class PreviewCustomerDetails implements Initializable {
     void exportButtonClicked(ActionEvent event) {
         try {
             exportButton.setDisable(true);
+
             //CREATE FILE DIRECTORY ON DESKTOP TO SAVE THE DOCUMENT.
             String desktopPath = System.getProperty("user.home") + File.separator + "Desktop";
             String directoryPath = desktopPath + File.separator + "Finsuit Document";
@@ -200,22 +211,15 @@ public class PreviewCustomerDetails implements Initializable {
             //check if the directory exists, if true save file else create the folder and save the document within.
             if (!directory.exists()) {
                 directory.mkdirs();
-                return;
             }
-            String fileName = applicantFullnameLabel.getText()+ ".pdf";
-            String documentPath = directoryPath + File.separator + fileName;
+            String fileName = applicantFullnameLabel.getText() + LocalDate.now() + ".pdf";
+            String documentPath = directory + File.separator + fileName;
 
-            createMiniDocument().save(documentPath);
-            createMiniDocument().close();
-            Thread.sleep(3000);
-            exportButton.setDisable(false);
+            createMiniDocument(documentPath);
             NOTIFICATION.successNotification("Export Successful", "Document Successfully Exported to desktop.");
-
         }catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -227,20 +231,10 @@ public class PreviewCustomerDetails implements Initializable {
 
     // Create a Document object
      @NotNull
-     private PDDocument createMiniDocument() throws IOException {
+     private void createMiniDocument(String fileName) throws IOException {
         // Create a new Word document
-         PDDocument document = new PDDocument();
-         PDPage documentPage = new PDPage();
-         document.addPage(documentPage);
-
-
-
-         //SETUP THE PAGE CONTENT
-         PDPageContentStream pageHeader = new PDPageContentStream(document, documentPage);
-         pageHeader.setLineWidth(18);
-
-         pageHeader.close();
-
+         PdfWriter pdfWriter = new PdfWriter(fileName);
+         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
 
          String businessName = "";
          String mobileNumber = "";
@@ -248,7 +242,7 @@ public class PreviewCustomerDetails implements Initializable {
          String email = "";
          String digitalAddress = "";
 
-         for (BusinessInfoObject info :MODEL_OBJ.getBusinessInfo()) {
+         for (BusinessInfoEntity info :MODEL_OBJ.getBusinessInfo()) {
              businessName = info.getName();
              mobileNumber = info.getMobileNumber();
              otherNumber = info.getOtherNumber();
@@ -256,22 +250,55 @@ public class PreviewCustomerDetails implements Initializable {
              digitalAddress = info.getDigital();
          }
 
+         //SET UP THE PAGE CONTENT AND CREATE THE TABLE WITH TWO COLUMNS.
+         Document page = new Document(pdfDocument, PageSize.A4);
+         Table documentTable = new Table(2).useAllAvailableWidth();
+         Div headerContainer = new Div();
+
+         //CREATE HEADER WITH LETTER HEAD
+         Paragraph letterHead = new Paragraph(businessName)
+            .setFontColor(ColorConstants.BLACK)
+            .setFontSize(18)
+            .setBold()
+            .setTextAlignment(TextAlignment.CENTER).setPaddingTop(4);
+
+         Paragraph numberHead = new Paragraph(mobileNumber + " | " + otherNumber)
+                 .setFontColor(ColorConstants.BLACK).setFontSize(12).setBold().setTextAlignment(TextAlignment.CENTER)
+                 .setMarginBottom(20);
+
+         Paragraph addressHead = new Paragraph(email + " | " + digitalAddress)
+                 .setFontSize(12).setBold().setFontColor(ColorConstants.BLACK).setTextAlignment(TextAlignment.CENTER);
+         headerContainer.add(letterHead);
+         headerContainer.add(addressHead);
+         headerContainer.add(numberHead);
+         headerContainer.setBackgroundColor(new DeviceRgb( 254, 245, 345), 10);
+         headerContainer.setBorderRadius(new BorderRadius(2)).setMarginBottom(5);
+         page.add(headerContainer);
+
          //parse the value and table data as key value pairs
          Map<String, String> tableContent = new HashMap<>();
-         tableContent.put("FULL NAME", applicantFullnameLabel.getText());
+         tableContent.put("FULL NAME", applicantFullName);
+         tableContent.put("MOBILE NUMBER", contactMobileNumber);
+         tableContent.put("EMAIL ADDRESS", applicantEmail);
          tableContent.put("ACCOUNT TYPE", applicantAccountType);
          tableContent.put("ACCOUNT NUMBER", applicantAccountNumber);
          tableContent.put("INITIAL DEPOSIT", applicantDepositAmount.toString());
-         tableContent.put("EMAIL ADDRESS", applicantEmail);
-         tableContent.put("MOBILE NUMBER", applicantFullName);
-         tableContent.put("REGISTRATION OFFICER ID", getFullName());
+         tableContent.put("REGISTRATION OFFICER", getFullName());
 
          //populate table
-         for (String mapKeys : tableContent.keySet()) {
-
+         for(Map.Entry<String, String> items : tableContent.entrySet()) {
+            Cell titleCell = new Cell().add(new Paragraph(items.getKey())).setTextAlignment(TextAlignment.CENTER)
+                    .setPadding(5);
+            Cell contentCell = new Cell().add(new Paragraph(items.getValue()))
+                    .setTextAlignment(TextAlignment.CENTER).setPadding(5);
+            documentTable.addCell(titleCell);
+            documentTable.addCell(contentCell);
          }
-         return document;
-    }
+         page.add(documentTable);
+        page.close();
+     }
+
+
 
 
 
