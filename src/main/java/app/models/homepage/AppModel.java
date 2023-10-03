@@ -1,7 +1,7 @@
 package app.models.homepage;
 
-import app.repositories.BusinessInfoEntity;
 import app.models.MainModel;
+import app.repositories.BusinessInfoEntity;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

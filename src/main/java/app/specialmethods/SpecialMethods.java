@@ -1,9 +1,9 @@
 package app.specialmethods;
 
 import app.AppStarter;
+import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.roles.UserRolesData;
-import app.models.MainModel;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -138,6 +138,14 @@ public class SpecialMethods {
             comboBox.getItems().add(x);
         }
     }
+
+    public static void setLoanType(ComboBox<String> comboBox) {
+        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
     public static void setRelationshipTypes(ComboBox<String> comboBox) {
         String[] items = {"Father", "Mother", "Brother", "Sister", "Uncle", "Aunty", "Friend", "Cousin", "Other", "Guardian", "Relative"};
         Arrays.sort(items);
@@ -176,7 +184,7 @@ public class SpecialMethods {
         else if (count == 1000000000 || count <= 999999999) {accountNo = "1000" + count;}
         else if (count == 1000000000 || count <= 999999999) {accountNo = "100" + count;}
         else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {accountNo = "10" + count;}
-        else {accountNo = String.valueOf("A" + count);}
+        else {accountNo = String.valueOf(count);}
         return accountNo;
     }
     public static String generateLoanNumber(long count) {
@@ -192,7 +200,7 @@ public class SpecialMethods {
         else if (count == 1000000000 || count <= 999999999) {loanId = "2000" + count;}
         else if (count == 1000000000 || count <= 999999999) {loanId = "200" + count;}
         else if (count == Long.parseLong("10000000000") && count <=Long.parseLong("99999999999")) {loanId = "20" + count;}
-        else {loanId = String.valueOf("L" + count);}
+        else {loanId = String.valueOf(count);}
         return loanId;
     }
 

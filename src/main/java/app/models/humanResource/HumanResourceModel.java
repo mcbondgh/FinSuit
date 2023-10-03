@@ -59,7 +59,8 @@ public class HumanResourceModel extends MainModel {
             preparedStatement.setInt(33, emp.getAdded_by());
             preparedStatement.setInt(34, emp.getModified_by());
             flag = preparedStatement.executeUpdate();
-        }catch (Exception e) {e.printStackTrace();};
+            commitTransaction();
+        }catch (Exception e) {rollBack();}
         return flag;
     }
 
@@ -70,7 +71,8 @@ public class HumanResourceModel extends MainModel {
             preparedStatement.setByte(1, statusValue);
             preparedStatement.setString(2, empId);
             preparedStatement.execute();
-        }catch (SQLException ignored) {}
+            commitTransaction();
+        }catch (SQLException ignored) {rollBack();}
 
     }
     protected int removeEmployee(String employeeId) {
@@ -80,7 +82,8 @@ public class HumanResourceModel extends MainModel {
                 preparedStatement = getConnection().prepareStatement(query);
                 preparedStatement.setString(1, employeeId);
                 flag = preparedStatement.executeUpdate();
-            }catch (SQLException ignored) {}
+                commitTransaction();
+            }catch (SQLException ignored) {rollBack();}
         return flag;
     }
 
@@ -129,8 +132,8 @@ public class HumanResourceModel extends MainModel {
                 preparedStatement.setInt(32, activeUserId);
                 preparedStatement.setString(33, emp_id);
                 flag = preparedStatement.executeUpdate();
-            }catch (SQLException e) {e.printStackTrace();}
-
+                commitTransaction();
+            }catch (SQLException e) {rollBack();}
         return flag;
     }
 

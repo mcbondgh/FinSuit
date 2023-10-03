@@ -7,6 +7,7 @@ import javafx.scene.control.ButtonType;
 public class UserAlerts {
 
     private String title, header, content;
+
     public UserAlerts(@NamedArg("title") String title, @NamedArg("header") String header, @NamedArg("body") String content) {
         this.title = title;
         this.header = header;
@@ -29,6 +30,15 @@ public class UserAlerts {
             flag = true;
         }
         return flag;
+    }
+    public String saveToDraft() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, content);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.getButtonTypes().add(ButtonType.YES);
+        alert.getButtonTypes().add(ButtonType.NO);
+        alert.getButtonTypes().remove(ButtonType.OK);
+        return alert.showAndWait().get() == ButtonType.YES ? "YES" : alert.showAndWait().get().equals(ButtonType.NO) ? "NO" : "CANCEL";
     }
 
     public void warningAlert() {

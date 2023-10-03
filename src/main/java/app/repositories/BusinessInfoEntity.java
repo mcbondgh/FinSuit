@@ -7,10 +7,12 @@ public class BusinessInfoEntity {
     String email;
     String accountPassword;
     String digital;
+
+    double loanPercentage;
     String location;
     String logo;
 
-    public BusinessInfoEntity(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo) {
+    public BusinessInfoEntity(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double loanPercentage) {
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.otherNumber = otherNumber;
@@ -19,6 +21,7 @@ public class BusinessInfoEntity {
         this.digital = digital;
         this.location = location;
         this.logo = logo;
+        this.loanPercentage = loanPercentage;
     }
 
     public String getName() {
@@ -70,6 +73,14 @@ public class BusinessInfoEntity {
     }
     public String getLocation() {
         return location;
+    }
+
+    public double getLoanPercentage() {
+        return loanPercentage;
+    }
+
+    public void setLoanPercentage(double loanPercentage) {
+        this.loanPercentage = loanPercentage;
     }
 
     public void setLocation(String location) {

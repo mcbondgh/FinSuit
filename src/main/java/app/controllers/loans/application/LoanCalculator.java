@@ -1,6 +1,7 @@
 package app.controllers.loans.application;
 
 import app.models.MainModel;
+import app.repositories.BusinessInfoEntity;
 import app.repositories.loans.ScheduleEntity;
 import app.repositories.users.UsersData;
 import app.specialmethods.SpecialMethods;
@@ -38,6 +39,7 @@ public class LoanCalculator extends MainModel implements Initializable {
     @FXML private TableColumn<ScheduleEntity, Double> principalColumn, interestColumn, installmentColumn, balanceColumn;
     @FXML private TableColumn<ScheduleEntity, LocalDate> paymentDateColumn;
     @FXML private Pane calculatorPane;
+    DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
 
 
@@ -89,7 +91,7 @@ public class LoanCalculator extends MainModel implements Initializable {
         populateTable();
 
         ScheduleEntity entity;
-        DecimalFormat df = new DecimalFormat("#.##");
+
 
         int loanTenure = loanPeriodSelector.getValue(); // 6
         double loanAmount = Double.parseDouble(displayLoanAmount.getText()); // 100.00
@@ -102,8 +104,8 @@ public class LoanCalculator extends MainModel implements Initializable {
         for (int x=1; x <= loanTenure; x++) {
             totalLoanAmount = totalLoanAmount - monthlyInstallment;
 
-            double formattedPrincipal = Double.parseDouble(df.format(principal));
-            double formattedLoanDifference = Double.parseDouble(df.format(totalLoanAmount));
+            double formattedPrincipal = Double.parseDouble(decimalFormat.format(principal));
+            double formattedLoanDifference = Double.parseDouble(decimalFormat.format(totalLoanAmount));
 
             //check for a negative value else just allow the value
             double maxValue = Math.max(formattedLoanDifference, 0.0);
@@ -119,7 +121,7 @@ public class LoanCalculator extends MainModel implements Initializable {
      *********************************************** IMPLEMENTATION OF ACTION EVENT METHODS
      ******************************************************************************************************************/
     void actionEventsMethodsImplementation() {
-                DecimalFormat df = new DecimalFormat("#.##");
+
                 loanPeriodSelector.setOnAction(action -> {
                     double loanAmount = Double.parseDouble(loanAmountField.getText());
                     int interest = interestRateSelector.getValue();
@@ -130,8 +132,8 @@ public class LoanCalculator extends MainModel implements Initializable {
                             double interestAmount = (loanAmount * interest) / 100;
                             double totalInterestAmount =  tenure * interestAmount;
                             double finalResult = totalInterestAmount + loanAmount;
-                            displayInterestAmount.setText(String.valueOf(df.format(totalInterestAmount)));
-                            displayTotalLoanAmount.setText(String.valueOf(df.format(finalResult)));
+                            displayInterestAmount.setText(String.valueOf(decimalFormat.format(totalInterestAmount)));
+                            displayTotalLoanAmount.setText(String.valueOf(decimalFormat.format(finalResult)));
                         }
                     }
                 });
@@ -140,14 +142,14 @@ public class LoanCalculator extends MainModel implements Initializable {
                     double loanAmount = Double.parseDouble(loanAmountField.getText());
                     int interest = interestRateSelector.getValue();
                     double interestAmount = (loanAmount * interest) / 100;
-                    displayInterestAmount.setText(String.valueOf(df.format(interestAmount)));
+                    displayInterestAmount.setText(String.valueOf(decimalFormat.format(interestAmount)));
                 });
 
                 processingRateSelector.setOnAction(event -> {
                     double loanAmount = Double.parseDouble(loanAmountField.getText());
                     int interest = processingRateSelector.getValue();
                     double interestAmount = (loanAmount * interest) / 100;
-                    displayProcessingAmount.setText(String.valueOf(df.format(interestAmount)));
+                    displayProcessingAmount.setText(String.valueOf(decimalFormat.format(interestAmount)));
                 });
 
                 datePicker.setOnAction(click -> {
@@ -159,7 +161,7 @@ public class LoanCalculator extends MainModel implements Initializable {
 
                     double totalAmount = Double.parseDouble(displayTotalLoanAmount.getText());
                     double result = totalAmount / tenure;
-                    displayMonthlyInstallmentAmount.setText(String.valueOf(df.format(result)));
+                    displayMonthlyInstallmentAmount.setText(String.valueOf(decimalFormat.format(result)));
 
                 });
 
@@ -188,14 +190,19 @@ public class LoanCalculator extends MainModel implements Initializable {
         });
 
         statutoryField.setOnKeyTyped(keyEvent -> {
+            double percentageValue = 0.0;
+            for (BusinessInfoEntity item : getBusinessInfo()) {
+                percentageValue = (item.getLoanPercentage() / 100);
+
+            }
             if (!keyEvent.getCharacter().matches("[0-9]")) {
                 statutoryField.deletePreviousChar();
             }
             try {
                 double basicSalary = Double.parseDouble(basicSalaryField.getText());
                 double statutory = Double.parseDouble(statutoryField.getText());
-                double result = (basicSalary - statutory) * 0.5;
-                remainingBalanceField.setText(String.valueOf(result));
+                double result = (basicSalary - statutory) * percentageValue;
+                remainingBalanceField.setText(String.valueOf(decimalFormat.format(result)));
             }catch (NumberFormatException e){
                 remainingBalanceField.setText(basicSalaryField.getText());
             }

@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -231,7 +232,7 @@ public class PreviewCustomerDetails implements Initializable {
 
     // Create a Document object
      @NotNull
-     private void createMiniDocument(String fileName) throws IOException {
+     private void createMiniDocument(String fileName) throws IOException, SQLException {
         // Create a new Word document
          PdfWriter pdfWriter = new PdfWriter(fileName);
          PdfDocument pdfDocument = new PdfDocument(pdfWriter);

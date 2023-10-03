@@ -2,18 +2,19 @@ package app.controllers.homepage;
 
 import app.controllers.accounting.AccountingController;
 import app.controllers.accounts.AccountsController;
-import app.controllers.accounts.CreateAccountController;
 import app.controllers.customers.CustomersController;
 import app.controllers.dashboard.DashboardController;
 import app.controllers.loans.LoansController;
 import app.controllers.messages.MessageBoxController;
-import app.controllers.resource.FrontController;
-import app.controllers.transactions.TransactionController;
 import app.controllers.reports.ReportsController;
+import app.controllers.resource.FrontController;
 import app.controllers.settings.SettingsController;
+import app.controllers.transactions.TransactionController;
 import app.models.homepage.AppModel;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
+import com.jfoenix.controls.JFXListView;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -26,9 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.util.Duration;
-import com.jfoenix.controls.JFXListView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,8 +53,9 @@ public class AppController extends AppModel implements Initializable {
     @FXML private ImageView siteLogo, logoImage;
     @FXML private BorderPane borderPane;
     @FXML private MFXButton dashboardButton, customersButton, accountsButton, transactionButton, accountingButton;
-    @FXML private MFXButton messageBoxButton, settingsButton, reportsButton, humanResourceButton, loanButton;
+    @FXML private MFXButton messageBoxButton, settingsButton, reportsButton, humanResourceButton;
     @FXML private JFXListView<String> sortCustomersListView;
+    @FXML private MFXButton loansButton;
 
 
 
@@ -145,9 +145,9 @@ public class AppController extends AppModel implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-        loanButton.setOnAction(action -> {
+        loansButton.setOnAction(action -> {
             try {
-                LoansController.pageTitlePlaceHolder = loanButton.getText();
+                LoansController.pageTitlePlaceHolder = loansButton.getText();
                 SpecialMethods.FlipView("views/loans/loans-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);

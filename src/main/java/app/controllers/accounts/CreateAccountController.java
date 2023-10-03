@@ -3,9 +3,10 @@ package app.controllers.accounts;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
-import app.models.accounts.CreateAccountModel;
+import app.models.accounts.CustomerAccountModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.accounts.CustomersDocumentRepository;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import com.jfoenix.controls.JFXToggleButton;
@@ -14,10 +15,10 @@ import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -29,15 +30,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CreateAccountController extends CreateAccountModel implements Initializable {
+public class CreateAccountController extends CustomerAccountModel implements Initializable {
 
     UserAlerts ALERTS;
     UserNotification NOTIFICATION = new UserNotification();
     CustomersDataRepository customersDataRepository = new CustomersDataRepository();
+
+    CustomersDocumentRepository documentRepository  = new CustomersDocumentRepository();
     CustomerAccountsDataRepository balanceDataModel = new CustomerAccountsDataRepository();
 
     /*******************************************************************************************************************
@@ -188,7 +193,6 @@ public class CreateAccountController extends CreateAccountModel implements Initi
         };
     }
 
-
     private byte[] getFileStream(String filePath) {
         byte[] bytes = new byte[0];
         try(FileInputStream stream = new FileInputStream(filePath)) {
@@ -197,7 +201,6 @@ public class CreateAccountController extends CreateAccountModel implements Initi
         }catch (Exception e){e.printStackTrace();}
         return bytes;
     }
-
     String getUploadedDocument() {
         String fileName = "";
         String filePath = "";
@@ -273,9 +276,29 @@ public class CreateAccountController extends CreateAccountModel implements Initi
                 customerEmailAddressField.setStyle(invalid);
             } else customerEmailAddressField.setStyle(valid);
         });
-
-
     }//end of input fields validation
+
+    @FXML void checkIfAccountExists() {
+        List<String> accountTypes = new ArrayList<>();
+        List<String> idNumbers = new ArrayList<>();
+        checkAccountNumberExists(accountTypes, idNumbers);
+
+        String accountValue = accountTypeSelector.getValue();
+        String idValue = customerIdNumberField.getText();
+        try {
+            for (int var = 0; var <= accountTypes.size(); var ++) {
+                if (accountTypes.get(var).equals(accountValue) && idNumbers.get(var).equals(idValue)) {
+                    ALERTS = new UserAlerts("EXISTING CUSTOMER ID", "Sorry anther customer is registered with this ID Number associated to a '" + accountValue.toUpperCase() + "' at the moment" ,"Duplicate registration not allowed. Either choose a different account type or provide a unique Id Number for selected account type.");
+
+                    ALERTS.warningAlert();
+                    customerIdNumberField.clear();
+                    return;
+                }
+            }
+        }catch (IndexOutOfBoundsException ignore) {}
+
+    }
+
 
 
 
@@ -365,8 +388,6 @@ public class CreateAccountController extends CreateAccountModel implements Initi
                     (isFileNameFiledEmpty() && isAttachFileButtonChecked())
             );
 
-
-            
             previewButton.setDisable(isFirstNameEmpty() || isLastNameEmpty() || isGenderEmpty() || isDobEmpty()
                     || isPlaceOfBirthEmpty() || isMobileNumberEmpty() || isDigitalAddressEmpty() || isResidentialAddressEmpty()||
                     isLandMarkEmpty() || isMaritalStatusEmpty() || isIdTypeEmpty() || isIdNumberEmpty() || isEducationalStatusEmpty() ||
@@ -417,11 +438,6 @@ public class CreateAccountController extends CreateAccountModel implements Initi
             String institutionNumber = institutionNumberField.getText();
             String relationshipType = relationshipSelector.getValue();
 
-            // check if the file upload check box is checked...
-            if (isAttachFileButtonChecked()) {
-
-            } else System.out.println("unchecked...");
-
             ALERTS = new UserAlerts("CREATE ACCOUNT", "ARE YOU SURE YOU WANT TO CREATE NEW ACCOUNT WITH ACCOUNT TYPE AS '" +  accountType + "'", "please confirm your action to create this account else CANCEL to abort process.");
             if (ALERTS.confirmationAlert()) {
                 customersDataRepository.setFirstname(firstname);
@@ -457,6 +473,7 @@ public class CreateAccountController extends CreateAccountModel implements Initi
                 customersDataRepository.setInstitution_number(institutionNumber);//33
                 customersDataRepository.setRelationship_to_applicant(relationshipType);//34
                 customersDataRepository.setCreated_by(currentUserId);//35
+
                 int flat = createNewAccount(customersDataRepository);
 
                 balanceDataModel.setCustomer_id(getTotalAccountNumbers());
@@ -467,18 +484,42 @@ public class CreateAccountController extends CreateAccountModel implements Initi
                 balanceDataModel.setModified_by(currentUserId);
 
                 flat += createAccountBalance(balanceDataModel);
+
+
+                //Check if the file attachment button is checked. this button enables you to upload a file to the system
+                //if true we, collect data and save to database.
+                if (isAttachFileButtonChecked()) {
+                   int customer_id = getCustomerIdByAccountNumber(accountNumber);
+                   String filePath = absoluteFilePathLabel.getText();
+                   documentRepository.setCustomer_id(customer_id);
+                   documentRepository.setDocument_name(firstNameField.getText());
+                   documentRepository.setFile_content(getFileStream(filePath));
+                   documentRepository.setUploaded_by(currentUserId);
+                   documentRepository.setReason_for_upload(reasonField.getText());
+
+                   saveDocument(documentRepository);
+                }
+
+
                 if (flat == 2) {
                     NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");
                     resetFields();
                     setAccountNumber();
-                }else NOTIFICATION.errorNotification("ACCOUNT CREATION FAILED", "Filed to create this account, please contact your system admin.");
+                }else {
+                    NOTIFICATION.errorNotification("ACCOUNT CREATION FAILED", "Filed to create this account, please contact your system admin.");
+                    rollBack();
+                }
             }
         });
 
         attachFileButton.setOnAction(checkEvent-> {
             uploadButton.setDisable(!isAttachFileButtonChecked());
             reasonField.setDisable(!isAttachFileButtonChecked());
+            if (!isAttachFileButtonChecked()) {
+                fileNameField.clear();
+            }
         });
+
 
         uploadButton.setOnAction(uploadAction -> {
             previewFileButton.setDisable(!isFileNameFiledEmpty());

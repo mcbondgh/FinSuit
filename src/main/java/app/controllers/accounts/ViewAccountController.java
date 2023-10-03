@@ -1,7 +1,7 @@
 package app.controllers.accounts;
 
 import app.repositories.accounts.ViewCustomersTableDataRepository;
-import app.models.accounts.CreateAccountModel;
+import app.models.accounts.CustomerAccountModel;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
 import javafx.collections.transformation.FilteredList;
@@ -18,7 +18,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 
-public class ViewAccountController extends CreateAccountModel implements Initializable {
+public class ViewAccountController extends CustomerAccountModel implements Initializable {
 
 
     //FXML FILE EJECTIONS.

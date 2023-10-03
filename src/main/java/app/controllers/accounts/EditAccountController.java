@@ -3,7 +3,7 @@ package app.controllers.accounts;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
-import app.models.accounts.CreateAccountModel;
+import app.models.accounts.CustomerAccountModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
@@ -33,7 +33,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class EditAccountController extends CreateAccountModel implements Initializable {
+public class EditAccountController extends CustomerAccountModel implements Initializable {
     UserAlerts ALERTS;
     UserNotification NOTIFICATION = new UserNotification();
     CustomersDataRepository customersDataRepository = new CustomersDataRepository();
@@ -184,15 +184,15 @@ public class EditAccountController extends CreateAccountModel implements Initial
                 institutionNumberField.setText(item.getInstitution_number());
                 relationshipSelector.setValue(item.getRelationship_to_applicant());
 
-
             }
         }
 
-        for (CustomersDocumentRepository item : fetchCustomerDocuments()){
-            if (Objects.equals(item.getCustomer_id(), selectedCustomerId)) {
-                System.out.println(item.getDoc_id());
-            }
+        long customer_id = getCustomerIdByAccountNumber(accountNumber);
+        for (CustomersDocumentRepository item : getLatestDocumentUpload(customer_id)) {
+                fileNameField.setText(item.getDocument_name());
+                reasonField.setText(item.getReason_for_upload());
         }
+
 
     }//enf of method.
     void resetFields() {

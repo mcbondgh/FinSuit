@@ -19,6 +19,7 @@ module app.finsuit {
     requires debugger.app;
     requires kernel;
     requires layout;
+    requires javafx.fxml;
 
 
     opens app to javafx.fxml;

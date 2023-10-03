@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS business_info(
     digital_address VARCHAR(50) NOT NULL,
     location VARCHAR(100),
     logoPath VARCHAR(255),
+    loan_percentage DECIMAL(3, 2) NOT NULL,
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -122,10 +123,10 @@ CREATE TABLE IF NOT EXISTS customer_data(
 CREATE TABLE IF NOT EXISTS customer_account_data(
 	account_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
-	account_type VARCHAR(50) NOT NULL,
+	account_type VARCHAR(50) DEFAULT 'Savings Account' NOT NULL,
     account_number VARCHAR(50) NOT NULL,
-    account_balance DECIMAL(10,2) COMMENT 'Current balance displays the actual amount of money left in the customers account after all dedactions',
-    previous_balance DECIMAL(10,2) COMMENT 'This balance shows the previous amount in the customers account before total dedaction.',
+    account_balance DECIMAL(10,2) DEFAULT 0.00 COMMENT 'Current balance displays the actual amount of money left in the customers account after all dedactions',
+    previous_balance DECIMAL(10,2) DEFAULT 0.00 COMMENT 'This balance shows the previous amount in the customers account before total dedaction.',
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     modified_by INT NOT NULL,
     FOREIGN KEY(customer_id) REFERENCES customer_data(customer_id)
@@ -156,9 +157,46 @@ CREATE TABLE IF NOT EXISTS group_supervisors(
     FOREIGN KEY(added_by) REFERENCES employees(emp_id)
 );
 
-CREATE TABLE IF NOT EXISTS loans_data(
-	load_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    load_no VARCHAR(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS loans(
+	loan_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT NOT NULL,
-    loan_count INT
+    loan_no VARCHAR(50) NOT NULL,
+    loan_type VARCHAR(50) NOT NULL,
+    requested_amount DOUBLE(10,2) DEFAULT 0.00 NOT NULL,
+    application_status TINYINT DEFAULT 1 COMMENT '1 means pending approval | 2 means pending payment | 3 means paid | 4 means rejected',
+    is_drafted BOOLEAN DEFAULT 0 ,
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by INT,
+    updated_by INT,
+    approved_by INT
 );
+
+CREATE TABLE IF NOT EXISTS loan_applicant_details(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    loan_no BIGINT,
+    company_name VARCHAR(50),
+    company_mobile_number VARCHAR(20),
+    company_address VARCHAR(50),
+    staff_id VARCHAR(50),
+    occupation VARCHAR(50),
+    employment_date DATE,
+    basic_salary DECIMAL(10,2) DEFAULT '0.00',
+    gross_salary DECIMAL(10,2) DEFAULT '0.00',
+    total_deduction DECIMAL(10,2) DEFAULT '0.00',
+    net_salary DECIMAL(10,2) DEFAULT '0.00',
+    guranter_name VARCHAR(100),
+    guranter_number VARCHAR(20),
+    guranter_digital_address VARCHAR(50),
+    guranter_residential_address VARCHAR(100),
+    guranter_idType VARCHAR(20),
+    guranter_idNumber VARCHAR(20),
+    guranter_relationship VARCHAR(50),
+    guranter_occupation VARCHAR(50),
+    gurater_place_of_work VARCHAR(50),
+    guranter_institution_address VARCHAR(100),
+    guranter_income DECIMAL(10,2)
+);
+
+
+

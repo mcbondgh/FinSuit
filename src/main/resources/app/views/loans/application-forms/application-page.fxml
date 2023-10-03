@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -17,19 +18,27 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="640.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.ApplicationController">
+<AnchorPane prefHeight="640.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanApplicationController">
    <children>
-      <Pane layoutX="10.0" layoutY="5.0" prefHeight="624.0" prefWidth="172.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
+      <Pane layoutX="10.0" layoutY="5.0" prefHeight="640.0" prefWidth="172.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
          <children>
-            <Pane fx:id="customerSelectorPane" layoutX="-1.0" layoutY="262.0" prefHeight="286.0" prefWidth="169.0" visible="false">
+            <Pane layoutX="7.0" layoutY="7.0" prefHeight="165.0" prefWidth="160.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-border-radius: 8px;">
                <children>
-                  <GridPane fx:id="gridPane" layoutX="8.0" layoutY="122.0" prefHeight="89.0" prefWidth="160.0">
+                  <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="150.0" layoutX="5.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/users.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane fx:id="customerSelectorPane" layoutX="1.0" layoutY="307.0" prefHeight="257.0" prefWidth="169.0">
+               <children>
+                  <GridPane fx:id="gridPane" layoutX="8.0" layoutY="70.0" prefHeight="100.0" prefWidth="160.0">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.66666920979817" minWidth="10.0" prefWidth="104.66666920979817" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.66668701171875" minWidth="10.0" prefWidth="73.99999745686848" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.66666920979817" minWidth="10.0" prefWidth="77.99998982747395" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="81.33334350585936" minWidth="10.0" prefWidth="81.33334350585936" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -37,7 +46,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Label prefHeight="29.0" prefWidth="84.0" text="Loan Status:">
+                        <Label prefHeight="29.0" prefWidth="84.0" text="Loan Count">
                            <font>
                               <Font name="Poppins Regular" size="11.0" />
                            </font>
@@ -47,191 +56,247 @@
                               <Font name="Poppins Regular" size="11.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="None" textFill="#7b7b7b" GridPane.columnIndex="1">
+                        <Label fx:id="loanCountLabel" alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="None" textFill="#7b7b7b" GridPane.columnIndex="1">
                            <font>
                               <Font name="Poppins Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="0.00" textFill="#7b7b7b" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label fx:id="paidAmountLabel" alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="0.00" textFill="#7b7b7b" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <font>
                               <Font name="Poppins Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="29.0" prefWidth="107.0" text="Pending Amount" GridPane.rowIndex="2">
+                        <Label prefHeight="35.0" prefWidth="78.0" text="Pending Amount" wrapText="true" GridPane.rowIndex="2">
                            <font>
                               <Font name="Poppins Regular" size="11.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="0.00" textFill="#7b7b7b" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label fx:id="pendingAmountLabel" alignment="CENTER" prefHeight="29.0" prefWidth="84.0" text="0.00" textFill="#7b7b7b" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <font>
                               <Font name="Poppins Bold" size="12.0" />
                            </font>
                         </Label>
                      </children>
                   </GridPane>
-                  <TextField fx:id="customerSearchBox" layoutX="6.0" layoutY="17.0" onKeyReleased="#filterCustomers" prefHeight="30.0" prefWidth="160.0" promptText="eg. GHA-000010101-11" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </TextField>
-                  <Label fx:id="filterCustomerLabel" layoutX="9.0" layoutY="1.0" text="Search By Account or Id No." textFill="#8b0000">
+                  <Label fx:id="filterCustomerLabel" layoutX="9.0" layoutY="6.0" text="Search By Account or Id No." textFill="#8b0000">
                      <font>
                         <Font name="Poppins Regular" size="10.0" />
                      </font>
                   </Label>
-                  <MFXListView fx:id="listView" depthLevel="LEVEL0" hideScrollBars="true" layoutX="6.0" layoutY="49.0" prefHeight="60.0" prefWidth="160.0" style="-fx-border-color: #eee; -fx-border-radius: 10px; -fx-background-radius: 10px;" />
-                  <Separator layoutX="2.0" layoutY="121.0" prefHeight="2.0" prefWidth="169.0" />
-                  <ComboBox fx:id="draftSelector" layoutX="8.0" layoutY="244.0" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                  <Label layoutX="12.0" layoutY="221.0" text="Drafts">
+                  <Separator layoutX="1.0" layoutY="69.0" prefHeight="2.0" prefWidth="169.0" />
+                  <ComboBox fx:id="draftSelector" layoutX="5.0" layoutY="211.0" onAction="#loadDraftVariablesOnAction" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                  <Label layoutX="9.0" layoutY="188.0" text="Drafts">
                      <font>
                         <Font name="Poppins Regular" size="14.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" layoutX="113.0" layoutY="215.0" prefHeight="29.0" prefWidth="43.0" text="0" textFill="#06b33c">
+                  <Label fx:id="draftCountLabel" alignment="CENTER" layoutX="110.0" layoutY="182.0" prefHeight="29.0" prefWidth="43.0" text="null" textFill="#06b33c">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
                   </Label>
+                  <MFXFilterComboBox fx:id="filterIdOrAccountNo" floatMode="DISABLED" layoutX="4.0" layoutY="26.0" onAction="#filterCustomerOnAction" popupOffsetY="1.0" prefHeight="32.0" prefWidth="160.0" selectable="true" style="-fx-background-color: #eee; -fx-border-color: #ddd;">
+                     <font>
+                        <Font name="Poppins Bold" size="12.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding></MFXFilterComboBox>
                </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Pane>
-            <ComboBox fx:id="customerTypeSelector" layoutX="6.0" layoutY="224.0" onAction="#customerTypeSelected" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-            <Label fx:id="customerTypeLabel" layoutX="10.0" layoutY="207.0" text="Select Customer Type *" textFill="#8b0000">
+            <ComboBox fx:id="customerTypeSelector" layoutX="6.0" layoutY="260.0" onAction="#customerTypeSelected" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+            <Label fx:id="customerTypeLabel" layoutX="10.0" layoutY="244.0" text="Select Customer Type *" textFill="#8b0000">
                <font>
                   <Font name="Poppins Regular" size="10.0" />
                </font>
             </Label>
-            <ImageView fitHeight="168.0" fitWidth="169.0" layoutX="1.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../images/users.jpg" />
-               </image>
-            </ImageView>
+            <MFXButton fx:id="uploadImageButton" layoutX="33.0" layoutY="178.0" onAction="#uploadImageButtonClicked" prefHeight="20.0" prefWidth="95.0" style="-fx-background-color: #eee; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Upload Image">
+               <font>
+                  <Font name="Poppins Regular" size="10.0" />
+               </font>
+            </MFXButton>
+            <Separator layoutX="-1.0" layoutY="207.0" prefHeight="3.0" prefWidth="172.0" />
+            <MFXButton buttonType="RAISED" depthLevel="LEVEL1" layoutX="42.0" layoutY="572.0" style="-fx-border-color: #015582; -fx-border-radius: 5px; -fx-background-color: #015582;" text="Reset Fields" textFill="#fbfeff">
+               <font>
+                  <Font name="System Bold" size="11.0" />
+               </font>
+            </MFXButton>
            
          </children>
       </Pane>
       <VBox fx:id="vBox" alignment="CENTER" layoutX="190.0" layoutY="5.0" prefHeight="640.0" prefWidth="1080.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
          <children>
-            <MFXScrollPane cache="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="1085.0" style="-fx-background-radius: 8px;" thumbColor="#c32828" thumbHoverColor="#300b82" trackColor="#d70505">
+            <MFXScrollPane fx:id="scrollPane" cache="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="1085.0" style="-fx-background-radius: 8px;" thumbColor="#c32828" thumbHoverColor="#300b82" trackColor="#d70505">
                <content>
-                  <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="1150.0" prefWidth="1083.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+                  <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="1257.0" prefWidth="1083.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                      <children>
-                        <Pane layoutX="11.0" layoutY="695.0" prefHeight="336.0" prefWidth="635.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+                        <Label layoutX="13.0" layoutY="11.0" text="LOAN APPLICATION">
+                           <font>
+                              <Font name="Roboto Black" size="16.0" />
+                           </font>
+                        </Label>
+                        <Pane fx:id="personalInformationPane" layoutX="9.0" layoutY="68.0" prefHeight="323.0" prefWidth="1054.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5;">
                            <children>
-                              <TextField layoutX="11.0" layoutY="52.0" prefHeight="40.0" prefWidth="404.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <ComboBox fx:id="loanTypeSelector" layoutX="13.0" layoutY="24.0" prefHeight="40.0" prefWidth="201.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <TextField fx:id="loanRequestField" layoutX="228.0" layoutY="24.0" onKeyTyped="#validateRequestAmountInput" prefHeight="40.0" prefWidth="200.0" promptText="eg 1500.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="12.0" layoutY="34.0" prefHeight="19.0" prefWidth="117.0" text="Fullname">
+                              <TextField fx:id="firstNameField" layoutX="12.0" layoutY="141.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Kofi" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="13.0" layoutY="122.0" prefHeight="19.0" prefWidth="99.0" text="Firstname *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="14.0" layoutY="6.0" text="GURANTER INFORMATION">
+                              <TextField fx:id="lastNameField" layoutX="220.0" layoutY="140.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Mensah" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="221.0" layoutY="121.0" prefHeight="19.0" prefWidth="99.0" text="Lastname *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="otherNameField" layoutX="427.0" layoutY="140.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Alhassan" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <DatePicker fx:id="dobPicker" editable="false" layoutX="636.0" layoutY="140.0" prefHeight="40.0" prefWidth="200.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                              <ComboBox fx:id="genderSelector" layoutX="842.0" layoutY="140.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins;" />
+                              <TextField fx:id="mobileNumberField" layoutX="13.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="otherNumberField" layoutX="220.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="emailField" layoutX="427.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" promptText="email@example.com" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="digitalAddressField" layoutX="636.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" promptText="EK-43434-34" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="428.0" layoutY="121.0" prefHeight="19.0" prefWidth="99.0" text="Other Name">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="636.0" layoutY="121.0" prefHeight="19.0" prefWidth="99.0" text="Date Of Birth *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="186.0" prefHeight="19.0" prefWidth="117.0" text="Mobile Number *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="427.0" layoutY="186.0" prefHeight="19.0" prefWidth="59.0" text="Email">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="636.0" layoutY="186.0" prefHeight="19.0" prefWidth="105.0" text="Digital Address *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="842.0" layoutY="120.0" prefHeight="19.0" prefWidth="74.0" text="Gender *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="residentialAddressField" layoutX="842.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" promptText="Ministries 43 ST." style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="842.0" layoutY="186.0" prefHeight="19.0" prefWidth="128.0" text="Residential Address *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="landmarkField" layoutX="13.0" layoutY="271.0" prefHeight="40.0" prefWidth="200.0" promptText="MINISTRIES" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <ComboBox fx:id="qualificationSelector" layoutX="220.0" layoutY="271.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
+                              <ComboBox fx:id="maritalStatusSelector" layoutX="427.0" layoutY="271.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
+                              <Label layoutX="13.0" layoutY="252.0" prefHeight="19.0" prefWidth="117.0" text="Key Landmark *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="idTypeSelector" layoutX="636.0" layoutY="271.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
+                              <TextField fx:id="idNumberField" layoutX="842.0" layoutY="271.0" onKeyTyped="#checkCustomerIdField" prefHeight="40.0" prefWidth="200.0" promptText="GHA-493948545-5" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="636.0" layoutY="252.0" prefHeight="19.0" prefWidth="74.0" text="Id Type *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="842.0" layoutY="252.0" prefHeight="19.0" prefWidth="154.0" text="Id Number *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="427.0" layoutY="252.0" prefHeight="19.0" prefWidth="99.0" text="Marital Status *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="220.0" layoutY="252.0" prefWidth="200.0" text="Qualification(Edu background)">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="13.0" layoutY="5.0" prefWidth="200.0" text=" Loan Request Type *">
+                                 <font>
+                                    <Font name="Poppins Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="92.0" text="PERSONAL INFORMATION">
                                  <font>
                                     <Font name="Poppins Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="422.0" layoutY="52.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="422.0" layoutY="34.0" prefHeight="19.0" prefWidth="140.0" text="Mobile Number *">
+                              <Separator layoutX="2.0" layoutY="76.0" prefHeight="3.0" prefWidth="1051.0" />
+                              <Label layoutX="229.0" layoutY="5.0" prefHeight="19.0" text="Loan Request Amount *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="10.0" layoutY="127.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="10.0" layoutY="109.0" prefHeight="19.0" prefWidth="140.0" text="Ditigal Address *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="219.0" layoutY="274.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="219.0" layoutY="254.0" prefHeight="19.0" prefWidth="140.0" text="Institution's Address *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="217.0" layoutY="128.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="217.0" layoutY="109.0" prefHeight="19.0" prefWidth="140.0" text="Residential Address *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="11.0" layoutY="274.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="12.0" layoutY="254.0" prefHeight="19.0" prefWidth="140.0" text="Place Of Work *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox layoutX="217.0" layoutY="202.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                              <Label layoutX="216.0" layoutY="182.0" prefHeight="19.0" prefWidth="140.0" text="Relationship Type*">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox layoutX="422.0" layoutY="128.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                              <Label layoutX="425.0" layoutY="109.0" prefHeight="19.0" prefWidth="83.0" text="Id Type *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="10.0" layoutY="202.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="10.0" layoutY="183.0" prefHeight="19.0" prefWidth="92.0" text="Id Number *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField alignment="CENTER" layoutX="424.0" layoutY="274.0" prefHeight="40.0" prefWidth="200.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="426.0" layoutY="254.0" prefHeight="19.0" prefWidth="140.0" text="Net Income *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="422.0" layoutY="202.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="422.0" layoutY="183.0" prefHeight="19.0" prefWidth="95.0" text="Occupation *">
+                              <Label layoutX="221.0" layoutY="186.0" prefHeight="19.0" prefWidth="95.0" text="Other Number">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </Pane>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" disable="true" fill="WHITE" height="234.0" layoutX="10.0" layoutY="54.0" stroke="#dddddd" strokeLineCap="ROUND" strokeLineJoin="ROUND" width="1055.0" />
-                        <Pane layoutX="10.0" layoutY="295.0" prefHeight="181.0" prefWidth="1055.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5;">
+                        <Pane layoutX="10.0" layoutY="404.0" prefHeight="189.0" prefWidth="1055.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5;">
                            <children>
-                              <TextField layoutX="11.0" layoutY="65.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="companyNameField" layoutX="11.0" layoutY="65.0" prefHeight="40.0" prefWidth="200.0" promptText="Microfinance LTD" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -241,7 +306,7 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="217.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="companyNumberField" layoutX="217.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -251,7 +316,7 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="424.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="companyAddressField" layoutX="424.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="EK-4343-323" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -261,7 +326,7 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="630.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 91039293232844" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="staffIdField" layoutX="630.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 91039293232844" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -271,17 +336,17 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <DatePicker editable="false" layoutX="11.0" layoutY="130.0" prefHeight="40.0" prefWidth="200.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
                               <Label layoutX="11.0" layoutY="111.0" prefHeight="19.0" prefWidth="157.0" text="Date Of Employment *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="837.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="occupationField" layoutX="837.0" layoutY="66.0" prefHeight="40.0" prefWidth="200.0" promptText="Teacher" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
+                              <DatePicker fx:id="employmentDatePicker" editable="false" layoutX="11.0" layoutY="130.0" prefHeight="36.0" prefWidth="200.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
                               <Label layoutX="837.0" layoutY="47.0" prefHeight="19.0" prefWidth="90.0" text="Occupation *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
@@ -292,171 +357,71 @@
                                     <Font name="Poppins Bold" size="14.0" />
                                  </font>
                               </Label>
-                           </children>
-                        </Pane>
-                        <Label layoutX="13.0" layoutY="17.0" text="LOAN APPLICATION">
-                           <font>
-                              <Font name="Roboto Black" size="16.0" />
-                           </font>
-                        </Label>
-                        <Separator layoutY="45.0" prefHeight="3.0" prefWidth="1089.0" />
-                        <Label layoutX="22.0" layoutY="59.0" text="PERSONAL INFORMATION">
-                           <font>
-                              <Font name="Poppins Bold" size="14.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="22.0" layoutY="106.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <DatePicker editable="false" layoutX="646.0" layoutY="105.0" prefHeight="40.0" prefWidth="200.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
-                        <Label layoutX="23.0" layoutY="87.0" prefHeight="19.0" prefWidth="99.0" text="Firstname *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="230.0" layoutY="105.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="231.0" layoutY="86.0" prefHeight="19.0" prefWidth="99.0" text="Lastname *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="437.0" layoutY="105.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="438.0" layoutY="86.0" prefHeight="19.0" prefWidth="99.0" text="Other Name">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="646.0" layoutY="86.0" prefHeight="19.0" prefWidth="99.0" text="Date Of Birth *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="23.0" layoutY="170.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="24.0" layoutY="151.0" prefHeight="19.0" prefWidth="117.0" text="Mobile Number *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="230.0" layoutY="170.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="230.0" layoutY="151.0" prefHeight="19.0" prefWidth="105.0" text="Other Number *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <ComboBox layoutX="852.0" layoutY="105.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins;" />
-                        <TextField layoutX="437.0" layoutY="170.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="437.0" layoutY="151.0" prefHeight="19.0" prefWidth="59.0" text="Email">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="646.0" layoutY="170.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="646.0" layoutY="151.0" prefHeight="19.0" prefWidth="105.0" text="Digital Address *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="852.0" layoutY="85.0" prefHeight="19.0" prefWidth="74.0" text="Gender *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <Pane layoutX="770.0" layoutY="11.0" prefHeight="28.0" prefWidth="243.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
-                           <children>
-                              <Label layoutX="8.0" layoutY="6.0" text="Application No." textFill="#656464">
-                                 <font>
-                                    <Font name="Poppins Bold" size="11.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="99.0" layoutY="5.0" prefHeight="19.0" prefWidth="137.0" text="[auto generated]" textFill="#bc0101">
-                                 <font>
-                                    <Font name="Poppins Bold" size="11.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </Pane>
-                        <TextField layoutX="852.0" layoutY="170.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="852.0" layoutY="151.0" prefHeight="19.0" prefWidth="128.0" text="Residential Address *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="23.0" layoutY="236.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="23.0" layoutY="217.0" prefHeight="19.0" prefWidth="117.0" text="Key Landmark *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <ComboBox layoutX="646.0" layoutY="236.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
-                        <Label layoutX="646.0" layoutY="217.0" prefHeight="19.0" prefWidth="74.0" text="Id Type *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField layoutX="852.0" layoutY="236.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                           <font>
-                              <Font name="Poppins Medium" size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="852.0" layoutY="217.0" prefHeight="19.0" prefWidth="154.0" text="Id Number *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <ComboBox layoutX="437.0" layoutY="236.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
-                        <Label layoutX="437.0" layoutY="217.0" prefHeight="19.0" prefWidth="99.0" text="Marital Status *">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <ComboBox layoutX="230.0" layoutY="236.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
-                        <Label layoutX="230.0" layoutY="217.0" prefWidth="200.0" text="Qualification(Edu background)">
-                           <font>
-                              <Font name="Poppins Regular" size="12.0" />
-                           </font>
-                        </Label>
-                        <Pane layoutX="11.0" layoutY="487.0" prefHeight="198.0" prefWidth="1055.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5;">
-                           <children>
-                              <TextField layoutX="11.0" layoutY="67.0" prefHeight="40.0" prefWidth="401.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="applicantBasicSalaryField" alignment="CENTER" layoutX="217.0" layoutY="128.0" prefHeight="40.0" prefWidth="200.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="11.0" layoutY="48.0" prefHeight="19.0" prefWidth="117.0" text="Fullname">
+                              <Label layoutX="217.0" layoutY="111.0" prefHeight="19.0" prefWidth="90.0" text="Basic Salary *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="applicantGrossSalaryField" alignment="CENTER" layoutX="424.0" layoutY="128.0" prefHeight="40.0" prefWidth="200.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="425.0" layoutY="111.0" prefHeight="19.0" prefWidth="90.0" text="Gross Salary *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="applicantTotalDeductionField" alignment="CENTER" layoutX="631.0" layoutY="128.0" prefHeight="40.0" prefWidth="200.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="632.0" layoutY="111.0" prefHeight="19.0" prefWidth="117.0" text="Total Deduction *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="applicantNetSalaryField" alignment="CENTER" layoutX="837.0" layoutY="128.0" prefHeight="40.0" prefWidth="200.0" promptText="0.00" style="-fx-border-radius: 5px; -fx-background-radius: 5px; -fx-font-size: 14px; -fx-text-fill: #ff0000;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="838.0" layoutY="111.0" prefHeight="19.0" prefWidth="110.0" text="Net Salary">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Separator layoutY="45.0" prefHeight="3.0" prefWidth="1089.0" />
+                        <Pane layoutX="815.0" layoutY="7.0" prefHeight="28.0" prefWidth="202.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
+                           <children>
+                              <Label layoutX="5.0" layoutY="6.0" text="Application No." textFill="#656464">
+                                 <font>
+                                    <Font name="Poppins Bold" size="11.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="loanNumberLabel" layoutX="96.0" layoutY="5.0" prefHeight="19.0" prefWidth="106.0" text="2000000000001" textFill="#bc0101">
+                                 <font>
+                                    <Font name="Poppins Bold" size="11.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane layoutX="11.0" layoutY="607.0" prefHeight="266.0" prefWidth="1055.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5;">
+                           <children>
+                              <TextField fx:id="contactPersonNameField" layoutX="11.0" layoutY="67.0" prefHeight="40.0" prefWidth="401.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="11.0" layoutY="48.0" prefHeight="19.0" prefWidth="117.0" text="Fullname *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
@@ -466,7 +431,7 @@
                                     <Font name="Poppins Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="420.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="contactPersonNumberField" layoutX="420.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -476,7 +441,7 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="626.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="contactPersonDigitalAddField" layoutX="626.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" promptText="eg EK-84380-444" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -486,112 +451,194 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="833.0" layoutY="141.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="contactPersonResidentialField" layoutX="831.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Ministries 43 st" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="835.0" layoutY="121.0" prefHeight="19.0" prefWidth="140.0" text="Institution's Address *">
+                              <Label layoutX="14.0" layoutY="189.0" prefHeight="19.0" prefWidth="140.0" text="Institution's Address *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="831.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
                               <Label layoutX="831.0" layoutY="47.0" prefHeight="19.0" prefWidth="140.0" text="Residential Address *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="628.0" layoutY="141.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <Label layoutX="832.0" layoutY="117.0" prefHeight="19.0" prefWidth="140.0" text="Place Of Work *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="contactPersonGenderSelector" layoutX="12.0" layoutY="138.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <ComboBox fx:id="relationshipTypeSelector" layoutX="221.0" layoutY="136.0" prefHeight="40.0" prefWidth="191.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <Label layoutX="222.0" layoutY="116.0" prefHeight="19.0" prefWidth="140.0" text="Relationship Type *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="contactPersonIdTypeSelector" layoutX="422.0" layoutY="137.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <Label layoutX="425.0" layoutY="118.0" prefHeight="19.0" prefWidth="83.0" text="Id Type *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="contactPersonIdNoField" layoutX="627.0" layoutY="137.0" prefHeight="40.0" prefWidth="200.0" promptText="GHA-384834043-4" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="628.0" layoutY="121.0" prefHeight="19.0" prefWidth="140.0" text="Place Of Work *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox layoutX="12.0" layoutY="140.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                              <Label layoutX="13.0" layoutY="120.0" prefHeight="19.0" prefWidth="140.0" text="Relationship Type *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox layoutX="218.0" layoutY="141.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                              <Label layoutX="221.0" layoutY="122.0" prefHeight="19.0" prefWidth="83.0" text="Id Type *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="423.0" layoutY="141.0" prefHeight="40.0" prefWidth="200.0" promptText="eg Customer" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="placeOfWorkField" layoutX="832.0" layoutY="137.0" prefHeight="40.0" prefWidth="200.0" promptText="Ministries" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="425.0" layoutY="122.0" prefHeight="19.0" prefWidth="92.0" text="Id Number *">
+                              <TextField fx:id="institutionAddressField" layoutX="12.0" layoutY="209.0" prefHeight="40.0" prefWidth="200.0" promptText="Ministries Road r43" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="629.0" layoutY="118.0" prefHeight="19.0" prefWidth="92.0" text="Id Number *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="13.0" layoutY="118.0" prefHeight="19.0" prefWidth="140.0" text="Gender *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </Pane>
-                        <Pane layoutX="654.0" layoutY="695.0" prefHeight="335.0" prefWidth="412.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+                        <Pane layoutX="11.0" layoutY="890.0" prefHeight="274.0" prefWidth="1058.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 8px;">
                            <children>
-                              <Label layoutX="17.0" layoutY="4.0" text="APPLICANT SALARY INFORMATION">
+                              <TextField fx:id="guranterNameField" layoutX="11.0" layoutY="58.0" prefHeight="40.0" prefWidth="404.0" promptText="eg Aam Alhassan" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="12.0" layoutY="40.0" prefHeight="19.0" prefWidth="117.0" text="Fullname *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="12.0" text="GUARANTOR INFORMATION">
                                  <font>
                                     <Font name="Poppins Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField alignment="CENTER" layoutX="14.0" layoutY="56.0" prefHeight="40.0" prefWidth="180.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="guranterNumberField" layoutX="422.0" layoutY="58.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="15.0" layoutY="34.0" prefHeight="19.0" prefWidth="90.0" text="Basic Salary *">
+                              <Label layoutX="422.0" layoutY="40.0" prefHeight="19.0" prefWidth="140.0" text="Mobile Number *">
                                  <font>
-                                    <Font name="Poppins Bold" size="10.0" />
+                                    <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField alignment="CENTER" layoutX="16.0" layoutY="128.0" prefHeight="40.0" prefWidth="180.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="guranterDigitalAddressField" layoutX="630.0" layoutY="58.0" prefHeight="40.0" prefWidth="200.0" promptText="eg EK-434394-23" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="17.0" layoutY="106.0" prefHeight="19.0" prefWidth="90.0" text="Gross Salary *">
+                              <Label layoutX="630.0" layoutY="40.0" prefHeight="19.0" prefWidth="140.0" text="Ditigal Address *">
                                  <font>
-                                    <Font name="Poppins Bold" size="10.0" />
+                                    <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField alignment="CENTER" layoutX="205.0" layoutY="56.0" prefHeight="40.0" prefWidth="180.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <Label layoutX="218.0" layoutY="185.0" prefHeight="19.0" prefWidth="140.0" text="Institution's Address *">
                                  <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Label layoutX="206.0" layoutY="34.0" prefHeight="19.0" prefWidth="117.0" text="Total Deduction *">
-                                 <font>
-                                    <Font name="Poppins Bold" size="10.0" />
+                                    <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField alignment="CENTER" editable="false" layoutX="205.0" layoutY="128.0" prefHeight="40.0" prefWidth="180.0" promptText="0.00" style="-fx-border-radius: 5px; -fx-background-radius: 5px; -fx-font-size: 14px; -fx-text-fill: #ff0000;">
+                              <TextField fx:id="guranterAddressField" layoutX="836.0" layoutY="57.0" prefHeight="40.0" prefWidth="200.0" promptText="Ministries" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="206.0" layoutY="106.0" prefHeight="19.0" prefWidth="110.0" text="Net Salary">
+                              <Label layoutX="836.0" layoutY="38.0" prefHeight="19.0" prefWidth="140.0" text="Residential Address *">
                                  <font>
-                                    <Font name="Poppins Bold" size="10.0" />
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="11.0" layoutY="185.0" prefHeight="19.0" prefWidth="140.0" text="Place Of Work *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="guranterGenderSelector" layoutX="10.0" layoutY="122.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <ComboBox fx:id="guranterIdTypeSelector" layoutX="217.0" layoutY="122.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <TextField fx:id="guranterIdNumberField" layoutX="426.0" layoutY="122.0" prefHeight="40.0" prefWidth="199.0" promptText="eg GHA-48384834-43" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <ComboBox fx:id="guranterRelationshipTypeSelector" layoutX="633.0" layoutY="123.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <Label layoutX="632.0" layoutY="103.0" prefHeight="19.0" prefWidth="140.0" text="Relationship Type*">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="220.0" layoutY="103.0" prefHeight="19.0" prefWidth="83.0" text="Id Type *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="426.0" layoutY="103.0" prefHeight="19.0" prefWidth="92.0" text="Id Number *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="425.0" layoutY="185.0" prefHeight="19.0" prefWidth="140.0" text="Net Income *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="guranterOccupationField" layoutX="838.0" layoutY="122.0" prefHeight="40.0" prefWidth="200.0" promptText="Teacher" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="guranterPlaceOfWorkField" layoutX="10.0" layoutY="205.0" prefHeight="40.0" prefWidth="200.0" promptText="eg KTU" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="guranterWorkAddressField" layoutX="218.0" layoutY="205.0" prefHeight="40.0" prefWidth="198.0" promptText="KTU PO BOX 43" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="guranterNetSalaryField" alignment="CENTER" layoutX="423.0" layoutY="205.0" prefHeight="40.0" prefWidth="195.0" promptText="eg 0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="838.0" layoutY="103.0" prefHeight="19.0" prefWidth="95.0" text="Occupation *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="13.0" layoutY="103.0" prefHeight="19.0" prefWidth="83.0" text="Gender *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </Pane>
-                        <MFXButton disable="true" layoutX="720.0" layoutY="1080.0" prefHeight="38.0" prefWidth="194.0" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
+                        <MFXButton fx:id="saveButton" disable="true" layoutX="808.0" layoutY="1200.0" onAction="#saveButtonClicked" prefHeight="32.0" prefWidth="125.0" style="-fx-background-color: #278c8f;" text="Apply For Loan" textFill="WHITE">
                            <font>
-                              <Font name="Poppins Bold" size="13.0" />
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </MFXButton>
+                        <MFXButton fx:id="draftButton" cancelButton="true" disable="true" layoutX="947.0" layoutY="1201.0" prefHeight="30.0" prefWidth="117.0" rippleColor="#bdbdbd" style="-fx-background-color: #197aef;" text="Save to Draft" textFill="WHITE">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
                            </font>
                         </MFXButton>
                      </children>

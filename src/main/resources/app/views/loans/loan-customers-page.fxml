@@ -1,58 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchorPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="1220.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanCustomersController">
    <children>
-      <HBox layoutX="767.0" layoutY="8.0" prefHeight="35.0" prefWidth="443.0" spacing="5.0">
-         <children>
-            <MFXButton fx:id="filterButton" prefHeight="30.0" prefWidth="79.0" style="-fx-background-color: #278c8f;" text="   Filter Table" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <MFXButton fx:id="addNewLoanButton" onAction="#newLoanButtonClicked" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: #278c8f;" text="➕ Add New " textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <MFXButton fx:id="payLoanButton" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: #278c8f;" text="   Pay Loan" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <MFXButton fx:id="loanRequestsButton" onAction="#setLoanRequestsButtonClicked" prefHeight="30.0" prefWidth="112.0" style="-fx-background-color: #278c8f;" text="Loan Requests (0)" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-         </children>
-      </HBox>
-      <MFXLegacyTableView fx:id="loanApplicantsTable" blendMode="MULTIPLY" cacheHint="SPEED" cacheShape="false" centerShape="false" depthTest="ENABLE" fixedCellSize="35.0" layoutX="5.0" layoutY="54.0" prefHeight="499.0" prefWidth="1022.0" scaleShape="false" style="-fx-font-family: poppins; -fx-font-size: 12; -fx-alignment: center; -fx-background-color: #fff;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="54.0">
+      <MFXLegacyTableView fx:id="loanApplicantsTable" blendMode="MULTIPLY" cacheHint="SPEED" cacheShape="false" centerShape="false" depthTest="ENABLE" fixedCellSize="35.0" layoutX="5.0" layoutY="54.0" prefHeight="477.0" prefWidth="1211.0" scaleShape="false" style="-fx-font-family: poppins; -fx-font-size: 12; -fx-alignment: center; -fx-background-color: #fff;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="54.0">
          <columns>
             <TableColumn prefWidth="64.00003290176392" text="NO." />
             <TableColumn prefWidth="222.6667251586914" text="FULLNAME" />
@@ -68,12 +29,7 @@
             <TableColumn prefWidth="66.6666259765625" text="B" />
          </columns>
       </MFXLegacyTableView>
-      <Label fx:id="applicantNameLabel" layoutX="28.0" layoutY="12.0" text="LOAN APPLICANTS">
-         <font>
-            <Font name="Roboto Black" size="16.0" />
-         </font>
-      </Label>
-      <Pane layoutX="234.0" layoutY="6.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
+      <Pane layoutX="4.0" layoutY="6.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
          <children>
             <Label layoutX="6.0" layoutY="4.0" text="🔎" textFill="#828181">
                <font>

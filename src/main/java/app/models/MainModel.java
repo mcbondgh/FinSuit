@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainModel extends DbConnection {
     public ArrayList<BusinessInfoEntity> getBusinessInfo() {
@@ -38,7 +39,10 @@ public class MainModel extends DbConnection {
                 String digital = resultSet.getString("digital_address"); //5
                 String location = resultSet.getString("location"); //6
                 String logo = resultSet.getString("logoPath");//7
-                data.add(new BusinessInfoEntity(name, number, otherNumber, email, accountPassword, digital, location, logo));
+                double loanPercentage = resultSet.getDouble("loan_percentage"); //8
+
+                data.add(new BusinessInfoEntity(name, number, otherNumber, email, accountPassword, digital, location, logo, loanPercentage));
+
             }
             preparedStatement.close();
             resultSet.close();
@@ -78,7 +82,6 @@ public class MainModel extends DbConnection {
         return userId;
     }
 
-
     public String getEmployeeIdByUsername(String username) {
         String emp_id = "";
         try {
@@ -104,7 +107,6 @@ public class MainModel extends DbConnection {
         }catch (SQLException e) {e.printStackTrace();}
         return count;
     }
-
     public String getFullNameByUserId(String userId) {
         try {
             String query = "SELECT concat(firstname, \" \", lastname) AS fullname FROM employees AS emp \n" +
@@ -119,8 +121,8 @@ public class MainModel extends DbConnection {
         }catch (Exception e){e.printStackTrace();}
         return "not found";
     }
-    public int getTotalAccountNumbers() {
-        int count = 0;
+    public long getTotalAccountNumbers() {
+        long count = 0;
         try {
             String query = "SELECT customer_id from customer_data order by customer_id desc limit 1;";
             preparedStatement = getConnection().prepareStatement(query);
@@ -132,7 +134,20 @@ public class MainModel extends DbConnection {
         return count;
     }
 
-
+    public long getTotalLoanCount() {
+        try {
+            String query = "SELECT MAX(loan_id) AS 'max_id' FROM loans;";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            commitTransaction();
+            if (resultSet.next()) {
+               return resultSet.getLong("max_id");
+            }
+        }catch (SQLException e) {
+            rollBack();
+        }
+        return 0;
+    }
     protected int getLastEmployeeId() {
         int flag = 0;
         try {
@@ -385,6 +400,21 @@ public class MainModel extends DbConnection {
         return flag;
     }
 
+    protected void checkAccountNumberExists(List<String> accountTypes, List<String> idNumbers) {
+        try {
+            String query2 = "SELECT account_type, id_number FROM customer_account_data AS cad\n" +
+                    "JOIN customer_data AS cd ON \n" +
+                    "cd.customer_id = cad.customer_id;";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query2);
+            while (resultSet.next()) {
+                accountTypes.add(resultSet.getString("account_type"));
+                idNumbers.add(resultSet.getString("id_number"));
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

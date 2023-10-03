@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+
 public class AppStages {
     UserAlerts ALERTS;
     public static void MainStage() throws IOException {

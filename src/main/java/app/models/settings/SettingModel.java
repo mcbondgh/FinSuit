@@ -6,10 +6,10 @@ import java.sql.SQLException;
 
 public class SettingModel extends DbConnection {
 
-    protected byte updateBusinessInfo(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo) {
+    protected byte updateBusinessInfo(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double percentageValue) {
         byte flag = 0;
         try {
-            String query = "UPDATE business_info SET business_name = ?, mobile_number = ?, other_number = ?, email = ?, account_password = ?, digital_address = ?, location = ?, logoPath = ?, date_modified = DEFAULT";
+            String query = "UPDATE business_info SET business_name = ?, mobile_number = ?, other_number = ?, email = ?, account_password = ?, digital_address = ?, location = ?, logoPath = ?, loan_percentage = ?, date_modified = DEFAULT";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, mobileNumber);
@@ -19,9 +19,11 @@ public class SettingModel extends DbConnection {
             preparedStatement.setString(6, digital);
             preparedStatement.setString(7, location);
             preparedStatement.setString(8, logo);
+            preparedStatement.setDouble(9, percentageValue);
             flag = (byte) preparedStatement.executeUpdate();
+            commitTransaction();
         }catch (SQLException e) {
-            e.printStackTrace();
+            rollBack();
         }
         return flag;
     }
@@ -36,8 +38,9 @@ public class SettingModel extends DbConnection {
                 flag = (byte) preparedStatement.executeUpdate();
                 preparedStatement.close();
                 getConnection().close();
-            }catch (SQLException e){e.printStackTrace();}
-
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         return flag;
     }
 

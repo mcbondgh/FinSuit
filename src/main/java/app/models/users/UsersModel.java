@@ -2,7 +2,6 @@ package app.models.users;
 
 import app.models.MainModel;
 
-import java.lang.ref.PhantomReference;
 import java.sql.SQLException;
 
 public class UsersModel extends MainModel {
@@ -18,7 +17,8 @@ public class UsersModel extends MainModel {
                 preparedStatement.setString(4, password);
                 preparedStatement.setInt(5, added_by);
                 flag = preparedStatement.executeUpdate();
-            }catch (SQLException e){e.printStackTrace();}
+                commitTransaction();
+            }catch (SQLException e){rollBack();}
         return flag;
     }
 
@@ -36,7 +36,8 @@ public class UsersModel extends MainModel {
                 preparedStatement.setInt(4, modified_by);
                 preparedStatement.setString(5, emp_id);
                 flag = preparedStatement.executeUpdate();
-            }catch (Exception e){e.printStackTrace();}
+                commitTransaction();
+            }catch (Exception e){rollBack();}
         return flag;
     }
 
@@ -47,7 +48,10 @@ public class UsersModel extends MainModel {
             preparedStatement.setByte(1, statusValue);
             preparedStatement.setString(2, emp_id);
             preparedStatement.execute();
-        }catch (SQLException ignore){}
+            commitTransaction();
+        }catch (SQLException ignore){
+            rollBack();
+        }
 
     }
 

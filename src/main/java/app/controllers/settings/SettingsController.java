@@ -4,10 +4,10 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.errorLogger.ErrorLogger;
-import app.repositories.BusinessInfoEntity;
-import app.repositories.SmsAPIEntity;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
+import app.repositories.BusinessInfoEntity;
+import app.repositories.SmsAPIEntity;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -18,17 +18,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import net.synedra.validatorfx.Validator;
 
-
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
-import net.synedra.validatorfx.Validator;
-
-import javax.imageio.ImageIO;
 
 public class SettingsController extends SettingModel implements Initializable{
     Logger logger = Logger.getLogger("error");
@@ -54,6 +52,10 @@ public class SettingsController extends SettingModel implements Initializable{
     @FXML private Label imageName, apiKeyField;
     @FXML private CheckBox modifyButton;
     @FXML private PasswordField accountPasswordField, passwordField;
+    @FXML private TextField loanPercentageField;
+    @FXML private Label percentageIndicator;
+
+
     Tooltip tooltip;
 
     /*******************************************************************************************************************
@@ -80,6 +82,7 @@ public class SettingsController extends SettingModel implements Initializable{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         actionEventMethods();
     }
 
@@ -124,9 +127,13 @@ public class SettingsController extends SettingModel implements Initializable{
               digitalAddField.setText(item.getDigital());
               imageName.setText(item.getLogo());
               accountPasswordField.setText(item.getAccountPassword());
+              double percentageValue = item.getLoanPercentage();
+              loanPercentageField.setText(String.valueOf(percentageValue));
+              percentageIndicator.setText(percentageValue + "% of basic Salary" );
               String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
               logoViewer.setImage(new Image(getImageSource));
         }
+
         for (SmsAPIEntity items : MODEL_OBJECT.getSmsApi()) {
             apiKeyField.setText(items.getKey());
             senderIdField.setText(items.getSender_id());
@@ -176,6 +183,13 @@ public class SettingsController extends SettingModel implements Initializable{
                     senderIdField.deletePreviousChar();
                 }
             });
+            loanPercentageField.setOnKeyTyped(keyEvent -> {
+                String value = loanPercentageField.getText();
+                if (!keyEvent.getCharacter().matches("[0-9.]")) {
+                    loanPercentageField.deletePreviousChar();
+                }
+                percentageIndicator.setText(value + "% of basic Salary");
+            });
 
     }
 
@@ -201,11 +215,12 @@ public class SettingsController extends SettingModel implements Initializable{
             String location = locationField.getText();
             String imageUrl = imageName.getText();
             String hashedValue = EncryptDecrypt.hashPlainText(accountPasswordField.getText());
+            double percentageValue = Double.parseDouble(loanPercentageField.getText());
 
             ALERT_OBJECT = new UserAlerts("UPDATE SYSTEM CONFIG", "ARE YOU SURE YOU WANT TO UPDATE SYSTEM PARAMETERS?",
                     "please confirm your action to proceed else CANCEL to abort");
             if (ALERT_OBJECT.confirmationAlert()) {
-                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, imageUrl));
+                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, imageUrl, percentageValue));
                 saveImageToDestination();
                 if (flag.get() > 0) {
                     NOTIFICATION_OBJECT.successNotification("UPDATE SUCCESSFUL", "System parameters successfully update");

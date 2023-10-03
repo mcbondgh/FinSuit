@@ -55,7 +55,8 @@ WHERE u.emp_id = "1000003";
 -- 25-08-2023
 SELECT concat(firstname, " ", lastname, " ", othername) AS fullname, gender, age, mobile_number,
 	id_type, account_type, account_number, date_created FROM customer_data AS cd 
-    INNER JOIN customer_account_data AS cad ON cd.customer_id = cad.customer_id;
+    INNER JOIN customer_account_data AS cad ON cd.customer_id = cad.customer_id
+    WHERE cd.is_active = 0;
 
 SELECT loan_count FROM loans_data WHERE customer_id = 1;
 
@@ -63,6 +64,31 @@ SELECT loan_count FROM loans_data WHERE customer_id = 1;
     
 -- 26/08/2023
 ALTER TABLE customer_data ADD COLUMN is_active TINYINT DEFAULT 1 AFTER date_created;
+ALTER TABLE customer_document ADD COLUMN file_content BLOB NOT NULL AFTER document_name;
+
+SELECT customer_id FROM customer_data ORDER BY customer_data.customer_id DESC LIMIT 1;
+SELECT MAX(loan_id) AS 'max_id' FROM loans;
+
+
+-- 27 /08 / 2023
+SELECT * FROM customer_document WHERE customer_id = 1;
+
+-- 16 / 09 /23 
+ALTER TABLE business_info
+ADD COLUMN loan_percentage DECIMAL(3,2) DEFAULT 0.00 NOT NULL AFTER logoPath;
+
+SELECT * FROM customer_data WHERE id_number = "GHA-849494934-3";
+
+SELECT id_number, account_number FROM customer_data cd
+INNER JOIN customer_account_data AS cad
+ON cd.customer_id = cad.customer_id;
+
+SELECT COUNT(ln.customer_id) AS loan_count FROM loans ln
+INNER JOIN customer_data AS cd
+ON cd.customer_id = ln.customer_id
+INNER JOIN customer_account_data AS cad
+ON cad.customer_id = ln.customer_id
+WHERE cd.id_number = '' OR cad.account_number = '';
 
 -- SET foreign_key_checks = 0;
 
