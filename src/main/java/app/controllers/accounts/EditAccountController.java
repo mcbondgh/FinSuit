@@ -137,7 +137,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
         SpecialMethods.setGenderParameters(c_genderSelector);
         SpecialMethods.setQualification(customerEducationalBackground);
         SpecialMethods.setQualification(c_educationalBackgroundSelector);
-//        SpecialMethods.setInitialDepositAmount(initialDepositSelector);
+        SpecialMethods.setInitialDepositAmount(initialDepositSelector);
         accountNumberLabel.setText(ViewAccountController.selectedCustomerAccountNumber);
     }
     void populateTextFields() {
@@ -146,6 +146,8 @@ public class EditAccountController extends CustomerAccountModel implements Initi
             if (Objects.equals(value.getAccount_number(), accountNumber)) {
                 selectedCustomerId = value.getCustomer_id();
                 accountTypeSelector.setValue(value.getAccount_type());
+                initialDepositSelector.setValue(value.getAccount_balance());
+
             }
         }
 
@@ -333,7 +335,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
                     isFullNameEmpty() || isGurantorDobEmpty() || isGurantorNumberEmpty() || isGurantorGenderEmpty() ||
                     isGurantorLandmarkEmpty() || isGurantorDigitalAddressEmpty() || isGurantorIdTypeEmpty() || isGurantorIdNumberEmpty() ||
                     isGurantorRelationshipTypeEmpty() || customerEmailAddressField.getStyle().equals(invalid) ||
-                    !isEditButtonChecked()
+                    !isEditButtonChecked() || isDepositEmpty()
             );
             if (isAttachFileButtonSelected()) {
                 saveButton.setDisable(isFileNameFieldEmpty() || isReasonFieldEmpty());
@@ -348,6 +350,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
             int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
             String accountType = accountTypeSelector.getValue();
             String accountNumber = accountNumberLabel.getText();
+            double depositAmount = initialDepositSelector.getValue();
             String firstname = firstNameField.getText();
             String lastname = lastNameField.getText();
             String otherName = otherNameField.getText();

@@ -8,6 +8,7 @@ import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.roles.UserRolesData;
+import app.repositories.settings.TemplatesRepository;
 import app.repositories.users.UsersData;
 import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.beans.NamedArg;
@@ -81,7 +82,6 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {e.printStackTrace();}
         return userId;
     }
-
     public String getEmployeeIdByUsername(String username) {
         String emp_id = "";
         try {
@@ -121,7 +121,7 @@ public class MainModel extends DbConnection {
         }catch (Exception e){e.printStackTrace();}
         return "not found";
     }
-    public long getTotalAccountNumbers() {
+    public long getTotalCustomerIds() {
         long count = 0;
         try {
             String query = "SELECT customer_id from customer_data order by customer_id desc limit 1;";
@@ -130,10 +130,24 @@ public class MainModel extends DbConnection {
             if (resultSet.next()) {
                 count = resultSet.getInt(1);
             }
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
         }catch (SQLException e) {e.printStackTrace();}
         return count;
-    }
 
+    }
+    public String getLastCustomerAccountNumber() {
+        try {
+            String query = "SELECT MAX(account_number) AS result FROM customer_account_data ";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                return resultSet.getString("result");
+            }
+        }catch (Exception ignore) {}
+        return null;
+    }
     public long getTotalLoanCount() {
         try {
             String query = "SELECT MAX(loan_id) AS 'max_id' FROM loans;";
@@ -262,7 +276,7 @@ public class MainModel extends DbConnection {
     public ArrayList<CustomersDataRepository> fetchCustomersData() {
         ArrayList<CustomersDataRepository> data = new ArrayList<>();
         try {
-            String query = "SELECT * FROM customer_data";
+            String query = "SELECT * FROM customer_data, customer_account_data";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -273,6 +287,7 @@ public class MainModel extends DbConnection {
                 String othername = resultSet.getNString("othername");
                 String gender = resultSet.getString("gender");
                 Date dob = resultSet.getDate("dob");
+                double account_balance = resultSet.getDouble("account_balance");
                 int age = resultSet.getInt("age");
                 String place_of_birth = resultSet.getNString("place_of_birth");
                 String  mobile_number = resultSet.getString("mobile_number");
@@ -314,6 +329,7 @@ public class MainModel extends DbConnection {
                         contact_person_id_number, contact_person_place_of_work, institution_address, institution_number,relationship_to_applicant,date_created,
                         created_by, date_modified, modified_by
                 ));
+                
             }
         }catch (Exception ignore) {}return data;
     }
@@ -338,7 +354,6 @@ public class MainModel extends DbConnection {
             }
         }catch (Exception ignore){}return data;
     }
-
     public ObservableList<CustomersDocumentRepository> fetchCustomerDocuments() {
         ObservableList<CustomersDocumentRepository> data = FXCollections.observableArrayList();
 //        doc_id, customer_id, document_type, document_name, file_content, reason_for_upload, date_uploaded, date_modified, uploaded_by, modified_by
@@ -415,7 +430,45 @@ public class MainModel extends DbConnection {
             e.printStackTrace();
         }
     }
+    public int createAccountBalance(CustomerAccountsDataRepository balanceDataModel) {
+        int flag = 0;
+        try {
+            String query = "INSERT INTO customer_account_data(customer_id, account_type, account_number, account_balance, previous_balance, modified_by) VALUES(?, ?, ?, ?, ?, ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setLong(1, balanceDataModel.getCustomer_id());
+            preparedStatement.setString(2, balanceDataModel.getAccount_type());
+            preparedStatement.setString(3, balanceDataModel.getAccount_number());
+            preparedStatement.setDouble(4, balanceDataModel.getAccount_balance());
+            preparedStatement.setDouble(5, balanceDataModel.getPrevious_balance());
+            preparedStatement.setDouble(6, balanceDataModel.getModified_by());
+            flag = preparedStatement.executeUpdate();
+            commitTransaction();
+        }catch (SQLException e) {
+            e.printStackTrace();
+            rollBack();
+        }
+        return flag;
+    };
 
+    public ArrayList<TemplatesRepository> getMessageTemplates() {
+        ArrayList<TemplatesRepository> data = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM message_templates;";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("message_id");//0
+                String title = resultSet.getString("title");//1
+                String message = resultSet.getString("message");//2
+                Timestamp date = resultSet.getTimestamp("date_modified");//3
+                int userId = resultSet.getInt("modified_by");//4
+                data.add(new TemplatesRepository(id, title, message, userId, date));
+            }
+
+        }catch (SQLException ignore){}
+
+        return data;
+    }
 
 
 

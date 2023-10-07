@@ -15,7 +15,6 @@ public class CustomerAccountsDataRepository {
     private int modified_by;
 
     public CustomerAccountsDataRepository() {}
-
     public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String account_type, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
         this.customer_id = account_id;
         this.customer_id = customer_id;

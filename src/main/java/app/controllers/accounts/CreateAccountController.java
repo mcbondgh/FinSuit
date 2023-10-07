@@ -142,7 +142,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
     }
 
     void setAccountNumber() {
-        String totalCount = SpecialMethods.generateAccountNumber(getTotalAccountNumbers() + 1);
+        String totalCount = SpecialMethods.generateAccountNumber(getTotalCustomerIds() + 1);
         accountNumberLabel.setText(totalCount);
     }
 
@@ -474,16 +474,16 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                 customersDataRepository.setRelationship_to_applicant(relationshipType);//34
                 customersDataRepository.setCreated_by(currentUserId);//35
 
-                int flat = createNewAccount(customersDataRepository);
+                int flag = createNewAccount(customersDataRepository);
 
-                balanceDataModel.setCustomer_id(getTotalAccountNumbers());
+                balanceDataModel.setCustomer_id(getTotalCustomerIds());
                 balanceDataModel.setAccount_type(accountType);
                 balanceDataModel.setAccount_number(accountNumber);
                 balanceDataModel.setAccount_balance(depositAmount);
                 balanceDataModel.setPrevious_balance(depositAmount);
                 balanceDataModel.setModified_by(currentUserId);
 
-                flat += createAccountBalance(balanceDataModel);
+                flag += createAccountBalance(balanceDataModel);
 
 
                 //Check if the file attachment button is checked. this button enables you to upload a file to the system
@@ -499,9 +499,8 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
 
                    saveDocument(documentRepository);
                 }
-
-
-                if (flat == 2) {
+                System.out.println(flag);
+                if (flag == 2) {
                     NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");
                     resetFields();
                     setAccountNumber();

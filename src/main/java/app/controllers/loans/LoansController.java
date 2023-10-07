@@ -1,23 +1,26 @@
 package app.controllers.loans;
 
-import app.AppStarter;
+import app.models.loans.LoansModel;
+import app.repositories.loans.LoansTableEntity;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoansController implements Initializable {
+public class LoansController extends LoansModel implements Initializable {
 
     Stage loanApplicationStage = AppStages.loanApplicationStage();
 
@@ -30,12 +33,22 @@ public class LoansController implements Initializable {
 
     public static String pageTitlePlaceHolder;
     @FXML private BorderPane borderPane;
+    @FXML private HBox hBox;
     @FXML
     private MFXButton addNewLoanButton, payLoanButton, filterButton, loanRequestsButton, generateSheetButton, uploadSheetButton;
-    @FXML private MFXLegacyTableView<Object> loanApplicantsTable;
+    @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
+    @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
+    @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
+    @FXML private TableColumn<LoansTableEntity, String>loansIdColumn;
+    @FXML private TableColumn<LoansTableEntity, String>dateColumn;
+    @FXML private TableColumn<LoansTableEntity, Double>amountColumn;
+    @FXML private TableColumn<LoansTableEntity, Label> statusColumn;
+    @FXML private TableColumn<LoansTableEntity, String> loanTypeColumn;
+    @FXML private TableColumn<LoansTableEntity, MFXButton> viewColumn;
+    @FXML private TableColumn<LoansTableEntity, MFXButton> editColumn;
 
-    public LoansController() throws IOException {
-    }
+
+    public LoansController() throws IOException {}
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -43,6 +56,7 @@ public class LoansController implements Initializable {
             loadForm();
             payLoanButtonClicked();
             filterButtonClicked();
+            populateTable();
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -50,17 +64,73 @@ public class LoansController implements Initializable {
 
     void loadForm() throws InterruptedException, IOException {
         pageTitle.setText(pageTitlePlaceHolder);
-        String fxmlFile = "views/loans/loan-customers-page.fxml";
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFile));
-        borderPane.setCenter(fxmlLoader.load());
+//        String fxmlFile = "views/loans/loan-customers-page.fxml";
+//        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFile));
+//        borderPane.setCenter(fxmlLoader.load());
     }
+
+    /*******************************************************************************************************************
+     *********************************************** OTHER METHODS IMPLEMENTATION.
+     *******************************************************************************************************************/
+    private void populateTable() {
+        noColumn.setCellValueFactory(new PropertyValueFactory<>("no"));
+        fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        loansIdColumn.setCellValueFactory(new PropertyValueFactory<>("loanNo"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("formattedDate"));
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("requestedAmount"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("statusLabel"));
+        loanTypeColumn.setCellValueFactory(new PropertyValueFactory<>("loanType"));
+        viewColumn.setCellValueFactory(new PropertyValueFactory<>("viewButton"));
+        editColumn.setCellValueFactory(new PropertyValueFactory<>("editButton"));
+        loanApplicantsTable.setItems(getLoanTableValues());
+
+        long counter = countRequestedLoans();
+        loanRequestsButton.setText("Loan Requests (" + counter + ")");
+    }
+
+    public void searchCustomerMethod(KeyEvent keyEvent) {
+
+    }
+
+
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
-    public void loadCustomersTable(MouseEvent mouseEvent) throws IOException {
+    @FXML void loansTableItemSelected() throws IOException {
+        populateTable();
+        if (loanApplicantsTable.getItems().size() != 0) {
 
+            for (LoansTableEntity item : loanApplicantsTable.getItems()) {
+                String loanNumber = item.getLoanNo();
+                //Check if the view-button is enabled or disabled and show the schedule stage...
+                boolean statusValue = item.getStatusLabel().getText().equals("Processing") || item.getStatusLabel().getText().equals("Pending Approval")
+                        || item.getStatusLabel().getText().equals("Pending Payment");
+                item.getViewButton().setDisable(statusValue);
+
+                boolean editValue = item.getStatusLabel().getText().equals("Paid") || item.getStatusLabel().getText().equals("Cancelled");
+                item.getEditButton().setDisable(editValue);
+
+                //Handle Click event for the view-button
+                item.getViewButton().setOnAction(action -> {
+                    if (!item.getViewButton().isDisabled()) {
+                        try {
+                            ScheduleController.setSelectedLoanValue(loanNumber);
+                            AppStages.loanScheduleStage();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+                //Handles click event for the edit-button
+                item.getEditButton().setOnAction(action -> {
+
+                });
+            }
+        }
     }
+
     @FXML
     private void setLoanRequestsButtonClicked() {
         try {
@@ -75,7 +145,6 @@ public class LoansController implements Initializable {
         loanApplicationStage.show();
     }
 
-
     void payLoanButtonClicked() {
         payLoanButton.setOnAction(event -> {
             try {
@@ -87,14 +156,9 @@ public class LoansController implements Initializable {
     }
     void filterButtonClicked() {
         filterButton.setOnAction(event -> {
-            try {
-                AppStages.loanScheduleStage();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+
         });
     }
-
 
 
 

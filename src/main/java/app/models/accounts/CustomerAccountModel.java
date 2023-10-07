@@ -1,7 +1,6 @@
 package app.models.accounts;
 
 import app.models.MainModel;
-import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.accounts.ViewCustomersTableDataRepository;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 public class CustomerAccountModel extends MainModel {
 
     protected int createNewAccount(CustomersDataRepository accountDataModel) {
+        int flag = 0;
         try {
             String query = "INSERT INTO customer_data(firstname, lastname, " +
                     "othername, gender, dob, age, place_of_birth, mobile_number, other_number, email, " +
@@ -58,27 +58,14 @@ public class CustomerAccountModel extends MainModel {
             preparedStatement.setString(31, accountDataModel.getInstitution_number());
             preparedStatement.setString(32, accountDataModel.getRelationship_to_applicant());
             preparedStatement.setInt(33, accountDataModel.getCreated_by());
-            return preparedStatement.executeUpdate();
+            flag =  preparedStatement.executeUpdate();
+            commitTransaction();
+            preparedStatement.close();
+            getConnection().close();
         }catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
+            rollBack();
         }
-    };
-    protected int createAccountBalance(CustomerAccountsDataRepository balanceDataModel) {
-        try {
-            String query = "INSERT INTO customer_account_data(customer_id, account_type, account_number, account_balance, previous_balance, modified_by) VALUES(?, ?, ?, ?, ?, ?);";
-            preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setLong(1, balanceDataModel.getCustomer_id());
-            preparedStatement.setString(2, balanceDataModel.getAccount_type());
-            preparedStatement.setString(3, balanceDataModel.getAccount_number());
-            preparedStatement.setDouble(4, balanceDataModel.getAccount_balance());
-            preparedStatement.setDouble(5, balanceDataModel.getPrevious_balance());
-            preparedStatement.setDouble(6, balanceDataModel.getModified_by());
-            return preparedStatement.executeUpdate();
-        }catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        return flag;
     };
 
     protected ObservableList<ViewCustomersTableDataRepository> fetchCustomersDataSummary() {
@@ -110,9 +97,11 @@ public class CustomerAccountModel extends MainModel {
             preparedStatement.setString(1, accountType);
             preparedStatement.setString(2, accountNumber);
             preparedStatement.execute();
-        }catch (Exception e) {e.printStackTrace();}
+            commitTransaction();
+        } catch (Exception e) {
+            rollBack();
+        }
     }
-
     protected void saveDocument(CustomersDocumentRepository documentRepository) {
         try {
             String query = "INSERT INTO customer_document(customer_id, document_name, file_content, reason_for_upload, uploaded_by) VALUES(?,?,?,?,?)";
@@ -123,7 +112,10 @@ public class CustomerAccountModel extends MainModel {
             preparedStatement.setString(4, documentRepository.getReason_for_upload());
             preparedStatement.setInt(5, documentRepository.getUploaded_by());
             preparedStatement.execute();
-        }catch (Exception e) {e.printStackTrace();}
+            commitTransaction();
+        }catch (Exception e) {
+            rollBack();
+            e.printStackTrace();}
     }
 
     protected int getCustomerIdByAccountNumber(String accountNumber){
@@ -156,8 +148,9 @@ public class CustomerAccountModel extends MainModel {
             preparedStatement.setLong(6, documentRepository.getCustomer_id());
             flag = preparedStatement.executeUpdate();
             commitTransaction();
+            preparedStatement.close();
+            getConnection().close();
         }catch (Exception e){rollBack();}
-
         return flag;
     }
 

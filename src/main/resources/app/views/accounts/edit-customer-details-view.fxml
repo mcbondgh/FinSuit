@@ -227,6 +227,12 @@
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
                   </Label>
+                  <Label layoutX="589.0" layoutY="361.0" text="Initial Deposit(Ghc) *">
+                     <font>
+                        <Font name="Poppins Regular" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="initialDepositSelector" layoutX="589.0" layoutY="381.0" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins; -fx-font-weight: bold;" />
                </children>
             </Pane>
             <Pane fx:id="contactPersonPane" disable="true" layoutX="13.0" layoutY="675.0" prefHeight="421.0" prefWidth="1173.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #fff;">

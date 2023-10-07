@@ -199,14 +199,14 @@
                               <Font name="Poppins Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Pane layoutX="860.0" layoutY="9.0" prefHeight="28.0" prefWidth="280.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
+                        <Pane layoutX="920.0" layoutY="9.0" prefHeight="28.0" prefWidth="220.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
                            <children>
-                              <Label layoutX="8.0" layoutY="6.0" text="Account Number[auto]" textFill="#2b5ea1">
+                              <Label layoutX="5.0" layoutY="6.0" text="Account Number" textFill="#7b7b7b">
                                  <font>
                                     <Font name="Poppins Bold" size="11.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="accountNumberLabel" layoutX="145.0" layoutY="5.0" prefHeight="19.0" prefWidth="131.0" textFill="#bc0101">
+                              <Label fx:id="accountNumberLabel" layoutX="107.0" layoutY="5.0" prefHeight="19.0" prefWidth="111.0" text="00000000000000" textFill="#bc0101">
                                  <font>
                                     <Font name="Poppins Bold" size="11.0" />
                                  </font>

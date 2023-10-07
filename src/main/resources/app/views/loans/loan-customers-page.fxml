@@ -11,22 +11,19 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="1220.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanCustomersController">
+<AnchorPane fx:id="anchorPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="1220.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoansController">
    <children>
-      <MFXLegacyTableView fx:id="loanApplicantsTable" blendMode="MULTIPLY" cacheHint="SPEED" cacheShape="false" centerShape="false" depthTest="ENABLE" fixedCellSize="35.0" layoutX="5.0" layoutY="54.0" prefHeight="477.0" prefWidth="1211.0" scaleShape="false" style="-fx-font-family: poppins; -fx-font-size: 12; -fx-alignment: center; -fx-background-color: #fff;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="54.0">
+      <MFXLegacyTableView fx:id="loanApplicantsTable" blendMode="MULTIPLY" cacheHint="SPEED" cacheShape="false" centerShape="false" depthTest="ENABLE" layoutX="5.0" layoutY="54.0" prefHeight="484.0" prefWidth="1211.0" scaleShape="false" style="-fx-font-family: poppins; -fx-font-size: 16px; -fx-alignment: center; -fx-background-color: #fff;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="54.0">
          <columns>
-            <TableColumn prefWidth="64.00003290176392" text="NO." />
-            <TableColumn prefWidth="222.6667251586914" text="FULLNAME" />
-            <TableColumn prefWidth="137.33331298828125" text="LOAN ID" />
-            <TableColumn prefWidth="109.99996948242188" text="RELEASE DATE" />
-            <TableColumn prefWidth="118.666748046875" text="MATURITY DATE" />
-            <TableColumn prefWidth="84.0" text="PRINCIPAL" />
-            <TableColumn prefWidth="67.3333740234375" text="PAID" />
-            <TableColumn prefWidth="80.6666259765625" text="BALANCE" />
-            <TableColumn prefWidth="118.66656494140625" text="LAST PAYMENT" />
-            <TableColumn prefWidth="81.99993896484375" style="-fx-pref-height: 4px;" text="STATUS" />
-            <TableColumn prefWidth="60.0" text="A" />
-            <TableColumn prefWidth="66.6666259765625" text="B" />
+            <TableColumn fx:id="noColumn" editable="false" prefWidth="64.00003290176392" style="-fx-alignment: center;" text="NO." />
+            <TableColumn fx:id="fullNameColumn" editable="false" prefWidth="239.3333511352539" style="-fx-alignment: center;" text="FULLNAME" />
+            <TableColumn fx:id="loansIdColumn" editable="false" prefWidth="202.0" style="-fx-alignment: center;" text="LOAN NUMBER" />
+            <TableColumn fx:id="loanTypeColumn" editable="false" prefWidth="128.0" style="-fx-alignment: center;" text="LOAN TYPE" />
+            <TableColumn fx:id="dateColumn" editable="false" prefWidth="160.0" style="-fx-alignment: center;" text="APPLICATION DATE" />
+            <TableColumn fx:id="amountColumn" editable="false" prefWidth="156.66668701171875" style="-fx-alignment: center;" text="REQUESTED AMONT" />
+            <TableColumn fx:id="statusColumn" editable="false" prefWidth="158.66680908203125" style="-fx-alignment: center;" text="STATUS" />
+            <TableColumn fx:id="viewColumn" editable="false" prefWidth="44.0" style="-fx-alignment: center;" text="VIEW " />
+            <TableColumn fx:id="editColumn" editable="false" prefWidth="44.6666259765625" style="-fx-alignment: center;" text="EDIT" />
          </columns>
       </MFXLegacyTableView>
       <Pane layoutX="4.0" layoutY="6.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">

@@ -142,8 +142,7 @@ CREATE TABLE customer_document(
     date_uploaded DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modified DATETIME DEFAULT NOW(),
     uploaded_by INT NOT NULL,
-    modified_by INT NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer_data(customer_id)
+    modified_by INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS group_supervisors(
@@ -163,8 +162,12 @@ CREATE TABLE IF NOT EXISTS loans(
     loan_no VARCHAR(50) NOT NULL,
     loan_type VARCHAR(50) NOT NULL,
     requested_amount DOUBLE(10,2) DEFAULT 0.00 NOT NULL,
-    application_status TINYINT DEFAULT 1 COMMENT '1 means pending approval | 2 means pending payment | 3 means paid | 4 means rejected',
+    disbursed_amount DECIMAL(10,2) DEFAULT 0.00,
+    total_payment DECIMAL(10,2) DEFAULT 0.00,
+    application_status VARCHAR(20) DEFAULT 'processing' COMMENT 'pending_approval |pending_payment | paid | rejected',
+    loan_status VARCHAR(20) DEFAULT 'active' COMMENT 'active | closed',
     is_drafted BOOLEAN DEFAULT 0 ,
+    profile_picture BLOB,
     date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_by INT,
@@ -185,17 +188,42 @@ CREATE TABLE IF NOT EXISTS loan_applicant_details(
     gross_salary DECIMAL(10,2) DEFAULT '0.00',
     total_deduction DECIMAL(10,2) DEFAULT '0.00',
     net_salary DECIMAL(10,2) DEFAULT '0.00',
-    guranter_name VARCHAR(100),
-    guranter_number VARCHAR(20),
-    guranter_digital_address VARCHAR(50),
-    guranter_residential_address VARCHAR(100),
-    guranter_idType VARCHAR(20),
-    guranter_idNumber VARCHAR(20),
-    guranter_relationship VARCHAR(50),
-    guranter_occupation VARCHAR(50),
-    gurater_place_of_work VARCHAR(50),
-    guranter_institution_address VARCHAR(100),
-    guranter_income DECIMAL(10,2)
+    guarantor_name VARCHAR(100),
+    guarantor_number VARCHAR(20),
+    guarantor_digital_address VARCHAR(50),
+    guarantor_residential_address VARCHAR(100),
+    guarantor_idType VARCHAR(20),
+    guarantor_idNumber VARCHAR(20),
+    guarantor_relationship VARCHAR(50),
+    guarantor_occupation VARCHAR(50),
+    guarator_place_of_work VARCHAR(50),
+    guarantor_institution_address VARCHAR(100),
+    guarantor_income DECIMAL(10,2)
+);
+
+CREATE TABLE IF NOT EXISTS message_templates(
+	message_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(50) NOT NULL, 
+    message TEXT NOT NULL,
+    date_modified DATETIME DEFAULT NOW(),
+    modified_by INT
+);
+
+
+CREATE TABLE IF NOT EXISTS message_operations(
+	id INT PRIMARY KEY,
+    template_id INT,
+    operation VARCHAR(20)
+);
+
+
+CREATE TABLE IF NOT EXISTS notificatiions(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(50),
+    sender_method VARCHAR(20) COMMENT 'This indicates the method of message deliver, either by SMS or EMAIL',
+    message VARCHAR(255),
+    date_sent DATETIME DEFAULT CURRENT_TIMESTAMP,
+    sent_by INT
 );
 
 

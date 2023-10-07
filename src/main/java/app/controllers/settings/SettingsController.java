@@ -3,12 +3,16 @@ package app.controllers.settings;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
+import app.controllers.homepage.AppController;
 import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.SmsAPIEntity;
+import app.repositories.settings.TemplatesRepository;
+import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXListView;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +37,16 @@ public class SettingsController extends SettingModel implements Initializable{
     Validator validator = new Validator();
     MainModel MODEL_OBJECT = new MainModel();
     UserAlerts  ALERT_OBJECT;
-    UserNotification NOTIFICATION_OBJECT = new UserNotification();;
+    UserNotification NOTIFICATION_OBJECT = new UserNotification();
+
+    private static String currentUserPlaceHolder;
+
+    public String getCurrentUser() {
+        return currentUserPlaceHolder;
+    }
+    public void setCurrentUser(String currentUser) {
+        currentUserPlaceHolder = currentUser;
+    }
     
 
 
@@ -54,6 +67,12 @@ public class SettingsController extends SettingModel implements Initializable{
     @FXML private PasswordField accountPasswordField, passwordField;
     @FXML private TextField loanPercentageField;
     @FXML private Label percentageIndicator;
+    @FXML private MFXListView<Object> templateListView;
+    @FXML private JFXTextArea messageBodyField;
+    @FXML private TextField messageTitleField;
+    @FXML private MFXButton saveTemplateButton, cancelTemplateButton, saveOperationButton;
+
+
 
 
     Tooltip tooltip;
@@ -70,6 +89,9 @@ public class SettingsController extends SettingModel implements Initializable{
     boolean isSenderMailFieldEmpty() {return senderMailField.getText().isEmpty();}
     boolean isPasswordFieldEmpty() {return passwordField.getText().isEmpty();}
     boolean isModifyButtonChecked() {return modifyButton.isSelected();}
+    boolean isTitleFieldEmpty() {return messageTitleField.getText().isEmpty();}
+    boolean isMessageFieldEmpty() {return messageBodyField.getText().isEmpty();}
+
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
      ********************************************************************************************************************/
@@ -77,6 +99,7 @@ public class SettingsController extends SettingModel implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
         validateInputFields();
+        setCurrentUser(AppController.activeUserPlaceHolder);
         try {
             fillFields();
         } catch (IOException e) {
@@ -84,6 +107,18 @@ public class SettingsController extends SettingModel implements Initializable{
         }
 
         actionEventMethods();
+        populateFields();
+    }
+
+    void populateFields() {
+        templateListView.getSelectionModel().setAllowsMultipleSelection(false);
+        templateListView.getItems().clear();
+        int size = getMessageTemplates().size();
+        for (TemplatesRepository items : getMessageTemplates()) {
+            templateListView.getItems().add(items.getMessageTitle());
+        }
+        messageBodyField.clear();
+        messageTitleField.clear();
     }
 
     void uploadLogo() throws IOException {
@@ -193,6 +228,19 @@ public class SettingsController extends SettingModel implements Initializable{
 
     }
 
+    @FXML void checkMessagesTitleName() {
+        String value = messageTitleField.getText().toUpperCase().replaceAll("", " ");
+
+        for (Object title : templateListView.getItems()) {
+            if (value.matches(title.toString())) {
+                ALERT_OBJECT = new UserAlerts("INVALID TITLE", "Sorry, message title must be unique from your list of titles");
+                ALERT_OBJECT.warningAlert();
+                messageTitleField.clear();
+                return;
+            }
+        }
+    }
+
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
@@ -246,6 +294,25 @@ public class SettingsController extends SettingModel implements Initializable{
             warningPane.setVisible(isModifyButtonChecked());
         });
 
+    }
+    @FXML
+    void saveTemplateButtonClicked() {
+        if (!(isTitleFieldEmpty() || isMessageFieldEmpty())) {
+            int userId = MODEL_OBJECT.getUserIdByName(getCurrentUser());
+            String title = messageTitleField.getText().toUpperCase();
+            String message = messageBodyField.getText();
+            ALERT_OBJECT = new UserAlerts("SAVE TEMPLATE", "Do you wish to add current message to your templates?");
+            if (ALERT_OBJECT.confirmationAlert()) {
+                if(saveMessageTemplate(title, message, userId) > 0) {
+                    NOTIFICATION_OBJECT.successNotification("SAVE SUCCESS", "Message successfully added to your templates.");
+                    populateFields();
+                }
+            }
+        }
+    }
+    @FXML void getSelectedTemplate() {
+        String selectedItem = templateListView.getSelectionModel().getSelection().toString();
+        System.out.println(selectedItem);
     }
 
 }//end of class...

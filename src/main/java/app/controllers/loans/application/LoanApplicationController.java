@@ -4,7 +4,9 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
 import app.models.loans.LoansModel;
+import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.loans.LoanApplicationEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -26,7 +28,10 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 import java.net.URL;
+import java.sql.Date;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -34,6 +39,10 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
     UserNotification NOTIFY = new UserNotification();
     UserAlerts ALERT;
+
+    CustomersDataRepository customerRepository = new CustomersDataRepository();
+    LoanApplicationEntity applicationEntity = new LoanApplicationEntity();
+    CustomerAccountsDataRepository accountRepository = new CustomerAccountsDataRepository();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -45,7 +54,8 @@ public class LoanApplicationController extends LoansModel implements Initializab
     private VBox vBox;
     @FXML
     Pane customerSelectorPane;
-    @FXML private ComboBox<String> customerTypeSelector, loanTypeSelector, draftSelector;
+    @FXML private MFXButton resetButton;
+    @FXML private ComboBox<String> customerTypeSelector, loanTypeSelector;
     @FXML private ImageView imageView;
     @FXML private MFXFilterComboBox<Object> filterIdOrAccountNo;
     @FXML private GridPane gridPane;
@@ -58,7 +68,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     @FXML private ComboBox<String> contactPersonGenderSelector, guranterGenderSelector;
     @FXML private TextField contactPersonNameField, contactPersonNumberField, contactPersonDigitalAddField;
     @FXML private TextField contactPersonResidentialField, contactPersonIdNoField, placeOfWorkField, institutionAddressField;
-    @FXML private TextField guranterNameField, guranterNumberField, guranterDigitalAddressField, guranterAddressField;
+    @FXML private TextField guranterNameField, guranterNumberField, guranterDigitalAddressField, guranterLandmarkField;
     @FXML private  TextField guranterIdNumberField, guranterOccupationField, guranterPlaceOfWorkField, guranterWorkAddressField, guranterNetSalaryField;
     @FXML private TextField applicantBasicSalaryField, applicantTotalDeductionField, applicantNetSalaryField, applicantGrossSalaryField;
     @FXML private TextField staffIdField;
@@ -122,7 +132,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     boolean isGuarantorNameEmpty() {return guranterNameField.getText().isEmpty();}
     boolean isGuarantorNumberEmpty() {return guranterNumberField.getText().isEmpty();}
     boolean isGuarantorDigitalAddressEmpty() {return guranterDigitalAddressField.getText().isEmpty();};
-    boolean isGuarantorAddressEmpty() {return guranterAddressField.getText().isEmpty();}
+    boolean isGuarantorAddressEmpty() {return guranterLandmarkField.getText().isEmpty();}
     boolean isGuarantorIdTypeEmpty() {return guranterIdTypeSelector.getValue() == null;}
     boolean isGuarantorIdNumberEmpty() {return guranterIdNumberField.getText().isEmpty();}
     boolean isGuarantorPlaceOfWorkEmpty() {return guranterPlaceOfWorkField.getText().isEmpty();}
@@ -143,6 +153,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String[] customerTypes = {"New Client", "Existing Client"};
         customerTypeSelector.setValue(customerTypes[0]);
+        customerSelectorPane.setVisible(false);
         for (String customerType : customerTypes) {
             customerTypeSelector.getItems().add(customerType);
         }
@@ -164,9 +175,57 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
     }
 
-     private String getCustomerIdOrIdType() {
-
-        return "";
+     private void resetFields() {
+         loanNumberLabel.setText(SpecialMethods.generateLoanNumber(getTotalLoanCount() + 1));
+         loanTypeSelector.setValue(null);
+         loanRequestField.clear();
+         firstNameField.clear();
+         lastNameField.clear();
+         otherNumberField.clear();
+         dobPicker.setValue(null);
+         genderSelector.setValue(null);
+         mobileNumberField.clear();
+         otherNumberField.clear();
+         emailField.clear();
+         digitalAddressField.clear();
+         residentialAddressField.clear();
+         landmarkField.clear();
+         qualificationSelector.setValue(null);
+         maritalStatusSelector.setValue(null);
+         idTypeSelector.setValue(null);
+         idNumberField.clear();
+         companyNumberField.clear();
+         companyNumberField.clear();
+         companyAddressField.clear();
+         staffIdField.clear();
+         occupationField.clear();
+         employmentDatePicker.setValue(null);
+         applicantBasicSalaryField.clear();
+         applicantGrossSalaryField.clear();
+         applicantNetSalaryField.clear();
+         applicantTotalDeductionField.clear();
+         contactPersonNameField.clear();
+         contactPersonNumberField.clear();
+         contactPersonDigitalAddField.clear();
+         contactPersonResidentialField.clear();
+         contactPersonGenderSelector.setValue(null);
+         relationshipTypeSelector.setValue(null);
+         contactPersonIdTypeSelector.setValue(null);
+         contactPersonIdNoField.clear();
+         placeOfWorkField.clear();
+         institutionAddressField.clear();
+         guranterNameField.clear();
+         guranterNumberField.clear();
+         guranterDigitalAddressField.clear();
+         guranterLandmarkField.clear();
+         guranterGenderSelector.setValue(null);
+         guranterIdTypeSelector.setValue(null);
+         guranterIdNumberField.clear();
+         guranterRelationshipTypeSelector.setValue(null);
+         guranterOccupationField.clear();
+         guranterPlaceOfWorkField.clear();
+         guranterWorkAddressField.clear();
+         guranterNetSalaryField.clear();
     }
 
     private InputStream getImageStream() {
@@ -178,7 +237,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     }
 
     private void populateFields() {
-        getDrafts(loanCountLabel, draftSelector);
+
     }
 
     /*******************************************************************************************************************
@@ -245,12 +304,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
             companyNumberField.deletePreviousChar();
         }
         });
-        lastNameField.setOnKeyTyped(keyEvent -> {
-            draftButton.setDisable(isFirstNameEmpty() || isLastNameEmpty() || isLoanTypeEmpty() || isLoanAmountFieldEmpty());
-        });
-        firstNameField.setOnKeyTyped(keyEvent -> {
-            draftButton.setDisable(isFirstNameEmpty() || isLastNameEmpty() || isLoanTypeEmpty() || isLoanAmountFieldEmpty());
-        });
 
         scrollPane.setOnMouseMoved(mouseEvent -> {
             saveButton.setDisable(
@@ -266,11 +319,9 @@ public class LoanApplicationController extends LoansModel implements Initializab
                     || isContactGenderEmpty() || isGuarantorGenderEmpty()
             );
         });
-
-
-
-
     }//end of input validation method...
+
+
 
 
     /*******************************************************************************************************************
@@ -311,27 +362,47 @@ public class LoanApplicationController extends LoansModel implements Initializab
     }
     @FXML void checkCustomerIdField(KeyEvent keyEvent) {
         String value = idNumberField.getText().replaceAll(" ", "");
+        boolean found = false;
         for (CustomersDataRepository data : fetchCustomersData()) {
             if (Objects.equals(value, data.getId_number()) && customerTypeSelector.getValue().equals("New Client")) {
                 String name = data.getLastname().toUpperCase() + " " + data.getFirstname().toUpperCase();
                 ALERT = new UserAlerts("EXISTING CUSTOMER ID", "Sorry anther customer owns this ID Number bearing the name '" + name + "'","you cannot register a customer with the same Id Number, please provide a unique id number.");
                 ALERT.warningAlert();
                 idNumberField.clear();
+                break;
             }
         }
 
     }
     @FXML void filterCustomerOnAction() {
-        String value = filterIdOrAccountNo.getValue().toString();
-        int loanCount = countTotalLoans(value);
-        loanCountLabel.setText(String.valueOf(loanCount));
-    }
-    @FXML void loadDraftVariablesOnAction() {
+        try {
+            DecimalFormat currencyFormat = new DecimalFormat("#.##");
+            String value = filterIdOrAccountNo.getValue().toString();
+            int loanCount = (int) countTotalLoans(value).get(0);
+            double disbursedAmount = (double) countTotalLoans(value).get(1);
+            double totalPayment = disbursedAmount - (double)countTotalLoans(value).get(2);
+            loanCountLabel.setText(String.valueOf(loanCount));
+            paidAmountLabel.setText(String.valueOf(currencyFormat.format(disbursedAmount)));
+            pendingAmountLabel.setText(String.valueOf(currencyFormat.format(totalPayment)));
 
-    }
-
-    @FXML private void draftButtonClicked() {
-
+            ArrayList<Object> registeredUser = getExistingCustomerForLoan(value);
+            firstNameField.setText(registeredUser.get(0).toString());
+            lastNameField.setText(registeredUser.get(1).toString());
+            otherNameField.setText(registeredUser.get(2).toString());
+            genderSelector.setValue(registeredUser.get(3).toString());
+            dobPicker.setValue(LocalDate.parse(registeredUser.get(4).toString()));
+            mobileNumberField.setText(registeredUser.get(5).toString());
+            otherNumberField.setText(registeredUser.get(6).toString());
+            emailField.setText(registeredUser.get(7).toString());
+            digitalAddressField.setText(registeredUser.get(8).toString());
+            residentialAddressField.setText(registeredUser.get(9).toString());
+            landmarkField.setText(registeredUser.get(10).toString());
+            maritalStatusSelector.setValue(registeredUser.get(11).toString());
+            idTypeSelector.setValue(registeredUser.get(12).toString());
+            idNumberField.setText(registeredUser.get(13).toString());
+            qualificationSelector.setValue(registeredUser.get(14).toString());
+            personalInformationPane.setDisable(true);
+        }catch (Exception ignore){}
     }
     @FXML private void saveButtonClicked() {
         int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
@@ -342,11 +413,12 @@ public class LoanApplicationController extends LoansModel implements Initializab
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String otherName = otherNameField.getText();
+        String gender = genderSelector.getValue();
         LocalDate dateOfBirth = dobPicker.getValue();
         String mobileNumber = mobileNumberField.getText();
         String otherNumber = otherNumberField.getText();
-        String address = digitalAddressField.getText();
         String email = emailField.getText();
+        String digitalAddress = digitalAddressField.getText();
         String residentialAddress = residentialAddressField.getText();
         String landMark = landmarkField.getText();
         String education = qualificationSelector.getValue();
@@ -356,8 +428,8 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
         String companyName = companyNameField.getText();
         String companyContact = companyNumberField.getText();
-        String digitalAddress = digitalAddressField.getText();
         String staffId = staffIdField.getText();
+        String companyAddress = companyAddressField.getText();
         String occupation = occupationField.getText();
         LocalDate employmentDate = employmentDatePicker.getValue();
         double basicSalary = Double.parseDouble(applicantBasicSalaryField.getText());
@@ -368,7 +440,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
         String contactMobileNumber = contactPersonNumberField.getText();
         String contactGender = contactPersonGenderSelector.getValue();
         String contactDigitalAdd = contactPersonDigitalAddField.getText();
-        String contactResidential = contactPersonResidentialField.getText();
+        String contactLandmark = contactPersonResidentialField.getText();
         String contactRelationshipType = relationshipTypeSelector.getValue();
         String contactIdType = contactPersonIdTypeSelector.getValue();
         String contactIdNumber = contactPersonIdNoField.getText();
@@ -378,23 +450,100 @@ public class LoanApplicationController extends LoansModel implements Initializab
         String guarantorName = guranterNameField.getText();
         String guarantorNumber = guranterNumberField.getText();
         String guarantorDigitalAdd = guranterDigitalAddressField.getText();
-        String guarantorResidentialAdd = guranterAddressField.getText();
+        String guarantorLandmark = guranterLandmarkField.getText();
         String guarantorIdType = guranterIdTypeSelector.getValue();
         String guarantorIdNumber = guranterIdNumberField.getText();
         String guarantorRelationship = guranterRelationshipTypeSelector.getValue();
         String guarantorOccupation = guranterOccupationField.getText();
         String guarantorPlaceOfWork = guranterPlaceOfWorkField.getText();
         String guarantorInstitutionAdd = guranterWorkAddressField.getText();
-        String guarantorNetSalary = guranterNetSalaryField.getText();
+        double guarantorNetSalary = Double.parseDouble(guranterNetSalaryField.getText());
         int age = LocalDate.now().getYear() - dobPicker.getValue().getYear();
 
         ALERT = new UserAlerts("LOAN APPLICATION", "You have initiated a loan request for '" + firstName.toUpperCase() +" " + lastName.toUpperCase() +"', do you wish to apply now?", "please confirm your decision to apply else CANCEL to abort.");
         if (ALERT.confirmationAlert()) {
+            customerRepository.setFirstname(firstName);
+            customerRepository.setLastname(lastName);
+            customerRepository.setOthername(otherName);
+            customerRepository.setGender(gender);
+            customerRepository.setDob(Date.valueOf(dateOfBirth));
+            customerRepository.setAge(age);
+            customerRepository.setMobile_number(mobileNumber);
+            customerRepository.setOther_number(otherNumber);
+            customerRepository.setEmail(email);
+            customerRepository.setDigital_address(digitalAddress);
+            customerRepository.setResidential_address(residentialAddress);
+            customerRepository.setKey_landmark(landMark);
+            customerRepository.setMarital_status(maritalStatus);
+            customerRepository.setId_type(idType);
+            customerRepository.setId_number(idNumber);
+            customerRepository.setEducational_background(education);
+            customerRepository.setContact_person_fullname(contactFullName);
+            customerRepository.setContact_person_number(contactMobileNumber);
+            customerRepository.setContact_person_gender(contactGender);
+            customerRepository.setContact_person_landmark(contactLandmark);
+            customerRepository.setContact_person_digital_address(contactDigitalAdd);
+            customerRepository.setContact_person_id_type(contactIdType);
+            customerRepository.setContact_person_id_number(contactIdNumber);
+            customerRepository.setContact_person_place_of_work(placeOfWork);
+            customerRepository.setInstitution_address(institutionAddress);
+            customerRepository.setRelationship_to_applicant(contactRelationshipType);
+            customerRepository.setCreated_by(currentUserId);
 
+            applicationEntity.setLoan_no(loanNumber);
+            applicationEntity.setCompany_name(companyName);
+            applicationEntity.setCompany_mobile_number(companyContact);
+            applicationEntity.setCompany_address(companyAddress);
+            applicationEntity.setStaff_id(staffId);
+            applicationEntity.setOccupation(occupation);
+            applicationEntity.setEmployment_date(employmentDate);
+            applicationEntity.setBasic_salary(basicSalary);
+            applicationEntity.setGross_salary(grossSalary);
+            applicationEntity.setTotal_deduction(totalDeduction);
+            applicationEntity.setNet_salary(netSalary);
+            applicationEntity.setGender(gender);
+            applicationEntity.setGuranter_name(guarantorName);
+            applicationEntity.setGuranter_number(guarantorNumber);
+            applicationEntity.setGuranter_digital_address(guarantorDigitalAdd);
+            applicationEntity.setGuarantor_landmark(guarantorLandmark);
+            applicationEntity.setGuranter_idType(guarantorIdType);
+            applicationEntity.setGuranter_idNumber(guarantorIdNumber);
+            applicationEntity.setGuranter_relationship(guarantorRelationship);
+            applicationEntity.setGuranter_occupation(guarantorOccupation);
+            applicationEntity.setGurater_place_of_work(guarantorPlaceOfWork);
+            applicationEntity.setGuranter_institution_address(guarantorInstitutionAdd);
+            applicationEntity.setNet_salary(guarantorNetSalary);
+
+            int flag = applyForLoan(applicationEntity, customerRepository);
+            flag += createLoan( getTotalCustomerIds(), loanNumber, loanType, loanAmount, currentUserId);
+
+            //CREATE ACCOUNT FOR LOAN CLIENT
+            accountRepository.setCustomer_id(getTotalCustomerIds());
+            accountRepository.setAccount_number(SpecialMethods.generateAccountNumber(getTotalCustomerIds() + 1));
+            accountRepository.setAccount_type("Savings Account");
+            accountRepository.setModified_by(currentUserId);
+            flag += createAccountBalance(accountRepository);
+
+            if (flag >= 2) {
+                NOTIFY.successNotification("LOAN REQUEST SUCCESSFUL", "Perfect, loan request successfully placed, your loan request has been queued for review.");
+                resetFields();
+            }
         }
 
 
-
+    }//end of save button...
+    @FXML void resetButtonClicked() {
+        ALERT = new UserAlerts("RESET FIELDS", "Do you wish to clear the form and reset all fields? ");
+        if (ALERT.confirmationAlert()) {
+            resetFields();
+            if (filterIdOrAccountNo.getSearchText() != null) {
+                filterIdOrAccountNo.clearSelection();
+                personalInformationPane.setDisable(false);
+                loanCountLabel.setText("0.00");
+                paidAmountLabel.setText("0.00");
+                pendingAmountLabel.setText("0.00");
+            }
+        }
     }
 
 
@@ -402,4 +551,4 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
 
 
-}//end of class...
+}//end of class.

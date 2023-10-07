@@ -28,17 +28,17 @@
       <BorderPane fx:id="borderPane" layoutX="4.0" layoutY="44.0" prefHeight="640.0" prefWidth="1230.0" style="-fx-border-color: #eee;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="43.0" />
       <VBox fx:id="menuContainer" alignment="CENTER" layoutX="1083.0" layoutY="38.0" onMouseExited="#HideMenuContainer" prefHeight="113.0" prefWidth="145.0" spacing="5.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" visible="false">
          <children>
-            <MFXButton fx:id="createAccountButton" alignment="CENTER" depthLevel="LEVEL1" prefHeight="30.0" prefWidth="137.0" style="-fx-background-color: #e5f2ff;" text="Create New Account" textOverrun="CLIP">
+            <MFXButton fx:id="createAccountButton" alignment="CENTER" depthLevel="LEVEL1" prefHeight="30.0" prefWidth="137.0" style="-fx-background-color: #278c8f;" text="Create New Account" textFill="WHITE" textOverrun="CLIP">
                <font>
-                  <Font name="Poppins Regular" size="12.0" />
+                  <Font name="Poppins Bold" size="10.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="viewAccountButton" alignment="CENTER" depthLevel="LEVEL1" prefHeight="30.0" prefWidth="133.0" style="-fx-background-color: #e5f2ff;" text="View  Accounts" textOverrun="CLIP">
+            <MFXButton fx:id="viewAccountButton" alignment="CENTER" depthLevel="LEVEL1" prefHeight="30.0" prefWidth="133.0" style="-fx-background-color: #278c8f;" text="View  Accounts" textFill="WHITE" textOverrun="CLIP">
                <font>
-                  <Font name="Poppins Regular" size="12.0" />
+                  <Font name="Poppins Bold" size="10.0" />
                </font>
                <cursor>
                   <Cursor fx:constant="HAND" />

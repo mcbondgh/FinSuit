@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="630.0" prefWidth="1240.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoansController">
@@ -68,7 +74,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="loanRequestsButton" onAction="#setLoanRequestsButtonClicked" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #278c8f;" text="Loan Requests (0)" textFill="WHITE">
+                  <MFXButton fx:id="loanRequestsButton" onAction="#setLoanRequestsButtonClicked" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #278c8f;" text="Loan Requests" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -80,6 +86,56 @@
             </HBox>
          </children>
       </Pane>
-      <BorderPane fx:id="borderPane" layoutX="7.0" layoutY="67.0" prefHeight="523.0" prefWidth="1231.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" />
+      <BorderPane fx:id="borderPane" layoutX="7.0" layoutY="67.0" prefHeight="523.0" prefWidth="1231.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" visible="false" />
+      <AnchorPane fx:id="anchorPage" layoutY="66.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#loansTableItemSelected" prefHeight="563.0" prefWidth="1243.0" style="-fx-background-color: #f6fbff;">
+         <children>
+            <MFXLegacyTableView fx:id="loanApplicantsTable" blendMode="MULTIPLY" cacheHint="SPEED" cacheShape="false" centerShape="false" depthTest="ENABLE" fixedCellSize="35.0" layoutX="16.0" layoutY="54.0" prefHeight="484.0" prefWidth="1212.0" scaleShape="false" style="-fx-font-family: poppins; -fx-font-size: 13px; -fx-alignment: center; -fx-background-color: #fff;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="54.0">
+               <columns>
+                  <TableColumn fx:id="noColumn" editable="false" prefWidth="60.00000190734863" style="-fx-alignment: center;" text="NO." />
+                  <TableColumn fx:id="fullNameColumn" editable="false" prefWidth="245.3333511352539" style="-fx-alignment: center;" text="FULLNAME" />
+                  <TableColumn fx:id="loansIdColumn" editable="false" prefWidth="175.33331298828125" style="-fx-alignment: center;" text="LOAN NUMBER" />
+                  <TableColumn fx:id="loanTypeColumn" editable="false" prefWidth="164.66665649414062" style="-fx-alignment: center;" text="LOAN TYPE" />
+                  <TableColumn fx:id="dateColumn" editable="false" prefWidth="141.33331298828125" style="-fx-alignment: center;" text="APPLICATION DATE" />
+                  <TableColumn fx:id="amountColumn" editable="false" prefWidth="148.6666259765625" style="-fx-alignment: center;" text="REQUESTED AMONT" />
+                  <TableColumn fx:id="statusColumn" editable="false" prefWidth="139.3333740234375" style="-fx-alignment: center;" text="STATUS" />
+                  <TableColumn fx:id="viewColumn" editable="false" prefWidth="65.3333740234375" style="-fx-alignment: center;" text="VIEW " />
+                  <TableColumn fx:id="editColumn" editable="false" prefWidth="60.6666259765625" style="-fx-alignment: center;" text="EDIT" />
+               </columns>
+            </MFXLegacyTableView>
+            <Pane layoutX="16.0" layoutY="10.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
+               <children>
+                  <Label layoutX="6.0" layoutY="4.0" text="🔎" textFill="#828181">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="searchField" layoutX="29.0" layoutY="2.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="Search By Loan Id or National Id No" style="-fx-background-color: #fff; -fx-background-radius: 5;">
+                     <font>
+                        <Font name="Poppins Regular" size="11.0" />
+                     </font>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </TextField>
+               </children>
+            </Pane>
+            <Pane fx:id="filterTable" layoutX="783.0" layoutY="43.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 5; -fx-border-radius: 5;" visible="false">
+               <effect>
+                  <DropShadow height="26.84" radius="7.567499999999999" width="5.43">
+                     <color>
+                        <Color opacity="0.1446700394153595" />
+                     </color>
+                  </DropShadow>
+               </effect>
+               <children>
+                  <Label layoutX="34.0" layoutY="14.0" text="FILER LOANS TABLE">
+                     <font>
+                        <Font name="Roboto Black" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

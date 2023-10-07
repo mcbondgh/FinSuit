@@ -214,5 +214,19 @@ public class SpecialMethods {
         return empId;
     }
 
+    public static void getOperationTypes(ComboBox<String> comboBox) {
+        String[] items = {"Account Opening.\n" +
+                "Account Update\n" +
+                "Cash Deposit\n" +
+                "Cash Withdrawal\n" +
+                "Loan Application\n" +
+                "Loan Payment\n" +
+                "Loan Reminder\n" +
+                "Loan Approval"};
+        for (String values : items) {
+            comboBox.getItems().add(values);
+        }
+    }
+
 
 }//end of clas

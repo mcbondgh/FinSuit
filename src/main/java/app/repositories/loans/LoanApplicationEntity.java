@@ -1,5 +1,6 @@
 package app.repositories.loans;
 
+import java.sql.Blob;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -15,12 +16,16 @@ public class LoanApplicationEntity {
     private String company_name, company_mobile_number, company_address, staff_id, occupation;
     private LocalDate employment_date;
     private double basic_salary, gross_salary, total_deduction, net_salary;
+    private  String gender;
+    private Blob profile_picture;
     private String guranter_name, guranter_number, guranter_digital_address, guranter_residential_address;
     private String guranter_idType, guranter_idNumber, guranter_relationship, guranter_occupation;
     private String gurater_place_of_work, guranter_institution_address;
     private double guranter_income;
 
-    public LoanApplicationEntity(long loan_id, long customer_id, String loan_no, String loan_type, double requested_amount, byte application_status, byte is_drafted, Timestamp date_created, Timestamp date_modified, int created_by, int updated_by, int approved_by, String company_name, String company_mobile_number, String company_address, String staff_id, String occupation, LocalDate employment_date, double basic_salary, double gross_salary, double total_deduction, double net_salary, String guranter_name, String guranter_number, String guranter_digital_address, String guranter_residential_address, String guranter_idType, String guranter_idNumber, String guranter_relationship, String guranter_occupation, String gurater_place_of_work, String guranter_institution_address, double guranter_income) {
+    public LoanApplicationEntity(){}
+
+    public LoanApplicationEntity(long loan_id, long customer_id, String loan_no, String loan_type, double requested_amount, byte application_status, byte is_drafted, Timestamp date_created, Timestamp date_modified, int created_by, int updated_by, int approved_by, String company_name, String company_mobile_number, String company_address, String staff_id, String occupation, LocalDate employment_date, double basic_salary, double gross_salary, double total_deduction, double net_salary, String guranter_name, String guranter_number, String gender, String guranter_digital_address, String guranter_residential_address, String guranter_idType, String guranter_idNumber, String guranter_relationship, String guranter_occupation, String gurater_place_of_work, String guranter_institution_address, double guranter_income) {
         this.loan_id = loan_id;
         this.customer_id = customer_id;
         this.loan_no = loan_no;
@@ -45,6 +50,7 @@ public class LoanApplicationEntity {
         this.net_salary = net_salary;
         this.guranter_name = guranter_name;
         this.guranter_number = guranter_number;
+        this.gender = gender;
         this.guranter_digital_address = guranter_digital_address;
         this.guranter_residential_address = guranter_residential_address;
         this.guranter_idType = guranter_idType;
@@ -74,6 +80,14 @@ public class LoanApplicationEntity {
 
     public String getLoan_no() {
         return loan_no;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public void setLoan_no(String loan_no) {
@@ -257,11 +271,11 @@ public class LoanApplicationEntity {
         this.guranter_digital_address = guranter_digital_address;
     }
 
-    public String getGuranter_residential_address() {
+    public String getGuarantor_landmark() {
         return guranter_residential_address;
     }
 
-    public void setGuranter_residential_address(String guranter_residential_address) {
+    public void setGuarantor_landmark(String guranter_residential_address) {
         this.guranter_residential_address = guranter_residential_address;
     }
 

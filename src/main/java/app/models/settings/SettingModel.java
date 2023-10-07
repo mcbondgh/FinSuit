@@ -1,10 +1,10 @@
 package app.models.settings;
 
-import app.config.db.DbConnection;
+import app.models.MainModel;
 
 import java.sql.SQLException;
 
-public class SettingModel extends DbConnection {
+public class SettingModel extends MainModel {
 
     protected byte updateBusinessInfo(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double percentageValue) {
         byte flag = 0;
@@ -43,6 +43,26 @@ public class SettingModel extends DbConnection {
             }
         return flag;
     }
+
+    protected int saveMessageTemplate(String title, String message, int userId) {
+        int flag = 0;
+        try {
+            String query = "INSERT INTO message_templates(title, message, modified_by) VALUES(?, ?, ?)";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, message);
+            preparedStatement.setInt(3, userId);
+            flag = preparedStatement.executeUpdate();
+            commitTransaction();
+            preparedStatement.close();
+            getConnection().close();
+        }catch (SQLException ignore) {
+            rollBack();
+        }
+        return flag;
+    }
+
+
 
 
 }//end of class...

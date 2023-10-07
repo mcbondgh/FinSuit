@@ -1,11 +1,13 @@
 package app.controllers.loans.application;
 
-import app.models.MainModel;
+import app.models.loans.LoansModel;
 import app.repositories.BusinessInfoEntity;
+import app.repositories.loans.LoansTableEntity;
 import app.repositories.loans.ScheduleEntity;
 import app.repositories.users.UsersData;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -15,17 +17,21 @@ import javafx.scene.layout.Pane;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class LoanCalculator extends MainModel implements Initializable {
+public class LoanCalculator extends LoansModel implements Initializable {
 
 
     /*******************************************************************************************************************
      *********************************************** EJECTION OF FXML NODES
      ******************************************************************************************************************/
+
+    @FXML private MFXFilterComboBox<String> applicationNumberSelector;
     @FXML private TextField basicSalaryField, statutoryField, totalDeductionField,finalAmountField;
     @FXML private Label remainingBalanceField;
     @FXML private  Label displayLoanAmount,displayInterestAmount, displayProcessingAmount, displayTotalLoanAmount;
+    @FXML private Label applicantFullnameLabel, loanTypeLabel, applicationDateLabel;
     @FXML private Label displayMonthlyInstallmentAmount, displayStartDate, displayEndDate, displayLoanStatus;
     @FXML private TextField loanAmountField;
     @FXML private ComboBox<Integer> loanPeriodSelector, interestRateSelector, processingRateSelector;
@@ -71,9 +77,7 @@ public class LoanCalculator extends MainModel implements Initializable {
         SpecialMethods.setInterestRate(interestRateSelector);
         SpecialMethods.setLoanPeriod(loanPeriodSelector);
         SpecialMethods.setInterestRate(processingRateSelector);
-        for (UsersData users : fetchAssignedUsersOnly() ) {
-            supervisorSelector.getItems().add(users.getUsername());
-        }
+        setComboBoxVariables();
     }
 
     private void populateTable() {
@@ -85,7 +89,6 @@ public class LoanCalculator extends MainModel implements Initializable {
         balanceColumn.setCellValueFactory(new PropertyValueFactory<>("balance"));
         scheduleTable.getItems().clear();
     }
-
 
     private void generateScheduleSheet() {
         populateTable();
@@ -116,12 +119,23 @@ public class LoanCalculator extends MainModel implements Initializable {
 
     }
 
+    private void setComboBoxVariables() {
+        for (UsersData users : fetchAssignedUsersOnly() ) {
+            supervisorSelector.getItems().add(users.getUsername());
+        }
+
+        for (LoansTableEntity items : getLoanTableValues()) {
+            if (items.getStatusLabel().getText().equals("Processing")) {
+                applicationNumberSelector.getItems().add(items.getLoanNo());
+            }
+        }
+    }
+
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF ACTION EVENT METHODS
      ******************************************************************************************************************/
     void actionEventsMethodsImplementation() {
-
                 loanPeriodSelector.setOnAction(action -> {
                     double loanAmount = Double.parseDouble(loanAmountField.getText());
                     int interest = interestRateSelector.getValue();
@@ -172,10 +186,7 @@ public class LoanCalculator extends MainModel implements Initializable {
                 generateScheduleButton.setOnAction(action -> {
                     generateScheduleSheet();
                 });
-
-
         };
-
     void inputFieldChaneListerImplementation() {
         basicSalaryField.setOnKeyTyped(keyPress -> {
             if (!keyPress.getCharacter().matches("[0-9]")) {
@@ -236,5 +247,19 @@ public class LoanCalculator extends MainModel implements Initializable {
             };
         });
     }//end of input event block
+
+    @FXML void getApplicantInformation() {
+        String loanNo = applicationNumberSelector.getValue();
+        for (LoansTableEntity data : getLoanTableValues()) {
+            if (Objects.equals(loanNo, data.getLoanNo())) {
+                applicantFullnameLabel.setText(data.getFullName());
+                loanTypeLabel.setText(data.getLoanType());
+                applicationDateLabel.setText(data.getFormattedDate());
+                loanAmountField.setText(data.getRequestedAmount().toString());
+            }
+        }
+    }
+
+
 
 }//end of class

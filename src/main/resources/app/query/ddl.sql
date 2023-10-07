@@ -13,6 +13,13 @@ CHANGE COLUMN contact_person_digiital_address contact_person_digital_address VAR
 
 ALTER TABLE users DROP FOREIGN KEY users_ibfk_1;
 
+-- QUERY DATE 04/10/23
+ALTER TABLE loans
+ADD COLUMN disbursed_amount DECIMAL(10,2) DEFAULT 0.00 AFTER requested_amount;
+ALTER TABLE loans ADD COLUMN total_payment DECIMAL(10,2) DEFAULT 0.00 AFTER disbursed_amount;
+ALTER TABLE loans MODIFY COLUMN application_status VARCHAR(20) DEFAULT 'processing'; 
+ALTER TABLE loans ADD COLUMN loan_status VARCHAR(20) DEFAULT 'active' AFTER application_status;
+
 TRUNCATE TABLE employees;
 TRUNCATE TABLE employees_account_details;
 
@@ -22,6 +29,17 @@ SELECT COUNT(*) FROM employees ORDER BY emp_id DESC LIMIT 1;
 INSERT INTO employees(work_id, firstname, lastname, othername, email, mobile_number, other_number, gender, dbo, digital_address, residential_address, landmark, id_type, id_number, marital_status, qualification, designation, working_experience, employment_date, contact_person_name, contact_person_number, contact_person_digital_address, contact_person_address, contact_person_landmark, contact_person_place_of_work, contact_person_org_number, contact_person_org_address, additional_information, added_by, modified_by)
 VALUES('1001', 'MCBND', 'AIDIA', 'FASDFA', 'ISFIFJ@GMGO.COM','1001', 'MCBND', 'AIDIA', '2020-10-10', 'DAFADFAF','1001', 'MCBND', 'AIDIA', 'FASDFA', 'DAFADFAF','1001', 'MCBND', 'AIDIA', '2020-10-10', 'DAFADFAF','1001', 'MCBND', 'AIDIA', 'FASDFA', 'DAFADFAF','1001', 'MCBND', 'AIDIA', 1, 1);
 
+INSERT INTO message_operations(operation) 
+VALUES("1.Account Opening"),
+("Account Update"),
+("Cash Deposit"),
+(".Cash Withdrawal"),
+("Loan Application"),
+("Loan Payment"),
+("Loan Reminder"),
+("Loan Approval");
+
+ALTER TABLE message_operations ADD PRIMARY KEY(id);
 
 -- 3RD AUGUST 2023
 SELECT * FROM employees FULL JOIN employees_account_details as em ON work_id = em.emp_id;
@@ -83,14 +101,47 @@ SELECT id_number, account_number FROM customer_data cd
 INNER JOIN customer_account_data AS cad
 ON cd.customer_id = cad.customer_id;
 
-SELECT COUNT(ln.customer_id) AS loan_count FROM loans ln
+SELECT COUNT(ln.customer_id) AS loan_count, sum(ln.disbursed_amount) AS 'disbursed_amount' , SUM(total_payment) total_payment FROM loans ln
 INNER JOIN customer_data AS cd
 ON cd.customer_id = ln.customer_id
 INNER JOIN customer_account_data AS cad
-ON cad.customer_id = ln.customer_id
+ON cad.customer_id = ln.customer_id 
 WHERE cd.id_number = '' OR cad.account_number = '';
 
--- SET foreign_key_checks = 0;
+SELECT COUNT(loan_id) AS drafts FROM loans WHERE is_drafted = 1;
+
+SELECT account_number FROM customer_account_data AS cad
+INNER JOIN loans as ln ON 
+cad.customer_id = ln.customer_id;
+
+SELECT account_type, id_number FROM customer_account_data AS cad
+JOIN customer_data AS cd ON 
+cd.customer_id = cad.customer_id;
+
+SELECT account_Number FROM customer_account_data ORDER BY account_number DESC LIMIT 1;
+SELECT MAX(account_number) AS result FROM customer_account_data;
+
+SELECT loan_id, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, 
+requested_amount, application_status FROM loans AS ln
+JOIN customer_data AS cd ON 
+ln.customer_id = cd.customer_id;
+
+SELECT firstname, lastname, othername, gender, dob, mobile_number, other_number, email, 
+		digital_address, residential_address, key_landmark, marital_status, id_type, id_number,
+        educational_background
+FROM customer_data AS cd 
+JOIN customer_account_data AS cad ON cd.customer_id = cad.customer_id
+WHERE cd.id_number = ? OR cad.account_number = ?;
+
+SELECT 
+
+
+
+
+ALTER TABLE customer_account_data
+DROP FOREIGN KEY customer_account_data_ibfk_1;
+
+SET foreign_key_checks = 0;
 
 
 
