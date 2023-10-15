@@ -20,8 +20,11 @@ public class HttpClientExample {
         try (Response response = client.newCall(request).execute()) {
             String responseBody = Objects.requireNonNull(response.body()).string();
             Map<String, Object> map = gson.fromJson(responseBody, new TypeToken<Map<String, Object>>(){}.getType());
-            System.out.println(responseBody);
-            System.out.println(map);
+//            System.out.println(responseBody);
+            String value = map.get("userId").toString();
+            System.out.println(value);
+
+
         }
 
 

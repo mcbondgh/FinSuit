@@ -2,11 +2,12 @@ package app.controllers.transactions;
 
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.event.ActionEvent;
+import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +21,9 @@ public class TransactionController implements Initializable {
     @FXML
     private Label pageTitle;
     public static String pageTitlePlaceHolder;
-    @FXML private MFXButton depositButton, checkBalanceButton, withdrawalButton;
+    @FXML private MFXButton depositButton, checkBalanceButton, withdrawalButton, loanPaymentButton;
+    @FXML private BorderPane borderPane;
+    @FXML private MFXLegacyTableView<Object> transactionsTable;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -48,6 +51,7 @@ public class TransactionController implements Initializable {
     @FXML void depositButtonClicked() throws IOException {
         AppStages.depositStage().show();
     }
+
     void withdrawalButtonClicked() {
         withdrawalButton.setOnAction(e -> {
             try {
@@ -67,4 +71,12 @@ public class TransactionController implements Initializable {
         });
     }
 
-}
+    @FXML void viewTransactionOnAction() {
+        try {
+            AppStages.accountBalanceStage().show();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+}//end of class...

@@ -201,6 +201,21 @@ CREATE TABLE IF NOT EXISTS loan_applicant_details(
     guarantor_income DECIMAL(10,2)
 );
 
+CREATE TABLE IF NOT EXISTS transaction_logs(
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    account_number VARCHAR(50) NOT NULL,
+    transaction_id VARCHAR(100) COMMENT 'System generated id, unique to all transactions.' NOT NULL, 
+    transaction_type VARCHAR(50) COMMENT 'Deposit, withdrawal, loan payment' NOT NULL,
+    payment_method VARCHAR(50) ,
+    payment_gateway VARCHAR(50),
+    cash_amount DECIMAL(10,2) NOT NULL,
+    ecash_amount DECIMAL(10,2),
+    ecash_id VARCHAR(50) COMMENT 'This is the transaction id generated after making an electronic cash (transaction id)',
+    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    transaction_made_by VARCHAR(50) DEFAULT 'account_holder' NOT NULL,
+    user_id INT COMMENT'this is the id of the cashier who initiated the transaction'
+);
+
 CREATE TABLE IF NOT EXISTS message_templates(
 	message_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(50) NOT NULL, 
@@ -209,11 +224,10 @@ CREATE TABLE IF NOT EXISTS message_templates(
     modified_by INT
 );
 
-
 CREATE TABLE IF NOT EXISTS message_operations(
-	id INT PRIMARY KEY,
+	id INT,
     template_id INT,
-    operation VARCHAR(20)
+    operation VARCHAR(20) PRIMARY KEY
 );
 
 
@@ -224,6 +238,16 @@ CREATE TABLE IF NOT EXISTS notificatiions(
     message VARCHAR(255),
     date_sent DATETIME DEFAULT CURRENT_TIMESTAMP,
     sent_by INT
+);
+
+CREATE TABLE IF NOT EXISTS message_logs(
+	log_id INT AUTO_INCREMENT PRIMARY KEY,
+    sent_to VARCHAR(50),
+    title VARCHAR(50),
+	message TEXT,
+    `Status` VARCHAR(10) DEFAULT 'unknown' COMMENT 'delivered | failed ',
+    sent_date DATETIME DEFAULT NOW(),
+    sent_by INT DEFAULT 1 
 );
 
 

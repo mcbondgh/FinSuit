@@ -102,16 +102,16 @@
                   <TableColumn fx:id="editColumn" editable="false" prefWidth="60.6666259765625" style="-fx-alignment: center;" text="EDIT" />
                </columns>
             </MFXLegacyTableView>
-            <Pane layoutX="16.0" layoutY="10.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
+            <Pane layoutX="16.0" layoutY="4.0" prefHeight="41.0" prefWidth="305.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
                <children>
-                  <Label layoutX="6.0" layoutY="4.0" text="🔎" textFill="#828181">
+                  <Label layoutX="5.0" layoutY="8.0" text="🔎" textFill="#828181">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="searchField" layoutX="29.0" layoutY="2.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="Search By Loan Id or National Id No" style="-fx-background-color: #fff; -fx-background-radius: 5;">
+                  <TextField fx:id="searchField" layoutX="27.0" layoutY="6.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="270.0" promptText="Search By Loan Id or National Id No" style="-fx-background-color: #fff; -fx-background-radius: 5;">
                      <font>
-                        <Font name="Poppins Regular" size="11.0" />
+                        <Font name="Poppins Regular" size="13.0" />
                      </font>
                      <padding>
                         <Insets left="5.0" />

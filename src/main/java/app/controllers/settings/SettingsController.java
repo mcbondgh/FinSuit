@@ -12,7 +12,6 @@ import app.repositories.SmsAPIEntity;
 import app.repositories.settings.TemplatesRepository;
 import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXListView;
 import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,10 +63,11 @@ public class SettingsController extends SettingModel implements Initializable{
     @FXML private ImageView logoViewer;
     @FXML private Label imageName, apiKeyField;
     @FXML private CheckBox modifyButton;
+    @FXML private ComboBox<String> templateSelector, operationSelector;
     @FXML private PasswordField accountPasswordField, passwordField;
     @FXML private TextField loanPercentageField;
     @FXML private Label percentageIndicator;
-    @FXML private MFXListView<Object> templateListView;
+    @FXML private ListView<String>templateListView;
     @FXML private JFXTextArea messageBodyField;
     @FXML private TextField messageTitleField;
     @FXML private MFXButton saveTemplateButton, cancelTemplateButton, saveOperationButton;
@@ -105,17 +105,16 @@ public class SettingsController extends SettingModel implements Initializable{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        operationSelector.setItems(getMessageOperations());
         actionEventMethods();
         populateFields();
     }
 
     void populateFields() {
-        templateListView.getSelectionModel().setAllowsMultipleSelection(false);
         templateListView.getItems().clear();
-        int size = getMessageTemplates().size();
-        for (TemplatesRepository items : getMessageTemplates()) {
-            templateListView.getItems().add(items.getMessageTitle());
+        for (TemplatesRepository value : fetchMessageTemplates()) {
+            templateListView.getItems().add(value.getMessageTitle());
+            templateSelector.getItems().add(value.getMessageTitle());
         }
         messageBodyField.clear();
         messageTitleField.clear();
@@ -228,15 +227,15 @@ public class SettingsController extends SettingModel implements Initializable{
 
     }
 
-    @FXML void checkMessagesTitleName() {
-        String value = messageTitleField.getText().toUpperCase().replaceAll("", " ");
 
+    @FXML void checkMessagesTitleName() {
+        String value = messageTitleField.getText().toUpperCase();
         for (Object title : templateListView.getItems()) {
             if (value.matches(title.toString())) {
                 ALERT_OBJECT = new UserAlerts("INVALID TITLE", "Sorry, message title must be unique from your list of titles");
                 ALERT_OBJECT.warningAlert();
                 messageTitleField.clear();
-                return;
+                break;
             }
         }
     }
@@ -297,22 +296,64 @@ public class SettingsController extends SettingModel implements Initializable{
     }
     @FXML
     void saveTemplateButtonClicked() {
+        int userId = MODEL_OBJECT.getUserIdByName(getCurrentUser());
         if (!(isTitleFieldEmpty() || isMessageFieldEmpty())) {
-            int userId = MODEL_OBJECT.getUserIdByName(getCurrentUser());
             String title = messageTitleField.getText().toUpperCase();
             String message = messageBodyField.getText();
-            ALERT_OBJECT = new UserAlerts("SAVE TEMPLATE", "Do you wish to add current message to your templates?");
-            if (ALERT_OBJECT.confirmationAlert()) {
-                if(saveMessageTemplate(title, message, userId) > 0) {
-                    NOTIFICATION_OBJECT.successNotification("SAVE SUCCESS", "Message successfully added to your templates.");
-                    populateFields();
+            if (saveTemplateButton.getText().equals("Save")) {
+                ALERT_OBJECT = new UserAlerts("SAVE TEMPLATE", "Do you wish to add current message to your templates?");
+                if (ALERT_OBJECT.confirmationAlert()) {
+                    if(saveMessageTemplate(title, message, userId) > 0) {
+                        NOTIFICATION_OBJECT.successNotification("SAVE SUCCESS", "Message successfully added to your templates.");
+                        populateFields();
+                    }
                 }
+            } else {
+                int templateId = 0;
+                for (TemplatesRepository item : fetchMessageTemplates()) {
+                    if (title.matches(item.getMessageTitle())) {
+                        templateId = item.getTemplateId();
+                        break;
+                    }
+                }
+                updateMessageTemplate(templateId, title, message, userId);
+                NOTIFICATION_OBJECT.successNotification("UPDATE SUCCESSFUL", "Message template successfully update.");
             }
         }
     }
     @FXML void getSelectedTemplate() {
-        String selectedItem = templateListView.getSelectionModel().getSelection().toString();
-        System.out.println(selectedItem);
+        if (!templateListView.getItems().isEmpty()) {
+            String selectedItem = templateListView.getSelectionModel().getSelectedItem();
+            for (TemplatesRepository item : fetchMessageTemplates())  {
+                if (selectedItem.matches(item.getMessageTitle())) {
+                    messageTitleField.setText(item.getMessageTitle());
+                    messageBodyField.setText(item.getMessageBody());
+                }
+            }
+            saveTemplateButton.setText("Update");
+        }
     }
+    @FXML void clearSelectionButtonClicked() {
+        populateFields();
+        saveTemplateButton.setText("Save");
+    }
+
+    @FXML void saveOperationButtonClicked() {
+        boolean emptySelection = operationSelector.getValue() == null || templateSelector.getValue() == null;
+        if (!emptySelection) {
+            String tempTitle = templateSelector.getValue();
+            String operation = operationSelector.getValue();
+            int temId = 0;
+            for (TemplatesRepository item : fetchMessageTemplates()) {
+                if (tempTitle.matches(item.getMessageTitle())) {
+                    temId = item.getTemplateId();
+                    break;
+                }
+            }
+            updateMessageOperation(temId, operation);
+            NOTIFICATION_OBJECT.informationNotification("OPERATION SAVED", "You have successfully assigned a message to a system operation.");
+        }
+    }
+
 
 }//end of class...

@@ -8,33 +8,41 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="630.0" prefWidth="1230.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.TransactionController">
    <children>
-      <Pane layoutX="1.0" prefHeight="41.0" prefWidth="1240.0" style="-fx-background-color: dodgerblue; -fx-background-radius: 10 10 0 0;">
+      <Pane layoutX="1.0" prefHeight="41.0" prefWidth="1240.0" style="-fx-background-color: #fff; -fx-background-radius: 10 10 0 0;">
          <children>
-            <Label fx:id="pageTitle" layoutX="42.0" layoutY="11.0" text="TITLE" textFill="WHITE">
+            <Label fx:id="pageTitle" layoutX="42.0" layoutY="11.0" text="TITLE" textFill="#7b0080">
                <font>
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <MFXLegacyTableView layoutX="22.0" layoutY="97.0" prefHeight="513.0" prefWidth="1201.0" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="96.0">
-         <columns>
-            <TableColumn prefWidth="75.0" text="NO" />
-            <TableColumn minWidth="138.0" prefWidth="160.0" text="NAME" />
-            <TableColumn minWidth="100.66665649414062" prefWidth="160.0" text="TRANSACTION TYPE" />
-            <TableColumn minWidth="89.33331298828125" prefWidth="160.0" text="AMOUNT" />
-            <TableColumn minWidth="138.0" prefWidth="160.0" text="TRANSACTION DATE" />
-            <TableColumn minWidth="138.0" prefWidth="160.0" text="TRANSACTION ID" />
-            <TableColumn minWidth="117.333251953125" prefWidth="160.0" text="PAYMENT METHOD" />
-            <TableColumn minWidth="138.0" prefWidth="142.66670735677076" text="CASHIER" />
-         </columns>
-      </MFXLegacyTableView>
+      <BorderPane fx:id="borderPane" layoutX="22.0" layoutY="97.0" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="96.0">
+         <center>
+            <MFXLegacyTableView fx:id="transactionsTable" prefHeight="513.0" prefWidth="1201.0" style="-fx-font-family: roboto; -fx-font-size: 14px;">
+               <columns>
+                  <TableColumn prefWidth="167.99998915195465" style="-fx-font-size: 12px;" text="TRANSACTION ID" />
+                  <TableColumn minWidth="92.66670227050781" prefWidth="188.00006103515625" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="CUSTOMER NAME" />
+                  <TableColumn minWidth="67.3333740234375" prefWidth="167.333251953125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="ACCOUNT NUMBER" />
+                  <TableColumn minWidth="100.66665649414062" prefWidth="151.3333740234375" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="TRANSACTION TYPE" />
+                  <TableColumn minWidth="116.0" prefWidth="116.0" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="PAYMENT METHOD" />
+                  <TableColumn minWidth="89.33331298828125" prefWidth="95.33331298828125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="AMOUNT" />
+                  <TableColumn minWidth="124.00006103515625" prefWidth="170.666748046875" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="TRANSACTION DATE" />
+                  <TableColumn minWidth="127.9998779296875" prefWidth="133.333251953125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="CASHIER" />
+               </columns>
+            </MFXLegacyTableView>
+         </center>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </BorderPane>
       <Pane layoutX="22.0" layoutY="51.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
          <children>
             <Label layoutX="6.0" layoutY="4.0" text="🔎" textFill="#828181">
@@ -52,9 +60,9 @@
             </TextField>
          </children>
       </Pane>
-      <HBox alignment="CENTER" layoutX="923.0" layoutY="52.0" prefHeight="34.0" prefWidth="301.0" spacing="10.0">
+      <HBox alignment="CENTER" layoutX="825.0" layoutY="8.0" prefHeight="34.0" prefWidth="396.0" spacing="5.0">
          <children>
-            <MFXButton fx:id="depositButton" buttonType="RAISED" depthLevel="LEVEL0" onAction="#depositButtonClicked" prefHeight="35.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #1880c5;" text="Deposit" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton fx:id="depositButton" buttonType="RAISED" depthLevel="LEVEL0" onAction="#depositButtonClicked" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Deposit" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -62,7 +70,15 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="checkBalanceButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="34.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #1880c5;" text="Check Balance" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton fx:id="withdrawalButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Withdrawal" textFill="WHITE" textOverrun="CLIP">
+               <font>
+                  <Font name="Poppins Bold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <MFXButton fx:id="checkBalanceButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Check Balance" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="11.0" />
                </font>
@@ -70,7 +86,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="withdrawalButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="35.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #1880c5;" text="Withdrawal" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton fx:id="loanPaymentButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Pay Loan" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>

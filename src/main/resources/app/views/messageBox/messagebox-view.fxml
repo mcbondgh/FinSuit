@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane prefHeight="630.0" prefWidth="1240.0" style="-fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.messages.MessageBoxController">
+   <children>
+      <Label fx:id="pageTitle" layoutX="35.0" layoutY="8.0" text="Title" textFill="#7b0080">
+         <font>
+            <Font name="Roboto Black" size="16.0" />
+         </font>
+      </Label>
+      <Separator layoutX="1.0" layoutY="38.0" prefHeight="0.0" prefWidth="1240.0" />
+      <TabPane fx:id="tabPane" layoutX="2.0" layoutY="40.0" prefHeight="590.0" prefWidth="1240.0" rotateGraphic="true" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0">
+         <tabs>
+            <Tab fx:id="notificationTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Notifications">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
+                     <children>
+                        <Pane layoutX="38.0" layoutY="31.0" prefHeight="198.0" prefWidth="198.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
+                           <children>
+                              <Label layoutX="16.0" layoutY="76.0" text="Search By Type">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField layoutX="15.0" layoutY="94.0" prefHeight="40.0" prefWidth="165.0" promptText="search" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="13.0" />
+                                 </font>
+                              </TextField>
+                              <ComboBox layoutX="15.0" layoutY="31.0" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins;" />
+                              <Label layoutX="17.0" layoutY="12.0" text="Display Limit">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <MFXLegacyTableView layoutX="260.0" layoutY="31.0" prefHeight="498.0" prefWidth="864.0">
+                           <columns>
+                              <TableColumn prefWidth="72.66665840148926" text="NO." />
+                              <TableColumn prefWidth="190.6666259765625" text="TYPE" />
+                              <TableColumn prefWidth="392.666748046875" text="MESSAGE " />
+                              <TableColumn maxWidth="220.0" minWidth="196.0" prefWidth="206.6666259765625" text="DATE" />
+                           </columns>
+                        </MFXLegacyTableView>
+                     </children></AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="smsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Send Messages">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
+                     <children>
+                        <Pane layoutX="667.0" layoutY="32.0" prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
+                           <children>
+                              <Pane layoutX="1.0" layoutY="445.0" prefHeight="56.0" prefWidth="400.0" style="-fx-background-color: #eee; -fx-background-radius: 0 0 10 10;">
+                                 <children>
+                                    <MFXButton fx:id="cancelButton" layoutX="283.0" layoutY="16.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #fff;" text="❌ Cancel">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <font>
+                                          <Font name="Poppins Regular" size="14.0" />
+                                       </font>
+                                    </MFXButton>
+                                    <MFXButton fx:id="sendButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="158.0" layoutY="16.0" prefHeight="30.0" prefWidth="113.0" rippleColor="#56b5a9" style="-fx-background-color: #278c8f;" text="Send Message" textFill="WHITE">
+                                       <font>
+                                          <Font name="Poppins Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </MFXButton>
+                                 </children>
+                              </Pane>
+                              <JFXTextArea fx:id="messageBodyField" layoutX="25.0" layoutY="226.0" prefHeight="200.0" prefWidth="350.0" style="-fx-border-color: #ddd; -fx-border-radius: 10;" unFocusColor="#4d4d4d00" wrapText="true">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </JFXTextArea>
+                              <Label layoutX="28.0" layoutY="203.0" text="Message Body *" textFill="#696969">
+                                 <font>
+                                    <Font name="Poppins Regular" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="28.0" layoutY="61.0" text="Message Title *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="senderIdField" editable="false" layoutX="25.0" layoutY="153.0" prefHeight="40.0" prefWidth="350.0" promptText="must be 11 characters" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #f8f8f8; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="13.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="31.0" layoutY="135.0" text="Sender Id *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="messageTitleField" layoutX="25.0" layoutY="80.0" prefHeight="40.0" prefWidth="350.0" promptText="0200000000" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label alignment="CENTER" layoutX="47.0" layoutY="9.0" prefHeight="34.0" prefWidth="293.0" style="-fx-background-color: #eee; -fx-background-radius: 8px;" text="SEND MESSAGE">
+                                 <font>
+                                    <Font name="Poppins Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane layoutX="209.0" layoutY="32.0" prefHeight="500.0" prefWidth="438.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
+                           <children>
+                              <Label layoutX="20.0" layoutY="228.0" text="Enter Mobile Number *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="numberField" layoutX="16.0" layoutY="246.0" onKeyTyped="#validateNumberField" prefHeight="40.0" prefWidth="200.0" promptText="0200000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                 <font>
+                                    <Font name="Poppins Medium" size="13.0" />
+                                 </font>
+                              </TextField>
+                              <MFXButton fx:id="addButton" depthLevel="LEVEL1" disable="true" layoutX="49.0" layoutY="303.0" onAction="#addButtonClicked" prefHeight="25.0" prefWidth="63.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #56b5a9; -fx-background-radius: 8px;" text="➕ Add" textFill="WHITE" textOverrun="CLIP">
+                                 <font>
+                                    <Font name="Poppins Bold" size="10.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </MFXButton>
+                              <ComboBox fx:id="templateSelector" layoutX="16.0" layoutY="80.0" onAction="#templateSelectorOnAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #f8f8f8; -fx-background-radius: 5; -fx-font-size: 12px; -fx-font-family: roboto; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-weight: bold;" />
+                              <Label layoutX="19.0" layoutY="58.0" text="Select Message Template">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="listCounter" alignment="CENTER" layoutX="118.0" layoutY="303.0" prefHeight="26.0" prefWidth="62.0" style="-fx-background-color: #ff0000; -fx-background-radius: 100;" text="0" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <MFXFilterComboBox fx:id="customerNameSelector" allowEdit="true" disable="true" editable="false" floatMode="DISABLED" layoutX="16.0" layoutY="179.0" onAction="#NumberSelectorOnAction" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" selectable="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
+                                 <font>
+                                    <Font name="Roboto" size="12.0" />
+                                 </font></MFXFilterComboBox>
+                              <CheckBox fx:id="customerCheckBox" layoutX="16.0" layoutY="132.0" mnemonicParsing="false" onAction="#customerCheckBoxChecked" prefHeight="39.0" prefWidth="200.0" style="-fx-alignment: CENTER; -FX-PADDING: 10PX; -fx-border-color: #eee; -fx-border-radius: 10px;" text="SEND TO CUSTOMER">
+                                 <font>
+                                    <Font name="Poppins Regular" size="11.0" />
+                                 </font>
+                              </CheckBox>
+                              <Label alignment="CENTER" layoutX="73.0" layoutY="9.0" prefHeight="34.0" prefWidth="293.0" style="-fx-background-color: #eee; -fx-background-radius: 8px;" text="SET MESSAGE PARAMETERS">
+                                 <font>
+                                    <Font name="Poppins Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <MFXButton fx:id="removeButton" depthLevel="LEVEL1" disable="true" layoutX="291.0" layoutY="446.0" onAction="#removeButtonClicked" prefHeight="25.0" prefWidth="83.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #ff0000; -fx-background-radius: 8px;" text="Remove" textFill="WHITE" textOverrun="CLIP">
+                                 <font>
+                                    <Font name="Poppins Bold" size="10.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </MFXButton>
+                              <ListView fx:id="listView" editable="true" layoutX="231.0" layoutY="78.0" onMouseEntered="#enableRemoveButton" prefHeight="347.0" prefWidth="191.0" style="-fx-background-radius: 10px; -fx-font-family: roboto; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8px;" />
+                              <Label fx:id="smsBalance" alignment="CENTER" contentDisplay="CENTER" layoutX="55.0" layoutY="388.0" prefHeight="34.0" prefWidth="115.0" style="-fx-background-color: #fff; -fx-background-radius: 10px; -fx-border-color: #ddd; -fx-border-radius: 10px;" text="0" textFill="#0888ae">
+                                 <font>
+                                    <Font name="Roboto Black" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" layoutX="50.0" layoutY="347.0" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: #eee; -fx-background-radius: 8px;" text="SMS BALANCE">
+                                 <font>
+                                    <Font name="Poppins Bold" size="11.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                     </children></AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="logsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Messaage Logs">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="556.0" prefWidth="1248.0" style="-fx-background-color: #f6fcff;">
+                     <children>
+                        <Pane fx:id="warningPane" layoutX="906.0" layoutY="268.0" prefHeight="171.0" prefWidth="187.0" style="-fx-background-color: #d0f0ff; -fx-background-radius: 8px;" visible="false">
+                           <children>
+                              <Circle fill="#a3cbf2" layoutX="94.0" layoutY="26.0" radius="17.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                              <Label layoutX="12.0" layoutY="45.0" prefHeight="117.0" prefWidth="164.0" text="Modifying these variabales will alter the behaviour of your Gmail API which may affect the configuration of your emal. Please be sure of your action before you alter these variables." textFill="#075c84" wrapText="true">
+                                 <font>
+                                    <Font name="Poppins Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="20.0" fitWidth="33.0" layoutX="84.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/warning-icon.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                        <MFXLegacyTableView layoutX="101.0" layoutY="63.0" prefHeight="467.0" prefWidth="1074.0">
+                           <columns>
+                              <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
+                              <TableColumn prefWidth="190.00001525878906" text="SENT TO" />
+                              <TableColumn prefWidth="144.6666259765625" text="TITLE" />
+                              <TableColumn prefWidth="246.6666259765625" text="MESSAGE BODY" />
+                              <TableColumn prefWidth="115.3333740234375" text="STATUS" />
+                              <TableColumn prefWidth="164.66668701171875" text="DATE &amp; TIME" />
+                              <TableColumn prefWidth="134.666748046875" text="SENT BY" />
+                           </columns>
+                        </MFXLegacyTableView>
+                        <TextField fx:id="numberField1" layoutX="619.0" layoutY="16.0" prefHeight="34.0" prefWidth="275.0" promptText="Search message status by number" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                           <font>
+                              <Font name="Poppins Medium" size="13.0" />
+                           </font>
+                        </TextField>
+                        <Label layoutX="597.0" layoutY="18.0" text="🔎">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="384.0" layoutY="24.0" text="Delivered">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="444.0" layoutY="24.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: #12cc3d; -fx-background-radius: 4;" />
+                        <Label layoutX="474.0" layoutY="24.0" text="Failed">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="514.0" layoutY="24.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: #ff0000; -fx-background-radius: 4;" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="topUpTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="To Up SMS">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
+                     <children>
+                        <WebView fx:id="webView" layoutX="301.0" layoutY="80.0" prefHeight="559.3333333333334" prefWidth="1240.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children></AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

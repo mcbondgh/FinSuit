@@ -20,4 +20,8 @@ public class ErrorLogger {
 
         logger.setUseParentHandlers(false);
     }
+
+    public void logError(String errorMessage) {
+
+    }
 }

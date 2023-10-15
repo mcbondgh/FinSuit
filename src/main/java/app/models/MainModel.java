@@ -121,6 +121,27 @@ public class MainModel extends DbConnection {
         }catch (Exception e){e.printStackTrace();}
         return "not found";
     }
+    protected ArrayList<Object> getCustomerFullNameByAccountNumber(String accountNumber) {
+        ArrayList<Object> data = new ArrayList<>();
+        try {
+            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_balance, cd.customer_id AS accountNo FROM customer_data AS cd\n" +
+                    "JOIN customer_account_data AS cad ON \n" +
+                    "cd.customer_id = cad.customer_id\n" +
+                    "WHERE(cad.account_number = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, accountNumber);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                data.add(resultSet.getString("fullname"));//0
+                data.add(resultSet.getInt("accountNo"));//1
+                data.add(resultSet.getDouble("account_balance"));//2
+            }
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore){}
+        return data;
+    }
     public long getTotalCustomerIds() {
         long count = 0;
         try {
@@ -136,6 +157,21 @@ public class MainModel extends DbConnection {
         }catch (SQLException e) {e.printStackTrace();}
         return count;
 
+    }
+    public long getTotalTransactionCount() {
+        long value = 0;
+        try {
+            String query = "SELECT MAX(id) AS result FROM transaction_logs;";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                value = resultSet.getLong("result");
+            }
+            preparedStatement.closeOnCompletion();
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore) {}
+        return value;
     }
     public String getLastCustomerAccountNumber() {
         try {
@@ -276,7 +312,9 @@ public class MainModel extends DbConnection {
     public ArrayList<CustomersDataRepository> fetchCustomersData() {
         ArrayList<CustomersDataRepository> data = new ArrayList<>();
         try {
-            String query = "SELECT * FROM customer_data, customer_account_data";
+            String query = "SELECT * FROM customer_data AS cd\n" +
+                    "INNER JOIN customer_account_data cad\n" +
+                    "ON cd.customer_id = cad.customer_id;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -450,7 +488,7 @@ public class MainModel extends DbConnection {
         return flag;
     };
 
-    public ArrayList<TemplatesRepository> getMessageTemplates() {
+    public ArrayList<TemplatesRepository> fetchMessageTemplates() {
         ArrayList<TemplatesRepository> data = new ArrayList<>();
         try {
             String query = "SELECT * FROM message_templates;";
@@ -469,6 +507,23 @@ public class MainModel extends DbConnection {
 
         return data;
     }
+
+    public ObservableList<String> getMessageOperations() {
+        ObservableList<String> data = FXCollections.observableArrayList();
+        try  {
+            String query = "SELECT * FROM message_operations;";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            while(resultSet.next()) {
+                data.add(resultSet.getString("operation"));
+            }
+            statement.close();
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore) {}
+        return data;
+    }
+
 
 
 

@@ -84,8 +84,7 @@ public class AppStages {
         stage.setTitle("Make Deposit");
         stage.setScene(scene);
         stage.centerOnScreen();
-        stage.initStyle(StageStyle.UTILITY);
-        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
         return  stage;
     }
     public static Stage accountBalanceStage() throws IOException {

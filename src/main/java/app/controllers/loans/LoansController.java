@@ -5,11 +5,14 @@ import app.repositories.loans.LoansTableEntity;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -47,6 +50,7 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private TableColumn<LoansTableEntity, MFXButton> viewColumn;
     @FXML private TableColumn<LoansTableEntity, MFXButton> editColumn;
 
+    @FXML private TextField searchField;
 
     public LoansController() throws IOException {}
 
@@ -88,15 +92,32 @@ public class LoansController extends LoansModel implements Initializable {
         loanRequestsButton.setText("Loan Requests (" + counter + ")");
     }
 
-    public void searchCustomerMethod(KeyEvent keyEvent) {
-
+    public void searchCustomerMethod(KeyEvent event) {
+        try {
+            loanApplicantsTable.getItems().clear();
+            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoanTableValues(), p -> true);
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(customersTableData -> {
+                    if (newValue.isEmpty() || newValue.isBlank()) {
+                        return true;
+                    }
+                    String searchKeyWord = newValue.toLowerCase();
+                    if (customersTableData.getFullName().toLowerCase().contains(searchKeyWord)) {
+                        return true;
+                    } else if (customersTableData.getLoanNo().toLowerCase().contains(searchKeyWord)) {
+                        return true;
+                    } else return customersTableData.getLoanType().toLowerCase().contains(searchKeyWord);
+                });
+            });
+            SortedList<LoansTableEntity> sortedResult = new SortedList<>(filteredList);
+            sortedResult.comparatorProperty().bind(loanApplicantsTable.comparatorProperty());
+            loanApplicantsTable.setItems(sortedResult);
+        }catch (Exception ignored) {}
     }
-
-
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
-     ********************************************************************************************************************/
+     *******************************************************************************************************************/
     @FXML void loansTableItemSelected() throws IOException {
         populateTable();
         if (loanApplicantsTable.getItems().size() != 0) {

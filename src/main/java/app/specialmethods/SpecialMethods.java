@@ -1,6 +1,7 @@
 package app.specialmethods;
 
 import app.AppStarter;
+import app.enums.PaymentMethods;
 import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.roles.UserRolesData;
@@ -214,18 +215,17 @@ public class SpecialMethods {
         return empId;
     }
 
-    public static void getOperationTypes(ComboBox<String> comboBox) {
-        String[] items = {"Account Opening.\n" +
-                "Account Update\n" +
-                "Cash Deposit\n" +
-                "Cash Withdrawal\n" +
-                "Loan Application\n" +
-                "Loan Payment\n" +
-                "Loan Reminder\n" +
-                "Loan Approval"};
-        for (String values : items) {
-            comboBox.getItems().add(values);
-        }
+    public static void setPaymentMethods(ComboBox<PaymentMethods> comboBox) {
+        comboBox.getItems().add(PaymentMethods.eCASH);
+        comboBox.getItems().add(PaymentMethods.CASH);
+        comboBox.getItems().add(PaymentMethods.BOTH_METHODS);
+    }
+
+    public static void setPaymentGateways(ComboBox<PaymentMethods> comboBox) {
+        comboBox.getItems().add(PaymentMethods.BANK_TRANSFER);
+        comboBox.getItems().add(PaymentMethods.MOMO);
+        comboBox.getItems().add(PaymentMethods.AIRTELTIGO);
+        comboBox.getItems().add(PaymentMethods.VODA_CASH);
     }
 
 

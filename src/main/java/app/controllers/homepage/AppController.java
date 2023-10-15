@@ -116,7 +116,7 @@ public class AppController extends AppModel implements Initializable {
         messageBoxButton.setOnAction(action -> {
             try {
                 MessageBoxController.pageTitlePlaceHolder = messageBoxButton.getText();
-                SpecialMethods.FlipView("views/messageBox/messagebox-page.fxml", borderPane);
+                SpecialMethods.FlipView("views/messageBox/messagebox-view.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

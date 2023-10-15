@@ -20,7 +20,8 @@ public class LoansTableEntity {
     private String loanType;
     private MFXButton viewButton = new MFXButton("View");
     private MFXButton editButton = new MFXButton("Edit");
-    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
     public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String status, String loanType) {
         this.no = no;
@@ -49,23 +50,23 @@ public class LoansTableEntity {
     private void badgeStyling() {
         if (status.equals("processing")) {
             statusLabel.setText("Processing");
-            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #1e90ff; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:10px; -fx-font-family:poppins; -fx-font-weight:bold;");
+            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #1e90ff; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-text-alignment: center -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("pending_approval")) {
             statusLabel.setText("Pending Approval");
-            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #ffba27; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:10px; -fx-font-family:poppins; -fx-font-weight:bold;");
+            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #ffba27; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-text-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("pending_payment")) {
             statusLabel.setText("Pending Payment");
-            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#5e2eb0; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:10px; -fx-font-family:poppins; -fx-font-weight:bold;");
+            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#5e2eb0; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-text-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("paid")) {
             statusLabel.setText("Paid");
-            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#059d83; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:10px; -fx-font-family:poppins; -fx-font-weight:bold;");
+            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#059d83; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-text-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("rejected")) {
             statusLabel.setText("Cancelled");
-            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #ff0000; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:10px; -fx-font-family:poppins; -fx-font-weight:bold;");
+            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #ff0000; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-text-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
     }
 

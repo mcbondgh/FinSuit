@@ -17,14 +17,14 @@
    <children>
       <Pane fx:id="addEmployeePane" prefHeight="556.0" prefWidth="1207.0" style="-fx-border-color: #f6fbff; -fx-border-radius: 10; -fx-background-color: #fff;">
          <children>
-            <Pane layoutX="214.0" layoutY="8.0" prefHeight="28.0" prefWidth="198.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
+            <Pane layoutX="214.0" layoutY="8.0" prefHeight="28.0" prefWidth="144.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 4;">
                <children>
-                  <Label layoutX="8.0" layoutY="6.0" text="Employee Id: " textFill="#656464">
+                  <Label layoutX="4.0" layoutY="6.0" text="Employee Id: " textFill="#656464">
                      <font>
                         <Font name="Poppins Bold" size="11.0" />
                      </font>
                   </Label>
-                  <Label fx:id="empIdLabel" layoutX="83.0" layoutY="5.0" prefHeight="19.0" prefWidth="109.0" textFill="#bc0101">
+                  <Label fx:id="empIdLabel" layoutX="80.0" layoutY="5.0" prefHeight="19.0" prefWidth="64.0" text="0" textFill="#bc0101">
                      <font>
                         <Font name="Poppins Bold" size="11.0" />
                      </font>

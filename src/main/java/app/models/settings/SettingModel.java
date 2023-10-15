@@ -43,7 +43,6 @@ public class SettingModel extends MainModel {
             }
         return flag;
     }
-
     protected int saveMessageTemplate(String title, String message, int userId) {
         int flag = 0;
         try {
@@ -61,6 +60,33 @@ public class SettingModel extends MainModel {
         }
         return flag;
     }
+    protected void updateMessageTemplate(int id, String title, String body, int userId) {
+        try {
+            String query = "UPDATE message_templates SET title = ?, message = ?, modified_by = ? WHERE( message_id = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1,title);
+            preparedStatement.setString(2, body);
+            preparedStatement.setInt(3, userId);
+            preparedStatement.setInt(4, id);
+            preparedStatement.execute();
+            commitTransaction();
+            preparedStatement.close();
+            getConnection().close();
+        }catch (SQLException ignore) {rollBack();}
+    }
+    protected  void updateMessageOperation(int tempId, String operation) {
+        try {
+            String query = "UPDATE message_operations SET template_id = ? WHERE(operation = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, tempId);
+            preparedStatement.setString(2, operation);
+            preparedStatement.execute();
+            commitTransaction();
+            preparedStatement.close();
+            getConnection().close();
+        }catch (Exception ignore) {}
+    }
+
 
 
 

@@ -2,12 +2,12 @@
 
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
@@ -262,12 +262,16 @@
                      <children>
                         <Pane layoutX="89.0" layoutY="41.0" prefHeight="472.0" prefWidth="243.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
                            <children>
-                              <Label alignment="CENTER" layoutX="14.0" layoutY="7.0" prefHeight="34.0" prefWidth="216.0" style="-fx-background-color: #eee; -fx-background-radius: 8px;" text="TEMPLATE TITLES">
+                              <Label alignment="CENTER" layoutX="12.0" layoutY="7.0" prefHeight="34.0" prefWidth="216.0" style="-fx-background-color: #eee; -fx-background-radius: 8px;" text="TEMPLATE TITLES">
                                  <font>
                                     <Font name="Poppins Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <MFXListView fx:id="templateListView" depthLevel="LEVEL0" layoutX="22.0" layoutY="51.0" onMouseClicked="#getSelectedTemplate" prefHeight="409.0" prefWidth="200.0" style="-fx-border-color: #ddd; -fx-border-radius: 8px; -fx-background-radius: 8; -fx-font-family: Roboto; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 8px;" thumbColor="#daf1ff" thumbHoverColor="#d9edff" />
+                              <MFXButton fx:id="clearSelectionButton" buttonType="RAISED" layoutX="74.0" layoutY="428.0" onAction="#clearSelectionButtonClicked" prefHeight="30.0" prefWidth="89.0" style="-fx-background-color: #a62c2c;" text="Clear Selection" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Bold" size="9.0" />
+                                 </font></MFXButton>
+                              <ListView fx:id="templateListView" fixedCellSize="20.0" layoutX="12.0" layoutY="48.0" onMouseClicked="#getSelectedTemplate" prefHeight="364.0" prefWidth="213.0" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-padding: 7px;" />
                            </children>
                         </Pane>
                         <Pane layoutX="352.0" layoutY="41.0" prefHeight="471.0" prefWidth="385.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
@@ -286,7 +290,7 @@
                                     </Label>
                                  </children>
                               </Pane>
-                              <Pane layoutX="1.0" layoutY="415.0" prefHeight="56.0" prefWidth="387.0" style="-fx-background-color: #eee; -fx-background-radius: 0 0 10 10;" />
+                              <Pane layoutY="414.0" prefHeight="56.0" prefWidth="386.0" style="-fx-background-color: #eee; -fx-background-radius: 0 0 10 10;" />
                               <JFXTextArea fx:id="messageBodyField" layoutX="19.0" layoutY="226.0" prefHeight="155.0" prefWidth="343.0" style="-fx-border-radius: 10; -fx-border-color: #ddd;" unFocusColor="#4d4d4d00" wrapText="true">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
@@ -308,9 +312,9 @@
                                     <Font name="Poppins Regular" size="14.0" />
                                  </font>
                               </MFXButton>
-                              <MFXButton fx:id="saveTemplateButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="150.0" layoutY="431.0" onAction="#saveTemplateButtonClicked" prefHeight="25.0" prefWidth="100.0" rippleColor="#a5ff9d" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
+                              <MFXButton fx:id="saveTemplateButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="150.0" layoutY="431.0" onAction="#saveTemplateButtonClicked" prefHeight="30.0" prefWidth="100.0" rippleColor="#56b5a9" style="-fx-background-color: #278c8f;" text="Save" textFill="WHITE">
                                  <font>
-                                    <Font name="Poppins Bold" size="14.0" />
+                                    <Font name="Poppins Bold" size="13.0" />
                                  </font>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
@@ -321,15 +325,16 @@
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="messageTitleField" layoutX="22.0" layoutY="159.0" onKeyTyped="#checkMessagesTitleName" prefHeight="40.0" prefWidth="336.0" promptText="Kofi" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="messageTitleField" layoutX="22.0" layoutY="159.0" onKeyTyped="#checkMessagesTitleName" prefHeight="40.0" prefWidth="336.0" promptText="Message Title" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins SemiBold" size="14.0" />
                                  </font>
                               </TextField>
                            </children>
                         </Pane>
-                        <Pane layoutX="746.0" layoutY="44.0" prefHeight="472.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
+                        <Pane layoutX="746.0" layoutY="44.0" prefHeight="467.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
                            <children>
+                              <Pane layoutY="411.0" prefHeight="56.0" prefWidth="339.0" style="-fx-background-color: #eee; -fx-background-radius: 0 0 10 10;" />
                               <Label alignment="CENTER" layoutX="21.0" layoutY="14.0" prefHeight="34.0" prefWidth="293.0" style="-fx-background-color: #eee; -fx-background-radius: 8px;" text="SET MESSAGE PARAMETERS">
                                  <font>
                                     <Font name="Poppins Bold" size="14.0" />
@@ -337,18 +342,18 @@
                               </Label>
                               <ComboBox fx:id="templateSelector" layoutX="34.0" layoutY="216.0" prefHeight="41.0" prefWidth="268.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
                               <ComboBox fx:id="operationSelector" layoutX="34.0" layoutY="306.0" prefHeight="41.0" prefWidth="268.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                              <Pane layoutX="21.0" layoutY="75.0" prefHeight="88.0" prefWidth="293.0" style="-fx-background-color: #e3f1ff; -fx-background-radius: 10px;">
+                              <Pane layoutX="21.0" layoutY="64.0" prefHeight="99.0" prefWidth="293.0" style="-fx-background-color: #e3f1ff; -fx-background-radius: 10px;">
                                  <children>
-                                    <Label layoutX="10.0" layoutY="4.0" prefHeight="80.0" prefWidth="272.0" text="Select and assign a message template to a particular operation. This will send template's message to the selected operation" textAlignment="CENTER" textFill="#385570" wrapText="true">
+                                    <Label layoutX="10.0" layoutY="4.0" prefHeight="91.0" prefWidth="273.0" text="Select and assign a message template to a particular operation. This will send template's message to the selected operation anytime the process is executed" textAlignment="CENTER" textFill="#385570" wrapText="true">
                                        <font>
                                           <Font name="Poppins Regular" size="12.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </Pane>
-                              <MFXButton fx:id="saveOperationButton" buttonType="RAISED" depthLevel="LEVEL0" disable="true" layoutX="117.0" layoutY="422.0" prefHeight="29.0" prefWidth="125.0" rippleColor="#a5ff9d" style="-fx-background-color: #278c8f;" text="Save Operation" textFill="WHITE">
+                              <MFXButton fx:id="saveOperationButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="113.0" layoutY="428.0" onAction="#saveOperationButtonClicked" prefHeight="29.0" prefWidth="125.0" rippleColor="#50c3b9" style="-fx-background-color: #278c8f;" text="Save Operation" textFill="WHITE">
                                  <font>
-                                    <Font name="Poppins Bold" size="14.0" />
+                                    <Font name="Poppins Bold" size="13.0" />
                                  </font>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />

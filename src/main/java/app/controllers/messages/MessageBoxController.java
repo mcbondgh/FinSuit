@@ -1,42 +1,54 @@
 package app.controllers.messages;
 
-import app.specialmethods.SpecialMethods;
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
+import app.models.message.MessagesModel;
+import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.settings.TemplatesRepository;
+import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXCheckListView;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class MessageBoxController implements Initializable {
+public class MessageBoxController extends MessagesModel implements Initializable {
+
+    UserNotification NOTIFY = new UserNotification();
+    UserAlerts ALERT;
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
      ********************************************************************************************************************/
     @FXML
-    private Label pageTitle, listCounter;
-    public static String pageTitlePlaceHolder;
+    private Label pageTitle, listCounter, smsBalance;
     @FXML private WebView webView;
     @FXML
-    TextField numberField;
-    @FXML private MFXButton addButton, smsButton, notificationsButton;
+    TextField numberField ;
+    @FXML private MFXButton addButton, sendButton, cancelButton, removeButton;
     @FXML
-    private MFXCheckListView<String> listView;
-    @FXML
-    private BorderPane borderPane;
+    private ListView<String> listView;
+
     @FXML private TabPane tabPane;
+    @FXML private Tab notificationTab, logsTab, smsTab, topUpTab;
     @FXML private CheckBox customerCheckBox;
     @FXML private MFXFilterComboBox<String> customerNameSelector;
+    @FXML private ComboBox<String> templateSelector;
+    @FXML private JFXTextArea messageBodyField;
+    @FXML private TextField messageTitleField, senderIdField;
+
+    private static String currentUserPlaceHolder;
+    public static String pageTitlePlaceHolder;
+    public String getCurrentUserName() {return currentUserPlaceHolder;}
+    public void setCurrentUserPlaceHolder(String userPlaceHolder) {
+        currentUserPlaceHolder = userPlaceHolder;}
 
 
     /*******************************************************************************************************************
@@ -46,22 +58,63 @@ public class MessageBoxController implements Initializable {
         return customerCheckBox.isSelected();
     }
     boolean isMobileNumberFieldEmpty() {
-        return numberField.getText().isEmpty();
+        return numberField.getText().isEmpty() || numberField.getText().isBlank();
     }
+    boolean isTitleFieldEmpty(){return messageTitleField.getText().isEmpty();}
+    boolean isMessageBodyEmpty() {return messageBodyField.getText().isEmpty();}
+    boolean listViewEmpty() {return listView.getItems().isEmpty() || listView.getItems().size() == 0;}
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
      ********************************************************************************************************************/
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) { pageTitle.setText(pageTitlePlaceHolder) ;}
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        pageTitle.setText(pageTitlePlaceHolder);
+
+        populateFields();
+    }
+
+    void populateFields() {
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        customerNameSelector.setEditable(true);
+        customerNameSelector.setResetOnPopupHidden(true);
+        customerNameSelector.setScrollOnOpen(true);
+        customerNameSelector.setSelectable(true);
+        for (TemplatesRepository items : fetchMessageTemplates()) {
+            templateSelector.getItems().add(items.getMessageTitle());
+        }
+        for (CustomersDataRepository items : fetchCustomersData()) {
+            String fullName = items.getFirstname().concat(" " + items.getOthername() + " " + items.getLastname());
+            customerNameSelector.getItems().add(fullName);
+        }
+    }
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
-    @FXML void validateNumberField() {
-        addButton.setDisable(isMobileNumberFieldEmpty());
-    }
+    @FXML void validateNumberField(KeyEvent event) {
+        String numberValue = numberField.getText();
+        if (!event.getCharacter().matches("[0-9]")) {
+            numberField.deletePreviousChar();
+        }
+        if (numberValue.length() >= 11) {
+            numberField.deletePreviousChar();
+        }
 
+        numberField.setOnKeyReleased(keyEvent -> {
+            addButton.setDisable(isMobileNumberFieldEmpty());
+            for (String value : listView.getItems()) {
+                if (numberValue.equals(value)) {
+                    NOTIFY.errorNotification("NUMBER EXIST", "This number already exists in the list of queued numbers.");
+                    addButton.setDisable(true);
+                    return;
+                }
+            }
+        });
+    }
+    @FXML void enableRemoveButton() {
+        removeButton.setDisable(listViewEmpty());
+    }
 
 
     /*******************************************************************************************************************
@@ -70,21 +123,49 @@ public class MessageBoxController implements Initializable {
     @FXML private void addButtonClicked() {
         addButton.setDisable(isMobileNumberFieldEmpty());
         String number = numberField.getText();
-        listView.getItems().add(number);
-        int increment = listView.getItems().size();
-        listCounter.setText(String.valueOf(increment));
+        int counter = Integer.parseInt(listCounter.getText());
+        if (counter == 50) {
+            NOTIFY.informationNotification("LIST FULL", "You have reached list capacity, you can process 50 numbers at a time.");
+            addButton.setDisable(true);
+        } else {
+            listView.getItems().add(number);
+            int increment = listView.getItems().size();
+            listCounter.setText(String.valueOf(increment));
+            numberField.clear();
+            addButton.setDisable(true);
+        }
     }
-    @FXML void smsButtonClicked() {
-        tabPane.setVisible(true);
-        borderPane.setCenter(tabPane);
-    }
-    @FXML void notificationsButtonClicked() throws IOException {
-        String fxmlFile = "views/messageBox/notifications-page.fxml";
-        tabPane.setVisible(false);
-        SpecialMethods.FlipView(fxmlFile, borderPane);
-    }
+
     @FXML void customerCheckBoxChecked() {
         customerNameSelector.setDisable(!isCustomerCheckBoxSelected());
+
     }
+
+    public void removeButtonClicked(ActionEvent event) {
+        ObservableList<String> selectedItems = listView.getSelectionModel().getSelectedItems();
+        try {
+            for (String item : selectedItems) {
+                listView.getItems().removeAll(item);
+                listCounter.setText(String.valueOf(listView.getItems().size()));
+            }
+        }catch (Exception ignore) {}
+
+     }
+
+     @FXML void templateSelectorOnAction() {
+        String var = templateSelector.getValue();
+        for (TemplatesRepository item : fetchMessageTemplates()) {
+            if (var.equals(item.getMessageTitle())) {
+                messageTitleField.setText(item.getMessageTitle());
+                messageBodyField.setText(item.getMessageBody());
+            }
+        }
+     }
+
+     @FXML void NumberSelectorOnAction() {
+
+
+     }
+
 
 }//END OF CLASS

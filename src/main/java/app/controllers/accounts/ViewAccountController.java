@@ -97,7 +97,6 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
         }catch (Exception ignored) {}
     }
 
-
     void viewButtonClicked() {
         for (ViewCustomersTableDataRepository data : customersTable.getItems()) {
             data.getViewButton().setOnAction(event -> {
