@@ -9,6 +9,7 @@ import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
+import app.repositories.transactions.TransactionsEntity;
 import app.repositories.users.UsersData;
 import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.beans.NamedArg;
@@ -21,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +43,8 @@ public class MainModel extends DbConnection {
                 String location = resultSet.getString("location"); //6
                 String logo = resultSet.getString("logoPath");//7
                 double loanPercentage = resultSet.getDouble("loan_percentage"); //8
-
-                data.add(new BusinessInfoEntity(name, number, otherNumber, email, accountPassword, digital, location, logo, loanPercentage));
-
+                double  taxPercentage = resultSet.getDouble("withdrawal_tax");
+                data.add(new BusinessInfoEntity(name, number, otherNumber, email, accountPassword, digital, location, logo, loanPercentage, taxPercentage));
             }
             preparedStatement.close();
             resultSet.close();
@@ -107,7 +108,7 @@ public class MainModel extends DbConnection {
         }catch (SQLException e) {e.printStackTrace();}
         return count;
     }
-    public String getFullNameByUserId(String userId) {
+    public String getEmployeeFullNameByWorkId(String userId) {
         try {
             String query = "SELECT concat(firstname, \" \", lastname) AS fullname FROM employees AS emp \n" +
                     "INNER JOIN users AS u ON emp.work_id = u.emp_id\n" +
@@ -124,25 +125,28 @@ public class MainModel extends DbConnection {
     protected ArrayList<Object> getCustomerFullNameByAccountNumber(String accountNumber) {
         ArrayList<Object> data = new ArrayList<>();
         try {
-            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_balance, cd.customer_id AS accountNo FROM customer_data AS cd\n" +
+            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_number, account_balance, cd.customer_id AS accountNo FROM customer_data AS cd\n" +
                     "JOIN customer_account_data AS cad ON \n" +
                     "cd.customer_id = cad.customer_id\n" +
-                    "WHERE(cad.account_number = ?);";
+                    "WHERE(cad.account_number = ? OR mobile_number = ?);";
+
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, accountNumber);
+            preparedStatement.setString(2, accountNumber);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 data.add(resultSet.getString("fullname"));//0
                 data.add(resultSet.getInt("accountNo"));//1
                 data.add(resultSet.getDouble("account_balance"));//2
+                data.add(resultSet.getString("account_number"));//3
             }
             preparedStatement.close();
             resultSet.close();
             getConnection().close();
-        }catch (SQLException ignore){}
+        }catch (SQLException e){e.printStackTrace();}
         return data;
     }
-    public long getTotalCustomerIds() {
+    public long totalCustomersCount() {
         long count = 0;
         try {
             String query = "SELECT customer_id from customer_data order by customer_id desc limit 1;";
@@ -172,6 +176,18 @@ public class MainModel extends DbConnection {
             getConnection().close();
         }catch (SQLException ignore) {}
         return value;
+    }
+    public int getTotalTransactionsForToday() {
+        int result = 0;
+        try {
+            String query = "SELECT COUNT(*) count FROM transaction_logs WHERE(DATE(transaction_date) = CURRENT_DATE());";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result =  resultSet.getInt("count");
+            }
+        }catch (Exception ignored){}
+        return result;
     }
     public String getLastCustomerAccountNumber() {
         try {
@@ -207,6 +223,28 @@ public class MainModel extends DbConnection {
             if(resultSet.next()) {flag = resultSet.getInt(1);}
         }catch (Exception ignored){}
         return flag;
+    }
+    protected int getTotalApprovedLoans() {
+        int result = 0;
+        try {
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'pending_payment');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        }catch (Exception ignored){}
+        return result;
+    }
+    protected int getTotalLoanRequests() {
+        int result = 0;
+        try {
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'processing');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {result = resultSet.getInt(1);}
+        }catch (Exception ignored){}
+        return result;
     }
     protected ObservableList<EmployeesData> fetchEmployeeSummaryData() {
         ObservableList<EmployeesData> data = FXCollections.observableArrayList();
@@ -524,6 +562,63 @@ public class MainModel extends DbConnection {
         return data;
     }
 
+    public ObservableList<TransactionsEntity> fetchTransactionLogs(int limitValue) {
+        ObservableList<TransactionsEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT tl.id, transaction_id, payment_method,  cad.account_number, concat(firstname, ' ', lastname, ' ', othername) AS fullname,\n" +
+                    "transaction_type, (cash_amount + ecash_amount) as amount, ecash_id, \n" +
+                    "transaction_made_by AS 'made_by', payment_gateway, national_id_number, transaction_date, username  \n" +
+                    "FROM customer_data AS cd\n" +
+                    "INNER JOIN customer_account_data AS cad \n" +
+                    "ON  cd.customer_id = cad.customer_id\n" +
+                    "INNER JOIN transaction_logs AS tl ON \n" +
+                    "cad.account_number = tl.account_number \n" +
+                    "INNER JOIN USERS AS u ON \n" +
+                    "tl.user_id = u.user_id\n" +
+                    "ORDER BY transaction_id DESC LIMIT ?;\n";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, limitValue);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String fullName = resultSet.getString("fullname");
+                    String transId = resultSet.getString("transaction_id");
+                    String paymentMtd = resultSet.getString("payment_method");
+                    String accountNo = resultSet.getString("cad.account_number");
+                    String transType = resultSet.getString("transaction_type");
+                    double amount = resultSet.getDouble("amount");
+                    String madeBy = resultSet.getString("made_by");
+                    Timestamp transDate = resultSet.getTimestamp("transaction_date");
+                    String username = resultSet.getString("username");
+                    String nationalIdNo = resultSet.getString("national_id_number");
+                    String paymentGway = resultSet.getString("payment_gateway");
+                    String ecashId = resultSet.getString("ecash_id");
+                    data.add(new TransactionsEntity(id, fullName , accountNo, transId, transType, paymentMtd, paymentGway,  amount, ecashId,  transDate, madeBy, nationalIdNo, username));
+            }
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
+        }catch (Exception e) {}
+        return data;
+    }
+
+    public ObservableList<TransactionsEntity> getTodayTransactionLogs() {
+        ObservableList<TransactionsEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT transaction_id, transaction_type, (cash_amount + ecash_amount) AS amount, \n" +
+                    "TIME(transaction_date) AS `time` FROM transaction_logs WHERE DATE(transaction_date) = current_date();";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                String transactionId  = resultSet.getString("transaction_id");
+                String transactionType = resultSet.getString("transaction_type");
+                double amount = resultSet.getDouble("amount");
+                LocalTime localTime = resultSet.getTime("time").toLocalTime();
+                data.add(new TransactionsEntity(transactionId, transactionType, amount, localTime));
+            }
+        }catch (Exception igored){}
+        return data;
+    }
 
 
 

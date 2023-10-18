@@ -66,10 +66,10 @@ public class SettingsController extends SettingModel implements Initializable{
     @FXML private ComboBox<String> templateSelector, operationSelector;
     @FXML private PasswordField accountPasswordField, passwordField;
     @FXML private TextField loanPercentageField;
-    @FXML private Label percentageIndicator;
+    @FXML private Label percentageIndicator, taxIndicator;
     @FXML private ListView<String>templateListView;
     @FXML private JFXTextArea messageBodyField;
-    @FXML private TextField messageTitleField;
+    @FXML private TextField messageTitleField, withdrawalRateField;
     @FXML private MFXButton saveTemplateButton, cancelTemplateButton, saveOperationButton;
 
 
@@ -162,10 +162,13 @@ public class SettingsController extends SettingModel implements Initializable{
               imageName.setText(item.getLogo());
               accountPasswordField.setText(item.getAccountPassword());
               double percentageValue = item.getLoanPercentage();
+              double taxValue = item.getTaxPercentage();
               loanPercentageField.setText(String.valueOf(percentageValue));
               percentageIndicator.setText(percentageValue + "% of basic Salary" );
               String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
               logoViewer.setImage(new Image(getImageSource));
+              withdrawalRateField.setText(String.valueOf(taxValue));
+              taxIndicator.setText(taxValue + "% of withdrawal amount");
         }
 
         for (SmsAPIEntity items : MODEL_OBJECT.getSmsApi()) {
@@ -224,6 +227,13 @@ public class SettingsController extends SettingModel implements Initializable{
                 }
                 percentageIndicator.setText(value + "% of basic Salary");
             });
+            withdrawalRateField.setOnKeyTyped(keyEvent -> {
+                String value = withdrawalRateField.getText();
+                if (!keyEvent.getCharacter().matches("[0-9.]")) {
+                    withdrawalRateField.deletePreviousChar();
+                }
+                taxIndicator.setText(value + "% of input");
+            });
 
     }
 
@@ -263,18 +273,18 @@ public class SettingsController extends SettingModel implements Initializable{
             String imageUrl = imageName.getText();
             String hashedValue = EncryptDecrypt.hashPlainText(accountPasswordField.getText());
             double percentageValue = Double.parseDouble(loanPercentageField.getText());
+            double taxPercentage = Double.parseDouble(withdrawalRateField.getText());
 
             ALERT_OBJECT = new UserAlerts("UPDATE SYSTEM CONFIG", "ARE YOU SURE YOU WANT TO UPDATE SYSTEM PARAMETERS?",
                     "please confirm your action to proceed else CANCEL to abort");
             if (ALERT_OBJECT.confirmationAlert()) {
-                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, imageUrl, percentageValue));
+                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, imageUrl, percentageValue, taxPercentage));
                 saveImageToDestination();
                 if (flag.get() > 0) {
                     NOTIFICATION_OBJECT.successNotification("UPDATE SUCCESSFUL", "System parameters successfully update");
                 }
             }
         });
-
         updateSenderIdButton.setOnAction(event -> {
             String senderId = senderIdField.getText();
             String email = senderMailField.getText();

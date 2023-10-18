@@ -227,7 +227,7 @@ public class PreviewCustomerDetails implements Initializable {
     String getFullName() {
         String username = AppController.activeUserPlaceHolder;
         String emp_id = MODEL_OBJ.getEmployeeIdByUsername(username);
-        return MODEL_OBJ.getFullNameByUserId(emp_id);
+        return MODEL_OBJ.getEmployeeFullNameByWorkId(emp_id);
     }
 
     // Create a Document object
@@ -255,6 +255,7 @@ public class PreviewCustomerDetails implements Initializable {
          Document page = new Document(pdfDocument, PageSize.A4);
          Table documentTable = new Table(2).useAllAvailableWidth();
          Div headerContainer = new Div();
+
 
          //CREATE HEADER WITH LETTER HEAD
          Paragraph letterHead = new Paragraph(businessName)

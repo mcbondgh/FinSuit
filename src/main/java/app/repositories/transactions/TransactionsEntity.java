@@ -3,54 +3,87 @@ package app.repositories.transactions;
 import javafx.scene.control.Label;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
 public class TransactionsEntity {
     private long id;
+    String fullname;
     private String account_number;
     private String transaction_id, transaction_type, payment_method, payment_gateway;
-    private double cash_amount, ecash_amount;
+    private double cash_amount, ecash_amount, total_amount;
+
     private String ecash_id;
     private Timestamp transaction_date;
-    private String transaction_made_by;
-    private int user_id;
+    private String transaction_made_by, nationalIdNumber;
+    private String username;
+    private int userId;
     private String formattedDate;
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+    private LocalTime localTime;
 
     private Label transactionStatus = new Label();
-
-    public TransactionsEntity(long id, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double cash_amount, double ecash_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, int user_id) {
+    public TransactionsEntity(long id, String fullname, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double total_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, String nationalIdNumber, String username) {
         this.id = id;
+        this.fullname = fullname;
         this.account_number = account_number;
         this.transaction_id = transaction_id;
         this.transaction_type = transaction_type;
         this.payment_method = payment_method;
         this.payment_gateway = payment_gateway;
-        this.cash_amount = cash_amount;
-        this.ecash_amount = ecash_amount;
+        this.total_amount = total_amount;
         this.ecash_id = ecash_id;
         this.transaction_date = transaction_date;
         this.transaction_made_by = transaction_made_by;
-        this.user_id = user_id;
+        this.nationalIdNumber = nationalIdNumber;
+        this.username = username;
         labelFormatter();
+        formatVariables();
     }
-
     public TransactionsEntity() {}
 
+    public TransactionsEntity(String transaction_id, String transaction_type, double total_amount, LocalTime localTime) {
+        this.transaction_id = transaction_id;
+        this.transaction_type = transaction_type;
+        this.total_amount = total_amount;
+        this.localTime = localTime;
+    }
     private void labelFormatter() {
         formattedDate = transaction_date.toLocalDateTime().format(formatter);
         transactionStatus.setText(transaction_type);
         switch(transaction_type) {
             case "CASH DEPOSIT" ->
-                transactionStatus.setStyle("-fx-font-size:12px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color: orange;" +
-                        "-fx-text-fill:#fff");
+                transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color:#278c8f;" +
+                        "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
             case "CASH WITHDRAWAL" ->
-                transactionStatus.setStyle("");
+                    transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color: orange;" +
+                            "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
             case "LOAN PAYMENT" ->
-                transactionStatus.setStyle("-fx-background-color:brown;");
+                    transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color: #117bdd;" +
+                            "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
         }
 
+    }
+
+    private void formatVariables() {
+        localTime = transaction_date.toLocalDateTime().toLocalTime();
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public long getId() {
@@ -83,6 +116,22 @@ public class TransactionsEntity {
 
     public void setTransaction_type(String transaction_type) {
         this.transaction_type = transaction_type;
+    }
+
+    public double getTotal_amount() {
+        return total_amount;
+    }
+
+    public Timestamp getTransaction_date() {
+        return transaction_date;
+    }
+
+    public void setTransaction_date(Timestamp transaction_date) {
+        this.transaction_date = transaction_date;
+    }
+
+    public void setTotal_amount(double total_amount) {
+        this.total_amount = total_amount;
     }
 
     public String getPayment_method() {
@@ -133,12 +182,20 @@ public class TransactionsEntity {
         this.transaction_made_by = transaction_made_by;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public String getNationalIdNumber() {
+        return nationalIdNumber;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setNationalIdNumber(String nationalIdNumber) {
+        this.nationalIdNumber = nationalIdNumber;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFormattedDate() {
@@ -155,6 +212,14 @@ public class TransactionsEntity {
 
     public void setFormatter(DateTimeFormatter formatter) {
         this.formatter = formatter;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public Label getTransactionStatus() {

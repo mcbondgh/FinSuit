@@ -133,8 +133,36 @@ FROM customer_data AS cd
 JOIN customer_account_data AS cad ON cd.customer_id = cad.customer_id
 WHERE cd.id_number = ? OR cad.account_number = ?;
 
-SELECT 
+-- 14/10/2023
+ALTER TABLE transaction_logs
+ADD COLUMN national_id_number VARCHAR(20) AFTER transaction_made_by;
 
+SELECT account_number ,mobile_number FROM customer_account_data, customer_data;
+
+SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_balance, account_number, cd.customer_id 
+AS accountNo FROM customer_data AS cd
+	JOIN customer_account_data AS cad ON
+	cd.customer_id = cad.customer_id
+	WHERE(cad.account_number = '1000000000003' OR mobile_number = '0202020202' );
+    
+
+-- 17 / 10 / 2023
+SELECT * FROM transaction_logs;
+SELECT tl.id, transaction_id, cad.account_number, concat(firstname, ' ', lastname, ' ', othername) AS fullname,
+transaction_type, (cash_amount + ecash_amount) 
+as amount, ecash_id, transaction_tax, payment_method, 
+transaction_made_by AS 'made by', transaction_date, username AS amount  
+FROM customer_data AS cd
+INNER JOIN customer_account_data AS cad 
+ON  cd.customer_id = cad.customer_id
+INNER JOIN transaction_logs AS tl ON 
+cad.account_number = tl.account_number 
+INNER JOIN USERS AS u ON 
+tl.user_id = u.user_id
+ORDER BY transaction_id DESC LIMIT 100;
+
+SELECT COUNT(*) count FROM transaction_logs WHERE DATE(transaction_date) = CURRENT_DATE();
+select DATE(transaction_date) as date FROM transaction_logs WHERE DATE(transaction_date) = current_date();
 
 
 

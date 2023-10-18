@@ -4,6 +4,7 @@
 <?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="630.0" prefWidth="1230.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.TransactionController">
+<AnchorPane prefHeight="630.0" prefWidth="1230.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.TransactionController">
    <children>
       <Pane layoutX="1.0" prefHeight="41.0" prefWidth="1240.0" style="-fx-background-color: #fff; -fx-background-radius: 10 10 0 0;">
          <children>
@@ -26,17 +27,21 @@
       </Pane>
       <BorderPane fx:id="borderPane" layoutX="22.0" layoutY="97.0" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="96.0">
          <center>
-            <MFXLegacyTableView fx:id="transactionsTable" prefHeight="513.0" prefWidth="1201.0" style="-fx-font-family: roboto; -fx-font-size: 14px;">
+            <MFXLegacyTableView fx:id="transactionsTable" onMouseEntered="#reloadTableOnLimit" prefHeight="513.0" prefWidth="1201.0" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
                <columns>
-                  <TableColumn prefWidth="167.99998915195465" style="-fx-font-size: 12px;" text="TRANSACTION ID" />
-                  <TableColumn minWidth="92.66670227050781" prefWidth="188.00006103515625" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="CUSTOMER NAME" />
-                  <TableColumn minWidth="67.3333740234375" prefWidth="167.333251953125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="ACCOUNT NUMBER" />
-                  <TableColumn minWidth="100.66665649414062" prefWidth="151.3333740234375" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="TRANSACTION TYPE" />
-                  <TableColumn minWidth="116.0" prefWidth="116.0" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="PAYMENT METHOD" />
-                  <TableColumn minWidth="89.33331298828125" prefWidth="95.33331298828125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="AMOUNT" />
-                  <TableColumn minWidth="124.00006103515625" prefWidth="170.666748046875" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="TRANSACTION DATE" />
-                  <TableColumn minWidth="127.9998779296875" prefWidth="133.333251953125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="CASHIER" />
+                  <TableColumn fx:id="transactionIdColumn" prefWidth="133.9999839067459" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANSACTION ID" />
+                  <TableColumn fx:id="customerNameColumn" minWidth="92.66670227050781" prefWidth="217.33338928222656" style="-fx-font-size: 14; -fx-alignment: center;" text="CUSTOMER NAME" />
+                  <TableColumn fx:id="accountNumberColumn" minWidth="67.3333740234375" prefWidth="173.33322143554688" style="-fx-font-size: 14; -fx-alignment: center;" text="ACCOUNT NUMBER" />
+                  <TableColumn fx:id="transactionTypeColumn" minWidth="100.66665649414062" prefWidth="151.3333740234375" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANSACTION TYPE" />
+                  <TableColumn fx:id="methodColumn" minWidth="116.0" prefWidth="116.0" style="-fx-font-size: 14; -fx-alignment: center;" text="PAYMENT METHOD" />
+                  <TableColumn fx:id="amountColumn" minWidth="89.33331298828125" prefWidth="95.33331298828125" style="-fx-font-size: 14; -fx-alignment: center;" text="AMOUNT" />
+                  <TableColumn fx:id="transactionDateColumn" minWidth="124.00006103515625" prefWidth="170.666748046875" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANSACTION DATE" />
+                  <TableColumn fx:id="cashierColumn" minWidth="127.9998779296875" prefWidth="133.333251953125" style="-fx-font-size: 14; -fx-alignment: center;" text="CASHIER" />
+
                </columns>
+               <padding>
+                  <Insets top="2.0" />
+               </padding>
             </MFXLegacyTableView>
          </center>
          <padding>
@@ -50,7 +55,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="searchField" layoutX="29.0" layoutY="2.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="search by name or account number" style="-fx-background-color: #fff; -fx-background-radius: 5;">
+            <TextField fx:id="searchField" layoutX="29.0" layoutY="2.0" onKeyPressed="#filterTransactionsTable" prefHeight="30.0" prefWidth="286.0" promptText="search by name or account number" style="-fx-background-color: #fff; -fx-background-radius: 5;">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -86,15 +91,8 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="loanPaymentButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Pay Loan" textFill="WHITE" textOverrun="CLIP">
-               <font>
-                  <Font name="Poppins Bold" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
          </children>
       </HBox>
+      <ComboBox fx:id="tableLimitSelector" layoutX="352.0" layoutY="52.0" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-weight: bold;" />
    </children>
 </AnchorPane>

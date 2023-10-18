@@ -11,8 +11,8 @@ public class TransactionModel extends MainModel {
         try {
             String query1 = "UPDATE customer_account_data SET account_balance = ?, previous_balance = ?, date_modified = DEFAULT, modified_by = ? WHERE(account_number = ?);";
 
-            String query2 = "INSERT INTO transaction_logs(account_number, transaction_id, transaction_type, payment_method, payment_gateway, cash_amount, ecash_amount, ecash_id, transaction_made_by, user_id)" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query2 = "INSERT INTO transaction_logs(account_number, transaction_id, transaction_type, payment_method, payment_gateway, cash_amount, ecash_amount, ecash_id, transaction_made_by, national_id_number, user_id)" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             preparedStatement = getConnection().prepareStatement(query1);
             preparedStatement.setDouble(1, account.getAccount_balance());
@@ -32,17 +32,17 @@ public class TransactionModel extends MainModel {
             preparedStatement.setDouble(7, transaction.getEcash_amount());
             preparedStatement.setString(8, transaction.getEcash_id());
             preparedStatement.setString(9, transaction.getTransaction_made_by());
-            preparedStatement.setInt(10, transaction.getUser_id());
+            preparedStatement.setString(10, transaction.getNationalIdNumber());
+            preparedStatement.setInt(11, transaction.getUserId());
 
             flag += preparedStatement.executeUpdate();
 
             commitTransaction();
-        }catch (Exception e) {
-            e.printStackTrace();
+        }catch (Exception ignore) {
             rollBack();
         }
-
         return flag;
     }
 
-}
+
+}//end of class...

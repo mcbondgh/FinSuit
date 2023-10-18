@@ -19,7 +19,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<MFXScrollPane fx:id="scrollPane" pannable="true" prefHeight="624.0" prefWidth="1225.0" style="-fx-background-color: #f6fbff;" thumbHoverColor="#f3ffff" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.EditAccountController">
+<MFXScrollPane fx:id="scrollPane" pannable="true" prefHeight="624.0" prefWidth="1225.0" style="-fx-background-color: #f6fbff;" thumbHoverColor="#f3ffff" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.EditAccountController">
    <content>
       <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1477.0" prefWidth="1203.0" style="-fx-background-color: #f6fbff;">
          <children>
@@ -443,34 +443,6 @@
                         <Font name="Poppins Bold" size="15.0" />
                      </font>
                   </JFXCheckBox>
-                  <Pane layoutX="784.0" layoutY="10.0" prefHeight="28.0" prefWidth="182.0" style="-fx-background-color: #FFF; -fx-background-radius: 4;">
-                     <children>
-                        <Label layoutX="11.0" layoutY="6.0" text="ACCOUNT STATUS" textFill="#278c8f">
-                           <font>
-                              <Font name="Poppins Bold" size="11.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="accountStatusLabel" layoutX="120.0" layoutY="5.0" prefHeight="19.0" prefWidth="60.0" text="OPEN" textFill="#26a64c">
-                           <font>
-                              <Font name="Poppins Bold" size="11.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </Pane>
-                  <Pane layoutX="971.0" layoutY="10.0" prefHeight="28.0" prefWidth="146.0" style="-fx-background-color: #FFF; -fx-background-radius: 4;">
-                     <children>
-                        <Label layoutX="5.0" layoutY="6.0" text="ACTIVE LOANS" textFill="#278c8f">
-                           <font>
-                              <Font name="Poppins Bold" size="11.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="activeLoanLabel" layoutX="92.0" layoutY="5.0" prefHeight="19.0" prefWidth="52.0" text="10000" textFill="#eb9500">
-                           <font>
-                              <Font name="Poppins Bold" size="11.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </Pane>
                </children>
                <effect>
                   <DropShadow blurType="ONE_PASS_BOX" height="15.16" offsetX="1.0" offsetY="3.0" radius="5.7225" spread="0.13" width="9.73">

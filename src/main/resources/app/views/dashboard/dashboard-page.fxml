@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="630.0" prefWidth="1240.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.dashboard.DashboardController">
+<AnchorPane prefHeight="630.0" prefWidth="1240.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.dashboard.DashboardController">
    <children>
       <Label fx:id="pageTitle" layoutX="35.0" layoutY="8.0" text="Title" textFill="#064a9d">
          <font>
@@ -34,7 +34,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#2c844e">
+            <Label fx:id="totalCustomersLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#2c844e">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#329696">
+            <Label fx:id="activeAccountsLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#329696">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -74,7 +74,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#8f8732">
+            <Label fx:id="approvedLoansLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#8f8732">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -89,12 +89,12 @@
                   <Image url="@../../images/icons8-paid-100.png" />
                </image>
             </ImageView>
-            <Label layoutX="102.0" layoutY="20.0" text="Paid Loans" textFill="#565957">
+            <Label layoutX="102.0" layoutY="20.0" text="Loan Applications" textFill="#565957">
                <font>
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#565957">
+            <Label fx:id="loanApplicationLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#565957">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -114,7 +114,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#963a2d">
+            <Label fx:id="dueLoansLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#963a2d">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -134,7 +134,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#b31b8a">
+            <Label fx:id="partiallyPaidLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#b31b8a">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -149,12 +149,12 @@
                   <Image url="@../../images/icons8-approval-100.png" />
                </image>
             </ImageView>
-            <Label layoutX="102.0" layoutY="20.0" text="Today's Collections" textFill="#3faa51">
+            <Label layoutX="97.0" layoutY="20.0" prefHeight="20.0" prefWidth="165.0" text="Today's Transactions" textFill="#3faa51">
                <font>
-                  <Font name="Roboto" size="18.0" />
+                  <Font name="Roboto Bold" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000" textFill="#3faa51">
+            <Label fx:id="transactionsLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#3faa51">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -172,12 +172,12 @@
                   </Label>
                </children>
             </Pane>
-            <MFXLegacyTableView layoutX="8.0" layoutY="41.0" prefHeight="372.0" prefWidth="532.0" style="-fx-font-size: 14; -fx-border-color: #fff;" tableMenuButtonVisible="true">
+            <MFXLegacyTableView fx:id="transactionsTable" layoutX="8.0" layoutY="41.0" prefHeight="372.0" prefWidth="532.0" style="-fx-font-size: 14; -fx-border-color: #fff; -fx-alignment: center;" tableMenuButtonVisible="true">
                <columns>
-                  <TableColumn prefWidth="47.333343505859375" text="No." />
-                  <TableColumn prefWidth="197.3333511352539" text="Transaction Type" />
-                  <TableColumn prefWidth="160.66668701171875" text="Date &amp; Time" />
-                  <TableColumn prefWidth="123.33334350585938" text="Initiated By" />
+                  <TableColumn fx:id="transactionIdColumn" prefWidth="155.33331298828125" style="-fx-alignment: center; -fx-font-size: 14px;" text="TRANSACTION NO." />
+                  <TableColumn fx:id="transactionTypeColumn" prefWidth="186.6666259765625" style="-fx-alignment: center; -fx-font-size: 14px;" text="TRANSACTION TYPE" />
+                  <TableColumn fx:id="amountColumn" prefWidth="98.0001220703125" style="-fx-alignment: center; -fx-font-size: 14px;" text="AMOUNT" />
+                  <TableColumn fx:id="timeColumn" prefWidth="92.666748046875" style="-fx-alignment: center; -fx-font-size: 14px;" text="TIME" />
                </columns>
             </MFXLegacyTableView>
          </children>
@@ -195,7 +195,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="46.0" text="10000">
+            <Label fx:id="smsBalanceLabel" layoutX="103.0" layoutY="46.0" text="0">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>

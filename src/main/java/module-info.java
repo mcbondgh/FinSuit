@@ -16,7 +16,7 @@ module app.finsuit {
     requires java.mail;
     requires annotations;
     requires org.apache.poi.poi;
-    requires debugger.app;
+//    requires debugger.app;
     requires kernel;
     requires layout;
     requires javafx.fxml;
@@ -62,5 +62,6 @@ module app.finsuit {
     opens app.repositories.accounts;
     opens app.repositories.loans;
     opens app.enums;
+    opens app.repositories.transactions;
 
 }

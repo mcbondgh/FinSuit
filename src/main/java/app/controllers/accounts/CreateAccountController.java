@@ -142,7 +142,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
     }
 
     void setAccountNumber() {
-        String totalCount = SpecialMethods.generateAccountNumber(getTotalCustomerIds() + 1);
+        String totalCount = SpecialMethods.generateAccountNumber(totalCustomersCount() + 1);
         accountNumberLabel.setText(totalCount);
     }
 
@@ -198,7 +198,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
         try(FileInputStream stream = new FileInputStream(filePath)) {
            bytes = new byte[(byte) filePath.length()];
            stream.read(bytes);
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception ignore){}
         return bytes;
     }
     String getUploadedDocument() {
@@ -476,7 +476,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
 
                 int flag = createNewAccount(customersDataRepository);
 
-                balanceDataModel.setCustomer_id(getTotalCustomerIds());
+                balanceDataModel.setCustomer_id(totalCustomersCount());
                 balanceDataModel.setAccount_type(accountType);
                 balanceDataModel.setAccount_number(accountNumber);
                 balanceDataModel.setAccount_balance(depositAmount);

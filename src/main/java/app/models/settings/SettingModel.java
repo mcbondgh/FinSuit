@@ -6,10 +6,10 @@ import java.sql.SQLException;
 
 public class SettingModel extends MainModel {
 
-    protected byte updateBusinessInfo(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double percentageValue) {
+    protected byte updateBusinessInfo(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double percentageValue, double taxValue) {
         byte flag = 0;
         try {
-            String query = "UPDATE business_info SET business_name = ?, mobile_number = ?, other_number = ?, email = ?, account_password = ?, digital_address = ?, location = ?, logoPath = ?, loan_percentage = ?, date_modified = DEFAULT";
+            String query = "UPDATE business_info SET business_name = ?, mobile_number = ?, other_number = ?, email = ?, account_password = ?, digital_address = ?, location = ?, logoPath = ?, loan_percentage = ?, withdrawal_tax = ?, date_modified = DEFAULT";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, mobileNumber);
@@ -20,6 +20,7 @@ public class SettingModel extends MainModel {
             preparedStatement.setString(7, location);
             preparedStatement.setString(8, logo);
             preparedStatement.setDouble(9, percentageValue);
+            preparedStatement.setDouble(10, taxValue);
             flag = (byte) preparedStatement.executeUpdate();
             commitTransaction();
         }catch (SQLException e) {

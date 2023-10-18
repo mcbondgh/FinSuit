@@ -515,11 +515,11 @@ public class LoanApplicationController extends LoansModel implements Initializab
             applicationEntity.setNet_salary(guarantorNetSalary);
 
             int flag = applyForLoan(applicationEntity, customerRepository);
-            flag += createLoan( getTotalCustomerIds(), loanNumber, loanType, loanAmount, currentUserId);
+            flag += createLoan( totalCustomersCount(), loanNumber, loanType, loanAmount, currentUserId);
 
             //CREATE ACCOUNT FOR LOAN CLIENT
-            accountRepository.setCustomer_id(getTotalCustomerIds());
-            accountRepository.setAccount_number(SpecialMethods.generateAccountNumber(getTotalCustomerIds() + 1));
+            accountRepository.setCustomer_id(totalCustomersCount());
+            accountRepository.setAccount_number(SpecialMethods.generateAccountNumber(totalCustomersCount() + 1));
             accountRepository.setAccount_type("Savings Account");
             accountRepository.setModified_by(currentUserId);
             flag += createAccountBalance(accountRepository);

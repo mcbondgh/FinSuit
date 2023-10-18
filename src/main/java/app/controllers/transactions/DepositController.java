@@ -3,10 +3,13 @@ package app.controllers.transactions;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
+import app.documents.DocumentGenerator;
 import app.enums.PaymentMethods;
 import app.enums.TransactionTypes;
 import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
+import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.documents.ReceiptsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -20,6 +23,10 @@ import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -33,6 +40,9 @@ public class DepositController extends TransactionModel implements Initializable
     final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     private static int CUSTOMER_ID;
+    private String TRANSACTION_ID = "";
+    DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+
 
 
     public static String getCurrentUserPlaceholder() {
@@ -43,9 +53,9 @@ public class DepositController extends TransactionModel implements Initializable
     }
     @FXML
     private MFXFilterComboBox<String>accountNumberField;
-    @FXML private Label accountHolderName, totalCashLabel;
+    @FXML private Label accountHolderName, totalCashLabel, accountNumberHolder;
     @FXML private ComboBox<PaymentMethods> paymentSelector, gatewaySelector;
-    @FXML private TextField cashField, eCashField, transactionIdField, depositorNameField;
+    @FXML private TextField cashField, eCashField, transactionIdField, depositorNameField, depositorIdField;
     @FXML private MFXButton saveButton;
 
 
@@ -64,6 +74,7 @@ public class DepositController extends TransactionModel implements Initializable
     boolean transactionIdEmpty() {return transactionIdField.getText().isEmpty();}
     boolean accountNumberEmpty() {return accountNumberField.getValue().isEmpty();}
     boolean depositorNameEmpty() {return depositorNameField.getText().isEmpty();}
+    boolean depositorIdEmpty() {return depositorIdField.getText().isEmpty();}
 
 
     /*******************************************************************************************************************
@@ -72,6 +83,7 @@ public class DepositController extends TransactionModel implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateFields();
+        TRANSACTION_ID = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
     }
 
     private void populateFields() {
@@ -83,10 +95,12 @@ public class DepositController extends TransactionModel implements Initializable
         for (CustomerAccountsDataRepository data : fetchCustomersAccountData()) {
             accountNumberField.getItems().add(data.getAccount_number());
         }
+        for (CustomersDataRepository data : fetchCustomersData()) {
+            accountNumberField.getItems().add(data.getMobile_number());
+        }
         SpecialMethods.setPaymentMethods(paymentSelector);
         SpecialMethods.setPaymentGateways(gatewaySelector);
     }
-
 
     void clearFields() {
         accountNumberField.setValue(null);
@@ -98,8 +112,11 @@ public class DepositController extends TransactionModel implements Initializable
         totalCashLabel.setText("0.00");
         transactionIdField.clear();
         depositorNameField.clear();
+        accountNumberHolder.setText("--------------");
+        depositorIdField.clear();
 
     }
+
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATION
@@ -114,12 +131,12 @@ public class DepositController extends TransactionModel implements Initializable
             totalCashLabel.setText(String.valueOf(value));
         }catch (NumberFormatException ignore){}
     }
-
     @FXML void checkForEmptyFields() {
         try{
-            saveButton.setDisable(isAmountEmpty() || accountNumberEmpty() || isPaymentMethodEmpty() || depositorNameEmpty());
+            saveButton.setDisable(isAmountEmpty() || accountNumberEmpty() || isPaymentMethodEmpty() || depositorNameEmpty() || depositorIdEmpty());
         }catch (NumberFormatException ignore){}
     }
+
 
 
     /*******************************************************************************************************************
@@ -128,18 +145,22 @@ public class DepositController extends TransactionModel implements Initializable
     @FXML void setOnAccountNumberSelected() {
         String var1 = accountNumberField.getValue();
         ArrayList<Object> items = getCustomerFullNameByAccountNumber(var1);
+
         accountHolderName.setText(items.get(0).toString());
+        accountNumberHolder.setText(items.get(3).toString());
         CUSTOMER_ID = (int) items.get(1);
 
     }
     @FXML void setSelectedPaymentMethod() {
-        PaymentMethods value = paymentSelector.getValue();
-        gatewaySelector.setDisable(value.equals(PaymentMethods.CASH));
-        cashField.setDisable(value.equals(PaymentMethods.eCASH));
-        cashField.setText(value.equals(PaymentMethods.eCASH) ? "0.00": cashField.getText());
-        gatewaySelector.setValue(null);
-        eCashField.setText("0.00");
-        transactionIdField.setText("Unspecified");
+        try{
+            PaymentMethods value = paymentSelector.getValue();
+            gatewaySelector.setDisable(value.equals(PaymentMethods.CASH));
+            cashField.setDisable(value.equals(PaymentMethods.eCASH));
+            cashField.setText(value.equals(PaymentMethods.eCASH) ? "0.00": cashField.getText());
+            gatewaySelector.setValue(null);
+            eCashField.setText("0.00");
+            transactionIdField.setText("Unspecified");
+        }catch (Exception ignored){}
     }
     @FXML void setGatewaySelectorOnAction() {
         try {
@@ -164,7 +185,7 @@ public class DepositController extends TransactionModel implements Initializable
     @FXML void saveButtonClicked() {
         try{
             int userId = getUserIdByName(getCurrentUserPlaceholder());
-            String accountNumber = accountNumberField.getValue();
+            String accountNumber = accountNumberHolder.getText();
             String paymentMethod = PaymentMethods.convertPayMethod(paymentSelector.getValue());
             String gateway = PaymentMethods.convertPayMethod(gatewaySelector.getValue());
             String transactionType = TransactionTypes.convertType(TransactionTypes.CASH_DEPOSIT);
@@ -172,8 +193,19 @@ public class DepositController extends TransactionModel implements Initializable
             double amount = Double.parseDouble(cashField.getText());
             double eCash = Double.parseDouble(eCashField.getText());
             String depositorName = depositorNameField.getText();
-            String transactionId = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
+            String depositorIdNumber = depositorIdField.getText();
             double totalAmount = Double.parseDouble(totalCashLabel.getText());
+
+            //RECEIPT VARIABLES...
+            DocumentGenerator documentGenerator = new DocumentGenerator();
+            ReceiptsEntity receiptsEntity = new ReceiptsEntity();
+            String work_id = getEmployeeIdByUsername(getCurrentUserPlaceholder());
+
+            String pdfName = accountHolderName.getText() + "-" + LocalDate.now() + ".pdf";
+            String directoryPath = documentGenerator.generateFolder(pdfName);
+
+            String cashierName = getEmployeeFullNameByWorkId(work_id);
+            String transactionDate = LocalDateTime.now().format(formatter);
 
             // get the user's current account balance by their account number...
             double currentBalance = 0;
@@ -191,7 +223,7 @@ public class DepositController extends TransactionModel implements Initializable
 
             //SET VALUES FOR transactionEntity to insert into the transaction_logs table...
             transactions.setAccount_number(accountNumber);
-            transactions.setTransaction_id(transactionId);
+            transactions.setTransaction_id(TRANSACTION_ID);
             transactions.setTransaction_type(transactionType);
             transactions.setPayment_method(paymentMethod);
             transactions.setPayment_gateway(gateway);
@@ -199,12 +231,27 @@ public class DepositController extends TransactionModel implements Initializable
             transactions.setEcash_amount(eCash);
             transactions.setEcash_id(eCashId);
             transactions.setTransaction_made_by(depositorName);
-            transactions.setUser_id(userId);
+            transactions.setNationalIdNumber(depositorIdNumber);
+            transactions.setUserId(userId);
+
+            //SET VALUES FOR receiptEntity to create receipt file..
+            receiptsEntity.setCustomerName(accountHolderName.getText());
+            receiptsEntity.setAccountNumber(accountNumber);
+            receiptsEntity.setTransactionType("Cash Deposit");
+            receiptsEntity.setPaymentMethod(paymentMethod);
+            receiptsEntity.setAmount(String.valueOf(totalAmount));
+            receiptsEntity.setDepositorName(depositorName);
+            receiptsEntity.setDepositorIdNumber(depositorIdNumber);
+            receiptsEntity.setTransactionDate(transactionDate);
+            receiptsEntity.setTransactionStatus("SUCCESSFUL");
+            receiptsEntity.setCashierName(cashierName);
+            receiptsEntity.setTransactionNumber(TRANSACTION_ID);
 
             ALERTS = new UserAlerts("SAVE TRANSACTION", "Do you wish to save current deposit transaction?",
                     "please confirm your action to save transaction else CANCEL to abort.");
             if(ALERTS.confirmationAlert()) {
                 if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
+                    documentGenerator.generateDepositReceipt(directoryPath, receiptsEntity);
                     NOTIFY.successNotification("TRANSACTION SUCCESSFUL", "Customer account number " + accountNumber + " has been credited with a deposit of Ghc" + totalAmount);
                     clearFields();
                 }
@@ -213,9 +260,6 @@ public class DepositController extends TransactionModel implements Initializable
             eCashField.setText("0.00");
             transactionIdField.setText("Unspecified");
         }
-
-
     }
-
 
 }//end of class..

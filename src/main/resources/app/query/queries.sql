@@ -210,9 +210,11 @@ CREATE TABLE IF NOT EXISTS transaction_logs(
     payment_gateway VARCHAR(50),
     cash_amount DECIMAL(10,2) NOT NULL,
     ecash_amount DECIMAL(10,2),
+    transaction_tax DECIMAL(10,2),
     ecash_id VARCHAR(50) COMMENT 'This is the transaction id generated after making an electronic cash (transaction id)',
     transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     transaction_made_by VARCHAR(50) DEFAULT 'account_holder' NOT NULL,
+    national_id_number VARCHAR(20) NOT NULL,
     user_id INT COMMENT'this is the id of the cashier who initiated the transaction'
 );
 
