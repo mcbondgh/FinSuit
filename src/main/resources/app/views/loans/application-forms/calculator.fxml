@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="636.0" prefWidth="1133.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanCalculator">
+<AnchorPane prefHeight="636.0" prefWidth="1133.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanCalculator">
    <children>
       <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="636.0" prefWidth="1143.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 5px;">
          <children>
@@ -56,7 +56,7 @@
                         <Font name="Poppins Medium" size="12.0" />
                      </font>
                   </TextField>
-                  <Label layoutX="26.0" layoutY="50.0" prefHeight="35.0" prefWidth="66.0" text="Basic Salary" wrapText="true">
+                  <Label layoutX="27.0" layoutY="50.0" prefHeight="35.0" prefWidth="66.0" text="Gross Salary" wrapText="true">
                      <font>
                         <Font name="Poppins Bold" size="9.0" />
                      </font>
@@ -164,7 +164,7 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Hyperlink>
-                        <MFXButton fx:id="saveButton" disable="true" layoutX="244.0" layoutY="5.0" prefHeight="30.0" prefWidth="77.0" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
+                        <MFXButton fx:id="saveButton" disable="true" layoutX="244.0" layoutY="5.0" onAction="#saveButtonClicked" prefHeight="30.0" prefWidth="77.0" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
                            <font>
                               <Font name="Poppins Bold" size="10.0" />
                            </font>
@@ -331,7 +331,7 @@
                               <Font name="Poppins SemiBold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="displayLoanStatus" alignment="CENTER" contentDisplay="CENTER" prefHeight="34.0" prefWidth="188.0" style="-fx-background-color: #c1ffb7;" text="Qualified" textFill="#0b8425" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <Label fx:id="displayLoanStatus" alignment="CENTER" contentDisplay="CENTER" prefHeight="34.0" prefWidth="188.0" style="-fx-background-color: #c1ffb7;" text="----" textFill="#0b8425" GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <font>
                               <Font name="Poppins SemiBold" size="12.0" />
                            </font>

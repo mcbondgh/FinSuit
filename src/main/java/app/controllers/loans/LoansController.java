@@ -1,5 +1,6 @@
 package app.controllers.loans;
 
+import app.controllers.homepage.AppController;
 import app.models.loans.LoansModel;
 import app.repositories.loans.LoansTableEntity;
 import app.stages.AppStages;
@@ -26,7 +27,7 @@ import java.util.ResourceBundle;
 public class LoansController extends LoansModel implements Initializable {
 
     Stage loanApplicationStage = AppStages.loanApplicationStage();
-
+    int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -38,7 +39,7 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private BorderPane borderPane;
     @FXML private HBox hBox;
     @FXML
-    private MFXButton addNewLoanButton, payLoanButton, filterButton, loanRequestsButton, generateSheetButton, uploadSheetButton;
+    private MFXButton addNewLoanButton, payLoanButton, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton;
     @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
     @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
     @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
@@ -51,6 +52,8 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private TableColumn<LoansTableEntity, MFXButton> editColumn;
 
     @FXML private TextField searchField;
+    @FXML private TextField finalAmountField;
+    @FXML private Label displayLoanStatus;
 
     public LoansController() throws IOException {}
 
@@ -59,8 +62,6 @@ public class LoansController extends LoansModel implements Initializable {
         try {
             loadForm();
             payLoanButtonClicked();
-            filterButtonClicked();
-            populateTable();
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +87,7 @@ public class LoansController extends LoansModel implements Initializable {
         loanTypeColumn.setCellValueFactory(new PropertyValueFactory<>("loanType"));
         viewColumn.setCellValueFactory(new PropertyValueFactory<>("viewButton"));
         editColumn.setCellValueFactory(new PropertyValueFactory<>("editButton"));
-        loanApplicantsTable.setItems(getLoanTableValues());
+        loanApplicantsTable.setItems(getLoansUnderProcessingOnly(loggedInUserId));
 
         long counter = countRequestedLoans();
         loanRequestsButton.setText("Loan Requests (" + counter + ")");
@@ -95,7 +96,7 @@ public class LoansController extends LoansModel implements Initializable {
     public void searchCustomerMethod(KeyEvent event) {
         try {
             loanApplicantsTable.getItems().clear();
-            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoanTableValues(), p -> true);
+            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderProcessingOnly(loggedInUserId), p -> true);
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredList.setPredicate(customersTableData -> {
                     if (newValue.isEmpty() || newValue.isBlank()) {
@@ -120,7 +121,7 @@ public class LoansController extends LoansModel implements Initializable {
      *******************************************************************************************************************/
     @FXML void loansTableItemSelected() throws IOException {
         populateTable();
-        if (loanApplicantsTable.getItems().size() != 0) {
+        if (!loanApplicantsTable.getItems().isEmpty()) {
 
             for (LoansTableEntity item : loanApplicantsTable.getItems()) {
                 String loanNumber = item.getLoanNo();
@@ -143,7 +144,6 @@ public class LoansController extends LoansModel implements Initializable {
                         }
                     }
                 });
-
                 //Handles click event for the edit-button
                 item.getEditButton().setOnAction(action -> {
 
@@ -151,7 +151,6 @@ public class LoansController extends LoansModel implements Initializable {
             }
         }
     }
-
     @FXML
     private void setLoanRequestsButtonClicked() {
         try {
@@ -161,11 +160,9 @@ public class LoansController extends LoansModel implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
     public void newLoanButtonClicked(ActionEvent event) throws IOException {
         loanApplicationStage.show();
     }
-
     void payLoanButtonClicked() {
         payLoanButton.setOnAction(event -> {
             try {
@@ -175,10 +172,9 @@ public class LoansController extends LoansModel implements Initializable {
             }
         });
     }
-    void filterButtonClicked() {
-        filterButton.setOnAction(event -> {
 
-        });
+    @FXML void loadTableOnAction() {
+
     }
 
 

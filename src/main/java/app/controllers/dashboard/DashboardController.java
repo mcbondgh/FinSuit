@@ -64,7 +64,7 @@ public class DashboardController extends MainModel implements Initializable {
         transactionTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transactionStatus"));
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("total_amount"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("localTime"));
-        transactionsTable.setItems(fetchTransactionLogs(10));
+        transactionsTable.setItems(getTodayTransactionLogs());
     }
 
 

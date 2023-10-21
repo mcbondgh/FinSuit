@@ -1,5 +1,8 @@
 package app.controllers.loans.application;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
+import app.controllers.homepage.AppController;
 import app.models.loans.LoansModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.loans.LoansTableEntity;
@@ -21,6 +24,8 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LoanCalculator extends LoansModel implements Initializable {
+    UserNotification NOTIFY = new UserNotification();
+    UserAlerts ALERTS;
 
 
     /*******************************************************************************************************************
@@ -46,6 +51,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
     @FXML private TableColumn<ScheduleEntity, LocalDate> paymentDateColumn;
     @FXML private Pane calculatorPane;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
 
 
 
@@ -57,6 +63,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
     boolean isLoanPeriodEmpty() {return loanPeriodSelector.getValue() == null;}
     boolean isStartDateEmpty() {return datePicker.getValue() == null;}
     boolean isReasonFieldEmpty() {return loanReasonField.getText().isEmpty();}
+    boolean isQualificationAmountEmpty() {return finalAmountField.getText().isEmpty();}
 
 
 
@@ -92,9 +99,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
 
     private void generateScheduleSheet() {
         populateTable();
-
         ScheduleEntity entity;
-
 
         int loanTenure = loanPeriodSelector.getValue(); // 6
         double loanAmount = Double.parseDouble(displayLoanAmount.getText()); // 100.00
@@ -124,7 +129,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
             supervisorSelector.getItems().add(users.getUsername());
         }
 
-        for (LoansTableEntity items : getLoanTableValues()) {
+        for (LoansTableEntity items : getLoansUnderProcessingOnly(loggedInUserId)) {
             if (items.getStatusLabel().getText().equals("Processing")) {
                 applicationNumberSelector.getItems().add(items.getLoanNo());
             }
@@ -151,7 +156,6 @@ public class LoanCalculator extends LoansModel implements Initializable {
                         }
                     }
                 });
-
                 interestRateSelector.setOnAction(action -> {
                     double loanAmount = Double.parseDouble(loanAmountField.getText());
                     int interest = interestRateSelector.getValue();
@@ -167,16 +171,29 @@ public class LoanCalculator extends LoansModel implements Initializable {
                 });
 
                 datePicker.setOnAction(click -> {
-                    LocalDate startDate = datePicker.getValue();
-                    displayStartDate.setText(String.valueOf(startDate));
-                    int tenure = loanPeriodSelector.getValue();
-                    LocalDate endDate = startDate.plusMonths(tenure);
-                    displayEndDate.setText(String.valueOf(endDate));
+                    if (isQualificationAmountEmpty()) {
+                        NOTIFY.informationNotification("AMOUNT FIELD EMPTY", "Please set the qualification values to check for LOAN QUALIFICATION");
+                    }else {
+                        LocalDate startDate = datePicker.getValue();
+                        displayStartDate.setText(String.valueOf(startDate));
+                        int tenure = loanPeriodSelector.getValue();
+                        LocalDate endDate = startDate.plusMonths(tenure);
+                        displayEndDate.setText(String.valueOf(endDate));
 
-                    double totalAmount = Double.parseDouble(displayTotalLoanAmount.getText());
-                    double result = totalAmount / tenure;
-                    displayMonthlyInstallmentAmount.setText(String.valueOf(decimalFormat.format(result)));
+                        double totalAmount = Double.parseDouble(displayTotalLoanAmount.getText());
+                        double result = totalAmount / tenure;
+                        displayMonthlyInstallmentAmount.setText(String.valueOf(decimalFormat.format(result)));
 
+                        double monthlyInstallment = Double.parseDouble(displayMonthlyInstallmentAmount.getText());
+                        double qualificationAmount = Double.parseDouble(finalAmountField.getText());
+                        if (monthlyInstallment > qualificationAmount) {
+                            displayLoanStatus.setText("NOT QUALIFIED");
+                            displayLoanStatus.setStyle("-fx-background-color: #ffdfdf; -fx-text-fill:red");
+                        } else {
+                            displayLoanStatus.setText("QUALIFIED");
+                            displayLoanStatus.setStyle("-fx-background-color: #c1ffb7; -fx-text-fill:#0b8425");
+                        }
+                    }
                 });
 
                 calculatorPane.setOnMouseMoved(event -> {
@@ -185,6 +202,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
 
                 generateScheduleButton.setOnAction(action -> {
                     generateScheduleSheet();
+                    saveButton.setDisable(false);
                 });
         };
     void inputFieldChaneListerImplementation() {
@@ -250,7 +268,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
 
     @FXML void getApplicantInformation() {
         String loanNo = applicationNumberSelector.getValue();
-        for (LoansTableEntity data : getLoanTableValues()) {
+        for (LoansTableEntity data : getLoansUnderProcessingOnly(loggedInUserId)) {
             if (Objects.equals(loanNo, data.getLoanNo())) {
                 applicantFullnameLabel.setText(data.getFullName());
                 loanTypeLabel.setText(data.getLoanType());
@@ -259,7 +277,20 @@ public class LoanCalculator extends LoansModel implements Initializable {
             }
         }
     }
+    public @FXML void generateScheduleButtonClicked() {
 
+    }
+    @FXML void saveButtonClicked() {
+        String statusLabel = displayLoanStatus.getText();
+        boolean result = statusLabel.equals("QUALIFIED");
+        if (!result) {
+            ALERTS = new UserAlerts("NOT QUALIFIED", "Sorry, applicant does not qualify for this loan facility, please reduce loan request amount",
+                    "you need to reduce applicant loan amount to qualify else terminate loan process.");
+            ALERTS.errorAlert();
+        }else {
+            NOTIFY.successNotification("QUALIFIED", "Congratulations, applicant qualifies for loan facility.");
+        }
+    }
 
 
 }//end of class

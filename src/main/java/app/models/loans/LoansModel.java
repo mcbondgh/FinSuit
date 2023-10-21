@@ -181,15 +181,16 @@ public class LoansModel extends MainModel {
         return flag;
     }
 
-    protected ObservableList<LoansTableEntity> getLoanTableValues() {
+    protected ObservableList<LoansTableEntity> getLoansUnderProcessingOnly(int user_id) {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT loan_id, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
+            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, application_status FROM loans AS ln\n" +
-                    "JOIN customer_data AS cd ON \n" +
-                    "ln.customer_id = cd.customer_id;";
-            statement = getConnection().createStatement();
-            resultSet = statement.executeQuery(query);
+                    "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing' AND user_id = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, user_id);
+            resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 int no = resultSet.getInt("loan_id");
                 String fullname = resultSet.getString("fullname");
@@ -200,7 +201,6 @@ public class LoansModel extends MainModel {
                 String status = resultSet.getString("application_status");
                 data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, status, loanType));
             }
-            statement.close();
             resultSet.close();
             getConnection().close();
         }catch (SQLException ignore) {}
