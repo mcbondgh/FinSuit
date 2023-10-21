@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS loans(
     requested_amount DOUBLE(10,2) DEFAULT 0.00 NOT NULL,
     disbursed_amount DECIMAL(10,2) DEFAULT 0.00,
     total_payment DECIMAL(10,2) DEFAULT 0.00,
-    application_status VARCHAR(20) DEFAULT 'processing' COMMENT 'pending_approval |pending_payment | paid | rejected',
+    application_status VARCHAR(20) DEFAULT 'application' COMMENT 'processing |pending_disbursment | disbursed | paid | rejected',
     loan_status VARCHAR(20) DEFAULT 'active' COMMENT 'active | closed',
     is_drafted BOOLEAN DEFAULT 0 ,
     profile_picture BLOB,

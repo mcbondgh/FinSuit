@@ -39,7 +39,7 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private BorderPane borderPane;
     @FXML private HBox hBox;
     @FXML
-    private MFXButton addNewLoanButton, payLoanButton, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton;
+    private MFXButton addNewLoanButton, payLoanButton, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton,viewLoansButton;
     @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
     @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
     @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
@@ -62,6 +62,7 @@ public class LoansController extends LoansModel implements Initializable {
         try {
             loadForm();
             payLoanButtonClicked();
+            showRequestedLoanCount();
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -89,8 +90,14 @@ public class LoansController extends LoansModel implements Initializable {
         editColumn.setCellValueFactory(new PropertyValueFactory<>("editButton"));
         loanApplicantsTable.setItems(getLoansUnderProcessingOnly(loggedInUserId));
 
-        long counter = countRequestedLoans();
-        loanRequestsButton.setText("Loan Requests (" + counter + ")");
+
+    }
+
+    private void showRequestedLoanCount() {
+        int counter = countRequestedLoans();
+        Label label = new Label(String.valueOf(counter));
+        label.setStyle("-fx-background-color:#e600000; -fx-background-radius:50%; -fx-text-fill:#fff; -fx-padding:5px;");
+        loanRequestsButton.setText("Loan Requests " + label);
     }
 
     public void searchCustomerMethod(KeyEvent event) {
@@ -120,7 +127,6 @@ public class LoansController extends LoansModel implements Initializable {
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      *******************************************************************************************************************/
     @FXML void loansTableItemSelected() throws IOException {
-        populateTable();
         if (!loanApplicantsTable.getItems().isEmpty()) {
 
             for (LoansTableEntity item : loanApplicantsTable.getItems()) {
@@ -174,7 +180,7 @@ public class LoansController extends LoansModel implements Initializable {
     }
 
     @FXML void loadTableOnAction() {
-
+        populateTable();
     }
 
 

@@ -24,9 +24,9 @@
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
-            <HBox fx:id="hBox" layoutX="574.0" layoutY="11.0" prefHeight="30.0" prefWidth="642.0" spacing="5.0">
+            <HBox fx:id="hBox" alignment="CENTER" layoutX="484.0" layoutY="4.0" prefHeight="41.0" prefWidth="741.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                <children>
-                  <MFXButton fx:id="loadTableButton" onAction="#loadTableOnAction" prefHeight="25.0" prefWidth="79.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
+                  <MFXButton fx:id="loadTableButton" onAction="#loadTableOnAction" prefHeight="25.0" prefWidth="81.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -34,7 +34,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="viewSummaryButton" prefHeight="25.0" prefWidth="96.0" style="-fx-background-color: #278c8f;" text="View Summary" textFill="WHITE">
+                  <MFXButton fx:id="viewSummaryButton" prefHeight="25.0" prefWidth="86.0" style="-fx-background-color: #278c8f;" text="View Summary" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -42,7 +42,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="addNewLoanButton" onAction="#newLoanButtonClicked" prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: #278c8f;" text="Loan Application" textFill="WHITE">
+                  <MFXButton fx:id="addNewLoanButton" onAction="#newLoanButtonClicked" prefHeight="25.0" prefWidth="96.0" style="-fx-background-color: #278c8f;" text="Loan Application" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -50,7 +50,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="payLoanButton" prefHeight="25.0" prefWidth="68.0" style="-fx-background-color: #278c8f;" text="Pay Loan" textFill="WHITE">
+                  <MFXButton fx:id="payLoanButton" prefHeight="25.0" prefWidth="61.0" style="-fx-background-color: #278c8f;" text="Pay Loan" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -58,7 +58,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="generateSheetButton" prefHeight="25.0" prefWidth="93.0" style="-fx-background-color: #278c8f;" text="Generate Sheet" textFill="WHITE">
+                  <MFXButton fx:id="generateSheetButton" prefHeight="25.0" prefWidth="88.0" style="-fx-background-color: #278c8f;" text="Generate Sheet" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -66,7 +66,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="uploadSheetButton" prefHeight="25.0" prefWidth="95.0" style="-fx-background-color: #278c8f;" text="Upload Sheet" textFill="WHITE">
+                  <MFXButton fx:id="uploadSheetButton" prefHeight="25.0" prefWidth="85.0" style="-fx-background-color: #278c8f;" text="Upload Sheet" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -74,7 +74,15 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="loanRequestsButton" onAction="#setLoanRequestsButtonClicked" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #278c8f;" text="Loan Requests" textFill="WHITE">
+                  <MFXButton fx:id="viewLoansButton" prefHeight="25.0" prefWidth="85.0" style="-fx-background-color: #278c8f;" text="View Loans(12)" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MFXButton>
+                  <MFXButton fx:id="loanRequestsButton" onAction="#setLoanRequestsButtonClicked" prefHeight="25.0" prefWidth="105.0" style="-fx-background-color: #278c8f;" text="Loan Requests" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -83,6 +91,13 @@
                      </cursor>
                   </MFXButton>
                </children>
+               <effect>
+                  <DropShadow height="12.73" radius="5.985" width="13.21">
+                     <color>
+                        <Color red="0.5877193212509155" green="0.5877193212509155" blue="0.5877193212509155" />
+                     </color>
+                  </DropShadow>
+               </effect>
             </HBox>
          </children>
       </Pane>

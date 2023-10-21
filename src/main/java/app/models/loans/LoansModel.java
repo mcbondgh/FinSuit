@@ -187,7 +187,7 @@ public class LoansModel extends MainModel {
             String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
-                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing' AND user_id = ?);";
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'application' AND user_id = ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setInt(1, user_id);
             resultSet = preparedStatement.executeQuery();
