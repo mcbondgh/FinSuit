@@ -28,7 +28,7 @@ public class DashboardController extends MainModel implements Initializable {
     @FXML private Label totalCustomersLabel, activeAccountsLabel, loanApplicationLabel, transactionsLabel;
     @FXML private MFXLegacyTableView<TransactionsEntity> transactionsTable;
     @FXML private TableColumn<TransactionsEntity, String> transactionIdColumn;
-    @FXML private  TableColumn<TransactionsEntity, Label> transactionTypeColumn;
+    @FXML private  TableColumn<TransactionsEntity, String> transactionTypeColumn;
     @FXML private TableColumn<TransactionsEntity, LocalTime> timeColumn;
     @FXML private  TableColumn<TransactionsEntity, Double> amountColumn;
 

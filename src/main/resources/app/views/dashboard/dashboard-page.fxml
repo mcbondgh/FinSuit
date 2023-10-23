@@ -172,7 +172,7 @@
                   </Label>
                </children>
             </Pane>
-            <MFXLegacyTableView fx:id="transactionsTable" layoutX="8.0" layoutY="41.0" prefHeight="372.0" prefWidth="532.0" style="-fx-font-size: 14; -fx-border-color: #fff; -fx-alignment: center;" tableMenuButtonVisible="true">
+            <MFXLegacyTableView fx:id="transactionsTable" layoutX="8.0" layoutY="41.0" prefHeight="372.0" prefWidth="532.0" style="-fx-font-size: 14; -fx-border-color: #fff; -fx-alignment: center; -fx-font-family: roboto;" tableMenuButtonVisible="true">
                <columns>
                   <TableColumn fx:id="transactionIdColumn" prefWidth="155.33331298828125" style="-fx-alignment: center; -fx-font-size: 14px;" text="TRANSACTION NO." />
                   <TableColumn fx:id="transactionTypeColumn" prefWidth="186.6666259765625" style="-fx-alignment: center; -fx-font-size: 14px;" text="TRANSACTION TYPE" />

@@ -279,13 +279,13 @@ public class PreviewCustomerDetails implements Initializable {
 
          //parse the value and table data as key value pairs
          Map<String, String> tableContent = new HashMap<>();
-         tableContent.put("MOBILE NUMBER", contactMobileNumber);
-         tableContent.put("ACCOUNT NUMBER", applicantAccountNumber);
-         tableContent.put("REGISTRATION OFFICER", getFullName());
-         tableContent.put("ACCOUNT TYPE", applicantAccountType);
          tableContent.put("FULL NAME", applicantFullName);
+         tableContent.put("MOBILE NUMBER", contactMobileNumber);
+         tableContent.put("ACCOUNT TYPE", applicantAccountType);
+         tableContent.put("ACCOUNT NUMBER", applicantAccountNumber);
          tableContent.put("INITIAL DEPOSIT", applicantDepositAmount.toString());
          tableContent.put("EMAIL ADDRESS", applicantEmail);
+         tableContent.put("REGISTRATION OFFICER", getFullName());
 
          //populate table
          for(Map.Entry<String, String> items : tableContent.entrySet()) {

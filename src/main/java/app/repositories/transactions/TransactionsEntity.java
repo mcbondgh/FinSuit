@@ -48,9 +48,9 @@ public class TransactionsEntity {
         this.transaction_type = transaction_type;
         this.total_amount = total_amount;
         this.localTime = localTime;
+        labelFormatter();
     }
     private void labelFormatter() {
-        formattedDate = transaction_date.toLocalDateTime().format(formatter);
         transactionStatus.setText(transaction_type);
         switch(transaction_type) {
             case "CASH DEPOSIT" ->
@@ -68,6 +68,7 @@ public class TransactionsEntity {
 
     private void formatVariables() {
         localTime = transaction_date.toLocalDateTime().toLocalTime();
+        formattedDate = transaction_date.toLocalDateTime().format(formatter);
     }
 
     public LocalTime getLocalTime() {

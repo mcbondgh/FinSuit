@@ -114,7 +114,6 @@ public class DepositController extends TransactionModel implements Initializable
         depositorNameField.clear();
         accountNumberHolder.setText("--------------");
         depositorIdField.clear();
-
     }
 
 

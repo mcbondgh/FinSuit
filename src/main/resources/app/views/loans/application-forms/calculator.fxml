@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="636.0" prefWidth="1133.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanCalculator">
+<AnchorPane prefHeight="636.0" prefWidth="1133.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanCalculatorController">
    <children>
       <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="636.0" prefWidth="1143.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 5px;">
          <children>
@@ -36,15 +36,19 @@
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
                   </MFXFilterComboBox>
-                  <ComboBox fx:id="supervisorSelector" layoutX="867.0" layoutY="8.0" prefHeight="36.0" prefWidth="249.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12px; -fx-font-family: poppins;" />
-                  <Label layoutX="731.0" layoutY="12.0" prefHeight="29.0" prefWidth="144.0" text="Assign A Supervisor *" textFill="WHITE" wrapText="true">
+                  <Label layoutX="867.0" layoutY="12.0" prefHeight="29.0" prefWidth="85.0" text="Employee Id:" textFill="WHITE" visible="false" wrapText="true">
                      <font>
                         <Font name="Poppins SemiBold" size="12.0" />
                      </font>
                   </Label>
+                  <Label fx:id="supervisorLabel" layoutX="949.0" layoutY="16.0" prefHeight="20.0" prefWidth="157.0" text="LOAN CALCULATOR" textFill="#fff200" visible="false">
+                     <font>
+                        <Font name="Roboto Black" size="16.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
-            <Pane layoutX="14.0" layoutY="64.0" prefHeight="566.0" prefWidth="335.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+            <Pane fx:id="qualificationPane" disable="true" layoutX="14.0" layoutY="64.0" prefHeight="566.0" prefWidth="335.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
                <children>
                   <Label alignment="CENTER" layoutX="22.0" layoutY="8.0" prefHeight="32.0" prefWidth="293.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="QUALIFICATION CHECKER" textFill="WHITE">
                      <font>
@@ -155,7 +159,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="calculatorPane" layoutX="359.0" layoutY="62.0" prefHeight="566.0" prefWidth="774.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+            <Pane fx:id="calculatorPane" disable="true" layoutX="359.0" layoutY="62.0" prefHeight="566.0" prefWidth="774.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
                <children>
                   <Pane layoutX="15.0" layoutY="520.0" prefHeight="39.0" prefWidth="326.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                      <children>

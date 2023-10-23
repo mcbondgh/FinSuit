@@ -1,6 +1,9 @@
 package app.repositories.loans;
 
+import app.models.MainModel;
+import app.repositories.users.UsersData;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
 import java.time.LocalDate;
@@ -11,6 +14,7 @@ import java.util.Date;
 public class LoansTableEntity {
     private int no;
     private String fullName;
+    private String username;
     private String loanNo;
     private Date applicationDate;
     private String formattedDate;
@@ -20,10 +24,11 @@ public class LoansTableEntity {
     private String loanType;
     private MFXButton viewButton = new MFXButton("View");
     private MFXButton editButton = new MFXButton("Edit");
+    private ComboBox<String> supervisorSelector = new ComboBox<>();
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
-    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String status, String loanType) {
+    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String username, String status, String loanType) {
         this.no = no;
         this.fullName = fullName;
         this.loanNo = loanNo;
@@ -31,10 +36,23 @@ public class LoansTableEntity {
         this.requestedAmount = requestedAmount;
         this.status = status;
         this.loanType = loanType;
+        this.username = username;
         this.formattedDate = formatter.format(LocalDate.parse(applicationDate.toString()));
         statusLabel = new Label("Unspecified");
         buttonStyling();
         badgeStyling();
+    }
+
+    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, String loanType) {
+        this.no = no;
+        this.fullName = fullName;
+        this.loanNo = loanNo;
+        this.applicationDate = applicationDate;
+        this.status = status;
+        this.loanType = loanType;
+        this.formattedDate = formatter.format(LocalDate.parse(applicationDate.toString()));
+        statusLabel = new Label("Unspecified");
+        comboBoxStyling();
 
     }
 
@@ -45,6 +63,17 @@ public class LoansTableEntity {
         editButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
                 "-fx-border-color:#eee; -fx-text-fill: #2b2929; -fx-background-color:#fff; -fx-font-family poppins; " +
                 "-fx-font-size: 11px; -fx-font-weight:bold");
+    }
+
+    private void comboBoxStyling() {
+        MainModel MODEL = new MainModel();
+        for (UsersData data : MODEL.fetchAssignedUsersOnly()) {
+           if (data.getRole().equals("Loan Officer")) {
+               supervisorSelector.getItems().add(data.getUsername());
+           }
+        }
+        supervisorSelector.setStyle("-fx-background-color:#eee; -fx-background-radius:5px; " +
+                "-fx-pref-width:200; -fx-font-size:13px; -fx-padding:4px; -fx-margin-top:3px; -fx-font-family:poppins; -fx-pref-height:25px; -fx-text-fill:black;");
     }
 
     private void badgeStyling() {
@@ -88,6 +117,14 @@ public class LoansTableEntity {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getLoanNo() {
@@ -144,5 +181,13 @@ public class LoansTableEntity {
 
     public void setEditButton(MFXButton editButton) {
         this.editButton = editButton;
+    }
+
+    public ComboBox<String> getSupervisorSelector() {
+        return supervisorSelector;
+    }
+
+    public void setSupervisorSelector(ComboBox<String> supervisorSelector) {
+        this.supervisorSelector = supervisorSelector;
     }
 }//end of class...

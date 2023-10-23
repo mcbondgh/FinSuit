@@ -180,8 +180,34 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
+    protected ObservableList<LoansTableEntity> getLoansUnderProcessingStage (int user_id) {
+        ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
+                    "requested_amount, application_status FROM loans AS ln\n" +
+                    "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing' AND user_id = ? OR user_id = 1);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, user_id);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                int no = resultSet.getInt("loan_id");
+                String fullname = resultSet.getString("fullname");
+                String loanNo = resultSet.getString("loan_no");
+                String loanType = resultSet.getString("loan_type");
+                Date date = resultSet.getDate("application_date");
+                double amount = resultSet.getDouble("requested_amount");
+                String status = resultSet.getString("application_status");
+                String username = resultSet.getString("username");
+                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore) {}
+        return data;
+    }
 
-    protected ObservableList<LoansTableEntity> getLoansUnderProcessingOnly(int user_id) {
+    protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage (int user_id) {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
@@ -199,17 +225,38 @@ public class LoansModel extends MainModel {
                 Date date = resultSet.getDate("application_date");
                 double amount = resultSet.getDouble("requested_amount");
                 String status = resultSet.getString("application_status");
-                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, status, loanType));
+                String username = resultSet.getString("username");
+                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType));
             }
             resultSet.close();
             getConnection().close();
         }catch (SQLException ignore) {}
         return data;
     }
-
+    protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage() {
+        ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT loan_id, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, DATE(ln.date_created) AS application_date, \n" +
+                    "loan_type FROM loans AS ln JOIN customer_data AS cd ON ln.customer_id = cd.customer_id WHERE(application_status = 'application'); ";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                int id = resultSet.getInt("loan_id");
+                String name = resultSet.getString("fullname");
+                String loanNo = resultSet.getString("loan_no");
+                Date date = resultSet.getDate("application_date");
+                String loanType = resultSet.getString("loan_type");
+                data.add(new LoansTableEntity(id, name, loanNo, date, loanType));
+            }
+            statement.close();
+            resultSet.close();
+            getConnection().close();
+        }catch (Exception ignore){}
+        return data;
+    }
     protected int countRequestedLoans() {
         try {
-            String query = "SELECT COUNT(loan_id) as count FROM loans WHERE(application_status = 'processing');";
+            String query = "SELECT COUNT(loan_id) as count FROM loans WHERE(application_status = 'application');";
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
@@ -254,6 +301,33 @@ public class LoansModel extends MainModel {
 
         return data;
     }
+    public int countAssignedLoans() {
+        try {
+            String query = "SELECT COUNT(loan_id) as count FROM loans WHERE(application_status = 'processing');";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        }catch (SQLException ignore){}
+        return 0;
+    }
 
+    //THIS METHOD WHEN INVOKED SHALL UPDATE THE loans table BASED ON THE ARGUMENTS PARSED TO IT.
+    //THIS SHALL CHANGE THE LOAN STATUS OF THE loans TABLE from application to processing...
+    protected  int updateLoanApplicationStatus(String employeeId, String loanNo, int userId) {
+        int flag = 0;
+        try {
+            String query = "UPDATE loans SET application_status = 'processing', date_modified = DEFAULT, updated_by = ?, employee_id = ? WHERE(loan_no = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, employeeId);
+            preparedStatement.setString(3, loanNo);
+            flag = preparedStatement.executeUpdate();
+            commitTransaction();
+            getConnection().close();
+        }catch (Exception e){rollBack();}
+        return flag;
+    }
 
 }//end of class...

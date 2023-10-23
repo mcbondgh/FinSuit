@@ -7,7 +7,6 @@ import app.models.loans.LoansModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.loans.LoansTableEntity;
 import app.repositories.loans.ScheduleEntity;
-import app.repositories.users.UsersData;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -23,7 +22,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class LoanCalculator extends LoansModel implements Initializable {
+public class LoanCalculatorController extends LoansModel implements Initializable {
     UserNotification NOTIFY = new UserNotification();
     UserAlerts ALERTS;
 
@@ -40,7 +39,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
     @FXML private Label displayMonthlyInstallmentAmount, displayStartDate, displayEndDate, displayLoanStatus;
     @FXML private TextField loanAmountField;
     @FXML private ComboBox<Integer> loanPeriodSelector, interestRateSelector, processingRateSelector;
-    @FXML private ComboBox<String> supervisorSelector;
+    @FXML private Label supervisorLabel;
     @FXML private DatePicker datePicker;
     @FXML private TextArea loanReasonField;
     @FXML private Hyperlink exportLink;
@@ -49,10 +48,9 @@ public class LoanCalculator extends LoansModel implements Initializable {
     @FXML private TableColumn<ScheduleEntity, Integer> noColumn;
     @FXML private TableColumn<ScheduleEntity, Double> principalColumn, interestColumn, installmentColumn, balanceColumn;
     @FXML private TableColumn<ScheduleEntity, LocalDate> paymentDateColumn;
-    @FXML private Pane calculatorPane;
+    @FXML private Pane calculatorPane, qualificationPane;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
     int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
-
 
 
     /*******************************************************************************************************************
@@ -64,6 +62,7 @@ public class LoanCalculator extends LoansModel implements Initializable {
     boolean isStartDateEmpty() {return datePicker.getValue() == null;}
     boolean isReasonFieldEmpty() {return loanReasonField.getText().isEmpty();}
     boolean isQualificationAmountEmpty() {return finalAmountField.getText().isEmpty();}
+    boolean isApplicationNoSelectorEmpty() {return applicationNumberSelector.getValue() == null;}
 
 
 
@@ -125,13 +124,10 @@ public class LoanCalculator extends LoansModel implements Initializable {
     }
 
     private void setComboBoxVariables() {
-        for (UsersData users : fetchAssignedUsersOnly() ) {
-            supervisorSelector.getItems().add(users.getUsername());
-        }
-
-        for (LoansTableEntity items : getLoansUnderProcessingOnly(loggedInUserId)) {
-            if (items.getStatusLabel().getText().equals("Processing")) {
-                applicationNumberSelector.getItems().add(items.getLoanNo());
+        for (LoansTableEntity item : getLoansUnderProcessingStage(loggedInUserId)) {
+            String status = item.getStatusLabel().getText();
+            if (status.equals("Processing")) {
+                applicationNumberSelector.getItems().add(item.getLoanNo());
             }
         }
     }
@@ -267,17 +263,20 @@ public class LoanCalculator extends LoansModel implements Initializable {
     }//end of input event block
 
     @FXML void getApplicantInformation() {
+        calculatorPane.setDisable(isApplicationNoSelectorEmpty());
+        qualificationPane.setDisable(isApplicationNoSelectorEmpty());
         String loanNo = applicationNumberSelector.getValue();
-        for (LoansTableEntity data : getLoansUnderProcessingOnly(loggedInUserId)) {
+        for (LoansTableEntity data : getLoansUnderProcessingStage(loggedInUserId)) {
             if (Objects.equals(loanNo, data.getLoanNo())) {
                 applicantFullnameLabel.setText(data.getFullName());
                 loanTypeLabel.setText(data.getLoanType());
                 applicationDateLabel.setText(data.getFormattedDate());
                 loanAmountField.setText(data.getRequestedAmount().toString());
+                displayLoanAmount.setText(data.getRequestedAmount().toString());
             }
         }
     }
-    public @FXML void generateScheduleButtonClicked() {
+    @FXML public void generateScheduleButtonClicked() {
 
     }
     @FXML void saveButtonClicked() {

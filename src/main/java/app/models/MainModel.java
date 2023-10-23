@@ -239,7 +239,7 @@ public class MainModel extends DbConnection {
     protected int getTotalLoanRequests() {
         int result = 0;
         try {
-            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'processing');";
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'application');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {result = resultSet.getInt(1);}
@@ -346,7 +346,6 @@ public class MainModel extends DbConnection {
             }catch (SQLException e){e.printStackTrace();}
         return roles;
     }
-
     public ArrayList<CustomersDataRepository> fetchCustomersData() {
         ArrayList<CustomersDataRepository> data = new ArrayList<>();
         try {
@@ -463,7 +462,7 @@ public class MainModel extends DbConnection {
                     "is_active FROM users AS u\n" +
                     "JOIN roles AS r \n" +
                     "ON  u.role_id = r.role_id\n" +
-                    "WHERE( is_deleted = 0);";
+                    "WHERE( is_active = 1 OR is_deleted = 0);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -525,7 +524,6 @@ public class MainModel extends DbConnection {
         }
         return flag;
     };
-
     public ArrayList<TemplatesRepository> fetchMessageTemplates() {
         ArrayList<TemplatesRepository> data = new ArrayList<>();
         try {
@@ -545,7 +543,6 @@ public class MainModel extends DbConnection {
 
         return data;
     }
-
     public ObservableList<String> getMessageOperations() {
         ObservableList<String> data = FXCollections.observableArrayList();
         try  {
@@ -561,7 +558,6 @@ public class MainModel extends DbConnection {
         }catch (SQLException ignore) {}
         return data;
     }
-
     public ObservableList<TransactionsEntity> fetchTransactionLogs(int limitValue) {
         ObservableList<TransactionsEntity> data = FXCollections.observableArrayList();
         try {
@@ -601,7 +597,6 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {}
         return data;
     }
-
     public ObservableList<TransactionsEntity> getTodayTransactionLogs() {
         ObservableList<TransactionsEntity> data = FXCollections.observableArrayList();
         try {
@@ -616,7 +611,7 @@ public class MainModel extends DbConnection {
                 LocalTime localTime = resultSet.getTime("time").toLocalTime();
                 data.add(new TransactionsEntity(transactionId, transactionType, amount, localTime));
             }
-        }catch (Exception igored){}
+        }catch (Exception e){e.printStackTrace();}
         return data;
     }
 

@@ -164,13 +164,14 @@ CREATE TABLE IF NOT EXISTS loans(
     requested_amount DOUBLE(10,2) DEFAULT 0.00 NOT NULL,
     disbursed_amount DECIMAL(10,2) DEFAULT 0.00,
     total_payment DECIMAL(10,2) DEFAULT 0.00,
-    application_status VARCHAR(20) DEFAULT 'application' COMMENT 'processing |pending_disbursment | disbursed | paid | rejected',
+    application_status VARCHAR(20) DEFAULT 'application' COMMENT 'processing | pending_disbursment | disburesed | paid | rejected',
     loan_status VARCHAR(20) DEFAULT 'active' COMMENT 'active | closed',
     is_drafted BOOLEAN DEFAULT 0 ,
     profile_picture BLOB,
     date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_by INT,
+    employee_id VARCHAR(20),
     updated_by INT,
     approved_by INT
 );
@@ -227,9 +228,9 @@ CREATE TABLE IF NOT EXISTS message_templates(
 );
 
 CREATE TABLE IF NOT EXISTS message_operations(
-	id INT,
+	id INT PRIMARY KEY AUTO_INCREMENT,
     template_id INT,
-    operation VARCHAR(20) PRIMARY KEY
+    operation_type VARCHAR(50)
 );
 
 

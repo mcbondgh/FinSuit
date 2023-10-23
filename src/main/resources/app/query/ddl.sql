@@ -122,9 +122,11 @@ SELECT account_Number FROM customer_account_data ORDER BY account_number DESC LI
 SELECT MAX(account_number) AS result FROM customer_account_data;
 
 SELECT loan_id, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, 
-requested_amount, application_status FROM loans AS ln
+application_status FROM loans AS ln
 JOIN customer_data AS cd ON 
-ln.customer_id = cd.customer_id;
+ln.customer_id = cd.customer_id
+JOIN users AS u On ln.created_by = u.user_id
+WHERE(application_status = 'application');
 
 SELECT firstname, lastname, othername, gender, dob, mobile_number, other_number, email, 
 		digital_address, residential_address, key_landmark, marital_status, id_type, id_number,
@@ -164,12 +166,25 @@ ORDER BY transaction_id DESC LIMIT 100;
 SELECT COUNT(*) count FROM transaction_logs WHERE DATE(transaction_date) = CURRENT_DATE();
 select DATE(transaction_date) as date FROM transaction_logs WHERE DATE(transaction_date) = current_date();
 
-
+SELECT transaction_id, transaction_type, (cash_amount + ecash_amount) AS amount, 
+TIME(transaction_date) AS `time` FROM transaction_logs WHERE DATE(transaction_date) = current_date();
 
 ALTER TABLE customer_account_data
 DROP FOREIGN KEY customer_account_data_ibfk_1;
 
-SET foreign_key_checks = 0;
+
+-- 22 / 10 / 2023
+ALTER TABLE loans CHANGE COLUMN assigned_officer_id employee_id VARCHAR(20);
+-- UPDATE loans SET application_status = 'processing', date_modified = DEFAULT, updated_by = ?, employee_id = ? WHERE(loan_no = ?); 
+
+SELECT * FROM message_templates AS mt
+JOIN message_operations AS mo 
+ON mt.message_id = mo.template_id;
+
+
+
+
+-- SET foreign_key_checks = 0;
 
 
 

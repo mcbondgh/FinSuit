@@ -3,6 +3,7 @@ package app.controllers.loans;
 import app.controllers.homepage.AppController;
 import app.models.loans.LoansModel;
 import app.repositories.loans.LoansTableEntity;
+import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -38,8 +40,10 @@ public class LoansController extends LoansModel implements Initializable {
     public static String pageTitlePlaceHolder;
     @FXML private BorderPane borderPane;
     @FXML private HBox hBox;
+    @FXML private AnchorPane anchorPane;
     @FXML
     private MFXButton addNewLoanButton, payLoanButton, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton,viewLoansButton;
+   @FXML private MFXButton generateScheduleButton;
     @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
     @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
     @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
@@ -88,22 +92,21 @@ public class LoansController extends LoansModel implements Initializable {
         loanTypeColumn.setCellValueFactory(new PropertyValueFactory<>("loanType"));
         viewColumn.setCellValueFactory(new PropertyValueFactory<>("viewButton"));
         editColumn.setCellValueFactory(new PropertyValueFactory<>("editButton"));
-        loanApplicantsTable.setItems(getLoansUnderProcessingOnly(loggedInUserId));
-
-
+        loanApplicantsTable.setItems(getLoansUnderApplicationStage(loggedInUserId));
     }
 
     private void showRequestedLoanCount() {
         int counter = countRequestedLoans();
-        Label label = new Label(String.valueOf(counter));
-        label.setStyle("-fx-background-color:#e600000; -fx-background-radius:50%; -fx-text-fill:#fff; -fx-padding:5px;");
-        loanRequestsButton.setText("Loan Requests " + label);
+        loanRequestsButton.setText("Loan Requests (" + counter +")");
+        int counter1 = countAssignedLoans();
+        generateScheduleButton.setText("Generate Schedule (" + counter1 +")");
+
     }
 
     public void searchCustomerMethod(KeyEvent event) {
         try {
             loanApplicantsTable.getItems().clear();
-            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderProcessingOnly(loggedInUserId), p -> true);
+            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderApplicationStage(loggedInUserId), p -> true);
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredList.setPredicate(customersTableData -> {
                     if (newValue.isEmpty() || newValue.isBlank()) {
@@ -142,12 +145,7 @@ public class LoansController extends LoansModel implements Initializable {
                 //Handle Click event for the view-button
                 item.getViewButton().setOnAction(action -> {
                     if (!item.getViewButton().isDisabled()) {
-                        try {
-                            ScheduleController.setSelectedLoanValue(loanNumber);
-                            AppStages.loanScheduleStage();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+
                     }
                 });
                 //Handles click event for the edit-button
@@ -158,10 +156,11 @@ public class LoansController extends LoansModel implements Initializable {
         }
     }
     @FXML
-    private void setLoanRequestsButtonClicked() {
+    public void setLoanRequestsButtonClicked() {
         try {
-            AppStages.loanCalculatorStage().show();
-            loanRequestsButton.setDisable(AppStages.loanCalculatorStage().isShowing());
+            borderPane.getChildren().remove(0);
+            String fxmlFile = "views/loans/loan-supervisor-assignment-view.fxml";
+            SpecialMethods.FlipView(borderPane, fxmlFile );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -178,11 +177,13 @@ public class LoansController extends LoansModel implements Initializable {
             }
         });
     }
-
     @FXML void loadTableOnAction() {
+        borderPane.setCenter(anchorPane);
         populateTable();
     }
-
+    @FXML void ScheduleButtonClicked() throws IOException {
+        AppStages.loanCalculatorStage().show();
+    }
 
 
 }//end of class
