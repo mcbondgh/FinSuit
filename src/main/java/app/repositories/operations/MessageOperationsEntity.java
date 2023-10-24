@@ -11,15 +11,11 @@ public class MessageOperationsEntity {
     private Timestamp date_modified;
     private int modified_by;
 
-    public MessageOperationsEntity(int id, int template_id, String operation_type, int message_id, String title, String message, Timestamp date_modified, int modified_by) {
+    public MessageOperationsEntity(int id, String operation_type,  String title, String message) {
         this.id = id;
-        this.template_id = template_id;
         this.operation_type = operation_type;
-        this.message_id = message_id;
         this.title = title;
         this.message = message;
-        this.date_modified = date_modified;
-        this.modified_by = modified_by;
     }
 
     public int getMessage_id() {

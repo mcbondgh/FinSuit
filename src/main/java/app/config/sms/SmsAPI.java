@@ -46,7 +46,6 @@ public class SmsAPI {
         }
         return balance;
     }
-
     public String sendSms(String mobileNumber, String messageBody) throws IOException {
         for(SmsAPIEntity item : MODEL_OBJECT.getSmsApi()) {
             api = item.getKey();

@@ -7,6 +7,7 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
+import app.repositories.operations.MessageOperationsEntity;
 import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
 import app.repositories.transactions.TransactionsEntity;
@@ -125,7 +126,7 @@ public class MainModel extends DbConnection {
     protected ArrayList<Object> getCustomerFullNameByAccountNumber(String accountNumber) {
         ArrayList<Object> data = new ArrayList<>();
         try {
-            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_number, account_balance, cd.customer_id AS accountNo FROM customer_data AS cd\n" +
+            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_number, mobile_number, email, account_balance, cd.customer_id AS accountNo FROM customer_data AS cd\n" +
                     "JOIN customer_account_data AS cad ON \n" +
                     "cd.customer_id = cad.customer_id\n" +
                     "WHERE(cad.account_number = ? OR mobile_number = ?);";
@@ -139,6 +140,8 @@ public class MainModel extends DbConnection {
                 data.add(resultSet.getInt("accountNo"));//1
                 data.add(resultSet.getDouble("account_balance"));//2
                 data.add(resultSet.getString("account_number"));//3
+                data.add(resultSet.getString("mobile_number"));//4
+                data.add(resultSet.getString("email"));//5
             }
             preparedStatement.close();
             resultSet.close();
@@ -550,7 +553,7 @@ public class MainModel extends DbConnection {
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
             while(resultSet.next()) {
-                data.add(resultSet.getString("operation"));
+                data.add(resultSet.getString("operation_type"));
             }
             statement.close();
             resultSet.close();
@@ -614,6 +617,27 @@ public class MainModel extends DbConnection {
         }catch (Exception e){e.printStackTrace();}
         return data;
     }
+
+    public ArrayList<MessageOperationsEntity> getMessageWithOperations() {
+        ArrayList<MessageOperationsEntity> data = new ArrayList<>();
+        try {
+            String query = "SELECT id, title, message, operation_type FROM message_templates AS mt\n" +
+                    "JOIN message_operations AS mo \n" +
+                    "ON mt.message_id = mo.template_id;";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String message = resultSet.getString("message");
+                String operation = resultSet.getString("operation_type");
+                data.add(new MessageOperationsEntity(id,operation, title, message));
+            }
+        }catch (SQLException ignore){}
+
+        return data;
+    }
+
 
 
 

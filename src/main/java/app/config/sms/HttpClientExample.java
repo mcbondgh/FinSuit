@@ -21,10 +21,10 @@ public class HttpClientExample {
         Gson gson = new Gson();
         try (Response response = client.newCall(request).execute()) {
             String responseBody = Objects.requireNonNull(response.body()).string();
-            Map<String, Object> map = gson.fromJson(responseBody, new TypeToken<Map<String, Object>>(){}.getType());
+            Map<String, Object> map = gson.fromJson(responseBody, new TypeToken<Map<String, Object>>() {
+            }.getType());
 //            System.out.println(responseBody);
             String value = map.get("userId").toString();
-
 
 
             Timer timer = new Timer();
@@ -32,17 +32,19 @@ public class HttpClientExample {
             TimerTask timerTask = new TimerTask() {
                 final int size = numbers.length;
                 int count = 0;
+
                 @Override
                 public void run() {
                     if (count != size) {
                         System.out.println(numbers[count]);
                         count++;
-                }else {
+                    } else {
                         timer.cancel();
                     }
-            }
+                }
             };
 
-            timer.scheduleAtFixedRate(timerTask, 1000, 1500);
+            timer.scheduleAtFixedRate(timerTask, 0, 1500);
         }
+    }
 }

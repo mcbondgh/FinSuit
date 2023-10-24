@@ -7,9 +7,10 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class ErrorLogger {
+    private static Logger logger = Logger.getLogger("error-logs");
+
     public static void LogError() throws IOException {
-        Logger logger = Logger.getLogger("error-logs");
-        String filePath = "src/main/resources/app/logs/error-logs.txt";
+        String filePath = "src/main/resources/app/logs/error_logs.txt";
         FileHandler fileHandler = new FileHandler(filePath);
 
         SimpleFormatter formatter = new SimpleFormatter();
