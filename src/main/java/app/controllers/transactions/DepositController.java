@@ -4,14 +4,17 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
-import app.controllers.messages.MessageTemplates;
+import app.controllers.messages.GenerateMessageForOperation;
 import app.documents.DocumentGenerator;
+import app.enums.MessageStatus;
 import app.enums.PaymentMethods;
 import app.enums.TransactionTypes;
+import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.documents.ReceiptsEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -40,7 +43,11 @@ public class DepositController extends TransactionModel implements Initializable
     TransactionsEntity transactions = new TransactionsEntity();
     CustomerAccountsDataRepository accountsDataRepository = new CustomerAccountsDataRepository();
     SmsAPI SMS_GATEWAY = new SmsAPI();
-    MessageTemplates MESSAGE_OBJECT = new MessageTemplates();
+    GenerateMessageForOperation MESSAGE_TEMPLATES = new GenerateMessageForOperation();
+    MessagesModel MESSAGE_MODEL = new MessagesModel();
+    MessageLogsEntity logsEntity = new MessageLogsEntity();
+
+
 
     //-----------------------------------------------------------------------------------------------------------------
 
@@ -93,7 +100,6 @@ public class DepositController extends TransactionModel implements Initializable
         populateFields();
         TRANSACTION_ID = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
     }
-
     private void populateFields() {
 
         setCurrentUserPlaceholder(AppController.activeUserPlaceHolder);
@@ -109,7 +115,6 @@ public class DepositController extends TransactionModel implements Initializable
         SpecialMethods.setPaymentMethods(paymentSelector);
         SpecialMethods.setPaymentGateways(gatewaySelector);
     }
-
     void clearFields() {
         accountNumberField.setValue(null);
         accountHolderName.setText("FIN-SUIT GHANA");
@@ -123,7 +128,6 @@ public class DepositController extends TransactionModel implements Initializable
         accountNumberHolder.setText("--------------");
         depositorIdField.clear();
     }
-
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATION
@@ -191,8 +195,9 @@ public class DepositController extends TransactionModel implements Initializable
     }
 
     @FXML void saveButtonClicked() {
+        saveButton.setDisable(true);
         try{
-            int userId = getUserIdByName(getCurrentUserPlaceholder());
+            int loggedInUserId = getUserIdByName(getCurrentUserPlaceholder());
             String clientName = accountHolderName.getText();
             String accountNumber = accountNumberHolder.getText();
             String paymentMethod = PaymentMethods.convertPayMethod(paymentSelector.getValue());
@@ -209,9 +214,7 @@ public class DepositController extends TransactionModel implements Initializable
             DocumentGenerator documentGenerator = new DocumentGenerator();
             ReceiptsEntity receiptsEntity = new ReceiptsEntity();
             String work_id = getEmployeeIdByUsername(getCurrentUserPlaceholder());
-
-            String pdfName = clientName + "-" + LocalDate.now() + ".pdf";
-            String directoryPath = documentGenerator.generateFolder(pdfName);
+            String pdfName = TRANSACTION_ID + " " + LocalDate.now() + ".pdf";
 
             String cashierName = getEmployeeFullNameByWorkId(work_id);
             String transactionDate = LocalDateTime.now().format(formatter);
@@ -228,7 +231,7 @@ public class DepositController extends TransactionModel implements Initializable
             double newAccountBalance = totalAmount + currentBalance;
             accountsDataRepository.setAccount_balance(newAccountBalance);
             accountsDataRepository.setPrevious_balance(currentBalance);
-            accountsDataRepository.setModified_by(userId);
+            accountsDataRepository.setModified_by(loggedInUserId);
             accountsDataRepository.setAccount_number(accountNumber);
 
             //SET VALUES FOR transactionEntity to insert into the transaction_logs table...
@@ -242,7 +245,7 @@ public class DepositController extends TransactionModel implements Initializable
             transactions.setEcash_id(eCashId);
             transactions.setTransaction_made_by(depositorName);
             transactions.setNationalIdNumber(depositorIdNumber);
-            transactions.setUserId(userId);
+            transactions.setUserId(loggedInUserId);
 
             //SET VALUES FOR receiptEntity to create receipt file..
             receiptsEntity.setCustomerName(clientName);
@@ -261,12 +264,19 @@ public class DepositController extends TransactionModel implements Initializable
                     "please confirm your action to save transaction else CANCEL to abort.");
             if(ALERTS.confirmationAlert()) {
                 if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
-                    documentGenerator.generateDepositReceipt(directoryPath, receiptsEntity);
+                    documentGenerator.generateDepositReceipt(pdfName, receiptsEntity);
                     NOTIFY.successNotification("TRANSACTION SUCCESSFUL", "Customer account number " + accountNumber + " has been credited with a deposit of Ghc" + totalAmount);
 
-                    String message = MESSAGE_OBJECT.cashDepositMessage(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
+                    String message = MESSAGE_TEMPLATES.cashDepositMessage(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
                     String status = SMS_GATEWAY.sendSms(MOBILE_NUMBER, message);
-                    System.out.println(status);
+                    String messageStatus = MessageStatus.getMessageStatusResult(status).toString();
+                    logsEntity.setRecipient(MOBILE_NUMBER);
+                    logsEntity.setStatus(messageStatus);
+                    logsEntity.setTitle("Cash Deposit");
+                    logsEntity.setMessage(message);
+                    logsEntity.setSent_by(loggedInUserId);
+                    MESSAGE_MODEL.logNotificationMessages(logsEntity);
+
                     clearFields();
                 }
             }

@@ -1,4 +1,5 @@
 package app.config.sms;
+import app.enums.MessageStatus;
 import app.repositories.SmsAPIEntity;
 import app.models.MainModel;
 import com.google.gson.Gson;
@@ -67,17 +68,21 @@ public class SmsAPI {
                 .url(sendSmsUrl + api + "&to=" + mobileNumber + "&from="+senderId + "&sms=" + messageBody) .build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            status = response.body().string();
+            String responseBody = Objects.requireNonNull((response.body()).string());
+            Map<String, Object> map = gson.fromJson(responseBody, new TypeToken<Map<String, Object>>() {
+            }.getType());
+            status = map.get("code").toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            status = MessageStatus.NO_INTERNET.name();
+            throw new RuntimeException("Network failed, there seem to be no internet...");
         }
         return status;
     }
-    public static void main(String[] args) throws IOException {
-        SmsAPI api1 = new SmsAPI();
-        System.out.println(api1.getSmsBalance());
-//        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
-    }
+//    public static void main(String[] args) throws IOException {
+//        SmsAPI api1 = new SmsAPI();
+//        System.out.println(api1.getSmsBalance());
+////        System.out.println(api1.sendSms("0246453922", "this was sent from the terminal"));
+//    }
 
 
 

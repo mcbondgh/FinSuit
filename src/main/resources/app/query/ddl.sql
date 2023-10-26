@@ -177,7 +177,7 @@ DROP FOREIGN KEY customer_account_data_ibfk_1;
 ALTER TABLE loans CHANGE COLUMN assigned_officer_id employee_id VARCHAR(20);
 -- UPDATE loans SET application_status = 'processing', date_modified = DEFAULT, updated_by = ?, employee_id = ? WHERE(loan_no = ?); 
 
-SELECT * FROM message_templates AS mt
+SELECT id, title, message, operation_type FROM message_templates AS mt
 JOIN message_operations AS mo 
 ON mt.message_id = mo.template_id;
 

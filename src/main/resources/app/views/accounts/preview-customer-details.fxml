@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.PreviewCustomerDetails">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.PreviewCustomerDetails">
    <children>
       <SplitPane dividerPositions="0.1684100418410042" layoutX="264.0" layoutY="59.0" orientation="VERTICAL" prefHeight="640.0" prefWidth="758.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -39,7 +39,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="857.0" style="-fx-background-color: #fff;">
                <children>
-                  <MFXScrollPane layoutX="160.0" layoutY="49.0" prefHeight="527.0" prefWidth="866.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-9.0" AnchorPane.topAnchor="0.0">
+                  <MFXScrollPane layoutX="160.0" layoutY="49.0" prefHeight="494.0" prefWidth="857.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <padding>
                         <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
@@ -49,8 +49,8 @@
                               <GridPane fx:id="gripView" alignment="CENTER" layoutX="38.0" layoutY="45.0" prefHeight="408.0" prefWidth="761.0">
                                 <columnConstraints>
                                     <ColumnConstraints halignment="LEFT" maxWidth="267.6666564941406" minWidth="10.0" prefWidth="131.66664632161456" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="281.33335367838544" />
-                                    <ColumnConstraints halignment="LEFT" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="128.33329264322913" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="242.33331298828125" />
+                                    <ColumnConstraints halignment="LEFT" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="154.33335367838538" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="245.3333740234375" />
                                 </columnConstraints>
                                 <rowConstraints>
@@ -331,8 +331,8 @@
                               <GridPane fx:id="gridView2" alignment="CENTER" layoutX="38.0" layoutY="516.0" prefHeight="290.0" prefWidth="761.0">
                                  <columnConstraints>
                                     <ColumnConstraints halignment="LEFT" maxWidth="267.6666564941406" minWidth="10.0" prefWidth="128.33333333333334" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="294.33331298828125" />
-                                    <ColumnConstraints halignment="LEFT" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="123.99995930989587" />
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="256.66666666666663" />
+                                    <ColumnConstraints halignment="LEFT" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="146.0" />
                                     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0000305175781" minWidth="10.0" prefWidth="246.3333740234375" />
                                  </columnConstraints>
                                  <rowConstraints>

@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 public class MessageLogsEntity {
 
     private int log_id;
-    private String mobileNumber;
+    private String recipient;
     private String title;
     private String message;
     private String status;
@@ -15,9 +15,10 @@ public class MessageLogsEntity {
     private Timestamp sent_date;
     private int sent_by;
 
-    public MessageLogsEntity(int log_id, String mobileNumber, String title, String message, String status, Label statusLabe, Timestamp sent_date, int sent_by) {
+    public MessageLogsEntity(){}
+    public MessageLogsEntity(int log_id, String recipient, String title, String message, String status, Label statusLabe, Timestamp sent_date, int sent_by) {
         this.log_id = log_id;
-        this.mobileNumber = mobileNumber;
+        this.recipient = recipient;
         this.title = title;
         this.message = message;
         this.status = status;
@@ -35,12 +36,12 @@ public class MessageLogsEntity {
         this.log_id = log_id;
     }
 
-    public String getMobileNumber() {
-        return mobileNumber;
+    public String getRecipient() {
+        return recipient;
     }
 
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
     }
 
     public String getTitle() {

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Objects;
@@ -28,23 +29,29 @@ public class HttpClientExample {
 
 
             Timer timer = new Timer();
-            String[] numbers = {"1", "4", "43", "33", "2"};
-            TimerTask timerTask = new TimerTask() {
-                final int size = numbers.length;
-                int count = 0;
-
-                @Override
-                public void run() {
-                    if (count != size) {
-                        System.out.println(numbers[count]);
-                        count++;
-                    } else {
-                        timer.cancel();
-                    }
-                }
-            };
+            TimerTask timerTask = getTimerTask(timer);
 
             timer.scheduleAtFixedRate(timerTask, 0, 1500);
         }
+    }
+
+    @NotNull
+    private static TimerTask getTimerTask(Timer timer) {
+        String[] numbers = {"1", "4", "43", "33", "2"};
+        TimerTask timerTask = new TimerTask() {
+            final int size = numbers.length;
+            int count = 0;
+
+            @Override
+            public void run() {
+                if (count != size) {
+                    System.out.println(numbers[count]);
+                    count++;
+                } else {
+                    timer.cancel();
+                }
+            }
+        };
+        return timerTask;
     }
 }

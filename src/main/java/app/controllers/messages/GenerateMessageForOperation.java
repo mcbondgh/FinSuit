@@ -5,11 +5,11 @@ import app.models.MainModel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class MessageTemplates  {
+public class GenerateMessageForOperation {
     MainModel DAO = new MainModel();
 
     private final StringBuilder stringBuilder = new StringBuilder();
-    private final String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss a"));
+    private final String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a"));
 
     public String cashDepositMessage(String clientName, String amount, String accountNo, String depositor, String transactionNo, double balance) {
                 DAO.getMessageWithOperations().forEach(item -> {
@@ -28,9 +28,9 @@ public class MessageTemplates  {
 
         return "";
     }
-    public static void main(String[] args) {
-        MessageTemplates temp = new MessageTemplates();
-    }
+//    public static void main(String[] args) {
+//        GenerateMessageForOperation temp = new GenerateMessageForOperation();
+//    }
 
 
 }//end of class...

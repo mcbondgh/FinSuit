@@ -19,12 +19,13 @@ public enum MessageStatus {
     INVALID_PHONE_NUMBER,
     INSUFFICIENT_BALANCE,
     INVALID_SENDER_ID,
+    NO_INTERNET,
     SPAM_WORDS;
 
-    public Enum<MessageStatus> getMessageStatusResult(String status) {
+    public static Enum<MessageStatus> getMessageStatusResult(String status) {
         Enum<MessageStatus> result = null;
         switch (status) {
-            case "Ok" -> result = OK;
+            case "ok" -> result = OK;
             case "100" -> result = BAD_REQUEST;
             case "101" -> result = WRONG_ACTION;
             case "102" -> result = AUTHENTICATION_FAILED;
@@ -32,6 +33,7 @@ public enum MessageStatus {
             case "105" -> result = INSUFFICIENT_BALANCE;
             case "106" -> result = INVALID_SENDER_ID;
             case "111" -> result =  SPAM_WORDS;
+            default -> result = NO_INTERNET;
         }
         return result;
     }
