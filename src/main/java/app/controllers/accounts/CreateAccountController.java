@@ -2,17 +2,22 @@ package app.controllers.accounts;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
+import app.controllers.messages.GenerateMessageForOperation;
+import app.enums.MessageStatus;
+import app.errorLogger.ErrorLogger;
 import app.models.accounts.CustomerAccountModel;
+import app.models.message.MessagesModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
+import app.repositories.operations.MessageLogsEntity;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import com.jfoenix.controls.JFXToggleButton;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -33,8 +38,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class CreateAccountController extends CustomerAccountModel implements Initializable {
 
@@ -44,6 +47,12 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
 
     CustomersDocumentRepository documentRepository  = new CustomersDocumentRepository();
     CustomerAccountsDataRepository balanceDataModel = new CustomerAccountsDataRepository();
+    GenerateMessageForOperation GENERATE_MESSAGE_OBJECT = new GenerateMessageForOperation();
+    SmsAPI SMS_OBJECT = new SmsAPI();
+    ErrorLogger errorLogger = new ErrorLogger();
+    MessagesModel MESSAGE_MODEL_OBJECT = new MessagesModel();
+    MessageLogsEntity logsEntity = new MessageLogsEntity();
+
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -108,6 +117,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
     boolean isSaveButtonEnabled() {return saveButton.isDisabled();}
     boolean isAttachFileButtonChecked(){return attachFileButton.isSelected();}
     boolean isFileNameFiledEmpty(){return fileNameField.getText().isEmpty();}
+    boolean isNotificationButtonChecked() {return sendNotificationButton.isSelected();}
     boolean isPreviewButtonClicked() {return previewFileButton.isPressed();}
 
 
@@ -183,15 +193,15 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
         relationshipSelector.setValue(null);
     }
 
-    void sendMailAndSMSNotification() {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Task task = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                return null;
-            }
-        };
-    }
+//    void sendMailAndSMSNotification() {
+//        ExecutorService executorService = Executors.newSingleThreadExecutor();
+//        executorService.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+//    }
 
     private byte[] getFileStream(String filePath) {
         byte[] bytes = new byte[0];
@@ -289,7 +299,6 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
             for (int var = 0; var <= accountTypes.size(); var ++) {
                 if (accountTypes.get(var).equals(accountValue) && idNumbers.get(var).equals(idValue)) {
                     ALERTS = new UserAlerts("EXISTING CUSTOMER ID", "Sorry anther customer is registered with this ID Number associated to a '" + accountValue.toUpperCase() + "' at the moment" ,"Duplicate registration not allowed. Either choose a different account type or provide a unique Id Number for selected account type.");
-
                     ALERTS.warningAlert();
                     customerIdNumberField.clear();
                     return;
@@ -424,7 +433,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
             Double depositAmount = initialDepositSelector.getValue();
             String comments = commentsField.getText();
 
-            String fullname = fullNameField.getText();
+            String c_fullname = fullNameField.getText();
             LocalDate c_dob = c_DobSelector.getValue();
             String c_mobileNumber = c_numberField.getText();
             String c_gender = c_genderSelector.getValue();
@@ -459,7 +468,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                 customersDataRepository.setId_number(idNumber);
                 customersDataRepository.setEducational_background(qualification);
                 customersDataRepository.setAdditional_comment(comments);
-                customersDataRepository.setContact_person_fullname(fullname);
+                customersDataRepository.setContact_person_fullname(c_fullname);
                 customersDataRepository.setContact_person_dob(Date.valueOf(c_dob));//23
                 customersDataRepository.setContact_person_number(c_mobileNumber);//24
                 customersDataRepository.setContact_person_gender(c_gender);//25
@@ -499,7 +508,25 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
 
                    saveDocument(documentRepository);
                 }
-                System.out.println(flag);
+
+                //SEND SMS NOTIFICATION TO CLIENT UPON SAVE BUTTON CLICKED. THIS METHOD WILL EXECUTE ONLY IF THE NOTIFICATION
+                // BUTTON ON THE CLIENT SIDE IS SELECTED/CHECKED.
+                if(isNotificationButtonChecked()) {
+                    String clientName = lastname.concat(" ").concat(otherName).concat(" " ).concat(firstname);
+                  String messageBody = GENERATE_MESSAGE_OBJECT.accountOpeningMessage(clientName, accountType, accountNumber);
+                  try {
+                      System.out.println(messageBody);
+                      String response = SMS_OBJECT.sendSms(mobileNumber, messageBody);
+                      String status = MessageStatus.getMessageStatusResult(response).toString();
+                      logsEntity.setRecipient(mobileNumber);
+                      logsEntity.setTitle("Account Opening");
+                      logsEntity.setStatus(status);
+                      logsEntity.setMessage(messageBody);
+                      logsEntity.setSent_by(currentUserId);
+                      MESSAGE_MODEL_OBJECT.logNotificationMessages(logsEntity);
+                  }catch (Exception e) {errorLogger.log(e.getLocalizedMessage());}
+                }
+
                 if (flag == 2) {
                     NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");
                     resetFields();

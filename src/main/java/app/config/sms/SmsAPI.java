@@ -1,15 +1,16 @@
 package app.config.sms;
-import app.enums.MessageStatus;
-import app.repositories.SmsAPIEntity;
+
 import app.models.MainModel;
+import app.repositories.SmsAPIEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import okhttp3.*;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class SmsAPI {
@@ -73,7 +74,6 @@ public class SmsAPI {
             }.getType());
             status = map.get("code").toString();
         } catch (IOException e) {
-            status = MessageStatus.NO_INTERNET.name();
             throw new RuntimeException("Network failed, there seem to be no internet...");
         }
         return status;

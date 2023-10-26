@@ -379,7 +379,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <JFXToggleButton fx:id="sendNotificationButton" blendMode="MULTIPLY" disable="true" graphicTextGap="1.0" layoutX="644.0" layoutY="1323.0" lineSpacing="1.0" maxHeight="-Infinity" prefHeight="41.0" prefWidth="205.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px;" text="Send Notification To Client" textAlignment="CENTER" toggleColor="#008f6a" toggleLineColor="#5fe657" unToggleColor="RED" unToggleLineColor="#ffb4b4" wrapText="true">
+            <JFXToggleButton fx:id="sendNotificationButton" blendMode="MULTIPLY" graphicTextGap="1.0" layoutX="644.0" layoutY="1323.0" lineSpacing="1.0" maxHeight="-Infinity" prefHeight="41.0" prefWidth="205.0" selected="true" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px;" text="Send Notification To Client" textAlignment="CENTER" toggleColor="#008f6a" toggleLineColor="#5fe657" unToggleColor="RED" unToggleLineColor="#ffb4b4" wrapText="true">
                <font>
                   <Font name="Poppins Medium" size="10.0" />
                </font>

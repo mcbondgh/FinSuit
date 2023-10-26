@@ -4,7 +4,6 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.controllers.homepage.AppController;
-import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import app.repositories.BusinessInfoEntity;
@@ -121,7 +120,7 @@ public class SettingsController extends SettingModel implements Initializable{
     }
 
     void uploadLogo() throws IOException {
-        ErrorLogger.LogError();
+
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose File");
