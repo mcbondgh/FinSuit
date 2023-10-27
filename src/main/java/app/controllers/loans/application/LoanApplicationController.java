@@ -2,7 +2,10 @@ package app.controllers.loans.application;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
+import app.controllers.messages.MessageBuilders;
+import app.errorLogger.ErrorLogger;
 import app.models.loans.LoansModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
@@ -14,10 +17,7 @@ import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -78,8 +78,9 @@ public class LoanApplicationController extends LoansModel implements Initializab
     @FXML private MFXScrollPane scrollPane;
     @FXML private DatePicker dobPicker, employmentDatePicker;
     @FXML private Pane personalInformationPane;
+    @FXML private TextArea loanPurposeField;
     private File imageFile = null;
-    final long standardImageSize = (300 * 1024);
+    final long STANDARD_IMAGE_SIZE = (300 * 1024);
 
     //Default constructor
     public LoanApplicationController() throws IOException {}
@@ -90,7 +91,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
      ********************************************************************************************************************/
 
     boolean checkImageSize(long imageSize) {
-        return imageSize > standardImageSize;
+        return imageSize > STANDARD_IMAGE_SIZE;
     }
     boolean isFirstNameEmpty() {return firstNameField.getText().isBlank();}
     boolean isLastNameEmpty() {return lastNameField.getText().isEmpty();}
@@ -144,6 +145,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     boolean isGrossSalaryEmpty() {return applicantGrossSalaryField.getText().isEmpty();}
     boolean isNetSalaryEmpty() {return applicantNetSalaryField.getText().isEmpty();}
     boolean isTotalDeductionEmpty() {return applicantTotalDeductionField.getText().isEmpty();}
+    boolean isPurposeFieldEmpty() {return loanPurposeField.getText().isEmpty();}
 
 
     /*******************************************************************************************************************
@@ -174,7 +176,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
         populateFields();
 
     }
-
      private void resetFields() {
          loanNumberLabel.setText(SpecialMethods.generateLoanNumber(getTotalLoanCount() + 1));
          loanTypeSelector.setValue(null);
@@ -226,6 +227,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
          guranterPlaceOfWorkField.clear();
          guranterWorkAddressField.clear();
          guranterNetSalaryField.clear();
+         loanPurposeField.clear();
     }
 
     private InputStream getImageStream() {
@@ -235,7 +237,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
         }catch (FileNotFoundException ignore){}
        return imageStream;
     }
-
     private void populateFields() {
 
     }
@@ -316,13 +317,10 @@ public class LoanApplicationController extends LoansModel implements Initializab
                     || isGuarantorNameEmpty() || isGuarantorNumberEmpty() || isGuarantorAddressEmpty() || isGuarantorDigitalAddressEmpty() || isGuarantorRelationshipEmpty()
                     || isGuarantorIdNumberEmpty() || isGuarantorIdTypeEmpty() || isGuarantorRelationshipEmpty() || isGuarantorRelationshipEmpty() || isGuarantorOccupationEmpty()
                     || isGuarantorPlaceOfWorkEmpty() || isGuarantorInstitutionAddressEmpty() || isNetSalaryEmpty() || isContactPersonAddressEmpty() || isContactPersonResidentialAddressEmpty() || isContactPersonRelationshipEmpty()
-                    || isContactGenderEmpty() || isGuarantorGenderEmpty()
+                    || isContactGenderEmpty() || isGuarantorGenderEmpty() || isPurposeFieldEmpty()
             );
         });
     }//end of input validation method...
-
-
-
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
@@ -349,7 +347,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
             imageFile = fileChooser.showOpenDialog(uploadImageButton.getScene().getWindow());
             Image image = new Image(imageFile.getPath());
             long imageSize = imageFile.length();
-
             //CHECK IF THE IMAGE SIZE IS GREATER THAN THE ACTUAL PERMITTED SIZE ie 300kb.
             if (checkImageSize(imageSize)) {
                 NOTIFY.informationNotification("FILE TOO LARGE", "Selected file size should be less or equal to 300kb");
@@ -425,7 +422,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
         String idType = idTypeSelector.getValue();
         String idNumber = idNumberField.getText();
         String maritalStatus = maritalStatusSelector.getValue();
-
+        String selectedImage = imageFile.getName();
         String companyName = companyNameField.getText();
         String companyContact = companyNumberField.getText();
         String staffId = staffIdField.getText();
@@ -459,6 +456,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
         String guarantorInstitutionAdd = guranterWorkAddressField.getText();
         double guarantorNetSalary = Double.parseDouble(guranterNetSalaryField.getText());
         int age = LocalDate.now().getYear() - dobPicker.getValue().getYear();
+        String loanPurpose = loanPurposeField.getText();
 
         ALERT = new UserAlerts("LOAN APPLICATION", "You have initiated a loan request for '" + firstName.toUpperCase() +" " + lastName.toUpperCase() +"', do you wish to apply now?", "please confirm your decision to apply else CANCEL to abort.");
         if (ALERT.confirmationAlert()) {
@@ -491,6 +489,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             customerRepository.setCreated_by(currentUserId);
 
             applicationEntity.setLoan_no(loanNumber);
+            applicationEntity.setProfile_picture(selectedImage);
             applicationEntity.setCompany_name(companyName);
             applicationEntity.setCompany_mobile_number(companyContact);
             applicationEntity.setCompany_address(companyAddress);
@@ -515,7 +514,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             applicationEntity.setNet_salary(guarantorNetSalary);
 
             int flag = applyForLoan(applicationEntity, customerRepository);
-            flag += createLoan( totalCustomersCount(), loanNumber, loanType, loanAmount, currentUserId);
+            flag += createLoan( totalCustomersCount(), loanNumber, loanType, loanAmount, loanPurpose, currentUserId);
 
             //CREATE ACCOUNT FOR LOAN CLIENT
             accountRepository.setCustomer_id(totalCustomersCount());
@@ -523,6 +522,14 @@ public class LoanApplicationController extends LoansModel implements Initializab
             accountRepository.setAccount_type("Savings Account");
             accountRepository.setModified_by(currentUserId);
             flag += createAccountBalance(accountRepository);
+
+            String message = new MessageBuilders().loanApplicationMessageBuilder(contactFullName, loanNumber,loanType, loanAmount);
+            try {
+                String responseValue = new SmsAPI().sendSms(mobileNumber, message);
+
+            }catch (Exception e) {
+                new ErrorLogger().log(e.getLocalizedMessage());
+            }
 
             if (flag >= 2) {
                 NOTIFY.successNotification("LOAN REQUEST SUCCESSFUL", "Perfect, loan request successfully placed, your loan request has been queued for review.");

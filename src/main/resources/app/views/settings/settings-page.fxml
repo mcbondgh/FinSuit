@@ -233,42 +233,36 @@
                               </ImageView>
                            </children>
                         </Pane>
-                        <Pane fx:id="apiPane1" layoutX="906.0" layoutY="22.0" prefHeight="125.0" prefWidth="261.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 8px; -fx-border-radius: 8px;">
+                        <Pane fx:id="apiPane1" layoutX="901.0" layoutY="22.0" prefHeight="137.0" prefWidth="322.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 8px; -fx-border-radius: 8px;">
                            <children>
-                              <Label layoutX="42.0" layoutY="14.0" text="SET LOAN PERCENTAGE(%)" textFill="#626161">
+                              <Label layoutX="22.0" layoutY="14.0" text="SET LOAN PERCENTAGE(%)" textFill="#626161">
                                  <font>
-                                    <Font name="System Bold" size="13.0" />
+                                    <Font name="Roboto Bold" size="10.0" />
                                  </font>
                               </Label>
-                              <Separator layoutY="41.0" prefHeight="3.0" prefWidth="261.0" />
-                              <TextField fx:id="loanPercentageField" layoutX="31.0" layoutY="52.0" prefHeight="40.0" prefWidth="202.0" promptText="eg 50" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="loanPercentageField" layoutX="22.0" layoutY="36.0" prefHeight="40.0" prefWidth="113.0" promptText="eg 50" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label fx:id="percentageIndicator" layoutX="50.0" layoutY="95.0" prefHeight="30.0" prefWidth="175.0" text="50 % of the  Bacis Salary" textAlignment="CENTER" textFill="#2b3e86" wrapText="true">
+                              <Label fx:id="percentageIndicator" layoutX="24.0" layoutY="83.0" prefHeight="20.0" prefWidth="123.0" text="50 % of the  Bacis Salary" textAlignment="CENTER" textFill="#2b3e86" wrapText="true">
                                  <font>
-                                    <Font name="Poppins Bold" size="13.0" />
+                                    <Font name="Roboto Bold" size="10.0" />
                                  </font>
                               </Label>
-                           </children>
-                        </Pane>
-                        <Pane fx:id="apiPane11" layoutX="906.0" layoutY="163.0" prefHeight="125.0" prefWidth="261.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 8px; -fx-border-radius: 8px;">
-                           <children>
-                              <Label layoutX="33.0" layoutY="14.0" text="SET WITHDRAWAL RATE(%)" textFill="#626161">
+                              <Label layoutX="183.0" layoutY="14.0" text="LOAN PENALTY RATE(%)" textFill="#626161">
                                  <font>
-                                    <Font name="System Bold" size="13.0" />
+                                    <Font name="Roboto Bold" size="10.0" />
                                  </font>
                               </Label>
-                              <Separator layoutY="41.0" prefHeight="3.0" prefWidth="261.0" />
-                              <TextField fx:id="withdrawalRateField" layoutX="24.0" layoutY="50.0" prefHeight="40.0" prefWidth="202.0" promptText="eg 50" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                              <TextField fx:id="withdrawalRateField" layoutX="183.0" layoutY="36.0" prefHeight="40.0" prefWidth="117.0" promptText="eg 50" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </TextField>
-                              <Label fx:id="taxIndicator" layoutX="50.0" layoutY="92.0" prefHeight="30.0" prefWidth="177.0" text="50 % of the  Bacis Salary" textAlignment="CENTER" textFill="#2b3e86" wrapText="true">
+                              <Label fx:id="taxIndicator" layoutX="184.0" layoutY="78.0" prefHeight="30.0" prefWidth="116.0" text="1% of the  Bacis Salary" textAlignment="CENTER" textFill="#2b3e86" wrapText="true">
                                  <font>
-                                    <Font name="Poppins Bold" size="13.0" />
+                                    <Font name="Roboto Bold" size="10.0" />
                                  </font>
                               </Label>
                            </children>
@@ -303,9 +297,9 @@
                                           <Font name="Poppins Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="11.0" layoutY="27.0" prefHeight="52.0" prefWidth="315.0" text="[NAME], [AMOUNT], [PAYMENT METHOD], [BALANCE], [DATE], [ACCOUNT TYPE], [ACCOUNT NO], [LOAN NO]" textAlignment="JUSTIFY" wrapText="true">
+                                    <Label layoutX="11.0" layoutY="29.0" lineSpacing="5.0" prefHeight="47.0" prefWidth="315.0" text="[NAME], [AMOUNT], [PAYMENT METHOD], [BALANCE], [DATE], [ACCOUNT TYPE], [ACCOUNT NO], [LOAN NO], [LOAN TYPE]" textAlignment="JUSTIFY" textFill="#707070" wrapText="true">
                                        <font>
-                                          <Font name="Poppins Regular" size="12.0" />
+                                          <Font name="Roboto Bold" size="11.0" />
                                        </font>
                                     </Label>
                                  </children>

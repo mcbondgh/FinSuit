@@ -1,6 +1,7 @@
 package app.controllers.login;
 
 import app.controllers.homepage.AppController;
+import app.documents.ImageReadWriter;
 import app.repositories.BusinessInfoEntity;
 import app.models.MainModel;
 import app.stages.AppStages;
@@ -53,7 +54,7 @@ public class LoginController extends MainModel implements Initializable{
     void setLoginParameters() {
         for (BusinessInfoEntity items : getBusinessInfo()) {
             appNameHeader.setText(items.getName());
-            String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + items.getLogo();
+            String getImageSource = ImageReadWriter.displayImage(items.getLogo());
             logoViewer.setImage(new Image(getImageSource));
         }
     }

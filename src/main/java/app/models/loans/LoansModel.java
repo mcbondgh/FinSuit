@@ -87,11 +87,11 @@ public class LoansModel extends MainModel {
                     "contact_person_id_number, contact_person_place_of_work, institution_address, relationship_to_applicant," +
                     "created_by) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            String query2 = "INSERT INTO loan_applicant_details(loan_no, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, " +
+            String query2 = "INSERT INTO loan_applicant_details(loan_no, profile_picture, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, " +
                     "basic_salary, gross_salary, total_deduction, net_salary, guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address," +
                     "guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation," +
                     "guarantor_place_of_work, guarantor_institution_address, guarantor_income) " +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
             preparedStatement = getConnection().prepareStatement(query);
@@ -127,28 +127,29 @@ public class LoansModel extends MainModel {
 
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setString(1, applicationEntity.getLoan_no());
-            preparedStatement.setString(2, applicationEntity.getCompany_name());
-            preparedStatement.setString(3, applicationEntity.getCompany_mobile_number());
-            preparedStatement.setString(4, applicationEntity.getCompany_address());
-            preparedStatement.setString(5, applicationEntity.getStaff_id());
-            preparedStatement.setString(6, applicationEntity.getOccupation());
-            preparedStatement.setDate(7, Date.valueOf(applicationEntity.getEmployment_date()));
-            preparedStatement.setDouble(8, applicationEntity.getBasic_salary());
-            preparedStatement.setDouble(9, applicationEntity.getGross_salary());
-            preparedStatement.setDouble(10, applicationEntity.getTotal_deduction());
-            preparedStatement.setDouble(11, applicationEntity.getNet_salary());
-            preparedStatement.setString(12, applicationEntity.getGuranter_name());
-            preparedStatement.setString(13, applicationEntity.getGender());
-            preparedStatement.setString(14, applicationEntity.getGuranter_number());
-            preparedStatement.setString(15, applicationEntity.getGuranter_digital_address());
-            preparedStatement.setString(16, applicationEntity.getGuarantor_landmark());
-            preparedStatement.setString(17, applicationEntity.getGuranter_idType());
-            preparedStatement.setString(18, applicationEntity.getGuranter_idNumber());
-            preparedStatement.setString(19, applicationEntity.getGuranter_relationship());
-            preparedStatement.setString(20, applicationEntity.getOccupation());
-            preparedStatement.setString(21, applicationEntity.getGurater_place_of_work());
-            preparedStatement.setString(22, applicationEntity.getGuranter_institution_address());
-            preparedStatement.setDouble(23, applicationEntity.getNet_salary());
+            preparedStatement.setString(2, applicationEntity.getProfile_picture());
+            preparedStatement.setString(3, applicationEntity.getCompany_name());
+            preparedStatement.setString(4, applicationEntity.getCompany_mobile_number());
+            preparedStatement.setString(5, applicationEntity.getCompany_address());
+            preparedStatement.setString(6, applicationEntity.getStaff_id());
+            preparedStatement.setString(7, applicationEntity.getOccupation());
+            preparedStatement.setDate(8, Date.valueOf(applicationEntity.getEmployment_date()));
+            preparedStatement.setDouble(9, applicationEntity.getBasic_salary());
+            preparedStatement.setDouble(10, applicationEntity.getGross_salary());
+            preparedStatement.setDouble(11, applicationEntity.getTotal_deduction());
+            preparedStatement.setDouble(12, applicationEntity.getNet_salary());
+            preparedStatement.setString(13, applicationEntity.getGuranter_name());
+            preparedStatement.setString(14, applicationEntity.getGender());
+            preparedStatement.setString(15, applicationEntity.getGuranter_number());
+            preparedStatement.setString(16, applicationEntity.getGuranter_digital_address());
+            preparedStatement.setString(17, applicationEntity.getGuarantor_landmark());
+            preparedStatement.setString(18, applicationEntity.getGuranter_idType());
+            preparedStatement.setString(19, applicationEntity.getGuranter_idNumber());
+            preparedStatement.setString(20, applicationEntity.getGuranter_relationship());
+            preparedStatement.setString(21, applicationEntity.getOccupation());
+            preparedStatement.setString(22, applicationEntity.getGurater_place_of_work());
+            preparedStatement.setString(23, applicationEntity.getGuranter_institution_address());
+            preparedStatement.setDouble(24, applicationEntity.getNet_salary());
             flag += preparedStatement.executeUpdate();
             commitTransaction();
             preparedStatement.close();
@@ -159,16 +160,17 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
-    protected int createLoan(long customerId, String loanNo, String loanType, double requestedAmount, int userId) {
+    protected int createLoan(long customerId, String loanNo, String loanType, double requestedAmount, String loanPurpose, int userId) {
         int flag = 0;
         try {
-            String query = "INSERT INTO loans(customer_id, loan_no, loan_type, is_drafted, requested_amount, created_by) VALUES(?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO loans(customer_id, loan_no, loan_type, is_drafted, requested_amount, loan_purpose, created_by) VALUES(?, ?, ?, ?, ?, ?, ?)";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setLong(1, customerId);
             preparedStatement.setString(2, loanNo);
             preparedStatement.setString(3, loanType);
             preparedStatement.setDouble(4, 0);
             preparedStatement.setDouble(5, requestedAmount);
+            preparedStatement.setString(6, loanPurpose);
             preparedStatement.setInt(6, userId);
             flag = preparedStatement.executeUpdate();
             commitTransaction();

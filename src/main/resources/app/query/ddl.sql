@@ -182,6 +182,12 @@ JOIN message_operations AS mo
 ON mt.message_id = mo.template_id;
 
 
+-- 26 /10/2023
+ALTER TABLE loans ADD COLUMN loan_purpose TEXT AFTER application_status;
+ALTER TABLE loans DROP COLUMN profile_picture;
+ALTER TABLE loan_applicant_details ADD COLUMN profile_picture VARCHAR(100) AFTER loan_no; 
+
+
 
 
 -- SET foreign_key_checks = 0;

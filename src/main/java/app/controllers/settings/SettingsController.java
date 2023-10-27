@@ -4,6 +4,7 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.controllers.homepage.AppController;
+import app.documents.ImageReadWriter;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import app.repositories.BusinessInfoEntity;
@@ -11,7 +12,6 @@ import app.repositories.SmsAPIEntity;
 import app.repositories.settings.TemplatesRepository;
 import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.utils.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -22,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import net.synedra.validatorfx.Validator;
 
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -120,7 +119,6 @@ public class SettingsController extends SettingModel implements Initializable{
     }
 
     void uploadLogo() throws IOException {
-
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Choose File");
@@ -136,19 +134,8 @@ public class SettingsController extends SettingModel implements Initializable{
     }
 
     void saveImageToDestination(){
-        String destinationFolder = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\";
         String fileName = imageName.getText();
-        Image selectedImage = logoViewer.getImage();
-        File saveToDestination = new File(destinationFolder);
-
-        if (selectedImage != null) {
-            if (!saveToDestination.exists()) {saveToDestination.mkdirs();}
-            try {
-                File filePath = new File(destinationFolder + fileName);
-                ImageIO.write(SwingFXUtils.fromFXImage(selectedImage, null), "png", filePath);
-            }catch (Exception e){e.printStackTrace();}
-        }
-
+        ImageReadWriter.saveImageToDestination(fileName, logoViewer);
     }
     void fillFields() throws IOException {
         for (BusinessInfoEntity item : MODEL_OBJECT.getBusinessInfo()) {
@@ -164,7 +151,7 @@ public class SettingsController extends SettingModel implements Initializable{
               double taxValue = item.getTaxPercentage();
               loanPercentageField.setText(String.valueOf(percentageValue));
               percentageIndicator.setText(percentageValue + "% of basic Salary" );
-              String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
+              String getImageSource = ImageReadWriter.displayImage(item.getLogo());
               logoViewer.setImage(new Image(getImageSource));
               withdrawalRateField.setText(String.valueOf(taxValue));
               taxIndicator.setText(taxValue + "% of withdrawal amount");

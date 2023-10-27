@@ -8,6 +8,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="640.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanApplicationController">
+<AnchorPane prefHeight="640.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanApplicationController">
    <children>
       <Pane layoutX="10.0" layoutY="5.0" prefHeight="640.0" prefWidth="186.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
          <children>
@@ -109,11 +110,11 @@
             <Separator layoutX="-1.0" layoutY="207.0" prefHeight="3.0" prefWidth="186.0" />
          </children>
       </Pane>
-      <VBox fx:id="vBox" alignment="CENTER" layoutX="204.0" layoutY="5.0" prefHeight="640.0" prefWidth="1093.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
+      <VBox fx:id="vBox" alignment="CENTER" layoutX="201.0" layoutY="4.0" prefHeight="640.0" prefWidth="1075.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
          <children>
-            <MFXScrollPane fx:id="scrollPane" cache="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="1090.0" style="-fx-background-radius: 8px;" thumbColor="#c32828" thumbHoverColor="#300b82" trackColor="#d70505">
+            <MFXScrollPane fx:id="scrollPane" cache="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="1083.0" style="-fx-background-radius: 8px;" thumbColor="#c32828" thumbHoverColor="#300b82" trackColor="#d70505">
                <content>
-                  <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="1257.0" prefWidth="1083.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+                  <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="1412.0" prefWidth="1081.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                      <children>
                         <Label layoutX="13.0" layoutY="11.0" text="LOAN APPLICATION">
                            <font>
@@ -593,12 +594,12 @@
                               </Label>
                            </children>
                         </Pane>
-                        <MFXButton fx:id="saveButton" disable="true" layoutX="808.0" layoutY="1200.0" onAction="#saveButtonClicked" prefHeight="32.0" prefWidth="125.0" style="-fx-background-color: #278c8f;" text="Apply For Loan" textFill="WHITE">
+                        <MFXButton fx:id="saveButton" disable="true" layoutX="803.0" layoutY="1350.0" onAction="#saveButtonClicked" prefHeight="32.0" prefWidth="117.0" style="-fx-background-color: #278c8f;" text="Apply For Loan" textFill="WHITE">
                            <font>
                               <Font name="Poppins Bold" size="12.0" />
                            </font>
                         </MFXButton>
-                        <MFXButton fx:id="resetButton" depthLevel="LEVEL0" layoutX="941.0" layoutY="1200.0" onAction="#resetButtonClicked" prefHeight="32.0" prefWidth="125.0" style="-fx-border-radius: 5px; -fx-background-color: #ddd;" text="Reset Fields" textFill="#040404">
+                        <MFXButton fx:id="resetButton" depthLevel="LEVEL0" layoutX="932.0" layoutY="1350.0" onAction="#resetButtonClicked" prefHeight="32.0" prefWidth="110.0" style="-fx-border-radius: 5px; -fx-background-color: #ddd;" text="Reset Fields" textFill="#040404">
                            <font>
                               <Font name="Poppins Regular" size="12.0" />
                            </font>
@@ -619,6 +620,16 @@
                               <Font name="Poppins Regular" size="12.0" />
                            </font>
                         </Label>
+                        <Label layoutX="33.0" layoutY="1181.0" text="Loan Purpose *">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="loanPurposeField" layoutX="26.0" layoutY="1200.0" prefHeight="119.0" prefWidth="1029.0" promptText="Type you applicant's purpose here....">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                        </TextArea>
                      </children>
                   </Pane>
                </content>

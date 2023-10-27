@@ -4,7 +4,7 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
-import app.controllers.messages.GenerateMessageForOperation;
+import app.controllers.messages.MessageBuilders;
 import app.enums.MessageStatus;
 import app.errorLogger.ErrorLogger;
 import app.models.accounts.CustomerAccountModel;
@@ -47,7 +47,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
 
     CustomersDocumentRepository documentRepository  = new CustomersDocumentRepository();
     CustomerAccountsDataRepository balanceDataModel = new CustomerAccountsDataRepository();
-    GenerateMessageForOperation GENERATE_MESSAGE_OBJECT = new GenerateMessageForOperation();
+    MessageBuilders GENERATE_MESSAGE_OBJECT = new MessageBuilders();
     SmsAPI SMS_OBJECT = new SmsAPI();
     ErrorLogger errorLogger = new ErrorLogger();
     MessagesModel MESSAGE_MODEL_OBJECT = new MessagesModel();
@@ -513,7 +513,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                 // BUTTON ON THE CLIENT SIDE IS SELECTED/CHECKED.
                 if(isNotificationButtonChecked()) {
                     String clientName = lastname.concat(" ").concat(otherName).concat(" " ).concat(firstname);
-                  String messageBody = GENERATE_MESSAGE_OBJECT.accountOpeningMessage(clientName, accountType, accountNumber);
+                  String messageBody = GENERATE_MESSAGE_OBJECT.accountOpeningMessageBuilder(clientName, accountType, accountNumber);
                   try {
                       System.out.println(messageBody);
                       String response = SMS_OBJECT.sendSms(mobileNumber, messageBody);

@@ -14,7 +14,6 @@ public class ErrorLogger {
                 fileHandler.setFormatter(formatter);
                 logger.addHandler(fileHandler);
            }catch (Exception ignored) {}
-
             }
 
             public void log(String message) {

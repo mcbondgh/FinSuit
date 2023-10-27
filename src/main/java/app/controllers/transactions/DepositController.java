@@ -4,7 +4,7 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
-import app.controllers.messages.GenerateMessageForOperation;
+import app.controllers.messages.MessageBuilders;
 import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
 import app.enums.PaymentMethods;
@@ -43,7 +43,7 @@ public class DepositController extends TransactionModel implements Initializable
     TransactionsEntity transactions = new TransactionsEntity();
     CustomerAccountsDataRepository accountsDataRepository = new CustomerAccountsDataRepository();
     SmsAPI SMS_GATEWAY = new SmsAPI();
-    GenerateMessageForOperation MESSAGE_TEMPLATES = new GenerateMessageForOperation();
+    MessageBuilders MESSAGE_TEMPLATES = new MessageBuilders();
     MessagesModel MESSAGE_MODEL = new MessagesModel();
     MessageLogsEntity logsEntity = new MessageLogsEntity();
 
@@ -267,7 +267,7 @@ public class DepositController extends TransactionModel implements Initializable
                     documentGenerator.generateDepositReceipt(pdfName, receiptsEntity);
                     NOTIFY.successNotification("TRANSACTION SUCCESSFUL", "Customer account number " + accountNumber + " has been credited with a deposit of Ghc" + totalAmount);
 
-                    String message = MESSAGE_TEMPLATES.cashDepositMessage(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
+                    String message = MESSAGE_TEMPLATES.cashDepositMessageBuilder(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
                     String status = SMS_GATEWAY.sendSms(MOBILE_NUMBER, message);
                     String messageStatus = MessageStatus.getMessageStatusResult(status).toString();
                     logsEntity.setRecipient(MOBILE_NUMBER);
