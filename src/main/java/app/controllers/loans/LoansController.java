@@ -99,8 +99,7 @@ public class LoansController extends LoansModel implements Initializable {
         int counter = countRequestedLoans();
         loanRequestsButton.setText("Loan Requests (" + counter +")");
         int counter1 = countAssignedLoans();
-        generateScheduleButton.setText("Generate Schedule (" + counter1 +")");
-
+        generateScheduleButton.setText("Unprocessed Loans (" + counter1 +")");
     }
 
     public void searchCustomerMethod(KeyEvent event) {

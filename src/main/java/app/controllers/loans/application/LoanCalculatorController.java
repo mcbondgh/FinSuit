@@ -58,6 +58,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
      ******************************************************************************************************************/
     boolean isLoanAmountEmpty() {return loanAmountField.getText().isEmpty();}
     boolean isInterestRateEmpty(){return interestRateSelector.getValue() == null;}
+    boolean isProcessingRateEmpty() {return processingRateSelector.getValue() == null;}
     boolean isLoanPeriodEmpty() {return loanPeriodSelector.getValue() == null;}
     boolean isStartDateEmpty() {return datePicker.getValue() == null;}
     boolean isReasonFieldEmpty() {return loanReasonField.getText().isEmpty();}
@@ -70,8 +71,58 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
      *********************************************** IMPLEMENTATION OF INPUT FIELDS VALIDATION
      ******************************************************************************************************************/
 
+    @FXML void calculateLoanValues() {
+        if (!isLoanAmountEmpty()) {}
+        if (!isInterestRateEmpty()) {
+            double loanAmount = Double.parseDouble(loanAmountField.getText());
+            int interest = interestRateSelector.getValue();
+            double interestAmount = (loanAmount * interest) / 100;
+            displayInterestAmount.setText(String.valueOf(decimalFormat.format(interestAmount)));
+        }
+        if (!isProcessingRateEmpty()) {
+            double loanAmount = Double.parseDouble(loanAmountField.getText());
+            int interest = processingRateSelector.getValue();
+            double interestAmount = (loanAmount * interest) / 100;
+            displayProcessingAmount.setText(String.valueOf(decimalFormat.format(interestAmount)));
+        }
 
+        if (!isLoanPeriodEmpty()) {
+            double loanAmount = Double.parseDouble(loanAmountField.getText());
+            int interest = interestRateSelector.getValue();
+            int tenure = loanPeriodSelector.getValue();
+            Object[] values = {loanAmount, interest, tenure};
+            for (Object value : values) {
+                if (!value.toString().isEmpty()) {
+                    double interestAmount = (loanAmount * interest) / 100;
+                    double totalInterestAmount =  tenure * interestAmount;
+                    double finalResult = totalInterestAmount + loanAmount;
+                    displayInterestAmount.setText(String.valueOf(decimalFormat.format(totalInterestAmount)));
+                    displayTotalLoanAmount.setText(String.valueOf(decimalFormat.format(finalResult)));
+                }
+            }
+        }
+        if (!isStartDateEmpty()) {
+            LocalDate startDate = datePicker.getValue();
+            displayStartDate.setText(String.valueOf(startDate));
+            int tenure = loanPeriodSelector.getValue();
+            LocalDate endDate = startDate.plusMonths(tenure);
+            displayEndDate.setText(String.valueOf(endDate));
 
+            double totalAmount = Double.parseDouble(displayTotalLoanAmount.getText());
+            double result = totalAmount / tenure;
+            displayMonthlyInstallmentAmount.setText(String.valueOf(decimalFormat.format(result)));
+
+            double monthlyInstallment = Double.parseDouble(displayMonthlyInstallmentAmount.getText());
+            double qualificationAmount = Double.parseDouble(finalAmountField.getText());
+            if (monthlyInstallment > qualificationAmount) {
+                displayLoanStatus.setText("NOT QUALIFIED");
+                displayLoanStatus.setStyle("-fx-background-color: #ffdfdf; -fx-text-fill:red");
+            } else {
+                displayLoanStatus.setText("QUALIFIED");
+                displayLoanStatus.setStyle("-fx-background-color: #c1ffb7; -fx-text-fill:#0b8425");
+            }
+        }
+    }
 
 
     /*******************************************************************************************************************
@@ -85,7 +136,6 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
         SpecialMethods.setInterestRate(processingRateSelector);
         setComboBoxVariables();
     }
-
     private void populateTable() {
         noColumn.setCellValueFactory(new PropertyValueFactory<>("index"));
         principalColumn.setCellValueFactory(new PropertyValueFactory<>("principal"));
@@ -95,7 +145,6 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
         balanceColumn.setCellValueFactory(new PropertyValueFactory<>("balance"));
         scheduleTable.getItems().clear();
     }
-
     private void generateScheduleSheet() {
         populateTable();
         ScheduleEntity entity;
@@ -120,16 +169,10 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             entity = new ScheduleEntity(x, formattedPrincipal, interestAmount, monthlyInstallment, maxValue, scheduleDate.plusMonths(x));
             scheduleTable.getItems().add(entity);
         }
-
     }
-
     private void setComboBoxVariables() {
-        for (LoansTableEntity item : getLoansUnderProcessingStage(loggedInUserId)) {
-            String status = item.getStatusLabel().getText();
-            if (status.equals("Processing")) {
-                applicationNumberSelector.getItems().add(item.getLoanNo());
-            }
-        }
+        String workerId = getWorkIdByUserId(loggedInUserId);
+        applicationNumberSelector.setItems(getGroupSupervisors(workerId));
     }
 
 
@@ -261,18 +304,18 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             };
         });
     }//end of input event block
-
     @FXML void getApplicantInformation() {
         calculatorPane.setDisable(isApplicationNoSelectorEmpty());
         qualificationPane.setDisable(isApplicationNoSelectorEmpty());
         String loanNo = applicationNumberSelector.getValue();
-        for (LoansTableEntity data : getLoansUnderProcessingStage(loggedInUserId)) {
+        for (LoansTableEntity data : getLoansUnderProcessingStage()) {
             if (Objects.equals(loanNo, data.getLoanNo())) {
                 applicantFullnameLabel.setText(data.getFullName());
                 loanTypeLabel.setText(data.getLoanType());
                 applicationDateLabel.setText(data.getFormattedDate());
                 loanAmountField.setText(data.getRequestedAmount().toString());
                 displayLoanAmount.setText(data.getRequestedAmount().toString());
+                loanReasonField.setText(data.getLoanPurpose());
             }
         }
     }
@@ -287,7 +330,8 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
                     "you need to reduce applicant loan amount to qualify else terminate loan process.");
             ALERTS.errorAlert();
         }else {
-            NOTIFY.successNotification("QUALIFIED", "Congratulations, applicant qualifies for loan facility.");
+
+//            NOTIFY.successNotification("QUALIFIED", "Congratulations, applicant qualifies for loan facility.");
         }
     }
 

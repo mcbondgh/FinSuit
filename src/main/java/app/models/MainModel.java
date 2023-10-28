@@ -1,6 +1,7 @@
 package app.models;
 
 import app.config.db.DbConnection;
+import app.errorLogger.ErrorLogger;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.SmsAPIEntity;
 import app.repositories.accounts.CustomerAccountsDataRepository;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainModel extends DbConnection {
+
+    ErrorLogger logger = new ErrorLogger();
     public ArrayList<BusinessInfoEntity> getBusinessInfo() {
         ArrayList<BusinessInfoEntity> data = new ArrayList<>();
         try {
@@ -94,7 +97,24 @@ public class MainModel extends DbConnection {
             if (resultSet.next()) {
                 emp_id = resultSet.getString(1);
             }
-        }catch (Exception e) {e.printStackTrace();}
+        }catch (Exception e) {
+            logger.log(e.getCause().toString());}
+        return emp_id;
+    }
+
+    public String getWorkIdByUserId(int userId) {
+        String emp_id = "";
+        try {
+            String query = "SELECT emp_id FROM users WHERE(user_id = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                emp_id = resultSet.getString(1);
+            }
+        }catch (Exception e) {
+            logger.log(e.getCause().toString());
+        }
         return emp_id;
     }
     public int getTotalEmployees() {

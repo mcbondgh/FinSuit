@@ -152,6 +152,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setDouble(24, applicationEntity.getNet_salary());
             flag += preparedStatement.executeUpdate();
             commitTransaction();
+
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e) {
@@ -171,7 +172,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setDouble(4, 0);
             preparedStatement.setDouble(5, requestedAmount);
             preparedStatement.setString(6, loanPurpose);
-            preparedStatement.setInt(6, userId);
+            preparedStatement.setInt(7, userId);
             flag = preparedStatement.executeUpdate();
             commitTransaction();
             preparedStatement.close();
@@ -182,15 +183,16 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
-    protected ObservableList<LoansTableEntity> getLoansUnderProcessingStage (int user_id) {
+    protected ObservableList<LoansTableEntity> getLoansUnderProcessingStage() {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
+            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, loan_purpose," +
+                    "DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
-                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing' AND user_id = ? OR user_id = 1);";
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing');";
             preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, user_id);
+//            preparedStatement.setString(1, user_id);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 int no = resultSet.getInt("loan_id");
@@ -201,7 +203,8 @@ public class LoansModel extends MainModel {
                 double amount = resultSet.getDouble("requested_amount");
                 String status = resultSet.getString("application_status");
                 String username = resultSet.getString("username");
-                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType));
+                String loanPurpose = resultSet.getString("loan_purpose");
+                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType, loanPurpose));
             }
             resultSet.close();
             getConnection().close();
@@ -213,7 +216,7 @@ public class LoansModel extends MainModel {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
-                    "requested_amount, application_status FROM loans AS ln\n" +
+                    "requested_amount, loan_purpose, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
                     "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'application' AND user_id = ?);";
             preparedStatement = getConnection().prepareStatement(query);
@@ -228,7 +231,8 @@ public class LoansModel extends MainModel {
                 double amount = resultSet.getDouble("requested_amount");
                 String status = resultSet.getString("application_status");
                 String username = resultSet.getString("username");
-                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType));
+                String loanPurpose = resultSet.getString("loan_purpose");
+                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType, loanPurpose));
             }
             resultSet.close();
             getConnection().close();
@@ -320,16 +324,37 @@ public class LoansModel extends MainModel {
     protected  int updateLoanApplicationStatus(String employeeId, String loanNo, int userId) {
         int flag = 0;
         try {
-            String query = "UPDATE loans SET application_status = 'processing', date_modified = DEFAULT, updated_by = ?, employee_id = ? WHERE(loan_no = ?);";
+            String query = "UPDATE loans SET application_status = 'processing', date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setInt(1, userId);
-            preparedStatement.setString(2, employeeId);
-            preparedStatement.setString(3, loanNo);
+            preparedStatement.setString(2, loanNo);
             flag = preparedStatement.executeUpdate();
+            commitTransaction();
+
+            String query2 = "INSERT INTO group_supervisors(emp_id, loan_id, added_by) VALUES(?, ?, ?);";
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setString(1, employeeId);
+            preparedStatement.setString(2, loanNo);
+            preparedStatement.setInt(3, userId);
+            flag += preparedStatement.executeUpdate();
+
             commitTransaction();
             getConnection().close();
         }catch (Exception e){rollBack();}
         return flag;
+    }
+
+    public ObservableList<String> getGroupSupervisors(String employeeId) {
+        ObservableList<String> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT loan_id FROM group_supervisors WHERE (emp_id = '"+ employeeId +"')";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            while(resultSet.next()) {
+                data.add(resultSet.getString(1));
+            }
+        }catch (SQLException ignore){}
+        return data;
     }
 
 }//end of class...

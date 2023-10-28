@@ -14,14 +14,15 @@ public class ImageReadWriter {
 
     static ErrorLogger log = new ErrorLogger();
     private static final String absolutePath = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\";
+    public static final File defaultImageName = new File("G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\images\\profile.png");
     public static void saveImageToDestination(String imageName, @NotNull ImageView uploadedImage ){
         Image selectedImage = uploadedImage.getImage();
         File destinationFolder = new File(absolutePath);
         if (selectedImage != null) {
             if (!destinationFolder.exists()) {destinationFolder.mkdirs();}
             try {
-                File filePath = new File(destinationFolder + imageName);
-                ImageIO.write(SwingFXUtils.fromFXImage(selectedImage, null), "png", filePath);
+                File filePath = new File(destinationFolder , imageName);
+                ImageIO.write(SwingFXUtils.fromFXImage(selectedImage, null), ".png", filePath);
             }catch (Exception e){
                     log.log(e.getLocalizedMessage());
             }

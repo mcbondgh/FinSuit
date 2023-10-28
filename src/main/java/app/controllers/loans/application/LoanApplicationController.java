@@ -5,11 +5,15 @@ import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
 import app.controllers.messages.MessageBuilders;
+import app.documents.ImageReadWriter;
+import app.enums.MessageStatus;
 import app.errorLogger.ErrorLogger;
 import app.models.loans.LoansModel;
+import app.models.message.MessagesModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.loans.LoanApplicationEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -43,6 +47,8 @@ public class LoanApplicationController extends LoansModel implements Initializab
     CustomersDataRepository customerRepository = new CustomersDataRepository();
     LoanApplicationEntity applicationEntity = new LoanApplicationEntity();
     CustomerAccountsDataRepository accountRepository = new CustomerAccountsDataRepository();
+    MessagesModel MESSAGE_MODEL_OBJECT = new MessagesModel();
+    MessageLogsEntity logsEntity = new MessageLogsEntity();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -173,7 +179,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
         SpecialMethods.setGenderParameters(contactPersonGenderSelector);
 
         filterIdOrAccountNo.setItems(getCustomerIdAndAccountNumbers());
-        populateFields();
 
     }
      private void resetFields() {
@@ -237,7 +242,14 @@ public class LoanApplicationController extends LoansModel implements Initializab
         }catch (FileNotFoundException ignore){}
        return imageStream;
     }
-    private void populateFields() {
+
+    private void saveUploadedImage() {
+        try {
+            String imageName = imageFile.getName();
+            ImageReadWriter.saveImageToDestination(imageName, imageView);
+        }catch (Exception e) {
+            imageFile = ImageReadWriter.defaultImageName;
+        }
 
     }
 
@@ -403,7 +415,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
     }
     @FXML private void saveButtonClicked() {
         int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
-
         String loanNumber = loanNumberLabel.getText();
         String loanType = loanTypeSelector.getValue();
         double loanAmount = Double.parseDouble(loanRequestField.getText());
@@ -422,7 +433,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
         String idType = idTypeSelector.getValue();
         String idNumber = idNumberField.getText();
         String maritalStatus = maritalStatusSelector.getValue();
-        String selectedImage = imageFile.getName();
         String companyName = companyNameField.getText();
         String companyContact = companyNumberField.getText();
         String staffId = staffIdField.getText();
@@ -460,6 +470,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
         ALERT = new UserAlerts("LOAN APPLICATION", "You have initiated a loan request for '" + firstName.toUpperCase() +" " + lastName.toUpperCase() +"', do you wish to apply now?", "please confirm your decision to apply else CANCEL to abort.");
         if (ALERT.confirmationAlert()) {
+            saveUploadedImage();
             customerRepository.setFirstname(firstName);
             customerRepository.setLastname(lastName);
             customerRepository.setOthername(otherName);
@@ -489,7 +500,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             customerRepository.setCreated_by(currentUserId);
 
             applicationEntity.setLoan_no(loanNumber);
-            applicationEntity.setProfile_picture(selectedImage);
+            applicationEntity.setProfile_picture(imageFile.getName());
             applicationEntity.setCompany_name(companyName);
             applicationEntity.setCompany_mobile_number(companyContact);
             applicationEntity.setCompany_address(companyAddress);
@@ -523,14 +534,19 @@ public class LoanApplicationController extends LoansModel implements Initializab
             accountRepository.setModified_by(currentUserId);
             flag += createAccountBalance(accountRepository);
 
-            String message = new MessageBuilders().loanApplicationMessageBuilder(contactFullName, loanNumber,loanType, loanAmount);
+            String message = new MessageBuilders().loanApplicationMessageBuilder(firstName.concat(" ").concat(lastName), loanNumber,loanType, loanAmount);
             try {
                 String responseValue = new SmsAPI().sendSms(mobileNumber, message);
-
+                String statusValue = MessageStatus.getMessageStatusResult(responseValue).toString();
+                logsEntity.setRecipient(mobileNumber);
+                logsEntity.setTitle("Loan Application");
+                logsEntity.setMessage(message);
+                logsEntity.setStatus(statusValue);
+                logsEntity.setSent_by(currentUserId);
+                new MessagesModel().logNotificationMessages(logsEntity);
             }catch (Exception e) {
                 new ErrorLogger().log(e.getLocalizedMessage());
             }
-
             if (flag >= 2) {
                 NOTIFY.successNotification("LOAN REQUEST SUCCESSFUL", "Perfect, loan request successfully placed, your loan request has been queued for review.");
                 resetFields();
@@ -552,8 +568,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
             }
         }
     }
-
-
 
 
 
