@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,145 +14,119 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1126.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ScheduleController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1192.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ScheduleController">
    <children>
-      <Label fx:id="pageLabel" layoutX="28.0" layoutY="8.0" text="Loan Schedule">
+      <Label fx:id="pageLabel" layoutX="28.0" layoutY="8.0" text="Loan Schedule" textFill="#7b0080">
          <font>
             <Font name="Roboto Black" size="16.0" />
          </font>
       </Label>
       <Separator layoutX="-2.0" layoutY="36.0" prefHeight="3.3333333333333335" prefWidth="1126.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="36.0" />
-      <Pane layoutX="129.0" layoutY="45.0" prefHeight="91.0" prefWidth="975.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" AnchorPane.bottomAnchor="514.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="45.0">
+      <AnchorPane layoutX="129.3333282470703" layoutY="45.33333206176758" AnchorPane.bottomAnchor="514.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="45.0">
          <children>
-            <GridPane alignment="CENTER" hgap="1.0" layoutX="14.0" layoutY="13.0" prefHeight="65.0" prefWidth="861.0" vgap="1.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.33331298828125" minWidth="10.0" prefWidth="103.99997965494792" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.6666768391927" minWidth="10.0" prefWidth="243.66668701171875" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="281.66668701171875" minWidth="10.0" prefWidth="107.6666259765625" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3333536783854" minWidth="10.0" prefWidth="234.00000000000006" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3333536783854" minWidth="10.0" prefWidth="65.33333333333337" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3333536783854" minWidth="10.0" prefWidth="109.66668701171875" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+            <Pane prefHeight="90.66666666666663" prefWidth="1040.6666666666667" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label fx:id="filterCustomerLabel1" text="Applicant Name" textFill="#363636">
+                  <GridPane alignment="CENTER" hgap="1.0" layoutX="14.0" layoutY="13.0" prefHeight="67.0" prefWidth="936.0" vgap="1.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.33331298828125" minWidth="10.0" prefWidth="106.66665649414062" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.6666768391927" minWidth="10.0" prefWidth="268.00001017252606" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="281.66668701171875" minWidth="10.0" prefWidth="114.3333740234375" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3333536783854" minWidth="10.0" prefWidth="198.33333333333337" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3333536783854" minWidth="10.0" prefWidth="94.66666666666663" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3333536783854" minWidth="10.0" prefWidth="143.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label fx:id="filterCustomerLabel1" text="Applicant Name" textFill="#363636">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="applicantName" text="Kofi Mensah Atsu Issah" textFill="#004480" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="filterCustomerLabel12" text="Loan Number" textFill="#363636" GridPane.columnIndex="4">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="applicantLoanNumber" text="L1000438048344" textFill="#004480" GridPane.columnIndex="5">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="filterCustomerLabel121" text="Mobile Number" textFill="#363636" GridPane.columnIndex="2">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="applicantNumber" text="000000000" textFill="#004480" GridPane.columnIndex="3">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="filterCustomerLabel1311" prefWidth="117.0" text="Loan Status" textFill="#363636" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="loanStatus" text="CLOSED" textFill="#d40d06" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="filterCustomerLabel132" text="Loan Amount" textFill="#363636" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="filterCustomerLabel1321" text="Paid" textFill="#363636" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="filterCustomerLabel13211" text="Unpaid" textFill="#363636" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="principalAmount" text="100,000.00" textFill="#004480" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="paidAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="arrearsAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Poppins Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </GridPane>
+                  <MFXButton fx:id="smsButton" layoutX="963.0" layoutY="49.0" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #FF0000;" text="Send SMS" textFill="WHITE">
                      <font>
-                        <Font name="Poppins Regular" size="12.0" />
+                        <Font name="System Bold" size="9.0" />
                      </font>
-                  </Label>
-                  <Label fx:id="applicantName" text="Kofi Mensah Atsu Issah" textFill="#004480" GridPane.columnIndex="1">
+                  </MFXButton>
+                  <MFXButton fx:id="exportButton" layoutX="963.0" layoutY="22.0" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #00a323;" text="Export Data" textFill="WHITE">
                      <font>
-                        <Font name="Poppins Bold" size="12.0" />
+                        <Font name="System Bold" size="9.0" />
                      </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel12" text="Loan Number" textFill="#363636" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="applicantLoanNumber" text="L1000438048344" textFill="#004480" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel121" text="Mobile Number" textFill="#363636" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="applicantNumber" text="000000000" textFill="#004480" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel13" text="Email Address" textFill="#363636" GridPane.columnIndex="2">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel131" text="Digital Address" textFill="#363636" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel1311" prefWidth="117.0" text="Loan Status" textFill="#363636" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="applicantEmail" text="customer@email.com" textFill="#004480" GridPane.columnIndex="3">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="applicantAddress" text="EK-0393-930323" textFill="#004480" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="loanStatus" text="Active/Closed" textFill="#0eab00" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel132" text="Principal" textFill="#363636" GridPane.columnIndex="4">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel1321" text="Paid" textFill="#363636" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="filterCustomerLabel13211" text="Arrears" textFill="#363636" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="Poppins Regular" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="principalAmount" text="100,000.00" textFill="#004480" GridPane.columnIndex="5">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="paidAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="arrearsAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="Poppins Bold" size="12.0" />
-                     </font>
-                  </Label>
+                  </MFXButton>
                </children>
-            </GridPane>
-            <MFXButton fx:id="smsButton" layoutX="902.0" layoutY="57.0" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #FF0000;" text="Send SMS" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="9.0" />
-               </font>
-            </MFXButton>
-            <MFXButton fx:id="exportButton" layoutX="902.0" layoutY="30.0" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #00a323;" text="Export Data" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="9.0" />
-               </font>
-            </MFXButton>
+            </Pane>
          </children>
-      </Pane>
-      <MFXLegacyTableView fx:id="scheduleTable" layoutX="23.0" layoutY="145.0" prefHeight="488.0" prefWidth="1080.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="145.0">
-         <columns>
-            <TableColumn prefWidth="75.0" text="No." />
-            <TableColumn prefWidth="167.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" text="MATURITY DATE" />
-            <TableColumn prefWidth="167.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" text="PAYEMNT TYPE" />
-            <TableColumn prefWidth="167.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" text="INSTALLMENT AMOUNT" />
-            <TableColumn prefWidth="167.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" text="BALANCE" />
-            <TableColumn prefWidth="167.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" text="STATUS" />
-            <TableColumn prefWidth="167.0" style="-fx-font-family: poppins; -fx-font-size: 14px;" text="DATE" />
-         </columns></MFXLegacyTableView>
+      </AnchorPane>
       <Pane layoutX="25.0" layoutY="45.0" prefHeight="91.0" prefWidth="97.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
          <children>
             <ImageView fx:id="applicantProfile" fitHeight="84.0" fitWidth="85.0" layoutX="6.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
@@ -162,5 +136,20 @@
             </ImageView>
          </children>
       </Pane>
+      <AnchorPane layoutX="22.0" layoutY="155.33333333333334" prefHeight="495.0" prefWidth="1149.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="155.0">
+         <children>
+            <TableView fixedCellSize="35.0" layoutY="47.333333333333336" prefHeight="484.0" prefWidth="1149.0" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-border-color: #eee; -fx-background-color: #fff;" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <columns>
+                  <TableColumn prefWidth="90.00002980232239" text="NO" />
+                  <TableColumn prefWidth="192.66665649414062" text="MONTHLY INSTALLMENT" />
+                  <TableColumn prefWidth="139.3333740234375" text="PRINCIPAL" />
+                  <TableColumn prefWidth="203.3333740234375" text="INTEREST AMOUNT" />
+                  <TableColumn prefWidth="145.33331298828125" text="DUE DATE" />
+                  <TableColumn prefWidth="181.3333740234375" text="PENALTY AMOUNT" />
+                  <TableColumn prefWidth="190.66656494140625" text="PAYMENT STATUS " />
+               </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

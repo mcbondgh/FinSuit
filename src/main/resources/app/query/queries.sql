@@ -171,7 +171,6 @@ CREATE TABLE IF NOT EXISTS loans(
     date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_by INT,
-    employee_id VARCHAR(20),
     updated_by INT,
     approved_by INT
 );
@@ -191,16 +190,48 @@ CREATE TABLE IF NOT EXISTS loan_applicant_details(
     total_deduction DECIMAL(10,2) DEFAULT '0.00',
     net_salary DECIMAL(10,2) DEFAULT '0.00',
     guarantor_name VARCHAR(100),
+    guarantor_gender VARCHAR(20),
     guarantor_number VARCHAR(20),
     guarantor_digital_address VARCHAR(50),
     guarantor_residential_address VARCHAR(100),
+    guarantor_landmark VARCHAR(100),
     guarantor_idType VARCHAR(20),
     guarantor_idNumber VARCHAR(20),
     guarantor_relationship VARCHAR(50),
     guarantor_occupation VARCHAR(50),
-    guarator_place_of_work VARCHAR(50),
+    guarantor_place_of_work VARCHAR(50),
     guarantor_institution_address VARCHAR(100),
     guarantor_income DECIMAL(10,2)
+);
+
+CREATE TABLE IF NOT EXISTS loan_qualification_values(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    loan_no VARCHAR(50) NOT NULL,
+    gross_salary DECIMAL(10,2) NOT NULL,
+    statutory_deduction DECIMAL(10,2) NOT NULL,
+    remaining_balance DECIMAL(10,2) NOT NULL,
+	total_deduction DECIMAL(10,2) NOT NULL,
+    amount DECIMAL(10,2) COMMENT 'This is the amount after total deduction',
+    loan_amount DECIMAL(10,2) NOT NULL,
+    interest_rate VARCHAR(5) NOT NULL COMMENT 'RATE IN PERCENTAGE (%) AND IS CALCULATED BASED ON THE REQUESTED LOAN AMOUNT',
+    loan_period VARCHAR(5) NOT NULL COMMENT 'PERIOD IN MONTHS',
+    processing_rate VARCHAR(5) NOT NULL COMMENT 'RATE IN PERCENTAGE (%) AND IS CALCULATED BASED ON THE REQUESTED LOAN AMOUNT',
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS loan_schedule(
+	schedule_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    loan_no VARCHAR(50) NOT NULL,
+    monthly_installment DECIMAL(10,2) NOT NULL,
+    principay_amount DECIMAL(10,2) NOT NULL,
+    interest_amount DECIMAL(10,2) NOT NULL,
+    payment_date DATE NOT NULL,
+    balance DECIMAL(10,2),
+    penalty_amount DECIMAL(10,2),
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    generated_by INT
 );
 
 CREATE TABLE IF NOT EXISTS transaction_logs(
@@ -228,6 +259,7 @@ CREATE TABLE IF NOT EXISTS message_templates(
     modified_by INT
 );
 
+
 CREATE TABLE IF NOT EXISTS message_operations(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     template_id INT,
@@ -252,6 +284,17 @@ CREATE TABLE IF NOT EXISTS message_logs(
     `Status` VARCHAR(10) DEFAULT 'unknown' COMMENT 'delivered | failed ',
     sent_date DATETIME DEFAULT NOW(),
     sent_by INT DEFAULT 1 
+);
+
+-- DROP TABLE access_control;
+CREATE TABLE IF NOT EXISTS access_control(
+	control_id INT PRIMARY KEY AUTO_INCREMENT,
+    module_id INT NOT NULL,
+    role_id INT NOT NULL,
+    operation VARCHAR(50),
+    is_allowed BOOLEAN DEFAULT 0 COMMENT '0 means access denied | 1 means access allowed',
+    date_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_by INT
 );
 
 

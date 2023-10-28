@@ -16,6 +16,7 @@ public class LoansTableEntity {
     private String fullName;
     private String username;
     private String loanNo;
+    private String loanPurpose;
     private Date applicationDate;
     private String formattedDate;
     private Double requestedAmount;
@@ -28,7 +29,7 @@ public class LoansTableEntity {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
-    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String username, String status, String loanType) {
+    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String username, String status, String loanType, String loanPurpose) {
         this.no = no;
         this.fullName = fullName;
         this.loanNo = loanNo;
@@ -36,6 +37,7 @@ public class LoansTableEntity {
         this.requestedAmount = requestedAmount;
         this.status = status;
         this.loanType = loanType;
+        this.loanPurpose = loanPurpose;
         this.username = username;
         this.formattedDate = formatter.format(LocalDate.parse(applicationDate.toString()));
         statusLabel = new Label("Unspecified");
@@ -121,6 +123,22 @@ public class LoansTableEntity {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getLoanPurpose() {
+        return loanPurpose;
+    }
+
+    public void setLoanPurpose(String loanPurpose) {
+        this.loanPurpose = loanPurpose;
     }
 
     public void setUsername(String username) {

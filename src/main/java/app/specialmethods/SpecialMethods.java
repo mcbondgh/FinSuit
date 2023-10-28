@@ -104,7 +104,7 @@ public class SpecialMethods {
     }
     public static void setLoanPeriod(ComboBox<Integer> comboBox) {
        int month = 120;
-       for(int x = 3; x <= month; x+=3) {
+       for(int x = 1; x <= month; x++) {
            comboBox.getItems().add(x);
        }
     }

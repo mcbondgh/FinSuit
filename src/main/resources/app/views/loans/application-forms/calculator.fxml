@@ -48,7 +48,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="qualificationPane" disable="true" layoutX="14.0" layoutY="64.0" prefHeight="566.0" prefWidth="335.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+            <Pane fx:id="qualificationPane" disable="true" layoutX="14.0" layoutY="64.0" onMouseMoved="#calculateLoanValues" prefHeight="566.0" prefWidth="335.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
                <children>
                   <Label alignment="CENTER" layoutX="22.0" layoutY="8.0" prefHeight="32.0" prefWidth="293.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="QUALIFICATION CHECKER" textFill="WHITE">
                      <font>
@@ -95,7 +95,7 @@
                         <Font name="Poppins Bold" size="9.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="finalAmountField" alignment="CENTER" layoutX="116.0" layoutY="142.0" prefHeight="38.0" prefWidth="80.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: orange; -fx-background-radius: 5px; -fx-text-fill: #fff;">
+                  <TextField fx:id="finalAmountField" alignment="CENTER" editable="false" layoutX="116.0" layoutY="142.0" prefHeight="38.0" prefWidth="80.0" promptText="0.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: orange; -fx-background-radius: 5px; -fx-text-fill: #fff;">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
@@ -163,7 +163,7 @@
                <children>
                   <Pane layoutX="15.0" layoutY="520.0" prefHeight="39.0" prefWidth="326.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                      <children>
-                        <Hyperlink fx:id="exportLink" layoutX="13.0" layoutY="9.0" text="Export">
+                        <Hyperlink fx:id="exportLink" layoutX="13.0" layoutY="9.0" onAction="#exportButtonClicked" text="Export">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -354,8 +354,8 @@
                   </GridPane>
                   <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="18.0" layoutY="236.0" prefHeight="279.0" prefWidth="739.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
                      <columns>
-                      <TableColumn fx:id="noColumn" editable="false" prefWidth="72.0" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
-                        <TableColumn fx:id="installmentColumn" prefWidth="184.66665649414062" style="-fx-alignment: center; -fx-font-size: 12px;" text="MONTHLY INSTALLMENT" />
+                      <TableColumn fx:id="noColumn" editable="false" prefWidth="53.33331298828125" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
+                        <TableColumn fx:id="installmentColumn" editable="false" prefWidth="202.66665649414062" style="-fx-alignment: center; -fx-font-size: 12px;" text="MONTHLY INSTALLMENT" />
                       <TableColumn fx:id="principalColumn" prefWidth="122.0" style="-fx-alignment: center; -fx-font-size: 12px;" text="PRINCIPAL" />
                         <TableColumn fx:id="interestColumn" prefWidth="98.0" style="-fx-alignment: center; -fx-font-size: 12px;" text="INTEREST" />
                         <TableColumn fx:id="paymentDateColumn" prefWidth="153.33331298828125" style="-fx-alignment: center; -fx-font-size: 12px;" text="PAYMENT DATE" />
