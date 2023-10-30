@@ -15,11 +15,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="636.0" prefWidth="1133.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanCalculatorController">
+<AnchorPane prefHeight="663.0" prefWidth="1143.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.LoanCalculatorController">
    <children>
       <Pane fx:id="loanApplicationPane" accessibleText="applicationForm1" prefHeight="636.0" prefWidth="1143.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 5px;">
          <children>
@@ -48,7 +49,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="qualificationPane" disable="true" layoutX="14.0" layoutY="64.0" onMouseMoved="#calculateLoanValues" prefHeight="566.0" prefWidth="335.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+            <Pane fx:id="qualificationPane" disable="true" layoutX="14.0" layoutY="64.0" onMouseMoved="#calculateLoanValues" prefHeight="588.0" prefWidth="335.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
                <children>
                   <Label alignment="CENTER" layoutX="22.0" layoutY="8.0" prefHeight="32.0" prefWidth="293.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="QUALIFICATION CHECKER" textFill="WHITE">
                      <font>
@@ -159,27 +160,8 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="calculatorPane" disable="true" layoutX="359.0" layoutY="62.0" prefHeight="566.0" prefWidth="774.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+            <Pane fx:id="calculatorPane" disable="true" layoutX="359.0" layoutY="62.0" prefHeight="588.0" prefWidth="774.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
                <children>
-                  <Pane layoutX="15.0" layoutY="520.0" prefHeight="39.0" prefWidth="326.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
-                     <children>
-                        <Hyperlink fx:id="exportLink" layoutX="13.0" layoutY="9.0" onAction="#exportButtonClicked" text="Export">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Hyperlink>
-                        <MFXButton fx:id="saveButton" disable="true" layoutX="244.0" layoutY="5.0" onAction="#saveButtonClicked" prefHeight="30.0" prefWidth="77.0" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
-                           <font>
-                              <Font name="Poppins Bold" size="10.0" />
-                           </font>
-                        </MFXButton>
-                        <MFXButton fx:id="generateScheduleButton" disable="true" layoutX="105.0" layoutY="5.0" prefHeight="30.0" prefWidth="133.0" style="-fx-background-color: #2478b2;" text="Generate Schedule" textFill="WHITE">
-                           <font>
-                              <Font name="Poppins Bold" size="10.0" />
-                           </font>
-                        </MFXButton>
-                     </children>
-                  </Pane>
                   <Label alignment="CENTER" layoutX="8.0" layoutY="8.0" prefHeight="32.0" prefWidth="739.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="SUMMARY SHEET" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
@@ -352,7 +334,7 @@
                         </Label>
                      </children>
                   </GridPane>
-                  <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="18.0" layoutY="236.0" prefHeight="279.0" prefWidth="739.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
+                  <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="18.0" layoutY="236.0" prefHeight="296.0" prefWidth="739.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
                      <columns>
                       <TableColumn fx:id="noColumn" editable="false" prefWidth="53.33331298828125" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
                         <TableColumn fx:id="installmentColumn" editable="false" prefWidth="202.66665649414062" style="-fx-alignment: center; -fx-font-size: 12px;" text="MONTHLY INSTALLMENT" />
@@ -365,6 +347,31 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
+                  <HBox alignment="CENTER" layoutX="22.0" layoutY="542.0" prefHeight="39.0" prefWidth="372.0" spacing="10.0" style="-fx-alignment: baseline; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                     <children>
+                        <Hyperlink fx:id="exportLink" disable="true" onAction="#exportButtonClicked" prefHeight="24.0" prefWidth="94.0" text="Export Table">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="50.0" />
+                           </HBox.margin>
+                        </Hyperlink>
+                        <MFXButton fx:id="generateScheduleButton" disable="true" prefHeight="30.0" prefWidth="119.0" style="-fx-background-color: #2478b2;" text="Generate Schedule" textFill="WHITE">
+                           <font>
+                              <Font name="Poppins Bold" size="10.0" />
+                           </font>
+                        </MFXButton>
+                        <MFXButton fx:id="saveButton" disable="true" onAction="#saveButtonClicked" prefHeight="30.0" prefWidth="77.0" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
+                           <font>
+                              <Font name="Poppins Bold" size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </MFXButton>
+                     </children>
+                  </HBox>
                </children>
             </Pane>
          </children>

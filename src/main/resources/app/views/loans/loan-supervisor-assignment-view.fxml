@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1196.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.AssignSupervisorController">
+   <children>
+      <Pane fx:id="pane" layoutX="149.0" layoutY="14.0" onMouseEntered="#checkTableStatus" prefHeight="517.0" prefWidth="997.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
+         <children>
+            <MFXButton fx:id="saveButton" onAction="#assignmentButtonOnAction" alignment="CENTER" disable="true" layoutX="724.0" layoutY="468.0" prefHeight="35.0" prefWidth="134.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="💾 Save Assignment" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Bold" size="12.0" />
+               </font>
+            </MFXButton>
+            <TableView fx:id="supervisorsTable" fixedCellSize="40.0" layoutX="14.0" layoutY="14.0" prefHeight="445.0" prefWidth="969.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 14px; -fx-font-weight: bold;">
+               <columns>
+                  <TableColumn fx:id="idColumn" prefWidth="46.0" style="-fx-font-size: 14; -fx-alignment: center;" text="NO." />
+                  <TableColumn fx:id="loanNumberColumn" prefWidth="174.00000762939453" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN NUMBER" />
+                  <TableColumn fx:id="nameColumn" prefWidth="208.6666259765625" style="-fx-font-size: 14; -fx-alignment: center;" text="APPLICANT NAME" />
+                  <TableColumn fx:id="statusColumn" prefWidth="154.0" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN TYPE" />
+                  <TableColumn fx:id="dateColumn" prefWidth="147.3333740234375" style="-fx-font-size: 14; -fx-alignment: center;" text="APPLICATION DATE" />
+                  <TableColumn fx:id="supervisorColumn" maxWidth="233.0" minWidth="233.0" prefWidth="233.0" style="-fx-font-size: 14; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="ASSIGN SUPERVISOR" />
+               </columns>
+            </TableView>
+            <MFXButton fx:id="clearButton"  onAction="#setClearButtonOnAction" alignment="CENTER" layoutX="862.0" layoutY="468.0" prefHeight="35.0" prefWidth="121.0" rippleColor="#ffa99c" style="-fx-background-color: #e60000;" text="❌ Clear " textFill="WHITE">
+               <font>
+                  <Font name="Roboto Bold" size="12.0" />
+               </font>
+            </MFXButton>
+         </children></Pane>
+      <Label alignment="CENTER" layoutX="8.0" layoutY="14.0" prefHeight="75.0" prefWidth="134.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="ASSIGN LOAN SUPERVISOR" textAlignment="CENTER" textFill="#570667" wrapText="true">
+         <font>
+            <Font name="Roboto Bold" size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor></Label>
+   </children>
+</AnchorPane>

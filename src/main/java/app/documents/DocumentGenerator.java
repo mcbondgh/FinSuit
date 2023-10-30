@@ -3,6 +3,7 @@ package app.documents;
 import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.documents.ReceiptsEntity;
+import app.repositories.loans.ScheduleTableValues;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -15,9 +16,13 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
+import javafx.scene.control.TableView;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 public class DocumentGenerator {
 
@@ -50,8 +55,8 @@ public class DocumentGenerator {
                 .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER);
         Paragraph addressText = new Paragraph(email.concat(" | ".concat(digitalAddress)))
                 .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER);
-        container.add(businessNameText).add(mobileNumbersText).add(addressText)
-                .setTextAlignment(TextAlignment.CENTER).setMargins(2, 0, 2, 0);
+        container.add(businessNameText).add(addressText).add(mobileNumbersText)
+                .setTextAlignment(TextAlignment.CENTER).setMargins(0, 0, 2, 0);
         return container;
     }
 
@@ -132,7 +137,6 @@ public class DocumentGenerator {
         }
         return directory;
     }
-
     public void generateNewAccountFile(String documentName, String fullName, String mobile, String accountType, String accountNumber, String initialDeposit, String email, String officerName, String digitalAddress ) {
         try {
             File newAccountsPath = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "new accounts\\");
@@ -175,6 +179,86 @@ public class DocumentGenerator {
         }catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+    public void exportScheduleSheet(String documentName, TableView<ScheduleTableValues> tableView) {
+        try {
+
+            Workbook workbook = new HSSFWorkbook();
+            Sheet sheet = workbook.createSheet(documentName);
+
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setFontName("roboto");
+
+            CellStyle sheetHeaderStyle = workbook.createCellStyle();
+            sheetHeaderStyle.setFont(font);
+            sheetHeaderStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+            sheetHeaderStyle.setBorderBottom(BorderStyle.DASHED);
+
+            //Lets create the header rows for the table cells with their various names.
+            Row headerRow = sheet.createRow(0);
+            headerRow.setRowStyle(sheetHeaderStyle);
+            headerRow.createCell(0).setCellValue("NO.");
+            headerRow.createCell(1).setCellValue("MONTHLY INSTALLMENT.");
+            headerRow.createCell(2).setCellValue("PRINCIPAL AMOUNT.");
+            headerRow.createCell(3).setCellValue("INTEREST AMOUNT.");
+            headerRow.createCell(4).setCellValue("PAYMENT DATE.");
+            headerRow.createCell(5).setCellValue("BALANCE");
+
+            //Lets iterate through the table and get the size of the table for the excel sheet.
+            int tableSize = tableView.getItems().size();
+            for (int i = 0; i < tableSize; i++) {
+                Row row = sheet.createRow(i + 1);
+                row.createCell(0).setCellValue(tableView.getItems().get(i).getIndex());
+                row.createCell(1).setCellValue(tableView.getItems().get(i).getMonthlyInstallment());
+                row.createCell(2).setCellValue(tableView.getItems().get(i).getPrincipal());
+                row.createCell(3).setCellValue(tableView.getItems().get(i).getInterestAmount());
+                row.createCell(4).setCellValue(tableView.getItems().get(i).getFormattedScheduleDate());
+                row.createCell(5).setCellValue(tableView.getItems().get(i).getBalance());
+            }
+
+            File directoryPath = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "loan schedules" + File.separator);
+            if (!directoryPath.exists()) {
+                directoryPath.mkdir();
+            }
+            File file = new File(directoryPath, documentName.concat(".xlsx"));
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void exportScheduleAsPdf(String documentName, TableView<ScheduleTableValues> tableView) {
+        try {
+            File newAccountsPath = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "loan schedules" + File.separator);
+            if (!newAccountsPath.exists()) {
+                newAccountsPath.mkdir();
+            }
+            File file = new File(newAccountsPath, documentName.concat(".pdf"));
+            PdfWriter pdfWriter = new PdfWriter(file);
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDocument, PageSize.A4);
+
+            Table table = new Table(6).useAllAvailableWidth();
+            table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN PAYMENT SCHEDULE ").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));
+            table.addCell(new Cell().add(new Paragraph("NO").setFontSize(10).setBold()));
+            table.addCell(new Cell().add(new Paragraph("MONTHLY INSTALLMENT").setBold().setFontSize(10)));
+            table.addCell(new Cell().add(new Paragraph("PRINCIPAL").setFontSize(10).setBold()));
+            table.addCell(new Cell().add(new Paragraph("INTEREST AMOUNT").setBold().setFontSize(10)));
+            table.addCell(new Cell().add(new Paragraph("PAYMENT DATE").setFontSize(10).setBold()));
+            table.addCell(new Cell().add(new Paragraph("BALANCE").setFontSize(10).setBold()));
+
+            for (ScheduleTableValues items : tableView.getItems()) {
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getIndex()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getMonthlyInstallment()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getPrincipal()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getInterestAmount()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getScheduleDate()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getBalance()))));
+            }
+            document.add(documentHeader()).add(table);
+            document.close();
+        }catch (Exception e) {e.printStackTrace();}
 
 
     }

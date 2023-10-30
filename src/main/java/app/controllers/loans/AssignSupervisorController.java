@@ -68,7 +68,8 @@ public class AssignSupervisorController extends LoansModel implements Initializa
                     String loanNo = items.getLoanNo();
                     String assignedOfficer = items.getSupervisorSelector().getValue();
                     String employeeId = getEmployeeIdByUsername(assignedOfficer);
-                    flag = updateLoanApplicationStatus(employeeId, loanNo,loggedInUserId);
+                    flag = updateLoanApplicationStatus("processing", employeeId, loggedInUserId);
+                    flag += assignGroupSupervisor(employeeId, loanNo, loggedInUserId);
                 }
             }
             return flag;

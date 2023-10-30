@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="578.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="578.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" height="586.0" layoutX="-6.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="504.0">
          <fill>
@@ -55,6 +55,16 @@
                   </Label>
                </children>
             </Pane>
+            <TextField fx:id="usernameField" layoutX="34.0" layoutY="93.0" prefHeight="40.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+               <font>
+                  <Font name="Poppins Bold" size="14.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="168.0" prefHeight="40.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
+               <font>
+                  <Font name="Poppins Regular" size="14.0" />
+               </font>
+            </PasswordField>
             <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="226.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #278c8f;" text="Login" textFill="WHITE">
                <font>
                   <Font name="Poppins Regular" size="14.0" />
@@ -76,16 +86,6 @@
                   <Font name="Roboto Black" size="23.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameField" layoutX="34.0" layoutY="93.0" prefHeight="40.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
-               <font>
-                  <Font name="Poppins Bold" size="14.0" />
-               </font>
-            </TextField>
-            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="168.0" prefHeight="40.0" prefWidth="272.0" style="-fx-background-color: #eee; -fx-background-radius: 8;">
-               <font>
-                  <Font name="Poppins Regular" size="14.0" />
-               </font>
-            </PasswordField>
             <Label layoutX="36.0" layoutY="73.0" text="Username" textFill="#5c5e60">
                <font>
                   <Font name="Roboto Medium" size="12.0" />

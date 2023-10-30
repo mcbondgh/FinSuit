@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -321,33 +322,43 @@ public class LoansModel extends MainModel {
 
     //THIS METHOD WHEN INVOKED SHALL UPDATE THE loans table BASED ON THE ARGUMENTS PARSED TO IT.
     //THIS SHALL CHANGE THE LOAN STATUS OF THE loans TABLE from application to processing...
-    protected  int updateLoanApplicationStatus(String employeeId, String loanNo, int userId) {
+    protected  int updateLoanApplicationStatus(String applicationStatus, String loanNo, int userId) {
         int flag = 0;
         try {
-            String query = "UPDATE loans SET application_status = 'processing', date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
+            String query = "UPDATE loans SET application_status = ?, date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
             preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setString(2, loanNo);
+            preparedStatement.setString(1,applicationStatus);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.setString(3, loanNo);
             flag = preparedStatement.executeUpdate();
             commitTransaction();
+            getConnection().close();
+        }catch (Exception e){
+            rollBack();}
+        return flag;
+    }
 
+    public int assignGroupSupervisor(String employeeId, String loanNo, int userId) {
+        int flag = 0;
+        try {
             String query2 = "INSERT INTO group_supervisors(emp_id, loan_id, added_by) VALUES(?, ?, ?);";
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setString(1, employeeId);
             preparedStatement.setString(2, loanNo);
             preparedStatement.setInt(3, userId);
-            flag += preparedStatement.executeUpdate();
-
+            flag = preparedStatement.executeUpdate();
             commitTransaction();
             getConnection().close();
-        }catch (Exception e){rollBack();}
+        }catch (Exception e){e.printStackTrace();}
         return flag;
     }
-
     public ObservableList<String> getGroupSupervisors(String employeeId) {
         ObservableList<String> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT loan_id FROM group_supervisors WHERE (emp_id = '"+ employeeId +"')";
+            String query = "SELECT gs.loan_id, emp_id FROM group_supervisors as gs\n" +
+                    "INNER JOIN loans AS ln\n" +
+                    "ON gs.loan_id = ln.loan_no\n" +
+                    "WHERE(gs.emp_id = '"+employeeId+"' AND application_status = 'processing');";
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
             while(resultSet.next()) {
@@ -356,5 +367,52 @@ public class LoansModel extends MainModel {
         }catch (SQLException ignore){}
         return data;
     }
+
+    protected void saveLoanSchedule(String loanNo, double monthlyInstallment, double principal, double interest, LocalDate date, double balance, int loggedInUserId) {
+        try {
+            String query = "INSERT INTO loan_schedule(loan_no, monthly_installment, principal_amount, interest_amount, payment_date, balance, generated_by)" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?)";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, loanNo);
+            preparedStatement.setDouble(2, monthlyInstallment);
+            preparedStatement.setDouble(3,principal);
+            preparedStatement.setDouble(4, interest);
+            preparedStatement.setDate(5, Date.valueOf(date));
+            preparedStatement.setDouble(6, balance);
+            preparedStatement.setInt(7, loggedInUserId);
+            preparedStatement.execute();
+            commitTransaction();
+            getConnection().close();
+        }catch (Exception e) {rollBack();}
+
+    }
+    protected int saveLoanCalculatorValues(String loanNo, double gross, double statsDeduction, double remainingBal, double totalDeduction, double amount, double loanAmount, int interestRate, int loanPeriod, int processRate, LocalDate startDate, LocalDate endDate) {
+        int flag = 0;
+        try {
+            String query = "INSERT INTO loan_qualification_values(loan_no, gross_salary, statutory_deduction, remaining_balance, total_deduction, amount, loan_amount, interest_rate, loan_period, processing_rate, start_date, end_date) " +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            preparedStatement = getConnection().prepareStatement(query);
+           preparedStatement.setString(1, loanNo);
+           preparedStatement.setDouble(2, gross);
+           preparedStatement.setDouble(3, statsDeduction);
+           preparedStatement.setDouble(4, remainingBal);
+           preparedStatement.setDouble(5, totalDeduction);
+           preparedStatement.setDouble(6, amount);
+           preparedStatement.setDouble(7, loanAmount);
+           preparedStatement.setInt(8, interestRate);
+           preparedStatement.setInt(9, loanPeriod);
+           preparedStatement.setInt(10, processRate);
+           preparedStatement.setDate(11, Date.valueOf(startDate));
+           preparedStatement.setDate(12, Date.valueOf(endDate));
+            flag = preparedStatement.executeUpdate();
+            commitTransaction();
+            getConnection().close();
+        }catch (Exception e) {
+            e.printStackTrace();
+            rollBack();
+        }
+        return flag;
+    }
+
 
 }//end of class...

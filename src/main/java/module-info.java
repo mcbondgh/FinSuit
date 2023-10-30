@@ -15,6 +15,7 @@ module app.finsuit {
     requires jbcrypt;
     requires java.mail;
     requires annotations;
+    requires aspose.cells;
     requires org.apache.poi.poi;
 //    requires debugger.app;
     requires kernel;

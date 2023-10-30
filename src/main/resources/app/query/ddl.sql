@@ -188,7 +188,11 @@ ALTER TABLE loans DROP COLUMN profile_picture;
 ALTER TABLE loan_applicant_details ADD COLUMN profile_picture VARCHAR(100) AFTER loan_no; 
 
 
-
+-- 29 /10/2023
+SELECT gs.loan_id, emp_id FROM group_supervisors as gs
+INNER JOIN loans AS ln
+ON gs.loan_id = ln.loan_no
+WHERE gs.emp_id = '1000005' AND application_status = "processing";
 
 -- SET foreign_key_checks = 0;
 

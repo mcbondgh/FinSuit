@@ -204,6 +204,7 @@ CREATE TABLE IF NOT EXISTS loan_applicant_details(
     guarantor_income DECIMAL(10,2)
 );
 
+-- DROP TABLE loan_qualification_values;
 CREATE TABLE IF NOT EXISTS loan_qualification_values(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     loan_no VARCHAR(50) NOT NULL,
@@ -221,11 +222,12 @@ CREATE TABLE IF NOT EXISTS loan_qualification_values(
     date_created DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+
 CREATE TABLE IF NOT EXISTS loan_schedule(
 	schedule_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     loan_no VARCHAR(50) NOT NULL,
     monthly_installment DECIMAL(10,2) NOT NULL,
-    principay_amount DECIMAL(10,2) NOT NULL,
+    principaL_amount DECIMAL(10,2) NOT NULL,
     interest_amount DECIMAL(10,2) NOT NULL,
     payment_date DATE NOT NULL,
     balance DECIMAL(10,2),

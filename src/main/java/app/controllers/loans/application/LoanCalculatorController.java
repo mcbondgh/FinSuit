@@ -3,13 +3,15 @@ package app.controllers.loans.application;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
+import app.documents.DocumentGenerator;
 import app.models.loans.LoansModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.loans.LoansTableEntity;
-import app.repositories.loans.ScheduleEntity;
+import app.repositories.loans.ScheduleTableValues;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -25,6 +27,7 @@ import java.util.ResourceBundle;
 public class LoanCalculatorController extends LoansModel implements Initializable {
     UserNotification NOTIFY = new UserNotification();
     UserAlerts ALERTS;
+    PopupControl popupControl = new PopupControl();
 
 
     /*******************************************************************************************************************
@@ -44,10 +47,10 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
     @FXML private TextArea loanReasonField;
     @FXML private Hyperlink exportLink;
     @FXML private MFXButton generateScheduleButton, saveButton;
-    @FXML private TableView<ScheduleEntity> scheduleTable;
-    @FXML private TableColumn<ScheduleEntity, Integer> noColumn;
-    @FXML private TableColumn<ScheduleEntity, Double> principalColumn, interestColumn, installmentColumn, balanceColumn;
-    @FXML private TableColumn<ScheduleEntity, LocalDate> paymentDateColumn;
+    @FXML private TableView<ScheduleTableValues> scheduleTable;
+    @FXML private TableColumn<ScheduleTableValues, Integer> noColumn;
+    @FXML private TableColumn<ScheduleTableValues, Double> principalColumn, interestColumn, installmentColumn, balanceColumn;
+    @FXML private TableColumn<ScheduleTableValues, LocalDate> paymentDateColumn;
     @FXML private Pane calculatorPane, qualificationPane;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
     int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
@@ -147,7 +150,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
     }
     private void generateScheduleSheet() {
         populateTable();
-        ScheduleEntity entity;
+        ScheduleTableValues entity;
 
         int loanTenure = loanPeriodSelector.getValue(); // 6
         double loanAmount = Double.parseDouble(displayLoanAmount.getText()); // 100.00
@@ -166,13 +169,31 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             //check for a negative value else just allow the value
             double maxValue = Math.max(formattedLoanDifference, 0.0);
 
-            entity = new ScheduleEntity(x, formattedPrincipal, interestAmount, monthlyInstallment, maxValue, scheduleDate.plusMonths(x));
+            entity = new ScheduleTableValues(x, formattedPrincipal, interestAmount, monthlyInstallment, maxValue, scheduleDate.plusMonths(x));
             scheduleTable.getItems().add(entity);
         }
+        exportLink.setDisable(false);
     }
     private void setComboBoxVariables() {
         String workerId = getWorkIdByUserId(loggedInUserId);
+        applicationNumberSelector.getItems().clear();
         applicationNumberSelector.setItems(getGroupSupervisors(workerId));
+    }
+    private void resetFields() {
+        basicSalaryField.clear();
+        statutoryField.clear();
+        totalDeductionField.clear();
+        finalAmountField.clear();
+        remainingBalanceField.setText("0.00");
+        loanAmountField.clear();
+        interestRateSelector.setValue(null);
+        loanPeriodSelector.setValue(null);
+        processingRateSelector.setValue(null);
+        datePicker.setValue(null);
+        scheduleTable.getItems().clear();
+        saveButton.setDisable(true);
+        exportLink.setDisable(true);
+        loanReasonField.clear();
     }
 
 
@@ -319,9 +340,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             }
         }
     }
-    @FXML public void generateScheduleButtonClicked() {
 
-    }
     @FXML void saveButtonClicked() {
         String statusLabel = displayLoanStatus.getText();
         boolean result = statusLabel.equals("QUALIFIED");
@@ -330,10 +349,56 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
                     "you need to reduce applicant loan amount to qualify else terminate loan process.");
             ALERTS.errorAlert();
         }else {
+            String loanNo = applicationNumberSelector.getValue();
+            String empId = getWorkIdByUserId(loggedInUserId);
 
-//            NOTIFY.successNotification("QUALIFIED", "Congratulations, applicant qualifies for loan facility.");
+            double grossSalary = Double.parseDouble(basicSalaryField.getText());
+            double statDeduction = Double.parseDouble(statutoryField.getText());
+            double remainingBal = Double.parseDouble(remainingBalanceField.getText());
+            double totalDeduction = Double.parseDouble(totalDeductionField.getText());
+            double balance = Double.parseDouble(finalAmountField.getText());
+
+            double loanAmount = Double.parseDouble(loanAmountField.getText());
+            int interestRate = interestRateSelector.getValue();
+            int loanTenor = loanPeriodSelector.getValue();
+            int processingRate = processingRateSelector.getValue();
+            LocalDate startDate = datePicker.getValue();
+            LocalDate endDate = LocalDate.parse(displayEndDate.getText());
+
+            int flag = 0;
+            ALERTS = new UserAlerts("SAVE DATA", "Do you wish to save current loan application as a processed loan?");
+            if (ALERTS.confirmationAlert()) {
+                flag = saveLoanCalculatorValues(loanNo, grossSalary, statDeduction, remainingBal, totalDeduction, balance, loanAmount, interestRate, loanTenor, processingRate, startDate, endDate);
+                flag += updateLoanApplicationStatus("pending_approval ",empId, loggedInUserId);
+                for (ScheduleTableValues values : scheduleTable.getItems()) {
+                    saveLoanSchedule(loanNo, values.getMonthlyInstallment(), values.getPrincipal(), values.getInterestAmount(), values.getScheduleDate(), values.getBalance(), loggedInUserId);
+                }
+                if (flag > 1) {
+                    NOTIFY.successNotification("DATA SAVED", "Congratulations, loan processing saved successfully");
+                    resetFields();
+                }
+            }
         }
     }
 
+
+    @FXML void exportButtonClicked() {
+        Platform.runLater(() -> {
+            try {
+                if (scheduleTable.getItems().isEmpty()) {
+                    NOTIFY.informationNotification("EMPTY TABLE", "You cannot export an empty table, please generate a schedule first.");
+                } else {
+                    exportLink.setDisable(true);
+                    new DocumentGenerator().exportScheduleAsPdf(applicantFullnameLabel.getText(), scheduleTable);
+                    Thread.sleep(600);
+                    exportLink.setDisable(false);
+                    NOTIFY.informationNotification("EXPORT SUCCESSFUL", "Applicant schedule successfully exported.");
+                }
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
 }//end of class

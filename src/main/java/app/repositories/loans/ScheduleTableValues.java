@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-public class ScheduleEntity {
+public class ScheduleTableValues {
     private int index;
     private double principal;
     private double interestAmount;
@@ -13,8 +13,8 @@ public class ScheduleEntity {
     private LocalDate scheduleDate;
     private String formattedScheduleDate;
 
-    public ScheduleEntity() {}
-    public ScheduleEntity(int index, double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
+    public ScheduleTableValues() {}
+    public ScheduleTableValues(int index, double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
         this.index = index;
         this.principal = principal;
         this.interestAmount = interestAmount;
