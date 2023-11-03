@@ -22,7 +22,7 @@ public class DashboardController extends MainModel implements Initializable {
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
      ********************************************************************************************************************/
-    @FXML private Label pageTitle, timeLabel, dateLabel;
+    @FXML private Label pageTitle, dateLabel;
     public static String pageTitlePlaceHolder;
     @FXML private Label smsBalanceLabel, dueLoansLabel, approvedLoansLabel, partiallyPaidLabel;
     @FXML private Label totalCustomersLabel, activeAccountsLabel, loanApplicationLabel, transactionsLabel;
@@ -44,7 +44,7 @@ public class DashboardController extends MainModel implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
-        SpecialMethods.generateTime(dateLabel, timeLabel);
+        SpecialMethods.generateTime(dateLabel);
         setVariables();
     }
 

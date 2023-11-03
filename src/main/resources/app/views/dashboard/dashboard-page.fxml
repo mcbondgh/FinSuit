@@ -15,13 +15,13 @@
 
 <AnchorPane prefHeight="630.0" prefWidth="1240.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.dashboard.DashboardController">
    <children>
-      <Label fx:id="pageTitle" layoutX="35.0" layoutY="8.0" text="Title" textFill="#064a9d">
+      <Label fx:id="pageTitle" layoutX="35.0" layoutY="17.0" text="Title" textFill="#064a9d">
          <font>
             <Font name="Roboto Black" size="16.0" />
          </font>
       </Label>
-      <Separator layoutX="1.0" layoutY="38.0" prefWidth="1240.0" />
-      <Pane layoutX="68.0" layoutY="58.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #71edb336; -fx-background-radius: 10; -fx-border-color: #2c844e; -fx-border-radius: 10;">
+      <Separator layoutX="1.0" layoutY="50.0" prefWidth="1240.0" />
+      <Pane layoutX="68.0" layoutY="72.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #71edb336; -fx-background-radius: 10; -fx-border-color: #2c844e; -fx-border-radius: 10;">
          <children>
             <Circle fill="#44a17436" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -41,7 +41,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="352.0" layoutY="58.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #44e4da6b; -fx-background-radius: 10; -fx-border-color: #3198916b; -fx-border-radius: 10;">
+      <Pane layoutX="352.0" layoutY="72.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #44e4da6b; -fx-background-radius: 10; -fx-border-color: #3198916b; -fx-border-radius: 10;">
          <children>
             <Circle fill="#3198916b" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -49,7 +49,7 @@
                   <Image url="@../../images/icons8-topup-payment-50.png" />
                </image>
             </ImageView>
-            <Label layoutX="102.0" layoutY="20.0" text="Active Accounts" textFill="#329696">
+            <Label layoutX="102.0" layoutY="20.0" text="Paid Loans" textFill="#329696">
                <font>
                   <Font name="Roboto" size="18.0" />
                </font>
@@ -61,7 +61,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="68.0" layoutY="279.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #fff25f36; -fx-background-radius: 10; -fx-border-color: #a19a4736; -fx-border-radius: 10;">
+      <Pane layoutX="68.0" layoutY="293.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #fff25f36; -fx-background-radius: 10; -fx-border-color: #a19a4736; -fx-border-radius: 10;">
          <children>
             <Circle fill="#c0b75454" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -81,7 +81,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="68.0" layoutY="168.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #acacac4d; -fx-background-radius: 10; -fx-border-color: #0000004d; -fx-border-radius: 10;">
+      <Pane layoutX="68.0" layoutY="182.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #acacac4d; -fx-background-radius: 10; -fx-border-color: #0000004d; -fx-border-radius: 10;">
          <children>
             <Circle fill="#00000031" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -101,7 +101,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="352.0" layoutY="168.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #ff9e9b42; -fx-background-radius: 10; -fx-border-color: #e8100567; -fx-border-radius: 10;">
+      <Pane layoutX="352.0" layoutY="182.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #ff9e9b42; -fx-background-radius: 10; -fx-border-color: #e8100567; -fx-border-radius: 10;">
          <children>
             <Circle fill="#e8100542" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -121,7 +121,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="352.0" layoutY="279.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #fa0c9b31; -fx-background-radius: 10; -fx-border-color: #fa0a9676; -fx-border-radius: 10;">
+      <Pane layoutX="352.0" layoutY="293.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #fa0c9b31; -fx-background-radius: 10; -fx-border-color: #fa0a9676; -fx-border-radius: 10;">
          <children>
             <Circle fill="#fa0c9b41" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -141,7 +141,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="68.0" layoutY="391.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #6cff6447; -fx-background-radius: 10; -fx-border-color: #06870047; -fx-border-radius: 10;">
+      <Pane layoutX="68.0" layoutY="405.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #6cff6447; -fx-background-radius: 10; -fx-border-color: #06870047; -fx-border-radius: 10;">
          <children>
             <Circle fill="#06870047" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -149,9 +149,9 @@
                   <Image url="@../../images/icons8-approval-100.png" />
                </image>
             </ImageView>
-            <Label layoutX="97.0" layoutY="20.0" prefHeight="20.0" prefWidth="165.0" text="Today's Transactions" textFill="#3faa51">
+            <Label layoutX="97.0" layoutY="20.0" prefHeight="20.0" prefWidth="165.0" text="Active Accounts" textFill="#3faa51">
                <font>
-                  <Font name="Roboto Bold" size="16.0" />
+                  <Font name="Roboto" size="18.0" />
                </font>
             </Label>
             <Label fx:id="transactionsLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#3faa51">
@@ -161,7 +161,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="654.0" layoutY="52.0" prefHeight="425.0" prefWidth="548.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-border-width: 1; -fx-background-color: #fff;">
+      <Pane layoutX="654.0" layoutY="72.0" prefHeight="419.0" prefWidth="548.0" style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-border-width: 1; -fx-background-color: #fff;">
          <children>
             <Pane prefHeight="34.0" prefWidth="548.0" style="-fx-border-color: p; -fx-border-radius: 10 10 0 0; -fx-border-width: 1; -fx-background-color: orange;">
                <children>
@@ -182,7 +182,7 @@
             </MFXLegacyTableView>
          </children>
       </Pane>
-      <Pane layoutX="352.0" layoutY="391.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;">
+      <Pane layoutX="352.0" layoutY="405.0" prefHeight="94.0" prefWidth="261.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;">
          <children>
             <Circle fill="WHITE" layoutX="58.0" layoutY="47.0" radius="36.0" stroke="TRANSPARENT" strokeType="INSIDE" />
             <ImageView fitHeight="41.0" fitWidth="56.0" layoutX="37.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -209,14 +209,9 @@
             </DropShadow>
          </effect>
       </Pane>
-      <Label fx:id="dateLabel" alignment="CENTER" layoutX="68.0" layoutY="503.0" prefHeight="72.0" prefWidth="261.0" style="-fx-border-color: #ddd; -fx-border-radius: 6px;">
+      <Label fx:id="dateLabel" alignment="CENTER" layoutX="282.0" layoutY="5.0" prefHeight="41.0" prefWidth="476.0" style="-fx-border-color: #ddd; -fx-border-radius: 6px; -fx-background-color: #ebf6ff;" textFill="#212122">
          <font>
             <Font name="Roboto Bold" size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="timeLabel" layoutX="52.0" layoutY="539.0" prefHeight="45.0" prefWidth="261.0" style="-fx-border-color: orange;" visible="false">
-         <font>
-            <Font name="Roboto Bold" size="34.0" />
          </font>
       </Label>
    </children>

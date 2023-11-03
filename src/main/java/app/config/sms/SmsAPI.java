@@ -54,14 +54,14 @@ public class SmsAPI {
             senderId = item.getSender_id();
         }
         String status = "";
-    //https://sms.arkesel.com/sms/api?action=send-sms&api_key=T2lVanFDcUdoR0VqYm1Zd3pyVGY&to=PhoneNumber&from=SenderID&sms=YourMessage
+        //https://sms.arkesel.com/sms/api?action=send-sms&api_key=T2lVanFDcUdoR0VqYm1Zd3pyVGY&to=PhoneNumber&from=SenderID&sms=YourMessage
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 //        Map<String, String> mappedValues = new LinkedHashMap<>();
 //        mappedValues.put("sender", senderId);
 //        mappedValues.put("message", messageBody);
 //        mappedValues.put("recipients", mobileNumber);
 
-////        RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(mappedValues));
+//        RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(mappedValues));
 //        RequestBody jsonRequestBody = RequestBody.create(gson.toJson(mappedValues), MediaType.parse("application/json; charset=utf-8"));
 //        System.out.println(jsonRequestBody.toString());
 

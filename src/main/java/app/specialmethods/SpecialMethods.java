@@ -108,13 +108,13 @@ public class SpecialMethods {
            comboBox.getItems().add(x);
        }
     }
-    public static void setInterestRate(ComboBox<Integer> comboBox) {
+    public static void setRateValue(ComboBox<Integer> comboBox) {
         int month = 100;
         for(int x = 1; x <= month; x++) {
             comboBox.getItems().add(x);
         }
     }
-    public static void generateTime(Label dateLabel, Label timeLabel) {
+    public static void generateTime(Label dateLabel) {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             final int value = 0;
@@ -125,8 +125,8 @@ public class SpecialMethods {
                 DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm:ss a");
                 DateTimeFormatter formatDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
                 Platform.runLater(()->{
-                    timeLabel.setText(formatTime.format(time));
-                    dateLabel.setText(formatTime.format(time) + "\n" + formatDate.format(date));
+//                    timeLabel.setText(formatTime.format(time));
+                    dateLabel.setText(formatTime.format(time).concat(", ")+ formatDate.format(date));
                 });
             }
         };

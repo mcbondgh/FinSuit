@@ -8,6 +8,7 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
+import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.operations.MessageOperationsEntity;
 import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
@@ -181,7 +182,7 @@ public class MainModel extends DbConnection {
             preparedStatement.close();
             resultSet.close();
             getConnection().close();
-        }catch (SQLException e) {e.printStackTrace();}
+        }catch (SQLException ignore) {}
         return count;
 
     }
@@ -212,17 +213,6 @@ public class MainModel extends DbConnection {
         }catch (Exception ignored){}
         return result;
     }
-    public String getLastCustomerAccountNumber() {
-        try {
-            String query = "SELECT MAX(account_number) AS result FROM customer_account_data ";
-            statement = getConnection().createStatement();
-            resultSet = statement.executeQuery(query);
-            if (resultSet.next()) {
-                return resultSet.getString("result");
-            }
-        }catch (Exception ignore) {}
-        return null;
-    }
     public long getTotalLoanCount() {
         try {
             String query = "SELECT MAX(loan_id) AS 'max_id' FROM loans;";
@@ -237,16 +227,6 @@ public class MainModel extends DbConnection {
         }
         return 0;
     }
-    protected int getLastEmployeeId() {
-        int flag = 0;
-        try {
-            String query = "SELECT COUNT(*) FROM employees ORDER BY emp_id DESC LIMIT 1;";
-            preparedStatement = getConnection().prepareStatement(query);
-            resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {flag = resultSet.getInt(1);}
-        }catch (Exception ignored){}
-        return flag;
-    }
     protected int getTotalApprovedLoans() {
         int result = 0;
         try {
@@ -259,6 +239,19 @@ public class MainModel extends DbConnection {
         }catch (Exception ignored){}
         return result;
     }
+    protected int getPendingApprovalLoansCount() {
+        int result = 0;
+        try {
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'pending_approval');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        }catch (Exception ignored){}
+        return result;
+    }
+
     protected int getTotalLoanRequests() {
         int result = 0;
         try {
@@ -498,7 +491,6 @@ public class MainModel extends DbConnection {
         }catch (Exception exception){exception.printStackTrace();}
         return data;
     }
-
     protected int getRoleIdByName(@NamedArg("role Name")String role_name) {
         int flag = 0;
             try {
@@ -512,7 +504,6 @@ public class MainModel extends DbConnection {
             }catch (SQLException ignored){}
         return flag;
     }
-
     protected void checkAccountNumberExists(List<String> accountTypes, List<String> idNumbers) {
         try {
             String query2 = "SELECT account_type, id_number FROM customer_account_data AS cad\n" +
@@ -658,6 +649,25 @@ public class MainModel extends DbConnection {
         return data;
     }
 
+    public ObservableList<LoanScheduleEntity> getLoanScheduleByLoanNo(String loanNo) {
+        ObservableList<LoanScheduleEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT * FROM loan_schedule WHERE(loan_no = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, loanNo);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                 double installment = resultSet.getDouble("monthly_installment");
+                 double principal = resultSet.getDouble("principal_amount");
+                 double interest = resultSet.getDouble("interest_amount");
+                 LocalDate date = resultSet.getDate("payment_date").toLocalDate();
+                 double balance = resultSet.getDouble("balance");
+                 data.add(new LoanScheduleEntity(installment, principal, installment, date, balance));
+            }
+        }catch (SQLException ignore){}
+
+        return data;
+    }
 
 
 
