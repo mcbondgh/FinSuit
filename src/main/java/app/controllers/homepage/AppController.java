@@ -1,6 +1,6 @@
 package app.controllers.homepage;
 
-import app.controllers.accounting.AccountingController;
+import app.controllers.finance.FinanceController;
 import app.controllers.accounts.AccountsController;
 import app.controllers.customers.CustomersController;
 import app.controllers.dashboard.DashboardController;
@@ -107,8 +107,8 @@ public class AppController extends AppModel implements Initializable {
         });
         accountingButton.setOnAction(event -> {
             try {
-                AccountingController.pageTitlePlaceHolder = accountingButton.getText();
-                SpecialMethods.FlipView("views/accounting/accounting-page.fxml", borderPane);
+                FinanceController.pageTitlePlaceHolder = accountingButton.getText();
+                SpecialMethods.FlipView("views/finance/finance-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

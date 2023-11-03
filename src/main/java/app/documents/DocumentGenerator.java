@@ -50,9 +50,9 @@ public class DocumentGenerator {
         }
         //CREATE A PARAGRAPH TO HOLD THE VARIOUS TEXTS IN THE LETTER HEAD...
         Paragraph businessNameText = new Paragraph(businessName)
-                .setFontSize(14).setBold().setTextAlignment(TextAlignment.CENTER);
+                .setFontSize(20).setBold().setTextAlignment(TextAlignment.CENTER).setMarginBottom(-5);
         Paragraph mobileNumbersText = new Paragraph(mobileNumbers)
-                .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER);
+                .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER).setMarginTop(-5);
         Paragraph addressText = new Paragraph(email.concat(" | ".concat(digitalAddress)))
                 .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER);
         container.add(businessNameText).add(addressText).add(mobileNumbersText)

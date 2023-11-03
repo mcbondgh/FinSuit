@@ -4,6 +4,7 @@ import app.models.MainModel;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.loans.LoanApplicationEntity;
 import app.repositories.loans.LoansTableEntity;
+import app.repositories.loans.PendingLoanApprovalEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -184,7 +185,7 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
-    protected ObservableList<LoansTableEntity> getLoansUnderProcessingStage() {
+    protected ObservableList<LoansTableEntity> getLoansByApplicationStatus() {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, loan_purpose," +
@@ -322,19 +323,20 @@ public class LoansModel extends MainModel {
 
     //THIS METHOD WHEN INVOKED SHALL UPDATE THE loans table BASED ON THE ARGUMENTS PARSED TO IT.
     //THIS SHALL CHANGE THE LOAN STATUS OF THE loans TABLE from application to processing...
-    protected  int updateLoanApplicationStatus(String applicationStatus, String loanNo, int userId) {
+    protected int updateLoanApplicationStatus(String applicationStatus, String loanNo, int userId) {
         int flag = 0;
         try {
-            String query = "UPDATE loans SET application_status = ?, date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
+            String query = "UPDATE loans SET application_status = ?, date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?)";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1,applicationStatus);
             preparedStatement.setInt(2, userId);
             preparedStatement.setString(3, loanNo);
             flag = preparedStatement.executeUpdate();
             commitTransaction();
+            preparedStatement.close();
             getConnection().close();
-        }catch (Exception e){
-            rollBack();}
+        }catch (Exception e){rollBack();
+        e.printStackTrace();}
         return flag;
     }
 
@@ -365,6 +367,35 @@ public class LoansModel extends MainModel {
                 data.add(resultSet.getString(1));
             }
         }catch (SQLException ignore){}
+        return data;
+    }
+
+    public ObservableList<PendingLoanApprovalEntity> getLoansUnderPendingApproval() {
+        ObservableList<PendingLoanApprovalEntity> data = FXCollections.observableArrayList();
+        try{
+            String query = "SELECT lqv.loan_no, requested_amount, gross_salary, statutory_deduction, \n" +
+                    "\tremaining_balance, total_deduction, amount, loan_amount, \n" +
+                    "interest_rate, loan_period, processing_rate, start_date FROM loans ln\n" +
+                    "INNER JOIN loan_qualification_values AS lqv \n" +
+                    "ON lqv.loan_no = ln.loan_no";
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+            while(resultSet.next()) {
+                String loanNo = resultSet.getString("lqv.loan_no");
+                double requestedNo = resultSet.getDouble("requested_amount");
+                double gross = resultSet.getDouble("gross_salary");
+                double statutory = resultSet.getDouble("statutory_deduction");
+                double remaining = resultSet.getDouble("remaining_balance");
+                double deduction = resultSet.getDouble("total_deduction");
+                double amount = resultSet.getDouble("amount");
+                double loanAmount = resultSet.getDouble("loan_amount");
+                int interest = resultSet.getInt("interest_rate");
+                int period = resultSet.getInt("loan_period");
+                int processing = resultSet.getInt("processing_rate");
+                LocalDate date = resultSet.getDate("start_date").toLocalDate();
+                data.addAll(new PendingLoanApprovalEntity(loanNo, requestedNo, gross, statutory, remaining, deduction, amount, loanAmount, interest, period, processing, date));
+            }
+        }catch (Exception ignore){}
         return data;
     }
 
@@ -413,6 +444,8 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
+
+
 
 
 }//end of class...

@@ -15,7 +15,6 @@ module app.finsuit {
     requires jbcrypt;
     requires java.mail;
     requires annotations;
-    requires aspose.cells;
     requires org.apache.poi.poi;
 //    requires debugger.app;
     requires kernel;
@@ -38,7 +37,7 @@ module app.finsuit {
     exports app.controllers.resource;
     exports app.controllers.settings;
     exports app.controllers;
-    exports app.controllers.accounting;
+    exports app.controllers.finance;
     exports app.controllers.loans.application;
     exports app.repositories.human_resources;
     exports app.repositories.users;
@@ -56,7 +55,7 @@ module app.finsuit {
     opens app.controllers.reports;
     opens app.controllers.settings;
     opens app.controllers.resource;
-    opens app.controllers.accounting;
+    opens app.controllers.finance;
     opens app.specialmethods to javafx.fxml;
     opens app.controllers.login;
     opens app.controllers.loans.application;

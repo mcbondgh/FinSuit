@@ -134,9 +134,9 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         actionEventsMethodsImplementation();inputFieldChaneListerImplementation();
-        SpecialMethods.setInterestRate(interestRateSelector);
+        SpecialMethods.setRateValue(interestRateSelector);
         SpecialMethods.setLoanPeriod(loanPeriodSelector);
-        SpecialMethods.setInterestRate(processingRateSelector);
+        SpecialMethods.setRateValue(processingRateSelector);
         setComboBoxVariables();
     }
     private void populateTable() {
@@ -329,7 +329,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
         calculatorPane.setDisable(isApplicationNoSelectorEmpty());
         qualificationPane.setDisable(isApplicationNoSelectorEmpty());
         String loanNo = applicationNumberSelector.getValue();
-        for (LoansTableEntity data : getLoansUnderProcessingStage()) {
+        for (LoansTableEntity data : getLoansByApplicationStatus()) {
             if (Objects.equals(loanNo, data.getLoanNo())) {
                 applicantFullnameLabel.setText(data.getFullName());
                 loanTypeLabel.setText(data.getLoanType());
@@ -369,7 +369,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             ALERTS = new UserAlerts("SAVE DATA", "Do you wish to save current loan application as a processed loan?");
             if (ALERTS.confirmationAlert()) {
                 flag = saveLoanCalculatorValues(loanNo, grossSalary, statDeduction, remainingBal, totalDeduction, balance, loanAmount, interestRate, loanTenor, processingRate, startDate, endDate);
-                flag += updateLoanApplicationStatus("pending_approval ",empId, loggedInUserId);
+                flag += updateLoanApplicationStatus("pending_approval",loanNo, loggedInUserId);
                 for (ScheduleTableValues values : scheduleTable.getItems()) {
                     saveLoanSchedule(loanNo, values.getMonthlyInstallment(), values.getPrincipal(), values.getInterestAmount(), values.getScheduleDate(), values.getBalance(), loggedInUserId);
                 }
