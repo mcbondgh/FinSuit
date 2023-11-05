@@ -40,7 +40,7 @@ public class AppStages {
         stage.show();
     }
     public static void testPage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("test-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/fileUpload.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Test Page");

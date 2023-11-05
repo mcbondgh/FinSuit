@@ -269,7 +269,7 @@ CREATE TABLE IF NOT EXISTS message_operations(
 );
 
 
-CREATE TABLE IF NOT EXISTS notificatiions(
+CREATE TABLE IF NOT EXISTS notifications(
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(50),
     sender_method VARCHAR(20) COMMENT 'This indicates the method of message deliver, either by SMS or EMAIL',

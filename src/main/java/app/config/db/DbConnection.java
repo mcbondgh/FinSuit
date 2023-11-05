@@ -13,7 +13,7 @@ public class DbConnection extends Variables{
             String DB_USERNAME = loadProperties().getProperty("db_username");
             String DB_PASSWORD = loadProperties().getProperty("db_password");
             connection = DriverManager.getConnection(LINK, DB_USERNAME, DB_PASSWORD);
-            connection.setAutoCommit(false);
+//            connection.setAutoCommit(false);
         }catch (SQLException e) {
             AppStages.databaseFailedStage();
         }

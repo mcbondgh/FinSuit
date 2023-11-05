@@ -2,11 +2,10 @@ package app.models.loans;
 
 import app.models.MainModel;
 import app.repositories.accounts.CustomersDataRepository;
-import app.repositories.loans.LoanApplicationEntity;
-import app.repositories.loans.LoansTableEntity;
-import app.repositories.loans.PendingLoanApprovalEntity;
+import app.repositories.loans.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -192,7 +191,7 @@ public class LoansModel extends MainModel {
                     "DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
-                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing');";
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing' AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
 //            preparedStatement.setString(1, user_id);
             resultSet = preparedStatement.executeQuery();
@@ -213,14 +212,13 @@ public class LoansModel extends MainModel {
         }catch (SQLException ignore) {}
         return data;
     }
-
     protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage (int user_id) {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, loan_purpose, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
-                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'application' AND user_id = ?);";
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'application' AND (user_id = ? OR user_id = 1));";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setInt(1, user_id);
             resultSet = preparedStatement.executeQuery();
@@ -323,7 +321,7 @@ public class LoansModel extends MainModel {
 
     //THIS METHOD WHEN INVOKED SHALL UPDATE THE loans table BASED ON THE ARGUMENTS PARSED TO IT.
     //THIS SHALL CHANGE THE LOAN STATUS OF THE loans TABLE from application to processing...
-    protected int updateLoanApplicationStatus(String applicationStatus, String loanNo, int userId) {
+    public int updateLoanApplicationStatus(String applicationStatus, String loanNo, int userId) {
         int flag = 0;
         try {
             String query = "UPDATE loans SET application_status = ?, date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?)";
@@ -340,7 +338,7 @@ public class LoansModel extends MainModel {
         return flag;
     }
 
-    public int assignGroupSupervisor(String employeeId, String loanNo, int userId) {
+    public int saveAssignedGroupSupervisor(String employeeId, String loanNo, int userId) {
         int flag = 0;
         try {
             String query2 = "INSERT INTO group_supervisors(emp_id, loan_id, added_by) VALUES(?, ?, ?);";
@@ -369,7 +367,6 @@ public class LoansModel extends MainModel {
         }catch (SQLException ignore){}
         return data;
     }
-
     public ObservableList<PendingLoanApprovalEntity> getLoansUnderPendingApproval() {
         ObservableList<PendingLoanApprovalEntity> data = FXCollections.observableArrayList();
         try{
@@ -377,7 +374,7 @@ public class LoansModel extends MainModel {
                     "\tremaining_balance, total_deduction, amount, loan_amount, \n" +
                     "interest_rate, loan_period, processing_rate, start_date FROM loans ln\n" +
                     "INNER JOIN loan_qualification_values AS lqv \n" +
-                    "ON lqv.loan_no = ln.loan_no";
+                    "ON lqv.loan_no = ln.loan_no WHERE(loan_status = 'active')";
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
             while(resultSet.next()) {
@@ -398,7 +395,6 @@ public class LoansModel extends MainModel {
         }catch (Exception ignore){}
         return data;
     }
-
     protected void saveLoanSchedule(String loanNo, double monthlyInstallment, double principal, double interest, LocalDate date, double balance, int loggedInUserId) {
         try {
             String query = "INSERT INTO loan_schedule(loan_no, monthly_installment, principal_amount, interest_amount, payment_date, balance, generated_by)" +
@@ -444,8 +440,55 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
+    public int approveLoanForDisbursement(@NotNull PendingLoanApprovalEntity qualifications, @NotNull LoansEntity loans) {
+        int status = 0;
+        try{
+            String query1 = "UPDATE loans\n" +
+                    "SET disbursed_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?\n" +
+                    "WHERE(loan_no = ?);";
 
+            String query2 = "UPDATE loan_qualification_values\n" +
+                    "SET loan_amount = ?, interest_rate = ?, loan_period = ?, processing_rate = ?, start_date = ?, end_date = ?\n" +
+                    "WHERE(loan_no = ?);";
 
+            preparedStatement = getConnection().prepareStatement(query1);
+            preparedStatement.setDouble(1, loans.getDisbursed_amount());
+            preparedStatement.setInt(2, loans.getApproved_by());
+            preparedStatement.setString(3, loans.getLoan_no());
+
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setDouble(1, qualifications.getLoan_amount());
+            preparedStatement.setInt(2, qualifications.getInterest_rate());
+            preparedStatement.setInt(3, qualifications.getLoan_period());
+            preparedStatement.setInt(4, qualifications.getProcessing_rate());
+            preparedStatement.setDate(5, Date.valueOf(qualifications.getStart_date()));
+            preparedStatement.setDate(6, Date.valueOf(qualifications.getEnd_date()));
+            preparedStatement.setString(7, qualifications.getLoan_no());
+            status = preparedStatement.executeUpdate();
+        }catch (SQLException e){
+            rollBack();
+            e.printStackTrace();}
+        return status;
+    }
+    public void updateLoanSchedule(double installment, double principal, double interest, LocalDate date, double balance, int generatedBy, long scheduleId) {
+        try {
+            String query3 = "UPDATE loan_schedule\n" +
+                    "SET monthly_installment = ?, principal_amount= ?, interest_amount = ?, payment_date = ?, balance = ?, generated_by = ?\n" +
+                    "WHERE(schedule_id = ?);";
+            preparedStatement = getConnection().prepareStatement(query3);
+            preparedStatement.setDouble(1, installment);
+            preparedStatement.setDouble(2,principal);
+            preparedStatement.setDouble(3, interest);
+            preparedStatement.setDate(4, Date.valueOf(date));
+            preparedStatement.setDouble(5, balance);
+            preparedStatement.setInt(6, generatedBy);
+            preparedStatement.setLong(7, scheduleId);
+            preparedStatement.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+            rollBack();
+        }
+    }
 
 
 }//end of class...

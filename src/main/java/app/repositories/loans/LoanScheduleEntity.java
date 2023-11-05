@@ -12,12 +12,19 @@ public class LoanScheduleEntity {
     private Timestamp date_created;
     private int generated_by;
 
-    public LoanScheduleEntity(Double monthly_installment, Double principal_amount, Double interest_amount, LocalDate payment_date, double balance) {
-        this.payment_date = payment_date;
-        this.balance = balance;
+    public LoanScheduleEntity() {}
+
+    public LoanScheduleEntity(long schedule_id, String loan_no, Double monthly_installment, Double principal_amount, Double interest_amount, LocalDate payment_date, double balance, double penalty_amount, Timestamp date_created, int generated_by) {
+        this.schedule_id = schedule_id;
+        this.loan_no = loan_no;
         this.monthly_installment = monthly_installment;
         this.principal_amount = principal_amount;
         this.interest_amount = interest_amount;
+        this.payment_date = payment_date;
+        this.balance = balance;
+        this.penalty_amount = penalty_amount;
+        this.date_created = date_created;
+        this.generated_by = generated_by;
     }
 
     public long getSchedule_id() {

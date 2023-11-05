@@ -194,6 +194,38 @@ INNER JOIN loans AS ln
 ON gs.loan_id = ln.loan_no
 WHERE gs.emp_id = '1000005' AND application_status = "processing";
 
+create table images(
+	id int auto_increment Primary key,
+    name VARCHAR(100),
+    content BLOB
+);
+
+SELECT lqv.loan_no, mobile_number, concat(firstname, ' ', lastname) AS fullname, requested_amount, gross_salary, statutory_deduction,
+       remaining_balance, total_deduction, amount, loan_amount,
+       interest_rate, loan_period, processing_rate, start_date FROM loans ln
+       INNER JOIN loan_qualification_values AS lqv 
+        ON lqv.loan_no = ln.loan_no
+        INNER JOIN customer_data AS cd ON
+        cd.customer_id = ln.customer_id
+        WHERE (loan_status = 'active');
+
+
+-- 04/11/2023
+UPDATE loan_qualification_values
+SET loan_amount = ?, interest_rate = ?, loan_period = ?, processing_rate = ?, start_date = ?, end_date = ?
+WHERE(loan_no = ?);
+
+UPDATE loans
+SET disbursed_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?
+WHERE(loan_no = ?);
+
+UPDATE loan_schedule
+SET monthly_isntallment = ?, principal = ?, interest_amount = ?, payment_date = ?, balance = ?, generated_by = ?
+WHERE(schedule_no = ?);
+	
+INSERT INTO notifications(title, sender_method, message, logged_by) 
+VALUES(?, ?, ?, ?);
+
 -- SET foreign_key_checks = 0;
 
 

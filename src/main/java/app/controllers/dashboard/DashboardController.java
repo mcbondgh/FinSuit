@@ -53,7 +53,7 @@ public class DashboardController extends MainModel implements Initializable {
 
         totalCustomersLabel.setText(String.valueOf(totalCustomersCount()));
         transactionsLabel.setText(String.valueOf(getTotalTransactionsForToday()));
-        approvedLoansLabel.setText(String.valueOf(getTotalApprovedLoans()));
+        approvedLoansLabel.setText(String.valueOf(getTotalApprovedLoansCount()));
         loanApplicationLabel.setText(String.valueOf(getTotalLoanRequests()));
         try {
             smsBalanceLabel.setText(SMS_API.getSmsBalance());

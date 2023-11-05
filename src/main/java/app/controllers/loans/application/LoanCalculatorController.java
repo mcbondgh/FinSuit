@@ -169,7 +169,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             //check for a negative value else just allow the value
             double maxValue = Math.max(formattedLoanDifference, 0.0);
 
-            entity = new ScheduleTableValues(x, formattedPrincipal, interestAmount, monthlyInstallment, maxValue, scheduleDate.plusMonths(x));
+            entity = new ScheduleTableValues(x, 0, formattedPrincipal,  interestAmount, monthlyInstallment, maxValue, scheduleDate.plusMonths(x));
             scheduleTable.getItems().add(entity);
         }
         exportLink.setDisable(false);
@@ -389,7 +389,8 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
                     NOTIFY.informationNotification("EMPTY TABLE", "You cannot export an empty table, please generate a schedule first.");
                 } else {
                     exportLink.setDisable(true);
-                    new DocumentGenerator().exportScheduleAsPdf(applicantFullnameLabel.getText(), scheduleTable);
+
+                    new DocumentGenerator().exportScheduleAsPdf(applicantFullnameLabel.getText(), scheduleTable, displayTotalLoanAmount.getText());
                     Thread.sleep(600);
                     exportLink.setDisable(false);
                     NOTIFY.informationNotification("EXPORT SUCCESSFUL", "Applicant schedule successfully exported.");

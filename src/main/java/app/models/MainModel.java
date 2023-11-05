@@ -8,7 +8,8 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
-import app.repositories.loans.LoanScheduleEntity;
+import app.repositories.loans.ScheduleTableValues;
+import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageOperationsEntity;
 import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
@@ -27,7 +28,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainModel extends DbConnection {
 
@@ -227,10 +230,10 @@ public class MainModel extends DbConnection {
         }
         return 0;
     }
-    protected int getTotalApprovedLoans() {
+    protected int getTotalApprovedLoansCount() {
         int result = 0;
         try {
-            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'pending_payment');";
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'pending_payment' AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -242,7 +245,7 @@ public class MainModel extends DbConnection {
     protected int getPendingApprovalLoansCount() {
         int result = 0;
         try {
-            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'pending_approval');";
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'pending_approval' AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -255,7 +258,7 @@ public class MainModel extends DbConnection {
     protected int getTotalLoanRequests() {
         int result = 0;
         try {
-            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'application');";
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'application' AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {result = resultSet.getInt(1);}
@@ -649,26 +652,58 @@ public class MainModel extends DbConnection {
         return data;
     }
 
-    public ObservableList<LoanScheduleEntity> getLoanScheduleByLoanNo(String loanNo) {
-        ObservableList<LoanScheduleEntity> data = FXCollections.observableArrayList();
+    public ObservableList<ScheduleTableValues> getLoanScheduleByLoanNo(String loanNo) {
+        ObservableList<ScheduleTableValues> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT * FROM loan_schedule WHERE(loan_no = ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, loanNo);
             resultSet = preparedStatement.executeQuery();
+            int count = 1;
             while (resultSet.next()) {
                  double installment = resultSet.getDouble("monthly_installment");
                  double principal = resultSet.getDouble("principal_amount");
                  double interest = resultSet.getDouble("interest_amount");
                  LocalDate date = resultSet.getDate("payment_date").toLocalDate();
                  double balance = resultSet.getDouble("balance");
-                 data.add(new LoanScheduleEntity(installment, principal, installment, date, balance));
+                 long scheduleId = resultSet.getLong("schedule_id");
+                 data.add(new ScheduleTableValues( count ++, scheduleId, principal, interest, installment, balance, date));
             }
         }catch (SQLException ignore){}
 
         return data;
     }
-
+    protected Map<String, String> getApplicantNameAndNumberByLoanId(String loanNo) {
+        Map<String, String> data = new HashMap<>();
+        try {
+            String query = "SELECT concat(firstname, ' ', lastname) AS fullname, mobile_number FROM customer_data AS cd\n" +
+                    "INNER JOIN loans AS ln ON \n" +
+                    "cd.customer_id = ln.customer_id\n" +
+                    "WHERE(loan_no = '"+loanNo+"');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                data.put("name", resultSet.getString("fullname"));
+                data.put("number", resultSet.getString("mobile_number"));
+            }
+        }catch (SQLException e){e.printStackTrace();}
+        return data;
+    }
+    protected void logNotification(NotificationEntity items) {
+        try {
+            String query = "INSERT INTO notifications(title, sender_method, message, logged_by) \n" +
+                    "VALUES(?, ?, ?, ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, items.getTitle());
+            preparedStatement.setString(2, items.getSender_method());
+            preparedStatement.setString(3, items.getMessage());
+            preparedStatement.setInt(4, items.getLogged_by());
+            preparedStatement.execute();
+        }catch (SQLException e) {
+            e.printStackTrace();
+            rollBack();
+        }
+    }
 
 
 

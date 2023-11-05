@@ -1,23 +1,40 @@
 package app.controllers.finance;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
+import app.config.sms.SmsAPI;
+import app.controllers.homepage.AppController;
+import app.controllers.messages.MessageBuilders;
+import app.documents.DocumentGenerator;
+import app.enums.MessageStatus;
 import app.models.finance.FinanceModel;
 import app.models.loans.LoansModel;
+import app.models.message.MessagesModel;
 import app.repositories.loans.LoanScheduleEntity;
+import app.repositories.loans.LoansEntity;
 import app.repositories.loans.PendingLoanApprovalEntity;
+import app.repositories.loans.ScheduleTableValues;
+import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
+import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -25,6 +42,20 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
 
 
     LoansModel LOAN_MODEL = new LoansModel();
+    LoansEntity LOANS_OBJ = new LoansEntity();
+    LoanScheduleEntity SCHEDULE_OBJ = new LoanScheduleEntity();
+    NotificationEntity NOTIFY_OBJ = new NotificationEntity();
+    PendingLoanApprovalEntity QUALIFICATION_OBJ = new PendingLoanApprovalEntity();
+    UserAlerts ALERT_OBJ;
+    UserNotification NOTIFY = new UserNotification();
+    MessageBuilders GENERATE_MESSAGE_OBJECT = new MessageBuilders();
+    MessagesModel MESSAGE_MODEL_OBJECT = new MessagesModel();
+    SmsAPI SMS_OBJECT = new SmsAPI();
+    MessageLogsEntity logsEntity = new MessageLogsEntity();
+
+    //------------------------------------------------------------------------------------------------------------------
+    int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+
     NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
@@ -37,15 +68,17 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     @FXML private TextField loanAmountField;
     @FXML private ComboBox<Integer> interestRateSelector, loanPeriodSelector, processingRateSelector;
     @FXML private DatePicker datePicker;
-    @FXML private TableView<LoanScheduleEntity> scheduleTable;
+    @FXML private TableView<ScheduleTableValues> scheduleTable;
     @FXML private TableColumn<Integer, Integer> noColumn;
-    @FXML private TableColumn<LoanScheduleEntity, Integer> installmentColumn;
-    @FXML private TableColumn<LoanScheduleEntity, Integer> principalColumn;
-    @FXML private TableColumn<LoanScheduleEntity, Integer> interestColumn;
-    @FXML private TableColumn<LoanScheduleEntity, Integer> paymentDateColumn;
-    @FXML private TableColumn<LoanScheduleEntity, Integer> balanceColumn;
+    @FXML private TableColumn<ScheduleTableValues, Integer> installmentColumn;
+    @FXML private TableColumn<ScheduleTableValues, Integer> principalColumn;
+    @FXML private TableColumn<ScheduleTableValues, Integer> interestColumn;
+    @FXML private TableColumn<ScheduleTableValues, Integer> paymentDateColumn;
+    @FXML private TableColumn<ScheduleTableValues, Integer> balanceColumn;
+    @FXML private TableColumn<ScheduleTableValues, Integer> scheduleId;
     @FXML private Hyperlink exportLink;
     @FXML private MFXButton generateScheduleButton, saveButton, rejectButton;
+    @FXML private Label fullnameLabel, numberLabel;
     @FXML private Label displayTotalLoanAmount, displayInterestAmount, displayMonthlyInstallmentAmount,
             displayProcessingAmount, displayStartDate, displayEndDate;
 
@@ -61,6 +94,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         SpecialMethods.setRateValue(processingRateSelector);
         accountNumberSelected();
         loadListView();
+        setDatePicker();
     }
 
     private void loadListView() {
@@ -71,7 +105,16 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     }
     
     void populateScheduleTable() {
+        noColumn.setCellValueFactory(new PropertyValueFactory<>("index"));
+        installmentColumn.setCellValueFactory(new PropertyValueFactory<>("monthlyInstallment"));
+        principalColumn.setCellValueFactory(new PropertyValueFactory<>("principal"));
+        interestColumn.setCellValueFactory(new PropertyValueFactory<>("interestAmount"));
+        paymentDateColumn.setCellValueFactory(new PropertyValueFactory<>("formattedScheduleDate"));
+        balanceColumn.setCellValueFactory(new PropertyValueFactory<>("balance"));
+        scheduleId.setCellValueFactory(new PropertyValueFactory<>("scheduleId"));
 
+        String loanNo =listView.getSelectionModel().getSelectedItem();
+        scheduleTable.setItems(getLoanScheduleByLoanNo(loanNo));
     }
 
     void calculateLoanValues() {
@@ -95,6 +138,42 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         displayEndDate.setText(String.valueOf(datePicker.getValue().plusMonths(loanPeriod)));
     }
 
+    private void generateScheduleSheet() {
+        populateScheduleTable();
+        ScheduleTableValues entity;
+
+        double loanAmount = Double.parseDouble(loanAmountField.getText());
+        int interestRate = interestRateSelector.getValue();
+        int loanPeriod = loanPeriodSelector.getValue();
+
+        double constant =(loanAmount / 100);
+        double interestAmount = (constant * interestRate) ;
+        double totalAmount = loanAmount + ((constant * interestRate) * loanPeriod);
+        double installment = totalAmount / loanPeriod;
+        double principal = loanAmount / loanPeriod;
+        LocalDate scheduleDate = datePicker.getValue();
+
+        scheduleTable.getItems().clear();
+        try {
+            for (int x = 0; x < loanPeriod; ++x) {
+                totalAmount = totalAmount - installment;
+
+                double formattedPrincipal = Double.parseDouble(decimalFormat.format(principal));
+                double formattedLoanDifference = Double.parseDouble(decimalFormat.format(totalAmount));
+
+                //Gets the schedule_id for each item at the index of (X)
+                long finalX = getLoanScheduleByLoanNo(listView.getSelectionModel().getSelectedItem()).get(x).getScheduleId();
+
+                //check for a negative value else just allow the value
+                double maxValue = Math.max(formattedLoanDifference, 0.0);
+                entity = new ScheduleTableValues(x, finalX, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x));
+                scheduleTable.getItems().add(entity);
+            }
+        }catch (IndexOutOfBoundsException ignore ) {}
+
+        exportLink.setDisable(false);
+    }
+
 
 
     /*******************************************************************************************************************
@@ -109,7 +188,6 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
      *********************************************** INPUT FIELDS VALIDATION METHOD
      ********************************************************************************************************************/
 @FXML void validateLoanAmountInput(KeyEvent keyEvent) {
-
     if (!(keyEvent.getCharacter().matches("[0-9]") || keyEvent.getCharacter().contains("."))) {
         loanAmountField.deletePreviousChar();
     }
@@ -127,10 +205,8 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION
      ********************************************************************************************************************/
 
-    public void exportButtonClicked(ActionEvent actionEvent) {
-    }
-
-    public void calculateLoanValues(MouseEvent mouseEvent) {
+    void setDatePicker() {
+        datePicker.setOnAction(event -> {calculateLoanValues();});
     }
 
     void accountNumberSelected() {
@@ -138,6 +214,9 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
             try{
                 String selectedValue = listView.getSelectionModel().getSelectedItem();
                 qualificationPane.setDisable(selectedValue.isEmpty());
+                Map<String, String> returnedValue = getApplicantNameAndNumberByLoanId(selectedValue);
+                fullnameLabel.setText(returnedValue.get("name"));
+                numberLabel.setText(returnedValue.get("number"));
 
                 //check if selection is not empty if false then get associated values pertaining to the selected loan no.
                 if (!selectedValue.isEmpty()) {
@@ -151,13 +230,100 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                         }
                     }
                     calculateLoanValues();
+                    populateScheduleTable();
+                    generateScheduleButton.setDisable(false);
+                    exportLink.setDisable(false);
+                    saveButton.setDisable(false);
+                    rejectButton.setDisable(false);
                 }
 
             }catch (NullPointerException ignore){}
 
         });
     }
+    public void exportButtonClicked(ActionEvent actionEvent) {
+        new Thread(()-> {
+            try {
+                System.out.println(Thread.currentThread().getName());
+                DocumentGenerator documentGenerator = new DocumentGenerator();
+                exportLink.setDisable(true);
+                documentGenerator.exportScheduleAsPdf(fullnameLabel.getText(), scheduleTable, displayTotalLoanAmount.getText());
+                Thread.sleep(2000);
+                exportLink.setDisable(false);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Platform.runLater(()-> {
+                NOTIFY.successNotification("EXPORT SCHEDULE", "Nice, applicant schedule data successfully exported.");
+            });
 
+        }).start();
+    }
+    @FXML void generateScheduleButtonClicked() {
+        generateScheduleSheet();
+    }
+    public void saveButtonClicked() {
+        String selectedLoanNo = listView.getSelectionModel().getSelectedItem();
+        int interest = interestRateSelector.getValue();
+        int processing = processingRateSelector.getValue();
+        int period = loanPeriodSelector.getValue();
+        double loanAmount = Double.parseDouble(loanAmountField.getText());
+        double disbursedAmount = Double.parseDouble(displayTotalLoanAmount.getText());
+        LocalDate startDate = LocalDate.parse(displayStartDate.getText());
+        Date endDate = Date.valueOf(displayEndDate.getText());
+
+        ALERT_OBJ = new UserAlerts("APPROVE LOAN PAYMENT", "Do you wish to approve disbursement of " + disbursedAmount +" for loan no. " + selectedLoanNo + "?",
+                "please confirm to approve disbursement process else CANCEL to abort.");
+        if (ALERT_OBJ.confirmationAlert()) {
+            new Thread(() -> {
+                //SET LOAN ENTITY VALUES
+                LOANS_OBJ.setLoan_no(selectedLoanNo);
+                LOANS_OBJ.setDisbursed_amount(disbursedAmount);
+                LOANS_OBJ.setApproved_by(loggedInUserId);
+                //SET QUALIFICATION ENTITY VALUES
+                QUALIFICATION_OBJ.setLoan_amount(loanAmount);
+                QUALIFICATION_OBJ.setInterest_rate(interest);
+                QUALIFICATION_OBJ.setProcessing_rate(processing);
+                QUALIFICATION_OBJ.setLoan_period(period);
+                QUALIFICATION_OBJ.setStart_date(startDate);
+                QUALIFICATION_OBJ.setEnd_date(endDate.toLocalDate());
+                QUALIFICATION_OBJ.setLoan_no(selectedLoanNo);
+                //SET NOTIFICATIONS ENTITY VALUES;
+                NOTIFY_OBJ.setTitle("Disbursement Approval");
+                NOTIFY_OBJ.setSender_method("UPDATE ONLY");
+                NOTIFY_OBJ.setMessage("Disbursement of Ghc" + disbursedAmount + " has successfully been approved for loan number " + selectedLoanNo + " while awaiting payment");
+                NOTIFY_OBJ.setLogged_by(loggedInUserId);
+
+                String message = GENERATE_MESSAGE_OBJECT.createLoanDisbursementMessage(fullnameLabel.getText(), selectedLoanNo, disbursedAmount);
+                logNotification(NOTIFY_OBJ);
+               scheduleTable.getItems().forEach(item ->{
+                    LOAN_MODEL.updateLoanSchedule(item.getMonthlyInstallment(), item.getPrincipal(), item.getInterestAmount(), item .getScheduleDate(),item.getBalance(), loggedInUserId, item.getScheduleId());
+                });
+                try {
+                    String response = SMS_OBJECT.sendSms(numberLabel.getText(), message);
+                    String status = MessageStatus.getMessageStatusResult(response).toString();
+                    logsEntity.setRecipient(numberLabel.getText());
+                    logsEntity.setSent_by(loggedInUserId);
+                    logsEntity.setStatus(status);
+                    logsEntity.setTitle("LOAN DISBURSEMENT");
+                    logsEntity.setMessage(message);
+                    MESSAGE_MODEL_OBJECT.logNotificationMessages(logsEntity);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                int result = LOAN_MODEL.approveLoanForDisbursement(QUALIFICATION_OBJ, LOANS_OBJ);
+                System.out.println(result);
+                if( result > 0) {
+                    Platform.runLater(() -> {
+                        NOTIFY.successNotification("DISBURSEMENT APPROVAL", "Nice, selected loan number has successfully been approved for payment.");
+                    });
+                }
+            }).start();
+        }
+    }
+    public void rejectButtonClicked() {
+
+    }
 
 
 }//end of class...

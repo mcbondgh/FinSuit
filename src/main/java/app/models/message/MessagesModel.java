@@ -16,7 +16,6 @@ public class MessagesModel extends MainModel {
             preparedStatement.setString(4, messageLogsEntity.getStatus());
             preparedStatement.setInt(5, messageLogsEntity.getSent_by());
             preparedStatement.execute();
-            commitTransaction();
         }catch (Exception e) {
             e.printStackTrace();
             rollBack();}

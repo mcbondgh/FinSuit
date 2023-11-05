@@ -69,7 +69,7 @@ public class DocumentGenerator {
         try {
             // CREATE A pdf document template that serves as the document environment to hold content...
             // This is equivalent to having an empty document space or white space...
-            File receiptFolder = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "receipts\\");
+            File receiptFolder = new File(createDirectoryIfNotExist().getPath() + File.separator + "receipts\\");
             if (!receiptFolder.exists()) {
                 receiptFolder.mkdir();
             }
@@ -128,7 +128,7 @@ public class DocumentGenerator {
     /*******************************************************************************************************************
         *************************************** ACCOUNT CREATION API *************************************************
      ******************************************************************************************************************/
-    public File createAccountOpeningFolderIfNotExists() {
+    public File createDirectoryIfNotExist() {
         File path = new File(System.getProperty("user.home") + File.separator + "Desktop");
         String createFolder = path.getPath() + File.separator + "Finsuit Document\\";
         File directory = new File(createFolder) ;
@@ -139,7 +139,7 @@ public class DocumentGenerator {
     }
     public void generateNewAccountFile(String documentName, String fullName, String mobile, String accountType, String accountNumber, String initialDeposit, String email, String officerName, String digitalAddress ) {
         try {
-            File newAccountsPath = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "new accounts\\");
+            File newAccountsPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "new accounts\\");
             if (!newAccountsPath.exists()) {
                 newAccountsPath.mkdir();
             }
@@ -217,7 +217,7 @@ public class DocumentGenerator {
                 row.createCell(5).setCellValue(tableView.getItems().get(i).getBalance());
             }
 
-            File directoryPath = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "loan schedules" + File.separator);
+            File directoryPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "loan schedules" + File.separator);
             if (!directoryPath.exists()) {
                 directoryPath.mkdir();
             }
@@ -228,9 +228,9 @@ public class DocumentGenerator {
             e.printStackTrace();
         }
     }
-    public void exportScheduleAsPdf(String documentName, TableView<ScheduleTableValues> tableView) {
+    public void exportScheduleAsPdf(String documentName, TableView<ScheduleTableValues> tableView, String totalLoanAmount) {
         try {
-            File newAccountsPath = new File(createAccountOpeningFolderIfNotExists().getPath() + File.separator + "loan schedules" + File.separator);
+            File newAccountsPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "loan schedules" + File.separator);
             if (!newAccountsPath.exists()) {
                 newAccountsPath.mkdir();
             }
@@ -241,6 +241,8 @@ public class DocumentGenerator {
 
             Table table = new Table(6).useAllAvailableWidth();
             table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN PAYMENT SCHEDULE ").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));
+            table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
+            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc".concat(totalLoanAmount)).setTextAlignment(TextAlignment.CENTER)));
             table.addCell(new Cell().add(new Paragraph("NO").setFontSize(10).setBold()));
             table.addCell(new Cell().add(new Paragraph("MONTHLY INSTALLMENT").setBold().setFontSize(10)));
             table.addCell(new Cell().add(new Paragraph("PRINCIPAL").setFontSize(10).setBold()));

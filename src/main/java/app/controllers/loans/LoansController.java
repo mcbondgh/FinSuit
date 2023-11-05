@@ -149,7 +149,8 @@ public class LoansController extends LoansModel implements Initializable {
                 });
                 //Handles click event for the edit-button
                 item.getEditButton().setOnAction(action -> {
-
+                    System.out.println("Loan No: ".concat(loanNumber));
+                    loanApplicationStage.show();
                 });
             }
         }

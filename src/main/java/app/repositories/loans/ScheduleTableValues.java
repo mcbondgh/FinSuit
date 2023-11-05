@@ -6,6 +6,7 @@ import java.time.format.FormatStyle;
 
 public class ScheduleTableValues {
     private int index;
+    private long scheduleId;
     private double principal;
     private double interestAmount;
     private double monthlyInstallment;
@@ -14,7 +15,18 @@ public class ScheduleTableValues {
     private String formattedScheduleDate;
 
     public ScheduleTableValues() {}
-    public ScheduleTableValues(int index, double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
+    public ScheduleTableValues(int index, long scheduleId, double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
+        this.index = index;
+        this.scheduleId = scheduleId;
+        this.principal = principal;
+        this.interestAmount = interestAmount;
+        this.monthlyInstallment = monthlyInstallment;
+        this.balance = balance;
+        this.scheduleDate = scheduleDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+        formattedScheduleDate = scheduleDate.format(formatter);
+    }
+    public ScheduleTableValues(int index,  double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
         this.index = index;
         this.principal = principal;
         this.interestAmount = interestAmount;
@@ -23,7 +35,6 @@ public class ScheduleTableValues {
         this.scheduleDate = scheduleDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
         formattedScheduleDate = scheduleDate.format(formatter);
-
     }
 
     public int getIndex() {
@@ -76,6 +87,14 @@ public class ScheduleTableValues {
 
     public void setFormattedScheduleDate(String formattedScheduleDate) {
         this.formattedScheduleDate = formattedScheduleDate;
+    }
+
+    public long getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(long scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     public void setScheduleDate(LocalDate scheduleDate) {

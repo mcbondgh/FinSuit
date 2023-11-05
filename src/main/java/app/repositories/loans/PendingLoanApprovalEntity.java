@@ -9,6 +9,9 @@ public class PendingLoanApprovalEntity {
     private double remaining_balance, total_deduction, amount, loan_amount;
     private int interest_rate, loan_period, processing_rate;
     private LocalDate start_date;
+    private LocalDate end_date;
+
+    public PendingLoanApprovalEntity() {}
 
     public PendingLoanApprovalEntity(String loan_no, double requested_amount, double gross_salary, double statutory_deduction, double remaining_balance, double total_deduction, double amount, double loan_amount, int interest_rate, int loan_period, int processing_rate, LocalDate start_date) {
         this.loan_no = loan_no;
@@ -119,5 +122,13 @@ public class PendingLoanApprovalEntity {
 
     public void setStart_date(LocalDate start_date) {
         this.start_date = start_date;
+    }
+
+    public LocalDate getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(LocalDate end_date) {
+        this.end_date = end_date;
     }
 }//end of class...

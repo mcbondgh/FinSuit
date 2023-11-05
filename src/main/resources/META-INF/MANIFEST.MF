@@ -1,3 +1,58 @@
 Manifest-Version: 1.0
 Main-Class: app.RunApp
+Class-Path: activation-1.1.jar ikonli-javafx-12.3.1.jar step-framework-m
+ odel-2.0.6.jar xmpbox-2.0.0.jar jdbc-socket-factory-core-1.14.1.jar jav
+ ax.mail-1.6.2.jar listenablefuture-9999.0-empty-to-avoid-conflict-with-
+ guava.jar jakarta.json-2.0.1.jar barcodes-7.1.4.jar forms-7.1.4.jar io-
+ 7.1.4.jar kernel-7.1.4.jar layout-7.1.4.jar pdfa-7.1.4.jar pdftest-7.1.
+ 4.jar sign-7.1.4.jar styled-xml-parser-7.1.4.jar svg-7.1.4.jar font-awe
+ some-6.3.0.jar mysql-socket-factory-connector-j-8-1.14.1.jar controlsfx
+ -11.1.2.jar javafx-fxml-19.0.2.1.jar httpcore-4.4.16.jar virtualizedfx-
+ 11.2.6.jar moshi-1.15.0.jar gax-2.35.0.jar unbescape-1.1.0.RELEASE.jar 
+ opencensus-api-0.31.1.jar bootstrapfx-core-0.4.0.jar javafx-base-19.0.2
+ .1.jar asm-commons-9.2.jar jrobin-1.5.9.jar asm-analysis-9.6.jar jnr-un
+ ixsocket-0.38.21.jar jakarta.persistence-api-3.1.0.jar admin-theme-1.6.
+ 0.jar gson-2.10.1.jar thymeleaf-2.1.5.RELEASE.jar javax.servlet-api-3.1
+ .0.jar checker-qual-3.37.0.jar kotlin-stdlib-common-1.5.31.jar javafx-m
+ edia-19.0.2.1.jar commons-logging-1.2.jar admin-tools-core-1.1.7.3.jar 
+ spring-aop-4.3.9.RELEASE.jar google-auth-library-credentials-1.20.0.jar
+  jempbox-1.8.11.jar kotlin-stdlib-jdk8-1.8.21.jar fontbox-2.0.0.jar pre
+ flight-2.0.0.jar pdfbox-tools-2.0.0.jar javafx-graphics-19.0.2.1-win.ja
+ r formsfx-core-11.6.0.jar failureaccess-1.0.1.jar grpc-context-1.27.2.j
+ ar msg-3.7.22.jar jackson-databind-2.15.2.jar materialfx-11.13.9.jar pd
+ fbox-2.0.13.jar spring-context-support-4.3.9.RELEASE.jar countries-17.0
+ .23.jar google-oauth-client-1.34.1.jar font-awesome-4.7.0.jar ionicons-
+ 2.0.1.jar poi-5.2.2.jar google-http-client-gson-1.43.3.jar bson-4.6.0.j
+ ar jnr-constants-0.10.4.jar commons-codec-1.15.jar bson-4.6.0.jar step-
+ commons-3.21.0.jar j2objc-annotations-2.8.jar spring-security-crypto-6.
+ 1.0.jar jbcrypt-0.4.jar error_prone_annotations-2.22.0.jar google-http-
+ client-apache-v2-1.42.3.jar pdfbox-debugger-2.0.0.jar poi-5.2.3.jar log
+ 4j-api-2.18.0.jar poi-5.2.3.wso2v1.jar SparseBitSet-1.2.jar commons-io-
+ 2.11.0.jar commons-codec-1.15.jar commons-math3-3.6.1.jar commons-colle
+ ctions4-4.4.jar google-auth-library-oauth2-http-1.20.0.jar javafx-web-1
+ 9.0.2.1.jar okhttp-4.10.0.jar spring-context-4.3.9.RELEASE.jar groovy-2
+ .4.3.jar javafx-controls-19.0.2.1-win.jar javamelody-core-2.0.1.jar asm
+ -util-9.6.jar javafx-controls-19.0.2.1.jar jffi-1.3.12-native.jar sprin
+ g-expression-4.3.9.RELEASE.jar toolboxfx-17.0.33.jar spring-core-4.3.9.
+ RELEASE.jar opencensus-contrib-http-util-0.31.1.jar exense-basic-common
+ s-2.0.3.jar google-http-client-1.43.3.jar okio-jvm-3.0.0.jar jackson-an
+ notations-2.15.2.jar kotlin-stdlib-1.6.20.jar admin-tools-melody-1.1.7.
+ 3.jar SparseBitSet-1.2.jar tilesfx-17.1.17.jar annotations-13.0.jar ste
+ p-library-kw-excel-1.0.18.jar step-core-model-3.21.0.jar adminlte-2.3.1
+ 1.jar jackson-core-2.15.2.jar jnr-enxio-0.32.16.jar jakarta.activation-
+ api-2.0.1.jar google-api-client-2.2.0.jar heatmap-17.0.12.jar jsr305-3.
+ 0.2.jar javafx-fxml-19.0.2.1-win.jar okio-2.10.0.jar javafx-base-19.0.2
+ .1-win.jar jnr-posix-3.1.18.jar spring-web-4.3.9.RELEASE.jar jnr-ffi-2.
+ 2.15.jar jfoenix-9.0.10.jar guava-32.1.3-android.jar javafx-web-19.0.2.
+ 1-win.jar commons-io-2.11.0.jar thymeleaf-spring4-2.1.5.RELEASE.jar com
+ mons-math3-3.6.1.jar spring-beans-4.3.9.RELEASE.jar javafx-media-19.0.2
+ .1-win.jar kotlin-stdlib-jdk7-1.8.21.jar spring-webmvc-4.3.9.RELEASE.ja
+ r slf4j-api-1.7.36.jar httpclient-4.5.14.jar asm-9.6.jar javassist-3.16
+ .1-GA.jar jnr-a64asm-1.0.0.jar jffi-1.3.12.jar itextpdf-5.5.13.3.jar th
+ ymeleaf-layout-dialect-1.4.0.jar google-api-services-sqladmin-v1beta4-r
+ ev20231004-2.0.0.jar auto-value-annotations-1.10.4.jar toolbox-17.0.35.
+ jar ikonli-core-12.3.1.jar jnr-x86asm-1.0.2.jar asm-tree-9.6.jar javafx
+ -graphics-19.0.2.1.jar ognl-3.0.8.jar validatorfx-0.4.0.jar commons-col
+ lections4-4.4.jar aspose-cells-23.9.jar mysql-connector-j-8.0.31.jar lo
+ g4j-api-2.17.2.jar
 

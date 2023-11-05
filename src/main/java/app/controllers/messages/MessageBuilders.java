@@ -47,6 +47,18 @@ public class MessageBuilders {
       return  stringBuilder.toString();
     }
 
+    public String createLoanDisbursementMessage(String fullName, String loanNo, double loanAmount) {
+        DAO.getMessageWithOperations().forEach(item -> {
+            if (item.getOperation_type().equalsIgnoreCase("Loan Approval")) {
+                message = item.getMessage().replace("[NAME]", fullName).replace("[LOAN NUMBER]", loanNo)
+                        .replace("[DATE]", dateTime)
+                        .replace("[AMOUNT]", String.valueOf(loanAmount));
+                stringBuilder.append(message);
+            }
+        });
+        return  stringBuilder.toString();
+    }
+
 
 //    public static void main(String[] args) {
 //        GenerateMessageForOperation temp = new GenerateMessageForOperation();

@@ -515,8 +515,6 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                     String clientName = lastname.concat(" ").concat(otherName).concat(" " ).concat(firstname);
                   String messageBody = GENERATE_MESSAGE_OBJECT.accountOpeningMessageBuilder(clientName, accountType, accountNumber);
                   try {
-
-                      System.out.println(messageBody);
                       String response = SMS_OBJECT.sendSms(mobileNumber, messageBody);
                       String status = MessageStatus.getMessageStatusResult(response).toString();
                       logsEntity.setRecipient(mobileNumber);
@@ -527,7 +525,6 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                       MESSAGE_MODEL_OBJECT.logNotificationMessages(logsEntity);
                   }catch (Exception e) {errorLogger.log(e.getLocalizedMessage());}
                 }
-
                 if (flag == 2) {
                     NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");
                     resetFields();
@@ -551,7 +548,6 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
         uploadButton.setOnAction(uploadAction -> {
             previewFileButton.setDisable(!isFileNameFiledEmpty());
             absoluteFilePathLabel.setText(getUploadedDocument());
-
         });
 
         previewFileButton.setOnAction(action -> {
