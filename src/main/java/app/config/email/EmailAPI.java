@@ -1,13 +1,13 @@
 package app.config.email;
 
-import app.repositories.SmsAPIEntity;
 import app.models.MainModel;
+import app.repositories.SmsAPIEntity;
 
-import java.io.IOException;
-import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.util.Properties;
 public class EmailAPI extends MainModel {
 
     private String senderMail, senderPassword;
@@ -66,9 +66,9 @@ public class EmailAPI extends MainModel {
             System.out.println("Failed to send email: " + e.getMessage());
         }
     }
-    public static void main(String[] args) throws IOException {
-        EmailAPI email = new EmailAPI("realmcbond@hotmail.com", "FINSUIT - GHANA", "App passwords aren't recommended and are unnecessary in most cases. To help keep your account secure, use ign in with Google to connect apps to your Google Account.", "this is the message footer...");
-        email.sendEmail();
-    }
+//    public static void main(String[] args) throws IOException {
+//        EmailAPI email = new EmailAPI("realmcbond@hotmail.com", "FINSUIT - GHANA", "App passwords aren't recommended and are unnecessary in most cases. To help keep your account secure, use ign in with Google to connect apps to your Google Account.", "this is the message footer...");
+//        email.sendEmail();
+//    }
 
 }//end of class...
