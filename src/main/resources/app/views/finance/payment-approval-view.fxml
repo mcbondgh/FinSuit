@@ -200,7 +200,7 @@
             </Label>
          </children>
       </Pane>
-      <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="515.0" layoutY="52.0" prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
+      <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="515.0" layoutY="52.0" onMouseMoved="#checkScheduleTableIfEmpty" prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
          <columns>
             <TableColumn fx:id="noColumn" editable="false" prefWidth="66.6666259765625" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
             <TableColumn fx:id="installmentColumn" editable="false" prefWidth="160.0" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="MONTHLY INSTALLMENT" />

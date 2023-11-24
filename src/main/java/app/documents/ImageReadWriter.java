@@ -13,8 +13,8 @@ import java.io.File;
 public class ImageReadWriter {
 
     static ErrorLogger log = new ErrorLogger();
-    private static final String absolutePath = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\";
-    public static final File defaultImageName = new File("G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\images\\profile.png");
+    public static final String absolutePath = "C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\uploads";
+    public static final File defaultImageName = new File("C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\images\\profile.png");
     public static void saveImageToDestination(String imageName, @NotNull ImageView uploadedImage ){
         Image selectedImage = uploadedImage.getImage();
         File destinationFolder = new File(absolutePath);

@@ -50,7 +50,7 @@ public class MessageBuilders {
     public String createLoanDisbursementMessage(String fullName, String loanNo, double loanAmount) {
         DAO.getMessageWithOperations().forEach(item -> {
             if (item.getOperation_type().equalsIgnoreCase("Loan Approval")) {
-                message = item.getMessage().replace("[NAME]", fullName).replace("[LOAN NUMBER]", loanNo)
+                message = item.getMessage().replace("[NAME]", fullName).replace("[LOAN NO]", loanNo)
                         .replace("[DATE]", dateTime)
                         .replace("[AMOUNT]", String.valueOf(loanAmount));
                 stringBuilder.append(message);

@@ -179,7 +179,14 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
      ********************************************************************************************************************/
-
+    @FXML
+    void checkScheduleTableIfEmpty() {
+        boolean empty = scheduleTable.getItems().isEmpty();
+        exportLink.setDisable(empty);
+        generateScheduleButton.setDisable(empty);
+        saveButton.setDisable(empty);
+        rejectButton.setDisable(listView.getSelectionModel().isEmpty());
+    }
 
 
 
@@ -199,7 +206,6 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         }
     };
 }
-
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION
@@ -236,9 +242,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                     saveButton.setDisable(false);
                     rejectButton.setDisable(false);
                 }
-
             }catch (NullPointerException ignore){}
-
         });
     }
     public void exportButtonClicked(ActionEvent actionEvent) {
@@ -280,6 +284,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                 LOANS_OBJ.setLoan_no(selectedLoanNo);
                 LOANS_OBJ.setDisbursed_amount(disbursedAmount);
                 LOANS_OBJ.setApproved_by(loggedInUserId);
+
                 //SET QUALIFICATION ENTITY VALUES
                 QUALIFICATION_OBJ.setLoan_amount(loanAmount);
                 QUALIFICATION_OBJ.setInterest_rate(interest);
@@ -312,7 +317,8 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                     throw new RuntimeException(e);
                 }
                 int result = LOAN_MODEL.approveLoanForDisbursement(QUALIFICATION_OBJ, LOANS_OBJ);
-                System.out.println(result);
+                loadListView();
+                scheduleTable.getItems().clear();
                 if( result > 0) {
                     Platform.runLater(() -> {
                         NOTIFY.successNotification("DISBURSEMENT APPROVAL", "Nice, selected loan number has successfully been approved for payment.");

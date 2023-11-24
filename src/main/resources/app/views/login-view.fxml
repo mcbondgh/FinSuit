@@ -117,7 +117,7 @@
       </Label>
       <ImageView fx:id="logoViewer" fitHeight="43.0" fitWidth="53.0" layoutX="222.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/applicationIcon-256.png" />
+            <Image url="@../images/finsit-logo.png" />
          </image>
       </ImageView>
       <Label layoutX="202.0" layoutY="552.0" text="2023 | finsuit ghana" textFill="WHITE">

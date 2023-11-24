@@ -374,7 +374,7 @@ public class LoansModel extends MainModel {
                     "\tremaining_balance, total_deduction, amount, loan_amount, \n" +
                     "interest_rate, loan_period, processing_rate, start_date FROM loans ln\n" +
                     "INNER JOIN loan_qualification_values AS lqv \n" +
-                    "ON lqv.loan_no = ln.loan_no WHERE(loan_status = 'active')";
+                    "ON lqv.loan_no = ln.loan_no WHERE(loan_status = 'active' AND application_status = 'pending_approval')";
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
             while(resultSet.next()) {
@@ -455,6 +455,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setDouble(1, loans.getDisbursed_amount());
             preparedStatement.setInt(2, loans.getApproved_by());
             preparedStatement.setString(3, loans.getLoan_no());
+            status = preparedStatement.executeUpdate();
 
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setDouble(1, qualifications.getLoan_amount());
@@ -464,10 +465,13 @@ public class LoansModel extends MainModel {
             preparedStatement.setDate(5, Date.valueOf(qualifications.getStart_date()));
             preparedStatement.setDate(6, Date.valueOf(qualifications.getEnd_date()));
             preparedStatement.setString(7, qualifications.getLoan_no());
-            status = preparedStatement.executeUpdate();
+            status += preparedStatement.executeUpdate();
+
         }catch (SQLException e){
             rollBack();
-            e.printStackTrace();}
+            e.printStackTrace();
+        }
+        System.out.println(status);
         return status;
     }
     public void updateLoanSchedule(double installment, double principal, double interest, LocalDate date, double balance, int generatedBy, long scheduleId) {

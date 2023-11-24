@@ -1,5 +1,6 @@
 package app.models.homepage;
 
+import app.documents.ImageReadWriter;
 import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import javafx.scene.control.Label;
@@ -10,7 +11,7 @@ public class AppModel extends MainModel {
     protected void setVariables(Label appName, ImageView logo) {
         for (BusinessInfoEntity items : getBusinessInfo()) {
             appName.setText(items.getName());
-            String getImageSource = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + items.getLogo();
+            String getImageSource = ImageReadWriter.absolutePath +"\\" + items.getLogo();
             logo.setImage(new Image(getImageSource));
         }
     }
