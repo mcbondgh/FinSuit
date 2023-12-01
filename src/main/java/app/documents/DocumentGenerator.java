@@ -119,7 +119,6 @@ public class DocumentGenerator {
             receiptBodyContainer.add(combinedParagraph).add(receiptContentContainer);
             document.add(documentHeader()).add(receiptBodyContainer);
             document.close();
-
         } catch (Exception ignore) {
         }
     }

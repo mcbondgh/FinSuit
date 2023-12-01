@@ -444,7 +444,7 @@ public class LoansModel extends MainModel {
         int status = 0;
         try{
             String query1 = "UPDATE loans\n" +
-                    "SET disbursed_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?\n" +
+                    "SET approved_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?\n" +
                     "WHERE(loan_no = ?);";
 
             String query2 = "UPDATE loan_qualification_values\n" +
@@ -492,6 +492,18 @@ public class LoansModel extends MainModel {
             e.printStackTrace();
             rollBack();
         }
+    }
+
+    protected int saveDisbursedLoans(String loanNo, int userId) {
+        int status = 0;
+        try{
+            String query = "UPDATE loans SET application_status = 'paid', date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, loanNo);
+            status = preparedStatement.executeUpdate();
+        }catch (SQLException ignore){}
+        return status;
     }
 
 

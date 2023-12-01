@@ -224,7 +224,6 @@ public class CustomerAccountModel extends MainModel {
                 documentRepository.setReason_for_upload(resultSet.getString("reason_for_upload"));
                 data.add(documentRepository);
             }
-            commitTransaction();
         }catch (SQLException e) {
             e.printStackTrace();
         }

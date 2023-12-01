@@ -13,7 +13,6 @@ public class ScheduleTableValues {
     private double balance;
     private LocalDate scheduleDate;
     private String formattedScheduleDate;
-
     public ScheduleTableValues() {}
     public ScheduleTableValues(int index, long scheduleId, double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
         this.index = index;
@@ -26,6 +25,7 @@ public class ScheduleTableValues {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
         formattedScheduleDate = scheduleDate.format(formatter);
     }
+
     public ScheduleTableValues(int index,  double principal, double interestAmount, double monthlyInstallment, double balance, LocalDate scheduleDate) {
         this.index = index;
         this.principal = principal;

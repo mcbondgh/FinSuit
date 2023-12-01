@@ -42,8 +42,8 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private HBox hBox;
     @FXML private AnchorPane anchorPane;
     @FXML
-    private MFXButton addNewLoanButton, payLoanButton, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton,viewLoansButton;
-   @FXML private MFXButton generateScheduleButton;
+    private MFXButton addNewLoanButton, disburseFundBtn, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton,viewLoansButton;
+   @FXML private MFXButton generateScheduleButton, viewLoansBtn;
     @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
     @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
     @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
@@ -65,7 +65,7 @@ public class LoansController extends LoansModel implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             loadForm();
-            payLoanButtonClicked();
+            disburseLoanButtonOnAction();
             showRequestedLoanCount();
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
@@ -97,9 +97,11 @@ public class LoansController extends LoansModel implements Initializable {
 
     private void showRequestedLoanCount() {
         int counter = countRequestedLoans();
-        loanRequestsButton.setText("Loan Requests (" + counter +")");
         int counter1 = countAssignedLoans();
+        int counter2 = countUnpaidLoans();
+        loanRequestsButton.setText("Loan Requests (" + counter +")");
         generateScheduleButton.setText("Unprocessed Loans (" + counter1 +")");
+        disburseFundBtn.setText("Disburse Fund(" + counter2 +")");
     }
 
     public void searchCustomerMethod(KeyEvent event) {
@@ -149,7 +151,6 @@ public class LoansController extends LoansModel implements Initializable {
                 });
                 //Handles click event for the edit-button
                 item.getEditButton().setOnAction(action -> {
-                    System.out.println("Loan No: ".concat(loanNumber));
                     loanApplicationStage.show();
                 });
             }
@@ -168,10 +169,12 @@ public class LoansController extends LoansModel implements Initializable {
     public void newLoanButtonClicked(ActionEvent event) throws IOException {
         loanApplicationStage.show();
     }
-    void payLoanButtonClicked() {
-        payLoanButton.setOnAction(event -> {
+    void disburseLoanButtonOnAction() {
+        disburseFundBtn.setOnAction(event -> {
             try {
-                AppStages.loanPaymentStage().show();
+                borderPane.getChildren().remove(0);
+                String fxmlFile = "views/loans/loan-disbursement-page.fxml";
+                SpecialMethods.FlipView(borderPane, fxmlFile );
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -183,6 +186,16 @@ public class LoansController extends LoansModel implements Initializable {
     }
     @FXML void ScheduleButtonClicked() throws IOException {
         AppStages.loanCalculatorStage().show();
+    }
+
+    @FXML void viewLoansBtnClicked() {
+        try {
+            borderPane.getChildren().remove(0);
+            String fxmlFile = "views/loans/loan-schedule-page.fxml";
+            SpecialMethods.FlipView(borderPane, fxmlFile );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

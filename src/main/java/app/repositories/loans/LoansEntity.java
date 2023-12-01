@@ -10,10 +10,13 @@ public class LoansEntity {
     private byte is_drafted;
     private Timestamp date_created, date_modified;
    private int created_by, updated_by, approved_by;
-
-    public int getLoan_id() {
+   public int getLoan_id() {
         return loan_id;
     }
+
+
+
+
 
     public void setLoan_id(int loan_id) {
         this.loan_id = loan_id;

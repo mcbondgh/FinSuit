@@ -8,6 +8,7 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
+import app.repositories.loans.DisbursementEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageOperationsEntity;
@@ -221,12 +222,11 @@ public class MainModel extends DbConnection {
             String query = "SELECT MAX(loan_id) AS 'max_id' FROM loans;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
-            commitTransaction();
             if (resultSet.next()) {
                return resultSet.getLong("max_id");
             }
-        }catch (SQLException e) {
-            rollBack();
+        }catch (SQLException ignore) {
+
         }
         return 0;
     }
@@ -703,6 +703,35 @@ public class MainModel extends DbConnection {
             e.printStackTrace();
             rollBack();
         }
+    }
+    public int countUnpaidLoans() {
+        int value = 0;
+        try {
+            preparedStatement = getConnection().prepareStatement("SELECT COUNT(*) FROM loans WHERE application_status = 'pending_payment';");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                value = resultSet.getInt(1);
+            }
+        }catch (SQLException ignore){}
+
+        return value;
+    }
+
+    public ObservableList<DisbursementEntity> getUnpaidLoans() {
+        ObservableList<DisbursementEntity> data = new ObservableStack<>();
+        try {
+            String query = "SELECT loan_id, loan_no, approved_amount, application_status FROM loans WHERE(application_status = 'pending_payment');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("loan_id");
+                String no = resultSet.getString("loan_no");
+                double amount = resultSet.getDouble("approved_amount");
+                String status = resultSet.getString("application_status");
+                data.add(new DisbursementEntity(id, no, amount, status));
+            }
+        }catch (SQLException i){i.printStackTrace();}
+        return data;
     }
 
 

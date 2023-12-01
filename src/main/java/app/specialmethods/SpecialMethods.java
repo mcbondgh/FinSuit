@@ -30,7 +30,7 @@ public class SpecialMethods {
     public static Image setLogoImage() {
         String filePath = "";
         for(BusinessInfoEntity item : MODEL.getBusinessInfo()) {
-            filePath = "G:\\My Drive\\FINAL YEAR PROJECT\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
+            filePath = "C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
         }
         return new Image(filePath);
     }

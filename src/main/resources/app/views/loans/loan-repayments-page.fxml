@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1196.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanDisbursementController">
+   <children>
+      <Label alignment="CENTER" layoutX="141.0" layoutY="14.0" prefHeight="59.0" prefWidth="297.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="LOAN STATUS AND REPAYMENTS" textAlignment="CENTER" textFill="#570667" wrapText="true">
+         <font>
+            <Font name="Roboto Bold" size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <TableView fx:id="repaymentsTable" fixedCellSize="40.0" layoutX="141.0" layoutY="78.0" prefHeight="447.0" prefWidth="884.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 14px; -fx-font-weight: bold;">
+         <columns>
+            <TableColumn fx:id="noColumn" prefWidth="65.99996948242188" style="-fx-font-size: 14; -fx-alignment: center;" text="NO." />
+            <TableColumn fx:id="loanIdColumn" prefWidth="185.3332977294922" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN NUMBER" />
+            <TableColumn fx:id="nameColumn" prefWidth="309.3333435058594" style="-fx-font-size: 14; -fx-alignment: center;" text="APPLICANT NAME" />
+            <TableColumn fx:id="loanStatusColumn" prefWidth="102.00006103515625" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN STATUS" />
+            <TableColumn fx:id="loanAmountColumn" prefWidth="98.66668701171875" style="-fx-font-size: 14; -fx-alignment: center;" text="AMOUNT" />
+            <TableColumn fx:id="buttonColumn" maxWidth="233.0" minWidth="105.99993896484375" prefWidth="117.33331298828125" style="-fx-font-size: 14; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="VIEW SCHEDULE" />
+         </columns>
+      </TableView>
+      <Pane layoutX="468.0" layoutY="23.0" prefHeight="41.0" prefWidth="305.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
+         <children>
+            <Label layoutX="5.0" layoutY="8.0" text="🔎" textFill="#828181">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="searchField" layoutX="27.0" layoutY="6.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="270.0" promptText="Search by loan No or applicant name" style="-fx-background-color: #fff; -fx-background-radius: 5;">
+               <font>
+                  <Font name="Poppins Regular" size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
