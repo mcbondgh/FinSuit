@@ -1,6 +1,7 @@
 package app.repositories.loans;
 
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
 public class DisbursementEntity {
@@ -12,6 +13,7 @@ public class DisbursementEntity {
     private String applicationStatus;
     private Label status = new Label();
     private CheckBox payBtn = new CheckBox("Pay");
+    private ComboBox<String> method = new ComboBox<>();
 
 
     public DisbursementEntity(int id, String loanNumber, double loanAmount, String appStatus) {
@@ -19,7 +21,14 @@ public class DisbursementEntity {
         this.loanNumber = loanNumber;
         this.loanAmount = loanAmount;
         applicationStatus = appStatus;
+        comboBox();
         styleStatus();
+    }
+
+    private void comboBox() {
+        method.getItems().add("CASH");
+        method.getItems().add("eCASH");
+        method.setStyle("-fx-pref-width:120px; -fx-font-family:roboto: -fx-font-weight:bold; -fx-background-color:#eee");
     }
 
     private void styleStatus(){
@@ -55,6 +64,14 @@ public class DisbursementEntity {
 
     public void setLoanAmount(double loanAmount) {
         this.loanAmount = loanAmount;
+    }
+
+    public ComboBox<String> getMethod() {
+        return method;
+    }
+
+    public void setMethod(ComboBox<String> method) {
+        this.method = method;
     }
 
     public Label getStatus() {

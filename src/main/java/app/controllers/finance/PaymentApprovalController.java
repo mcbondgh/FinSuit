@@ -7,6 +7,7 @@ import app.controllers.homepage.AppController;
 import app.controllers.messages.MessageBuilders;
 import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
+import app.errorLogger.ErrorLogger;
 import app.models.finance.FinanceModel;
 import app.models.loans.LoansModel;
 import app.models.message.MessagesModel;
@@ -52,6 +53,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     MessagesModel MESSAGE_MODEL_OBJECT = new MessagesModel();
     SmsAPI SMS_OBJECT = new SmsAPI();
     MessageLogsEntity logsEntity = new MessageLogsEntity();
+    ErrorLogger errorLogger = new ErrorLogger();
 
     //------------------------------------------------------------------------------------------------------------------
     int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
@@ -313,17 +315,16 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                     logsEntity.setTitle("LOAN DISBURSEMENT");
                     logsEntity.setMessage(message);
                     MESSAGE_MODEL_OBJECT.logNotificationMessages(logsEntity);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                int result = LOAN_MODEL.approveLoanForDisbursement(QUALIFICATION_OBJ, LOANS_OBJ);
-                loadListView();
-                scheduleTable.getItems().clear();
-                if( result > 0) {
-                    Platform.runLater(() -> {
-                        NOTIFY.successNotification("DISBURSEMENT APPROVAL", "Nice, selected loan number has successfully been approved for payment.");
-                    });
-                }
+                    int result = LOAN_MODEL.approveLoanForDisbursement(QUALIFICATION_OBJ, LOANS_OBJ);
+                    loadListView();
+                    scheduleTable.getItems().clear();
+                    if( result > 0) {
+                        Platform.runLater(() -> {
+                            NOTIFY.successNotification("DISBURSEMENT APPROVAL", "Nice, selected loan number has successfully been approved for payment.");
+                        });
+                    }
+                } catch (IOException ignore) {}
+
             }).start();
         }
     }

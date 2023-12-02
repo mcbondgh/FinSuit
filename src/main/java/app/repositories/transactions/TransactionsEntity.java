@@ -62,6 +62,9 @@ public class TransactionsEntity {
             case "LOAN PAYMENT" ->
                     transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color: #117bdd;" +
                             "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
+            case "DISBURSED FUND" ->
+                    transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color:#25aa04;" +
+                            "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
         }
 
     }

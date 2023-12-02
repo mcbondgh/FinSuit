@@ -545,7 +545,8 @@ public class LoanApplicationController extends LoansModel implements Initializab
                 logsEntity.setSent_by(currentUserId);
                 new MessagesModel().logNotificationMessages(logsEntity);
             }catch (Exception e) {
-                new ErrorLogger().log(e.getLocalizedMessage());
+                new MessagesModel().logNotificationMessages(logsEntity);
+                new ErrorLogger().log(e.getCause().toString());
             }
             if (flag >= 2) {
                 NOTIFY.successNotification("LOAN REQUEST SUCCESSFUL", "Perfect, loan request successfully placed, your loan request has been queued for review.");

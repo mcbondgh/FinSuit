@@ -20,7 +20,6 @@ public class MessagesModel extends MainModel {
             e.printStackTrace();
             rollBack();}
 
-
     }
 
 

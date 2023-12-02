@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1192.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ScheduleController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1192.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.RepaymentController">
    <children>
       <Pane layoutX="304.0" layoutY="14.0" prefHeight="76.0" prefWidth="874.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" AnchorPane.bottomAnchor="456.0" AnchorPane.leftAnchor="304.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
          <children>
@@ -76,7 +76,7 @@
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="filterCustomerLabel13211" text="Arrears" textFill="#363636" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                  <Label fx:id="filterCustomerLabel13211" text="Balance" textFill="#363636" GridPane.columnIndex="4" GridPane.rowIndex="1">
                      <font>
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
@@ -91,7 +91,7 @@
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="arrearsAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                  <Label fx:id="balanceAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="1">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
@@ -132,7 +132,7 @@
             <TableColumn fx:id="actionColumn" prefWidth="88.666748046875" text="ACTION" />
          </columns>
       </TableView>
-      <ListView fx:id="listView" layoutX="9.0" layoutY="193.0" prefHeight="339.0" prefWidth="201.0" style="-fx-background-radius: 5px;" />
+      <ListView fx:id="listView" fixedCellSize="30.0" layoutX="9.0"  onMouseClicked="#getSelectedLoanNumber" layoutY="193.0" prefHeight="339.0" prefWidth="201.0" style="-fx-background-radius: 5px; -fx-font-size: 14px; -fx-font-family: roboto; -fx-font-weight: bold;" />
       <Pane layoutX="12.0" layoutY="112.0" prefHeight="41.0" prefWidth="201.0" style="-fx-background-color: #eee; -fx-background-radius: 5;">
          <children>
             <Label layoutX="5.0" layoutY="8.0" text="🔎" textFill="#828181">
@@ -140,7 +140,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="searchField" layoutX="27.0" layoutY="6.0" prefHeight="30.0" prefWidth="169.0" promptText="Search by loan No " style="-fx-background-color: #fff; -fx-background-radius: 5;">
+            <TextField fx:id="searchField"  onKeyReleased="#searchCustomerMethod" layoutX="27.0" layoutY="6.0" prefHeight="30.0" prefWidth="169.0" promptText="Search by loan No " style="-fx-background-color: #fff; -fx-background-radius: 5;">
                <font>
                   <Font name="Poppins Regular" size="13.0" />
                </font>

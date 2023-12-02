@@ -1,5 +1,6 @@
 package app.models.loans;
 
+import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.loans.*;
@@ -10,10 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class LoansModel extends MainModel {
+    ErrorLogger logError = new ErrorLogger();
 
     protected List<Object> countTotalLoans(String searchParameter) {
         List<Object> data = new ArrayList<>();
@@ -443,13 +445,15 @@ public class LoansModel extends MainModel {
     public int approveLoanForDisbursement(@NotNull PendingLoanApprovalEntity qualifications, @NotNull LoansEntity loans) {
         int status = 0;
         try{
-            String query1 = "UPDATE loans\n" +
-                    "SET approved_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?\n" +
-                    "WHERE(loan_no = ?);";
+            String query1 = """
+                    UPDATE loans
+                    SET approved_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?
+                    WHERE(loan_no = ?);""";
 
-            String query2 = "UPDATE loan_qualification_values\n" +
-                    "SET loan_amount = ?, interest_rate = ?, loan_period = ?, processing_rate = ?, start_date = ?, end_date = ?\n" +
-                    "WHERE(loan_no = ?);";
+            String query2 = """
+                    UPDATE loan_qualification_values
+                    SET loan_amount = ?, interest_rate = ?, loan_period = ?, processing_rate = ?, start_date = ?, end_date = ?
+                    WHERE(loan_no = ?);""";
 
             preparedStatement = getConnection().prepareStatement(query1);
             preparedStatement.setDouble(1, loans.getDisbursed_amount());
@@ -504,6 +508,37 @@ public class LoansModel extends MainModel {
             status = preparedStatement.executeUpdate();
         }catch (SQLException ignore){}
         return status;
+    }
+
+    protected Map<String, Object> getLoanDetailsByLoanNumber(String loanNo) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        try {
+            String query = """
+                    SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,\s
+                    	mobile_number,\s
+                    	approved_amount,
+                        loan_status,
+                        total_payment,
+                        (approved_amount - total_payment) AS balance FROM customer_data AS cd
+                        INNER JOIN loans AS ln\s
+                        ON cd.customer_id = ln.customer_id
+                        WHERE(loan_no = ?);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, loanNo);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                data.put("fullname", resultSet.getString("fullname"));
+                data.put("mobile_number", resultSet.getString("mobile_number"));
+                data.put("approved_amount", resultSet.getDouble("approved_amount"));
+                data.put("loan_status", resultSet.getString("loan_status"));
+                data.put("total_payment", resultSet.getDouble("total_payment"));
+                data.put("balance", resultSet.getDouble("balance"));
+            }
+        }catch (SQLException e){e.printStackTrace();
+            logError.log(e.getCause().getMessage());
+        }
+        return data;
     }
 
 

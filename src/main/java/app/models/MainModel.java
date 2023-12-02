@@ -230,6 +230,20 @@ public class MainModel extends DbConnection {
         }
         return 0;
     }
+
+    public long getTotalDisbursedLoanCount()  {
+        try {
+            String query = "SELECT COUNT(loan_no) AS result FROM loans WHERE((application_status = 'paid' OR 'pending_payment') AND loan_status = 'active');\n";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getLong("result");
+            }
+        }catch (SQLException ignore) {
+
+        }
+        return 0;
+    }
     protected int getTotalApprovedLoansCount() {
         int result = 0;
         try {
@@ -618,7 +632,8 @@ public class MainModel extends DbConnection {
         ObservableList<TransactionsEntity> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT transaction_id, transaction_type, (cash_amount + ecash_amount) AS amount, \n" +
-                    "TIME(transaction_date) AS `time` FROM transaction_logs WHERE DATE(transaction_date) = current_date();";
+                    "TIME(transaction_date) AS `time` FROM transaction_logs WHERE DATE(transaction_date) = current_date()" +
+                    "ORDER BY transaction_id DESC;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -734,7 +749,18 @@ public class MainModel extends DbConnection {
         return data;
     }
 
-
+    public ObservableList<String> getDisbursedLoanNumbers() {
+        ObservableList<String > data = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT loan_no FROM loans WHERE((application_status = 'paid' OR 'pending_payment') AND loan_status = 'active');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                data.add(resultSet.getString(1));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
 
 
 }//END OF CLASS...

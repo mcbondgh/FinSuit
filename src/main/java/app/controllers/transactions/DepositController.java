@@ -276,9 +276,8 @@ public class DepositController extends TransactionModel implements Initializable
                     logsEntity.setMessage(message);
                     logsEntity.setSent_by(loggedInUserId);
                     MESSAGE_MODEL.logNotificationMessages(logsEntity);
-
-                    clearFields();
                 }
+                clearFields();
             }
         }catch (NumberFormatException ignore) {
             eCashField.setText("0.00");

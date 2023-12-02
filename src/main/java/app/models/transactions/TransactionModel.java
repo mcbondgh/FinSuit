@@ -1,10 +1,16 @@
 package app.models.transactions;
 
+import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
+import app.repositories.loans.DisbursementEntity;
 import app.repositories.transactions.TransactionsEntity;
 
+import java.sql.SQLException;
+
 public class TransactionModel extends MainModel {
+
+    ErrorLogger logger = new ErrorLogger();
 
     protected int saveDepositTransaction(CustomerAccountsDataRepository account, TransactionsEntity transaction) {
         int flag = 0;
@@ -20,7 +26,6 @@ public class TransactionModel extends MainModel {
             preparedStatement.setInt(3, account.getModified_by());
             preparedStatement.setString(4, account.getAccount_number());
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
 
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setString(1, transaction.getAccount_number());
@@ -34,16 +39,32 @@ public class TransactionModel extends MainModel {
             preparedStatement.setString(9, transaction.getTransaction_made_by());
             preparedStatement.setString(10, transaction.getNationalIdNumber());
             preparedStatement.setInt(11, transaction.getUserId());
-
             flag += preparedStatement.executeUpdate();
 
-            commitTransaction();
-        }catch (Exception ignore) {
+        }catch (Exception e) {
+            logger.log(e.getCause().toString());
             rollBack();
         }
         return flag;
     }
 
+    public void saveDisbursementTransaction(TransactionsEntity var1) {
+        try {
+            String query = "INSERT INTO transaction_logs(account_number, transaction_id, transaction_type, payment_method, cash_amount, ecash_amount, user_id)\n" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?);";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, var1.getAccount_number());
+            preparedStatement.setString(2, var1.getTransaction_id());
+            preparedStatement.setString(3, "DISBURSED FUND");
+            preparedStatement.setString(4, var1.getPayment_method());
+            preparedStatement.setDouble(5, var1.getCash_amount());
+            preparedStatement.setDouble(6, var1.getEcash_amount());
+            preparedStatement.setInt(7, var1.getUserId());
+            preparedStatement.execute();
+        }catch (SQLException e){
+            logger.log(e.getCause().toString());
+            rollBack();}
+    }
 
 
 }//end of class...
