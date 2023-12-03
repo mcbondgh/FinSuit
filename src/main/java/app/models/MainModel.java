@@ -9,6 +9,7 @@ import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.loans.DisbursementEntity;
+import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageOperationsEntity;
@@ -745,10 +746,9 @@ public class MainModel extends DbConnection {
                 String status = resultSet.getString("application_status");
                 data.add(new DisbursementEntity(id, no, amount, status));
             }
-        }catch (SQLException i){i.printStackTrace();}
+        }catch (SQLException ignore){}
         return data;
     }
-
     public ObservableList<String> getDisbursedLoanNumbers() {
         ObservableList<String > data = FXCollections.observableArrayList();
         try {
@@ -759,6 +759,44 @@ public class MainModel extends DbConnection {
                 data.add(resultSet.getString(1));
             }
         }catch (SQLException ignore){}
+        return data;
+    }
+    public ObservableList<LoanScheduleEntity> getRepaymentSchedule(String loanNo) {
+        LoanScheduleEntity entity = new LoanScheduleEntity();
+        ObservableList<LoanScheduleEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = """
+                    SELECT schedule_id,
+                    monthly_installment,
+                    principal_amount,
+                    interest_amount,
+                    payment_date,
+                    penalty_amount,
+                    	(SELECT SUM(paid_amount) FROM loan_payment_logs
+                    	WHERE( installment_month = payment_date)) AS monthly_payment
+                    FROM loan_schedule AS ls
+                    WHERE loan_no = ?;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, loanNo);
+            resultSet = preparedStatement.executeQuery();
+            long index = 1;
+            while(resultSet.next()) {
+                entity.setSchedule_id(index++);
+                entity.setMonthly_installment(resultSet.getDouble("monthly_installment"));
+                entity.setPrincipal_amount(resultSet.getDouble("principal_amount"));
+                entity.setInterest_amount(resultSet.getDouble("interest_amount"));
+                entity.setPayment_date(resultSet.getDate("payment_date").toLocalDate());
+                entity.setPenalty_amount(resultSet.getDouble("penalty_amount"));
+                entity.setMonthly_payment(resultSet.getDouble("monthly_payment"));
+                data.add(
+                        new LoanScheduleEntity(
+                                entity.getSchedule_id(), entity.getMonthly_installment(), entity.getPrincipal_amount(),
+                                entity.getInterest_amount(), entity.getPayment_date(), entity.getPenalty_amount(), entity.getMonthly_payment())
+                );
+            }
+        }catch (SQLException ignore){}
+
         return data;
     }
 

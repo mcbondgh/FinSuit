@@ -41,7 +41,7 @@
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="applicantName" text="Kofi Mensah Atsu Issah" textFill="#004480" GridPane.columnIndex="1">
+                  <Label fx:id="applicantName" text="-" textFill="#004480" GridPane.columnIndex="1">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
@@ -51,7 +51,7 @@
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="applicantNumber" prefHeight="17.0" prefWidth="96.0" text="1234567890" textFill="#004480" GridPane.columnIndex="3">
+                  <Label fx:id="applicantNumber" prefHeight="17.0" prefWidth="96.0" text="-" textFill="#004480" GridPane.columnIndex="3">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
@@ -61,7 +61,7 @@
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="loanStatus" text="Active" textFill="#09ba41" GridPane.columnIndex="5">
+                  <Label fx:id="loanStatus" text="-" textFill="#09ba41" GridPane.columnIndex="5">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
@@ -81,17 +81,17 @@
                         <Font name="Poppins Regular" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="disbursedAmount" text="100,000.00" textFill="#004480" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="disbursedAmount" text="-" textFill="#004480" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="paidAmount" prefHeight="17.0" prefWidth="75.0" text="50,000.00" textFill="#004480" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <Label fx:id="paidAmount" prefHeight="17.0" prefWidth="75.0" text="-" textFill="#004480" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="balanceAmount" text="50,000.00" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                  <Label fx:id="balanceAmount" text="-" textFill="#004480" GridPane.columnIndex="5" GridPane.rowIndex="1">
                      <font>
                         <Font name="Poppins Bold" size="12.0" />
                      </font>
@@ -103,7 +103,7 @@
                   <Font name="System Bold" size="9.0" />
                </font>
             </MFXButton>
-            <MFXButton fx:id="exportButton" layoutX="797.0" layoutY="14.0" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #00a323;" text="Export Data" textFill="WHITE">
+            <MFXButton fx:id="exportButton" layoutX="797.0" layoutY="14.0" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #278c8f;" text="Export Data" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="9.0" />
                </font>
@@ -119,7 +119,7 @@
             </ImageView>
          </children>
       </Pane>
-      <TableView fx:id="scheduleTable" fixedCellSize="0.0" layoutX="223.33333333333334" layoutY="112.0" prefHeight="423.0" prefWidth="955.0" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-border-color: #eee; -fx-background-color: #fff; -fx-font-weight: bold;" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="223.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="112.0">
+      <TableView fx:id="scheduleTable" fixedCellSize="0.0" layoutX="223.33333333333334" layoutY="112.0" onMouseEntered="#getClickedLoanValueFromTable" prefHeight="423.0" prefWidth="955.0" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-border-color: #eee; -fx-background-color: #fff; -fx-font-weight: bold;" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="223.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="112.0">
          <columns>
             <TableColumn fx:id="indexColumn" prefWidth="53.33339059352875" text="INDEX" />
             <TableColumn fx:id="installmentColumn" prefWidth="107.33337783813477" text="INSTALLMENT" />
@@ -128,11 +128,11 @@
             <TableColumn fx:id="dateColumn" prefWidth="144.00009155273438" text="DUE DATE" />
             <TableColumn fx:id="penaltyColumn" prefWidth="86.66668701171875" text="PENALTY" />
             <TableColumn fx:id="amountColumn" prefWidth="118.0" text="AMOUNT PAID" />
-            <TableColumn fx:id="statusColumn" prefWidth="114.66668701171875" text=" STATUS " />
-            <TableColumn fx:id="actionColumn" prefWidth="88.666748046875" text="ACTION" />
+            <TableColumn fx:id="statusColumn" prefWidth="114.66668701171875" style="-fx-alignment: center;" text=" STATUS " />
+            <TableColumn fx:id="actionColumn" prefWidth="88.666748046875" style="-fx-alignment: center;" text="ACTION" />
          </columns>
       </TableView>
-      <ListView fx:id="listView" fixedCellSize="30.0" layoutX="9.0"  onMouseClicked="#getSelectedLoanNumber" layoutY="193.0" prefHeight="339.0" prefWidth="201.0" style="-fx-background-radius: 5px; -fx-font-size: 14px; -fx-font-family: roboto; -fx-font-weight: bold;" />
+      <ListView fx:id="listView" fixedCellSize="30.0" layoutX="9.0" layoutY="193.0" onMouseClicked="#getSelectedLoanNumber" prefHeight="339.0" prefWidth="201.0" style="-fx-background-radius: 5px; -fx-font-size: 14px; -fx-font-family: roboto; -fx-font-weight: bold;" />
       <Pane layoutX="12.0" layoutY="112.0" prefHeight="41.0" prefWidth="201.0" style="-fx-background-color: #eee; -fx-background-radius: 5;">
          <children>
             <Label layoutX="5.0" layoutY="8.0" text="🔎" textFill="#828181">
@@ -140,7 +140,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="searchField"  onKeyReleased="#searchCustomerMethod" layoutX="27.0" layoutY="6.0" prefHeight="30.0" prefWidth="169.0" promptText="Search by loan No " style="-fx-background-color: #fff; -fx-background-radius: 5;">
+            <TextField fx:id="searchField" layoutX="27.0" layoutY="6.0" onKeyReleased="#searchCustomerMethod" prefHeight="30.0" prefWidth="169.0" promptText="Search by loan No " style="-fx-background-color: #fff; -fx-background-radius: 5;">
                <font>
                   <Font name="Poppins Regular" size="13.0" />
                </font>
