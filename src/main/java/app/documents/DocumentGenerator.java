@@ -65,7 +65,7 @@ public class DocumentGenerator {
      ******************************************************************************************************************/
 
 
-    public void generateDepositReceipt(String documentName, ReceiptsEntity receiptsEntity) {
+    public void generateTransactionReceipt(String documentName, ReceiptsEntity receiptsEntity) {
         try {
             // CREATE A pdf document template that serves as the document environment to hold content...
             // This is equivalent to having an empty document space or white space...
@@ -85,6 +85,7 @@ public class DocumentGenerator {
                     .useAllAvailableWidth();
 
             Div receiptBodyContainer = new Div();
+//            receiptBodyContainer.setFont("Times New Roman");
 
             Paragraph combinedParagraph = new Paragraph();
             Paragraph labelNames;
@@ -104,13 +105,14 @@ public class DocumentGenerator {
 
             combinedParagraph.add(new Paragraph("-----------------------------------------------------------------------------------------------------------"));
             Div receiptContentContainer = new Div();
+            receiptContentContainer.setFontSize(12);
             receiptContentContainer.add(new Paragraph("CUSTOMER NAME: ".concat(receiptsEntity.getCustomerName())));
             receiptContentContainer.add(new Paragraph("ACCOUNT NUMBER: ".concat(receiptsEntity.getAccountNumber())));
             receiptContentContainer.add(new Paragraph("TRANSACTION TYPE: ".concat(receiptsEntity.getTransactionType())));
-            receiptContentContainer.add(new Paragraph("DEPOSIT AMOUNT: Ghc".concat(receiptsEntity.getAmount())));
+            receiptContentContainer.add(new Paragraph("PAID AMOUNT: Ghc".concat(receiptsEntity.getAmount())));
             receiptContentContainer.add(new Paragraph("PAYMENT METHOD: ".concat(receiptsEntity.getPaymentMethod())));
-            receiptContentContainer.add(new Paragraph("DEPOSITOR'S NAME: ".concat(receiptsEntity.getDepositorName())));
-            receiptContentContainer .add(new Paragraph("DEPOSITOR'S ID NO: ".concat(receiptsEntity.getDepositorIdNumber())));
+            receiptContentContainer.add(new Paragraph("PAYER'S NAME: ".concat(receiptsEntity.getDepositorName())));
+            receiptContentContainer .add(new Paragraph("PAYER'S ID NO: ".concat(receiptsEntity.getDepositorIdNumber())));
             receiptContentContainer.add(new Paragraph("CASHIER'S NAME: ".concat(receiptsEntity.getCashierName())));
             receiptContentContainer.add(new Paragraph("-----------------------------------------------------------------------------------------------------------").setTextAlignment(TextAlignment.CENTER));
             receiptContentContainer.add(new Paragraph("THANK YOU DEAR CUSTOMER, WE APPRECIATE YOU!!!").setFontSize(6).setMarginTop(5).setTextAlignment(TextAlignment.CENTER));
@@ -260,9 +262,10 @@ public class DocumentGenerator {
             document.add(documentHeader()).add(table);
             document.close();
         }catch (Exception e) {e.printStackTrace();}
-
-
     }
+
+
+
 
 
 }// end of class...

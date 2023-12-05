@@ -3,14 +3,16 @@ package app.controllers.loans;
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
+import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
 import app.models.loans.LoansModel;
-import app.repositories.SmsAPIEntity;
+import app.repositories.documents.ReceiptsEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,8 +27,11 @@ import javafx.scene.input.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RepaymentController extends LoansModel implements Initializable {
 
@@ -36,6 +41,7 @@ public class RepaymentController extends LoansModel implements Initializable {
     NotificationEntity NOTIFY_ENTITY;
     MessageStatus MESSAGE_STATUS;
     SmsAPI SEND_SMS;
+    DocumentGenerator DOC_GENERATOR = new DocumentGenerator();
 
 
 
@@ -57,6 +63,7 @@ public class RepaymentController extends LoansModel implements Initializable {
     @FXML private TableColumn<LoanScheduleEntity, Double> penaltyColumn, amountColumn;
     @FXML private TableColumn<LoanScheduleEntity, Label> statusColumn;
     @FXML private TableColumn<LoanScheduleEntity, MFXButton>actionColumn;
+    @FXML private TableColumn<LoanScheduleEntity, MFXButton> logsColumn;
 
     /*******************************************************************************************************************
      TRUE OR FALSE STATEMENTS
@@ -75,7 +82,6 @@ public class RepaymentController extends LoansModel implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateListView();
-
     }
 
     private void populateListView() {
@@ -93,6 +99,15 @@ public class RepaymentController extends LoansModel implements Initializable {
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("monthly_payment"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("statusLabel"));
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("payBtn"));
+        logsColumn.setCellValueFactory(new PropertyValueFactory<>("logsBtn"));
+        String selection = listView.getSelectionModel().getSelectedItem();
+        scheduleTable.setItems(getRepaymentSchedule(selection));
+    }
+
+    private double formatBalance() {
+        double var1 = Double.parseDouble(disbursedAmount.getText());
+        double var2 = Double.parseDouble(paidAmount.getText());
+        return var2 > var1 ? 0.00 : var2;
     }
 
     /*******************************************************************************************************************
@@ -111,26 +126,40 @@ public class RepaymentController extends LoansModel implements Initializable {
             }catch (NullPointerException e) {populateListView();}
         }//..........END OF METHOD
 
+    private void refreshTableValues() {
+             Timer timer = new Timer();
+             TimerTask task = new TimerTask() {
+                 int counter= 0;
+                 @Override
+                 public void run() {
+                     Platform.runLater(()-> {
+                         setScheduleTableProperties();
+                         System.out.println(counter++);
+                     });
+                 }
+             };
+             timer.scheduleAtFixedRate(task, 1000, 5000);
+    }
 
     /*******************************************************************************************************************
      ACTION EVENT METHODS IMPLEMENTATION
      *******************************************************************************************************************/
     @FXML void getSelectedLoanNumber() {
+        updateAllLoanStatus();
         scheduleTable.setDisable(isListEmpty() || isListSelectionEmpty());
         if (isListSelectionEmpty()) {
             NOTIFY.informationNotification("INVALID SELECTION", "You have not made any selection, please make a selection to get value.");
         }else {
+
             String selection = listView.getSelectionModel().getSelectedItem();
             Map<String, Object> data = getLoanDetailsByLoanNumber(selection);
             applicantName.setText(data.get("fullname").toString());
             applicantNumber.setText(data.get("mobile_number").toString());
-            loanStatus.setText(data.get("loan_status").toString());
+            loanStatus.setText(data.get("loan_status").toString().toUpperCase());
             paidAmount.setText(data.get("total_payment").toString());
             balanceAmount.setText(data.get("balance").toString());
             disbursedAmount.setText(data.get("approved_amount").toString());
             setScheduleTableProperties();
-            scheduleTable.setItems(getRepaymentSchedule(selection));
-
         }
 
     }//........END OF METHOD
@@ -141,12 +170,15 @@ public class RepaymentController extends LoansModel implements Initializable {
             item.getPayBtn().setOnAction(event -> {
                 LoanPaymentController.setLoanNumber(loanNo);
                 LoanPaymentController.setDueDate(item.getPayment_date());
-                LoanPaymentController.setPayableAmount(item.getMonthly_installment());
+                LoanPaymentController.setPayableAmount(item.getMonthly_installment() - item.getMonthly_payment());
                 LoanPaymentController.setPenaltyAmount(item.getPenalty_amount());
                 LoanPaymentController.setName(applicantName.getText());
                 LoanPaymentController.setMobileNumber(applicantNumber.getText());
                 try {
                     AppStages.loanPaymentStage().show();
+                    if (!AppStages.loanPaymentStage().isShowing()) {
+                        setScheduleTableProperties();
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -155,6 +187,10 @@ public class RepaymentController extends LoansModel implements Initializable {
     }//-------END OF METHOD.
 
 
+    @FXML void exportButtonClicked() {
+        String docName = applicantName.getText() + "- loan_repayment";
+        LocalDateTime datetime = LocalDateTime.now();
+    }
 
 
 

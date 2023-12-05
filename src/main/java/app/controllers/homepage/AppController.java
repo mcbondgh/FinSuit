@@ -180,6 +180,7 @@ public class AppController extends AppModel implements Initializable {
         signOutButton.setOnMouseClicked(mouseEvent -> {
             try {
                 signOutButton.getScene().getWindow().hide();
+                Thread.getAllStackTraces().clear();
                 AppStages.LoginStage();
             } catch (IOException e) {
                 throw new RuntimeException(e);

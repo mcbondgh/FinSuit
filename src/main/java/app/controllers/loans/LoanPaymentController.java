@@ -3,12 +3,19 @@ package app.controllers.loans;
 import app.alerts.UserAlerts;
 import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
-import app.enums.MessageStatus;
+import app.controllers.messages.MessageBuilders;
+import app.documents.DocumentGenerator;
 import app.models.loans.LoansModel;
+import app.models.message.MessagesModel;
+import app.repositories.documents.ReceiptsEntity;
+import app.repositories.loans.LoansEntity;
+import app.repositories.loans.RepaymentEntity;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
+import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -19,7 +26,12 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class LoanPaymentController extends LoansModel implements Initializable {
 
@@ -28,6 +40,13 @@ public class LoanPaymentController extends LoansModel implements Initializable {
     MessageLogsEntity LOG_MESSAGE = new MessageLogsEntity();
     TransactionsEntity TRANS_ENTITY = new TransactionsEntity();
     NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
+    MessageBuilders MESSAGE_BUILDER = new MessageBuilders();
+    MessageLogsEntity MESSAGE_ENTITY = new MessageLogsEntity();
+    RepaymentEntity REPAYMENT_ENTITY = new RepaymentEntity();
+    LoansEntity LOAN_ENTITY = new LoansEntity();
+    MessagesModel MESSAGE_MODEL = new MessagesModel();
+    DocumentGenerator DOC_GENERATOR = new DocumentGenerator();
+    ReceiptsEntity RECEIPT_ENTITY = new ReceiptsEntity();
 
     int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
 
@@ -87,6 +106,28 @@ public class LoanPaymentController extends LoansModel implements Initializable {
         collectButton.setDisable(isAmountFieldEmpty() || isMethodSelectorEmpty());
     }
 
+    void paymentReceipt(){
+        AtomicReference<String> name = new AtomicReference<>("");
+        String empId = getEmployeeIdByUsername(AppController.activeUserPlaceHolder);
+        String loanNo = loanNumberField.getText();
+        fetchAllLoans().forEach(item-> {
+            if (item.getLoan_no().equals(loanNo)){
+                name.set(item.getCustomerName());
+            }
+        });
+        LocalDateTime dateTime = LocalDateTime.now();
+        String docName = name + " repayment_receipt.pdf";
+        RECEIPT_ENTITY.setAmount(paymentAmountField.getText());
+        RECEIPT_ENTITY.setCustomerName(name.toString());
+        RECEIPT_ENTITY.setTransactionNumber(SpecialMethods.getTransactionId(getTotalTransactionCount() + 1));
+        RECEIPT_ENTITY.setDepositorIdNumber("-");
+        RECEIPT_ENTITY.setTransactionStatus("Successful");
+        RECEIPT_ENTITY.setPaymentMethod(methodSelector.getValue());
+        RECEIPT_ENTITY.setTransactionDate(dateTime.toString());
+        RECEIPT_ENTITY.setCashierName(getEmployeeFullNameByWorkId(empId));
+        DOC_GENERATOR.generateTransactionReceipt(docName, RECEIPT_ENTITY);
+    }
+
     /******************************************************************************************************************
      TRUE OR FALSE STATEMENTS
      ******************************************************************************************************************/
@@ -108,15 +149,92 @@ public class LoanPaymentController extends LoansModel implements Initializable {
     }//....end of method
 
     @FXML void collectButtonClicked() {
-        String var = "for ".concat(dateField.getText());
-
+        collectButton.setDisable(true);
         double amount = Double.parseDouble(paymentAmountField.getText());
         double penalty = Double.parseDouble(penaltyLabel.getText());
         Date date = Date.valueOf(dateField.getText());
         String payMethod = methodSelector.getValue();
         String loanNumber = loanNumberField.getText();
+        String transactionId = SpecialMethods.getTransactionId(getTotalTransactionCount() +1);
+        double applicantTotalLoanRepayment = (getLoanTotalRepaymentAmount(loanNumber) + amount);
 
-        Object[] variables = {getName(), amount, loanNumber, var};
+        Object[] variables = {getName(), amount, loanNumber, date};
+        String message = MESSAGE_BUILDER.loanRepaymentMessage(List.of(variables));
+
+        //SET VALUES FOR REPAYMENT ENTITY FOR DATABASE TABLE
+        REPAYMENT_ENTITY.setLoan_no(loanNumber);
+        REPAYMENT_ENTITY.setCollected_by(loggedInUserId);
+        REPAYMENT_ENTITY.setInstallment_month(date);
+        REPAYMENT_ENTITY.setPaid_amount(amount);
+
+        //SET VALUES FOR TRANSACTION LOGS ENTITY
+        TRANS_ENTITY.setAccount_number(loanNumber);
+        TRANS_ENTITY.setPayment_method(payMethod);
+        TRANS_ENTITY.setTransaction_id(transactionId);
+        TRANS_ENTITY.setCash_amount(payMethod.equals("CASH") ? amount : 0.00);
+        TRANS_ENTITY.setEcash_amount(payMethod.equals("eCASH") ? amount : 0.00);
+        TRANS_ENTITY.setTransaction_type("REPAYMENT");
+        TRANS_ENTITY.setUserId(loggedInUserId);
+
+        //SET VALUES FOR LOANS
+        LOAN_ENTITY.setLoan_no(loanNumber);
+        LOAN_ENTITY.setTotal_payment(applicantTotalLoanRepayment);
+
+        //SET VALES FOR NOTIFICATION
+        NOTIFY_ENTITY.setTitle("REPAYMENT");
+        NOTIFY_ENTITY.setMessage("Loan Repayment has successfully been completed for ".concat(loanNumber).concat(" by ").concat(getWorkIdByUserId(loggedInUserId)));
+        NOTIFY_ENTITY.setSender_method("SMS");
+        NOTIFY_ENTITY.setLogged_by(loggedInUserId);
+
+        if (amount > getPayableAmount()) {
+            ALERT = new UserAlerts("INVALID AMOUNT", "Input value cannot be greater than payable", "please review your input for a valid payment amount.");
+            ALERT.errorAlert();
+        }else {
+            ALERT = new UserAlerts("REPAY LOAN", "Do you wish to confirm payment for the specified loan number and date?", "please confirm your action to save else CANCEL to abort.");
+            if (ALERT.confirmationAlert()) {
+                int counter = 0;
+                String smsStatus = "";
+                counter = saveLoanPaymentTransaction(LOAN_ENTITY, TRANS_ENTITY, REPAYMENT_ENTITY, penalty);
+
+                //SET VARIABLES FOR SENT MESSAGE.
+                MESSAGE_ENTITY.setMessage(message);
+                MESSAGE_ENTITY.setTitle("REPAYMENT");
+                MESSAGE_ENTITY.setRecipient(mobileNumber);
+                MESSAGE_ENTITY.setSent_by(loggedInUserId);
+                logNotification(NOTIFY_ENTITY);
+
+                try {
+                    smsStatus = SMS.sendSms(mobileNumber, message);
+                    MESSAGE_ENTITY.setStatus(smsStatus);
+                    MESSAGE_MODEL.logNotificationMessages(MESSAGE_ENTITY);
+                }catch (Exception e){
+                    smsStatus = "NO INTERNET";
+                    MESSAGE_ENTITY.setStatus(smsStatus);
+                    MESSAGE_MODEL.logNotificationMessages(MESSAGE_ENTITY);}
+                if (counter == 3){
+                    successIndicator.setVisible(true);
+                    paymentReceipt();
+                    Timer time = new Timer();
+                    TimerTask task = new TimerTask() {
+                        int delay = 2;
+                        @Override
+                        public void run() {
+                            collectButton.setDisable(true);
+                            successIndicator.setVisible(true);
+                            delay --;
+                            if (delay == 0) {
+                                Platform.runLater(() -> {
+                                    collectButton.getScene().getWindow().hide();
+                                });
+                                this.cancel();
+                            }
+                        }
+                    };
+                    time.schedule(task, 1000, 1000);
+                }
+            }
+        }
+
 
 
 

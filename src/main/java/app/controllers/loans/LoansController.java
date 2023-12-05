@@ -100,7 +100,7 @@ public class LoansController extends LoansModel implements Initializable {
         int counter1 = countAssignedLoans();
         int counter2 = countUnpaidLoans();
         loanRequestsButton.setText("Loan Requests (" + counter +")");
-        generateScheduleButton.setText("Unprocessed Loans (" + counter1 +")");
+        generateScheduleButton.setText(generateScheduleButton.getText() + " (" + counter1 +")");
         disburseFundBtn.setText("Disburse Fund(" + counter2 +")");
     }
 

@@ -4,6 +4,9 @@ import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.loans.*;
+import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
+import app.repositories.transactions.TransactionsEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
@@ -540,6 +543,64 @@ public class LoansModel extends MainModel {
         }
         return data;
     }
+
+    protected int saveLoanPaymentTransaction(LoansEntity loans, TransactionsEntity trans, RepaymentEntity repay, double penalty) {
+        int status = 0;
+        try {
+            String query1 = "INSERT INTO loan_payment_logs(loan_no, installment_month, paid_amount, collected_by)\n" +
+                    "VALUES(?, ?, ?, ?);";
+            preparedStatement = getConnection().prepareStatement(query1);
+            preparedStatement.setString(1, repay.getLoan_no());
+            preparedStatement.setDate(2, repay.getInstallment_month());
+            preparedStatement.setDouble(3, repay.getPaid_amount());
+            preparedStatement.setLong(4, repay.getCollected_by());
+            status = preparedStatement.executeUpdate();
+
+            String query2 = """
+                    INSERT INTO transaction_logs(\s
+                    \taccount_number,
+                    \ttransaction_id,\s
+                        transaction_type,
+                        payment_method,
+                    \tcash_amount,\s
+                        ecash_amount,\s
+                        user_id)
+                    VALUES(?, ?, ?, ?, ?, ?, ?);""";
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setString(1, trans.getAccount_number());
+            preparedStatement.setString(2, trans.getTransaction_id());
+            preparedStatement.setString(3, "REPAYMENT");
+            preparedStatement.setString(4, trans.getPayment_method());
+            preparedStatement.setDouble(5, trans.getCash_amount());
+            preparedStatement.setDouble(6, trans.getEcash_amount());
+            preparedStatement.setInt(7, trans.getUserId());
+            status += preparedStatement.executeUpdate();
+
+            String query5 = "UPDATE loans \n" +
+                    "SET total_payment = ?, date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
+            preparedStatement = getConnection().prepareStatement(query5);
+            preparedStatement.setDouble(1, loans.getTotal_payment());
+            preparedStatement.setInt(2, trans.getUserId());
+            preparedStatement.setString(3, loans.getLoan_no());
+            preparedStatement.execute();
+
+            String query3 = """
+                    UPDATE loan_schedule
+                    SET penalty_amount = ? WHERE payment_date = ?;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query3);
+            preparedStatement.setDouble(1, penalty);
+            preparedStatement.setDate(2, repay.getInstallment_month());
+            status += preparedStatement.executeUpdate();
+
+        }catch (SQLException e) {
+            logError.log(e.getCause().getMessage());
+            e.printStackTrace();
+            rollBack();
+        }
+        return status;
+    }
+
 
 
 }//end of class...

@@ -24,9 +24,17 @@
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
-            <HBox fx:id="hBox" alignment="CENTER" layoutX="403.0" layoutY="8.0" prefHeight="41.0" prefWidth="810.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+            <HBox fx:id="hBox" alignment="CENTER" layoutX="303.0" layoutY="8.0" prefHeight="41.0" prefWidth="910.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                <children>
                   <MFXButton fx:id="loadTableButton" onAction="#loadTableOnAction" prefHeight="25.0" prefWidth="81.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MFXButton>
+                  <MFXButton fx:id="clearedLoansBtn" prefHeight="25.0" prefWidth="85.0" style="-fx-background-color: #1880c5;" text="Cleared Loans" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -58,7 +66,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="generateScheduleButton" alignment="BASELINE_LEFT" onAction="#ScheduleButtonClicked" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: #278c8f;" text="Unprocessed Loans" textFill="WHITE">
+                  <MFXButton fx:id="generateScheduleButton" alignment="BASELINE_LEFT" onAction="#ScheduleButtonClicked" prefHeight="25.0" prefWidth="103.0" style="-fx-background-color: #278c8f;" text="Unprocessed" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>

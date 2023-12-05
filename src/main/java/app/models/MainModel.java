@@ -10,6 +10,7 @@ import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.loans.DisbursementEntity;
 import app.repositories.loans.LoanScheduleEntity;
+import app.repositories.loans.LoansEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageOperationsEntity;
@@ -800,5 +801,65 @@ public class MainModel extends DbConnection {
         return data;
     }
 
+    public double getLoanTotalRepaymentAmount(String loanNo){
+        double value = 0;
+        try{
+            String query = "SELECT total_payment FROM loans WHERE loan_no ='"+loanNo+"'";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                value = resultSet.getInt(1);
+            }
+        }catch (SQLException ignore){}
+        return value;
+    }
+    
+    public void updateAllLoanStatus() {
+        try {
+            preparedStatement = getConnection().prepareStatement("UPDATE loans " +
+                    "SET loan_status = 'cleared' WHERE(total_payment >= approved_amount);");
+            preparedStatement.execute();
+            preparedStatement.close();
+            getConnection().close();
+        } catch (SQLException ignore) {
+        }
+    }
 
+    public ObservableList<LoansEntity> fetchAllLoans() {
+        ObservableList<LoansEntity> data = new ObservableStack<>();
+        try {
+            String query = """
+                    SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,
+                    loan_id, loan_no, loan_type, requested_amount, approved_amount,
+                    total_payment, application_status, loan_purpose, loan_status,
+                    is_drafted, ln.date_created,
+                    ln.date_modified, ln.created_by, ln.updated_by, ln.approved_by FROM loans AS ln
+                    INNER JOIN customer_data AS cd\s
+                    ON ln.customer_id = cd.customer_id;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                String name = resultSet.getString("fullname");
+                int loan_id = resultSet.getInt("loan_id");
+                String loan_no = resultSet.getString("loan_no");
+                String loan_type = resultSet.getString("loan_type");
+                double requested_amount = resultSet.getDouble("requested_amount");
+                double approved_amount = resultSet.getDouble("approved_amount");
+                byte is_drafted = resultSet.getByte("is_drafted");
+                double total_payment = resultSet.getDouble("total_payment");
+                String application_status = resultSet.getString("application_status");
+                String loan_purpose = resultSet.getString("loan_purpose");
+                String loan_status = resultSet.getString("loan_status");
+                Timestamp date_modified = resultSet.getTimestamp("ln.date_modified");
+                Timestamp date_created = resultSet.getTimestamp("ln.date_created");
+                int created_by = resultSet.getInt("ln.created_by"   );
+                int updated_by = resultSet.getInt("ln.updated_by");
+                int approved_by = resultSet.getInt("ln.approved_by");
+                data.add(new LoansEntity(loan_id, name, loan_no, loan_type, requested_amount, approved_amount, total_payment,
+                        application_status, loan_purpose, loan_status, is_drafted, date_created, date_modified, created_by, updated_by, approved_by));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
 }//END OF CLASS...

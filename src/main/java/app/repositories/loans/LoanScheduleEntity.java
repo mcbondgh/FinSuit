@@ -18,6 +18,7 @@ public class LoanScheduleEntity {
     private int generated_by;
     private Label statusLabel = new Label();
     private MFXButton payBtn = new MFXButton("Collect");
+    private MFXButton logsBtn = new MFXButton("View");
 
     public LoanScheduleEntity() {}
 
@@ -54,6 +55,9 @@ public class LoanScheduleEntity {
                 "-fx-padding:4px; -fx-background-radius: 5px; -fx-pref-width:60px; -fx-font-size:10px; -fx-font-family:roboto");
         payBtn.setCursor(Cursor.HAND);
         payBtn.setDisable(statusLabel.getText().equals("Cleared"));
+        logsBtn.setStyle("-fx-background-color:#eee;-fx-alignment:center; " +
+                "-fx-padding:4px; -fx-background-radius: 5px; -fx-pref-width:60px; -fx-font-size:10px; -fx-font-family:roboto");
+        logsBtn.setCursor(Cursor.HAND);
     }
 
     private void penaltyLogics() {
@@ -107,6 +111,14 @@ public class LoanScheduleEntity {
 
     public void setMonthly_installment(Double monthly_installment) {
         this.monthly_installment = monthly_installment;
+    }
+
+    public MFXButton getLogsBtn() {
+        return logsBtn;
+    }
+
+    public void setLogsBtn(MFXButton logsBtn) {
+        this.logsBtn = logsBtn;
     }
 
     public Double getPrincipal_amount() {

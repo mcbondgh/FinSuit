@@ -264,7 +264,7 @@ public class DepositController extends TransactionModel implements Initializable
                     "please confirm your action to save transaction else CANCEL to abort.");
             if(ALERTS.confirmationAlert()) {
                 if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
-                    documentGenerator.generateDepositReceipt(pdfName, receiptsEntity);
+                    documentGenerator.generateTransactionReceipt(pdfName, receiptsEntity);
                     NOTIFY.successNotification("TRANSACTION SUCCESSFUL", "Customer account number " + accountNumber + " has been credited with a deposit of Ghc" + totalAmount);
 
                     String message = MESSAGE_TEMPLATES.cashDepositMessageBuilder(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
