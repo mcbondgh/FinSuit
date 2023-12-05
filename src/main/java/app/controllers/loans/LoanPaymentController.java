@@ -14,6 +14,8 @@ import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Paragraph;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -107,25 +109,28 @@ public class LoanPaymentController extends LoansModel implements Initializable {
     }
 
     void paymentReceipt(){
-        AtomicReference<String> name = new AtomicReference<>("");
+        String transactionId = SpecialMethods.getTransactionId(getTotalTransactionCount());
+
+        String customerName = "";
         String empId = getEmployeeIdByUsername(AppController.activeUserPlaceHolder);
         String loanNo = loanNumberField.getText();
-        fetchAllLoans().forEach(item-> {
-            if (item.getLoan_no().equals(loanNo)){
-                name.set(item.getCustomerName());
+
+        for (LoansEntity item : fetchAllLoans()){
+            if (loanNo.equals(item.getLoan_no())){
+                customerName = item.getCustomerName();
             }
-        });
-        LocalDateTime dateTime = LocalDateTime.now();
-        String docName = name + " repayment_receipt.pdf";
-        RECEIPT_ENTITY.setAmount(paymentAmountField.getText());
-        RECEIPT_ENTITY.setCustomerName(name.toString());
-        RECEIPT_ENTITY.setTransactionNumber(SpecialMethods.getTransactionId(getTotalTransactionCount() + 1));
-        RECEIPT_ENTITY.setDepositorIdNumber("-");
-        RECEIPT_ENTITY.setTransactionStatus("Successful");
-        RECEIPT_ENTITY.setPaymentMethod(methodSelector.getValue());
-        RECEIPT_ENTITY.setTransactionDate(dateTime.toString());
-        RECEIPT_ENTITY.setCashierName(getEmployeeFullNameByWorkId(empId));
-        DOC_GENERATOR.generateTransactionReceipt(docName, RECEIPT_ENTITY);
+        }
+        RECEIPT_ENTITY.setTransactionDate(LocalDateTime.now().toString());
+        RECEIPT_ENTITY.setTransactionNumber(transactionId);
+        RECEIPT_ENTITY.setPaymentMethod(methodSelector.getValue());//6
+        RECEIPT_ENTITY.setTransactionType("Loan Repayment");//3
+        RECEIPT_ENTITY.setCustomerName(customerName);//1
+        RECEIPT_ENTITY.setTransactionStatus("Successful");//4
+        RECEIPT_ENTITY.setAmount(paymentAmountField.getText());//5
+        RECEIPT_ENTITY.setCashierName(getEmployeeFullNameByWorkId(empId));//7
+        RECEIPT_ENTITY.setAccountNumber(loanNo);//2
+        String docName = customerName+ "_repayment_"+ getTotalTransactionCount();
+        DOC_GENERATOR.generateLoanRepaymentReceipt(docName, RECEIPT_ENTITY);
     }
 
     /******************************************************************************************************************
@@ -212,18 +217,19 @@ public class LoanPaymentController extends LoansModel implements Initializable {
                     MESSAGE_ENTITY.setStatus(smsStatus);
                     MESSAGE_MODEL.logNotificationMessages(MESSAGE_ENTITY);}
                 if (counter == 3){
-                    successIndicator.setVisible(true);
                     paymentReceipt();
+                    successIndicator.setVisible(true);
                     Timer time = new Timer();
                     TimerTask task = new TimerTask() {
                         int delay = 2;
                         @Override
                         public void run() {
-                            collectButton.setDisable(true);
                             successIndicator.setVisible(true);
                             delay --;
                             if (delay == 0) {
                                 Platform.runLater(() -> {
+                                    paymentAmountField.clear();
+                                    methodSelector.setValue(null);
                                     collectButton.getScene().getWindow().hide();
                                 });
                                 this.cancel();

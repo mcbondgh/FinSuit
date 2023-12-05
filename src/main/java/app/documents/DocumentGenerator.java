@@ -3,16 +3,22 @@ package app.documents;
 import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.documents.ReceiptsEntity;
+import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.draw.DottedLine;
+import com.itextpdf.kernel.pdf.colorspace.PdfColorSpace;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.BorderRadius;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
@@ -23,6 +29,9 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 public class DocumentGenerator {
 
@@ -85,7 +94,6 @@ public class DocumentGenerator {
                     .useAllAvailableWidth();
 
             Div receiptBodyContainer = new Div();
-//            receiptBodyContainer.setFont("Times New Roman");
 
             Paragraph combinedParagraph = new Paragraph();
             Paragraph labelNames;
@@ -105,7 +113,6 @@ public class DocumentGenerator {
 
             combinedParagraph.add(new Paragraph("-----------------------------------------------------------------------------------------------------------"));
             Div receiptContentContainer = new Div();
-            receiptContentContainer.setFontSize(12);
             receiptContentContainer.add(new Paragraph("CUSTOMER NAME: ".concat(receiptsEntity.getCustomerName())));
             receiptContentContainer.add(new Paragraph("ACCOUNT NUMBER: ".concat(receiptsEntity.getAccountNumber())));
             receiptContentContainer.add(new Paragraph("TRANSACTION TYPE: ".concat(receiptsEntity.getTransactionType())));
@@ -229,6 +236,69 @@ public class DocumentGenerator {
             e.printStackTrace();
         }
     }
+
+    public int exportLoanRepaymentSchedule(String docName, String loanNumber, TableView<LoanScheduleEntity> tableView) {
+        int statusCode = 200;
+        try {
+            Workbook workbook = new HSSFWorkbook();
+            Sheet sheet = workbook.createSheet(docName);
+
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setFontName("roboto");
+
+            CellStyle sheetHeaderStyle = workbook.createCellStyle();
+            sheetHeaderStyle.setFont(font);
+            sheetHeaderStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+            sheetHeaderStyle.setBorderBottom(BorderStyle.DASHED);
+
+            //Lets create the header rows for the table cells with their various names.
+            Row headerRow = sheet.createRow(0);
+            headerRow.setRowStyle(sheetHeaderStyle);
+            headerRow.createCell(0).setCellValue("CUSTOMER NAME");
+            headerRow.createCell(1).setCellValue(docName);
+            headerRow.createCell(2).setCellValue("LOAN NUMBER");
+            headerRow.createCell(3).setCellValue(loanNumber);
+
+            //CREATE ROWS TO HOLD CUSTOMER'S AND LOAN NUMBER.
+            Row tableHeaderRows = sheet.createRow(1);
+            tableHeaderRows.createCell(0).setCellValue("INDEX");
+            tableHeaderRows.createCell(1).setCellValue("INSTALLMENT");
+            tableHeaderRows.createCell(2).setCellValue("PRINCIPAL");
+            tableHeaderRows.createCell(3).setCellValue("INTEREST");
+            tableHeaderRows.createCell(4).setCellValue("DUE DATE");
+            tableHeaderRows.createCell(5).setCellValue("PENALTY");
+            tableHeaderRows.createCell(6).setCellValue("PAID AMOUNT");
+            tableHeaderRows.createCell(7).setCellValue("STATUS");
+
+            //Lets iterate through the table and get the size of the table for the excel sheet.
+            int tableSize = tableView.getItems().size();
+            for (int i = 0; i < tableSize; i++) {
+                Row row = sheet.createRow(2+i);
+                row.createCell(0).setCellValue(tableView.getItems().get(i).getSchedule_id());
+                row.createCell(1).setCellValue(tableView.getItems().get(i).getMonthly_installment());
+                row.createCell(2).setCellValue(tableView.getItems().get(i).getPrincipal_amount());
+                row.createCell(3).setCellValue(tableView.getItems().get(i).getInterest_amount());
+                row.createCell(4).setCellValue(tableView.getItems().get(i).getPayment_date());
+                row.createCell(5).setCellValue(tableView.getItems().get(i).getPenalty_amount());
+                row.createCell(6).setCellValue(tableView.getItems().get(i).getMonthly_payment());
+                row.createCell(7).setCellValue(tableView.getItems().get(i).getStatusLabel().getText());
+            }
+
+            File directoryPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "loan schedules\\excel sheets" + File.separator);
+            if (!directoryPath.exists()) {
+                directoryPath.mkdir();
+            }
+            File file = new File(directoryPath, docName.concat(".xlsx"));
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+            return statusCode;
+        }catch (Exception e){
+            statusCode = 404;
+            e.printStackTrace();};
+        return statusCode;
+    }
+
     public void exportScheduleAsPdf(String documentName, TableView<ScheduleTableValues> tableView, String totalLoanAmount) {
         try {
             File newAccountsPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "loan schedules" + File.separator);
@@ -264,6 +334,54 @@ public class DocumentGenerator {
         }catch (Exception e) {e.printStackTrace();}
     }
 
+    public void generateLoanRepaymentReceipt(String documentName, ReceiptsEntity receiptsEntity) {
+        try{
+            File receiptFolder = new File(createDirectoryIfNotExist().getPath() + File.separator + "receipts\\");
+            if (!receiptFolder.exists()) {
+                receiptFolder.mkdir();
+            }
+            File pdfFile = new File(receiptFolder, documentName.concat(".pdf"));
+            PdfWriter pdfWriter = new PdfWriter(pdfFile);
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+
+            String formattedDate = LocalDateTime.parse(receiptsEntity.getTransactionDate()).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+
+            //CREATE A DOCUMENT FOR THE PDF FILE.
+            Document document = new Document(pdfDocument, PageSize.A4);
+
+            Div paragraphContainer = new Div();
+
+            Paragraph transactionIdLabel;
+            Paragraph receiptDate;
+
+            paragraphContainer.setTextAlignment(TextAlignment.RIGHT).setFontSize(10).setMarginRight(19);
+            transactionIdLabel = new Paragraph("TRANSACTION ID: ".concat(receiptsEntity.getTransactionNumber()));
+            receiptDate = new Paragraph("DATE: ".concat(formattedDate));
+            paragraphContainer.add(transactionIdLabel).add(receiptDate).setBold().setTextAlignment(TextAlignment.RIGHT);
+
+            Paragraph receiptTitle = new Paragraph("OFFICIAL RECEIPT").setUnderline().setFontSize(20).setBold();
+            Div secondContainer = new Div();
+            secondContainer.add(receiptTitle).add(paragraphContainer).setTextAlignment(TextAlignment.CENTER);
+
+            Div contentContainer = new Div();
+            contentContainer.setFontSize(12);
+            Paragraph customerName = new Paragraph("Customer Name:          ".concat(receiptsEntity.getCustomerName().toUpperCase()));
+            Paragraph loanNumber = new Paragraph("Loan Number:              ".concat(receiptsEntity.getAccountNumber()));
+            Paragraph transType = new Paragraph("Transaction Type:         ".concat(receiptsEntity.getTransactionType().toUpperCase()));
+            Paragraph transStatus = new Paragraph("Transaction Status:      ".concat(receiptsEntity.getTransactionStatus().toUpperCase()));
+            Paragraph amount = new Paragraph("Paid Amount:                Ghc".concat(receiptsEntity.getAmount()));
+            Paragraph payMethod = new Paragraph("Payment Method:         ".concat(receiptsEntity.getPaymentMethod().toUpperCase()));
+            Paragraph cashierName = new Paragraph("Cashier:                        ".concat(receiptsEntity.getCashierName().toUpperCase()));
+            Paragraph dash = new Paragraph("-------------------------------").setMarginTop(20).setTextAlignment(TextAlignment.RIGHT).setMarginRight(40);
+            Paragraph dash2 = new Paragraph("---------------------------------------------------------------------------------------------------------------------");
+            contentContainer.add(dash2).add(customerName).add(loanNumber).add(transType).add(amount).add(transStatus).add(payMethod).add(cashierName).add(dash);
+            contentContainer.setTextAlignment(TextAlignment.JUSTIFIED).setMarginLeft(40);
+            document.add(documentHeader()).add(secondContainer).add(contentContainer);
+            document.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
 
