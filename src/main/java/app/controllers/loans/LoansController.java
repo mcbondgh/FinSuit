@@ -198,5 +198,15 @@ public class LoansController extends LoansModel implements Initializable {
         }
     }
 
+    @FXML void sheetButtonClicked() {
+        try {
+            borderPane.getChildren().remove(0);
+            String fxmlFile = "views/loans/collection-sheet-view.fxml";
+            SpecialMethods.FlipView(borderPane, fxmlFile );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }//end of class

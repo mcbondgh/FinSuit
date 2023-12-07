@@ -218,6 +218,7 @@ public class LoanPaymentController extends LoansModel implements Initializable {
                     MESSAGE_MODEL.logNotificationMessages(MESSAGE_ENTITY);}
                 if (counter == 3){
                     paymentReceipt();
+                    paymentAmountField.clear();
                     successIndicator.setVisible(true);
                     Timer time = new Timer();
                     TimerTask task = new TimerTask() {
@@ -228,7 +229,6 @@ public class LoanPaymentController extends LoansModel implements Initializable {
                             delay --;
                             if (delay == 0) {
                                 Platform.runLater(() -> {
-                                    paymentAmountField.clear();
                                     methodSelector.setValue(null);
                                     collectButton.getScene().getWindow().hide();
                                 });

@@ -36,7 +36,7 @@ public class DisbursementEntity {
         payBtn.setStyle("-fx-font-family:roboto; -fx-font-size:12px; -fx-font-weight:bold;");
         if (value) {
             status.setText("Unpaid");
-            status.setStyle("-fx-text-fill:#fff; -fx-background-color:#ff0000;-fx-alignment:center; " +
+            status.setStyle("-fx-text-fill:#fff; -fx-background-color:#ff3939;-fx-alignment:center; " +
                     "-fx-padding:4px; -fx-background-radius: 5px; -fx-pref-width:70px; -fx-font-size:12px; -fx-font-family:roboto");
         }
     }

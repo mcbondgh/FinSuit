@@ -8,10 +8,7 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.human_resources.EmployeesData;
-import app.repositories.loans.DisbursementEntity;
-import app.repositories.loans.LoanScheduleEntity;
-import app.repositories.loans.LoansEntity;
-import app.repositories.loans.ScheduleTableValues;
+import app.repositories.loans.*;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageOperationsEntity;
 import app.repositories.roles.UserRolesData;
@@ -23,6 +20,7 @@ import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -860,6 +858,39 @@ public class MainModel extends DbConnection {
                         application_status, loan_purpose, loan_status, is_drafted, date_created, date_modified, created_by, updated_by, approved_by));
             }
         }catch (SQLException ignore){}
+        return data;
+    }
+
+    public ObservableList<CollectionSheetEntity> fetchCollectionSheetData(String officerId){
+        ObservableList<CollectionSheetEntity> data = FXCollections.observableArrayList();
+        try {
+            String query = """
+                    SELECT\s
+                    	DISTINCT(monthly_installment) as installment, ls.loan_id, CONCAT(e.lastname, ' ', e.firstname) AS officer,\s
+                    	ls.loan_no, \s
+                    	CONCAT(cd.lastname, ' ', cd.othername, ' ',cd.firstname) AS fullname FROM group_supervisors AS gs
+                    INNER JOIN employees AS e
+                    	ON gs.emp_id = work_id
+                    INNER JOIN loans AS ls\s
+                    	ON gs.loan_id = ls.loan_no
+                    INNER JOIN loan_schedule AS sch
+                    	ON ls.loan_no = sch.loan_no
+                    INNER JOIN customer_data AS cd\s
+                    	ON ls.customer_id = cd.customer_id
+                    WHERE loan_status = 'active' AND work_id = ?
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, officerId);
+            resultSet = preparedStatement.executeQuery();
+            int id = 1;
+            while(resultSet.next()){
+                String officer = resultSet.getString("officer");
+                String fullname = resultSet.getString("fullname");
+                String loanNo = resultSet.getString("ls.loan_no");
+                double installment = resultSet.getDouble("installment");
+                data.add(new CollectionSheetEntity(id++, loanNo, fullname, officer, installment));
+            }
+        }catch (SQLException e){e.printStackTrace();}
         return data;
     }
 }//END OF CLASS...

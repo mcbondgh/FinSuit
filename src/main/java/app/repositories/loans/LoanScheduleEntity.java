@@ -1,5 +1,6 @@
 package app.repositories.loans;
 
+import app.models.MainModel;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -73,7 +74,7 @@ public class LoanScheduleEntity {
         String statusText = monthly_payment == 0.00 ? "Unpaid" : (monthly_payment > 0 && monthly_payment < monthly_installment) ? "Part Payment" : "Cleared";
         switch(statusText) {
             case "Unpaid"->
-                statusLabel.setStyle("-fx-text-fill:#fff; -fx-background-color:#ff0000;-fx-alignment:center; " +
+                statusLabel.setStyle("-fx-text-fill:#fff; -fx-background-color:#ff3939;-fx-alignment:center; " +
                         "-fx-padding:4px; -fx-background-radius: 5px; -fx-pref-width:70px; -fx-font-size:10px; -fx-font-family:roboto");
 
             case "Part Payment" ->
@@ -200,4 +201,5 @@ public class LoanScheduleEntity {
     public void setGenerated_by(int generated_by) {
         this.generated_by = generated_by;
     }
+
 }//end of class...

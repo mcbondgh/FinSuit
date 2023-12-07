@@ -23,7 +23,7 @@ public class LoansModel extends MainModel {
     protected List<Object> countTotalLoans(String searchParameter) {
         List<Object> data = new ArrayList<>();
         try {
-            String query = "SELECT COUNT(ln.customer_id) AS loan_count, sum(ln.disbursed_amount) AS 'disbursed_amount' , SUM(total_payment) total_payment FROM loans ln\n" +
+            String query = "SELECT COUNT(ln.customer_id) AS loan_count, sum(ln.approved_amount) AS 'disbursed_amount' , SUM(total_payment) total_payment FROM loans ln\n" +
                     "INNER JOIN customer_data AS cd\n" +
                     "ON cd.customer_id = ln.customer_id\n" +
                     "INNER JOIN customer_account_data AS cad\n" +

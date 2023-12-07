@@ -150,7 +150,6 @@ public class RepaymentController extends LoansModel implements Initializable {
         if (isListSelectionEmpty()) {
             NOTIFY.informationNotification("INVALID SELECTION", "You have not made any selection, please make a selection to get value.");
         }else {
-
             String selection = listView.getSelectionModel().getSelectedItem();
             Map<String, Object> data = getLoanDetailsByLoanNumber(selection);
             applicantName.setText(data.get("fullname").toString());
@@ -159,7 +158,9 @@ public class RepaymentController extends LoansModel implements Initializable {
             paidAmount.setText(data.get("total_payment").toString());
             balanceAmount.setText(data.get("balance").toString());
             disbursedAmount.setText(data.get("approved_amount").toString());
+            exportButton.setDisable(isListSelectionEmpty());
             setScheduleTableProperties();
+
         }
 
     }//........END OF METHOD
@@ -188,8 +189,15 @@ public class RepaymentController extends LoansModel implements Initializable {
 
 
     @FXML void exportButtonClicked() {
-        String docName = applicantName.getText() + "- loan_repayment";
-        LocalDateTime datetime = LocalDateTime.now();
+        LocalDate datetime = LocalDate.now();
+        String docName = applicantName.getText() + "_repayment_"+ datetime;
+        String loanNo = listView.getSelectionModel().getSelectedItem();
+        int statusCode = DOC_GENERATOR.exportLoanRepaymentSchedule(docName, loanNo, scheduleTable);
+        switch (statusCode){
+            case 200 -> NOTIFY.successNotification("DATA EXPORT", "Schedule data successfully exported");
+            case 404 -> NOTIFY.informationNotification("FAILED EXPORT", "Failed to export schedule data, retry");
+            default -> NOTIFY.successNotification("ERROR", "An error occurred while trying to export data, please contact system admin.");
+        }
     }
 
 

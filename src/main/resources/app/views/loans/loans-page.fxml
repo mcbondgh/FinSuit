@@ -34,7 +34,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="clearedLoansBtn" prefHeight="25.0" prefWidth="85.0" style="-fx-background-color: #1880c5;" text="Cleared Loans" textFill="WHITE">
+                  <MFXButton fx:id="clearedLoansBtn" disable="true" prefHeight="25.0" prefWidth="85.0" style="-fx-background-color: #1880c5;" text="Cleared Loans" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -82,7 +82,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="generateSheetButton" prefHeight="25.0" prefWidth="88.0" style="-fx-background-color: #278c8f;" text="Generate Sheet" textFill="WHITE">
+                  <MFXButton fx:id="generateSheetButton" onAction="#sheetButtonClicked" prefHeight="25.0" prefWidth="88.0" style="-fx-background-color: #278c8f;" text="Generate Sheet" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>

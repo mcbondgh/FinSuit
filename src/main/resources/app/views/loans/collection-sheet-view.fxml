@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1192.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.CollectionSheetController">
+   <children>
+      <TableView fx:id="collectionTable" fixedCellSize="36.0" layoutX="296.0" layoutY="80.0" prefHeight="445.0" prefWidth="828.0" style="-fx-font-family: roboto; -fx-font-size: 14; -fx-border-color: #eee; -fx-background-color: #fff; -fx-font-weight: bold;" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="296.0" AnchorPane.rightAnchor="68.0" AnchorPane.topAnchor="80.0">
+         <columns>
+            <TableColumn fx:id="indexColumn" prefWidth="71.33334350585938" text="INDEX" />
+            <TableColumn fx:id="loanNoColumn" prefWidth="150.66668701171875" text="LOAN NUMBER" />
+            <TableColumn fx:id="nameColumn" prefWidth="278.6666259765625" text="CUSTOMER NAME" />
+            <TableColumn fx:id="installmentColumn" prefWidth="153.33331298828125" text="INSTALLMENT" />
+            <TableColumn fx:id="dateColumn" minWidth="0.0" prefWidth="180.0" text="DUE DATE" />
+            <TableColumn fx:id="amountColumn" editable="false" minWidth="0.0" prefWidth="0.0" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Label alignment="CENTER" layoutX="294.0" layoutY="5.0" prefHeight="61.0" prefWidth="828.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="GENERATE COLLECTION SHEET FOR LOAN OFFICERS" textAlignment="CENTER" textFill="#570667" wrapText="true">
+         <font>
+            <Font name="Roboto Bold" size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <VBox alignment="CENTER" layoutX="69.0" layoutY="80.0" prefHeight="445.0" prefWidth="212.0" spacing="10.0" style="-fx-background-color: #fff; -fx-background-radius: 10;">
+         <children>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="201.0" spacing="10.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+               <children>
+                  <Label text="SELECT AN OFFICER" textFill="#570667">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="222.0" spacing="5.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+               <children>
+                  <Label prefHeight="15.0" prefWidth="35.0" text="DATE" textFill="#4e4e4e">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="sheetDate" prefHeight="15.0" prefWidth="127.0" text="yyyy-mm-dd" textFill="#170398">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="222.0" spacing="5.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+               <children>
+                  <Label prefHeight="15.0" prefWidth="44.0" text="OFFICE:" textFill="#4e4e4e">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="officerNameLabel" prefHeight="15.0" prefWidth="141.0" text="-" textFill="#170398">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <ListView fx:id="listView" fixedCellSize="30.0" onMouseClicked="#officerIdSelected" prefHeight="242.0" prefWidth="173.0" style="-fx-background-radius: 5px; -fx-font-size: 14px; -fx-font-family: roboto; -fx-font-weight: bold;">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding></ListView>
+            <MFXButton fx:id="exportButton" disable="true" onAction="#exportButtonOnAction" prefHeight="20.0" prefWidth="64.0" style="-fx-background-color: #278c8f;" text="Export Data" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="9.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </MFXButton>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <effect>
+            <DropShadow height="31.71" radius="14.1375" width="26.84">
+               <color>
+                  <Color red="0.8771929740905762" green="0.8771929740905762" blue="0.8771929740905762" />
+               </color>
+            </DropShadow>
+         </effect>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -160,7 +160,6 @@ public class SettingsController extends SettingModel implements Initializable{
         for (SmsAPIEntity items : MODEL_OBJECT.getSmsApi()) {
             apiKeyField.setText(items.getKey());
             senderIdField.setText(items.getSender_id());
-            emailField.setText(items.getEmailAddress());
             passwordField.setText(items.getPassword());
             senderMailField.setText(items.getEmailAddress());
         }
