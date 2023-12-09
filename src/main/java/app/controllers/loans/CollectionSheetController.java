@@ -2,9 +2,10 @@ package app.controllers.loans;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.controllers.homepage.AppController;
+import app.documents.DocumentGenerator;
 import app.models.loans.LoansModel;
 import app.repositories.loans.CollectionSheetEntity;
-import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.notifications.NotificationEntity;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -17,15 +18,21 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicStampedReference;
 
 public class CollectionSheetController extends LoansModel implements Initializable {
 
     UserAlerts ALERTS;
     UserNotification NOTIFY = new UserNotification();
-    NotificationEntity
+    NotificationEntity LOG_NOTIFICATION = new NotificationEntity();
+    CollectionSheetEntity COLLECTION_ENTITY;
+    DocumentGenerator DOCUMENT_GENERATOR = new DocumentGenerator();
+
+    int loggedInUser = getUserIdByName(AppController.activeUserPlaceHolder);
+    String userName = AppController.activeUserPlaceHolder;
 
     /*******************************************************************************************************************
      *********************************************** FXML FILE EJECTION .*************************************/
@@ -88,10 +95,35 @@ public class CollectionSheetController extends LoansModel implements Initializab
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS.*************************************/
     @FXML void exportButtonOnAction() {
-        collectionTable.getItems().forEach(item-> {
+        try {
+            AtomicBoolean checkSelection = new AtomicBoolean(false);
+            collectionTable.getItems().forEach(item-> {
+                checkSelection.set(item.getDueDateSelector().getValue() == null);
+                if (checkSelection.get()){
+                    item.getDueDateSelector().setStyle("-fx-background-color:#ffecec");
+                }else item.getDueDateSelector().setStyle("-fx-background-color:#eeee");
+            });
 
-        });
-    }
+            //check if either of the comboxes is empty and show notification else collect table data...
+            if (checkSelection.get()){
+                NOTIFY.informationNotification("EMPTY SELECTION", "One or more empty date selection. Please fill all date fields to continue");
+            }else {
+                String officerName = officerNameLabel.getText();
+                String date = sheetDate.getText();
+                int responseStatus =DOCUMENT_GENERATOR.exportCollectionSheetAsExcel(officerName, date, collectionTable  );
+                if (responseStatus == 200) {
+                    NOTIFY.successNotification("FILE CREATED", "Collection sheet successfully generated.");
+                    LOG_NOTIFICATION.setSender_method("SYSTEM NOTIFICATION");
+                    LOG_NOTIFICATION.setTitle("COLLECTION SHEET GENERATED");
+                    LOG_NOTIFICATION.setLogged_by(loggedInUser);
+                    LOG_NOTIFICATION.setMessage("Employee ".concat(userName).concat(" have generated a collection sheet."));
+                    logNotification(LOG_NOTIFICATION);
+                }else NOTIFY.errorNotification("FAILED PROCESS", "Filed attempt to generated collection sheet");
+            }
+        }catch (NullPointerException exception) {
+            NOTIFY.informationNotification("EMPTY SELECTION", "One or more empty date selection. Please fill all date fields to continue");
+        }
+    }// end of method...
 
     @FXML void officerIdSelected() {
         populateTableView();

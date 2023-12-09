@@ -208,5 +208,4 @@ public class LoansController extends LoansModel implements Initializable {
         }
     }
 
-
 }//end of class

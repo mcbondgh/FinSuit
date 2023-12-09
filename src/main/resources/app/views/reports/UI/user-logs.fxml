@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="546.0" prefWidth="1227.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.reports.ui.UserEmployeesReport">
+   <children>
+      <TabPane fx:id="tabPane" prefHeight="564.0" prefWidth="1229.0" style="-fx-background-color: #f6fbff; -fx-font-size: 13px; -fx-font-weight: bold;">
+         <tabs>
+            <Tab fx:id="userLogsTab" text="USER LOGS">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
+                     <children>
+                        <VBox layoutX="97.0" layoutY="79.0" prefHeight="441.0" prefWidth="224.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                           <children>
+                              <Label alignment="CENTER" prefHeight="61.0" prefWidth="203.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="SET REPORT PARAMETERS" textAlignment="CENTER" textFill="#570667" wrapText="true">
+                                 <font>
+                                    <Font name="Roboto Bold" size="16.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </Label>
+                              <Line endX="100.0" startX="-100.0" stroke="#e0dede" />
+                              <VBox prefHeight="71.0" prefWidth="209.0">
+                                 <children>
+                                    <Label text="USERNAME" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="genderSelector" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins; -fx-font-weight: semibold;">
+                                       <VBox.margin>
+                                          <Insets top="2.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <Line endX="100.0" startX="-100.0" stroke="#e0dede" />
+                              <VBox prefHeight="141.0" prefWidth="209.0">
+                                 <children>
+                                    <Label text="START DATE" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="customerDobSelector" editable="false" prefHeight="40.0" prefWidth="215.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                                    <Label text="END DATE" textFill="#626262">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="Roboto Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="customerDobSelector1" editable="false" prefHeight="40.0" prefWidth="241.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <Line endX="100.0" startX="-100.0" stroke="#e0dede" />
+                              <MFXButton fx:id="generateUserReportBtn" prefHeight="25.0" prefWidth="280.0" style="-fx-background-color: #1880c5;" text="Generate Report" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins Bold" size="10.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </MFXButton>
+                              <MFXButton fx:id="exportUserRportBtn" prefHeight="25.0" prefWidth="236.0" style="-fx-background-color: #278c8f;" text="Export Data" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins Bold" size="10.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </MFXButton>
+                           </children>
+                           <effect>
+                              <DropShadow height="34.63" radius="15.84" spread="0.2" width="30.73">
+                                 <color>
+                                    <Color red="0.8399999737739563" green="0.8399999737739563" blue="0.8399999737739563" opacity="0.824873149394989" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                        </VBox>
+                        <TableView layoutX="351.0" layoutY="77.0" prefHeight="443.0" prefWidth="791.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="INDEX" />
+                              <TableColumn prefWidth="218.0" text="USER NAME" />
+                              <TableColumn prefWidth="154.0" text="USER ROLE" />
+                              <TableColumn prefWidth="191.33331298828125" text="SIGN IN DATE" />
+                              <TableColumn prefWidth="152.0" text="SIGN IN TIME" />
+                           </columns>
+                        </TableView>
+                        <Label alignment="CENTER" layoutX="97.0" layoutY="9.0" prefHeight="61.0" prefWidth="225.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="USER LOG REPORTS" textAlignment="CENTER" textFill="#570667" wrapText="true">
+                           <font>
+                              <Font name="Roboto Bold" size="16.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="transactionTab" text="EMPLOYEES LOG">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
+                     <children>
+                        <TableView fx:id="transactionLogsTable" fixedCellSize="35.0" layoutX="11.0" layoutY="82.0" prefHeight="394.0" prefWidth="1208.0" style="-fx-font-size: 12;" tableMenuButtonVisible="true">
+                           <columns>
+                              <TableColumn fx:id="transIndexColumn" prefWidth="63.33334541320801" text="INDEX" />
+                              <TableColumn fx:id="transIdColumn" prefWidth="125.0" text="TRANSACTION ID" />
+                              <TableColumn fx:id="transTypeColumn" prefWidth="125.0" text="TRANSACTION TYPE" />
+                              <TableColumn fx:id="transAccountNumberColumn" prefWidth="125.0" text="ACCOUNT NUMBER" />
+                              <TableColumn fx:id="paymentMethodColumn" prefWidth="125.33328247070312" text="PAYMENT METHODS" />
+                              <TableColumn fx:id="gatewayColumn" prefWidth="125.33328247070312" text="GATEWAY" />
+                              <TableColumn fx:id="cashColumn" prefWidth="75.0" text="CASH" />
+                              <TableColumn fx:id="ecashColumn" prefWidth="75.0" text="E-CASH" />
+                              <TableColumn fx:id="ecashIdColumn" prefWidth="120.66668701171875" text="E-CASH TRANS ID" />
+                              <TableColumn fx:id="transDateColumn" prefWidth="120.00006103515625" text="TRANS DATE" />
+                              <TableColumn fx:id="initiatedByColumn" prefWidth="115.3333740234375" text="INITIATED BY" />
+                              <TableColumn fx:id="paidByColumn" prefWidth="91.33331298828125" text="PAID BY" />
+                           </columns>
+                        </TableView>
+                        <HBox fx:id="transDetailedPane" layoutX="590.0" layoutY="8.0" prefHeight="63.0" prefWidth="625.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                           <children>
+                              <VBox prefHeight="49.0" prefWidth="170.0">
+                                 <children>
+                                    <Label text="TRANSACTION TYPE" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <MFXFilterComboBox fx:id="transactionTypeBox" allowEdit="true" disable="true" editable="false" floatMode="DISABLED" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" selectable="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
+                                       <font>
+                                          <Font name="Roboto" size="11.0" />
+                                       </font>
+                                    </MFXFilterComboBox>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="49.0" prefWidth="170.0">
+                                 <children>
+                                    <Label text="TRANSACTION ID" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="10.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <MFXFilterComboBox fx:id="transactionIdBox" allowEdit="true" disable="true" editable="false" floatMode="DISABLED" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" selectable="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
+                                       <font>
+                                          <Font name="Roboto" size="11.0" />
+                                       </font>
+                                    </MFXFilterComboBox>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="49.0" prefWidth="170.0">
+                                 <children>
+                                    <Label text="ACCOUNT NUMBER" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="10.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <MFXFilterComboBox fx:id="accountNumberBox" allowEdit="true" disable="true" editable="false" floatMode="DISABLED" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" selectable="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
+                                       <font>
+                                          <Font name="Roboto" size="11.0" />
+                                       </font>
+                                    </MFXFilterComboBox>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="12.0" layoutY="9.0" prefHeight="61.0" prefWidth="573.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <children>
+                              <VBox prefHeight="49.0" prefWidth="120.0">
+                                 <children>
+                                    <Label text="START DATE" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="transStartDatePicker" editable="false" prefHeight="35.0" prefWidth="159.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 12; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="49.0" prefWidth="120.0">
+                                 <children>
+                                    <Label text="END DATE" textFill="#626262">
+                                       <font>
+                                          <Font name="Roboto Bold" size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="transEndDatePicker" editable="false" prefHeight="35.0" prefWidth="159.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 12; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox prefHeight="49.0" prefWidth="67.0" spacing="5.0">
+                                 <children>
+                                    <MFXButton fx:id="transactionGenerateBtn" prefHeight="25.0" prefWidth="280.0" style="-fx-background-color: #1880c5;" text="Generate " textFill="WHITE">
+                                       <font>
+                                          <Font name="Poppins Bold" size="10.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </MFXButton>
+                                    <MFXButton fx:id="transactionExportBtn" disable="true" prefHeight="25.0" prefWidth="236.0" style="-fx-background-color: #278c8f;" text="Export" textFill="WHITE">
+                                       <font>
+                                          <Font name="Poppins Bold" size="10.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </MFXButton>
+                                 </children>
+                              </VBox>
+                              <CheckBox fx:id="transactionCheckBox" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="1.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="98.0" text="DETAILED LOGS" textOverrun="CLIP">
+                                 <font>
+                                    <Font name="Roboto Bold" size="10.0" />
+                                 </font>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

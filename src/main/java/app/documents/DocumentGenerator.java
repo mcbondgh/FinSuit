@@ -3,6 +3,7 @@ package app.documents;
 import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.documents.ReceiptsEntity;
+import app.repositories.loans.CollectionSheetEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
 import com.itextpdf.kernel.colors.Color;
@@ -24,7 +25,10 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import javafx.scene.control.TableView;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.functions.Column;
+import org.apache.poi.ss.formula.functions.Columns;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,6 +71,27 @@ public class DocumentGenerator {
         container.add(businessNameText).add(addressText).add(mobileNumbersText)
                 .setTextAlignment(TextAlignment.CENTER).setMargins(0, 0, 2, 0);
         return container;
+    }
+
+    StringBuilder excelDocumentHeader() {
+        StringBuilder builder = new StringBuilder();
+        //GET BUSINESS CREDENTIALS FOR THE LETTER HEAD.
+        String businessName = "";
+        String mobileNumbers = "";
+        String email = "";
+        String digitalAddress = "";
+
+        for (BusinessInfoEntity data : DAO.getBusinessInfo()) {
+            businessName = data.getName();
+            mobileNumbers = data.getMobileNumber() + " | ".concat(data.getOtherNumber());
+            email = data.getEmail();
+            digitalAddress = data.getDigital();
+        }
+        String addressText = email.concat(" | ").concat(digitalAddress);
+        builder.append(businessName).append("\n").append(mobileNumbers).append("\n").append(addressText);
+
+
+        return builder;
     }
 
     /*******************************************************************************************************************
@@ -134,7 +159,7 @@ public class DocumentGenerator {
 
 
     /*******************************************************************************************************************
-        *************************************** ACCOUNT CREATION API *************************************************
+    *************************************** ACCOUNT CREATION API *************************************************
      ******************************************************************************************************************/
     public File createDirectoryIfNotExist() {
         File path = new File(System.getProperty("user.home") + File.separator + "Desktop");
@@ -145,6 +170,7 @@ public class DocumentGenerator {
         }
         return directory;
     }
+
     public void generateNewAccountFile(String documentName, String fullName, String mobile, String accountType, String accountNumber, String initialDeposit, String email, String officerName, String digitalAddress ) {
         try {
             File newAccountsPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "new accounts\\");
@@ -250,7 +276,7 @@ public class DocumentGenerator {
             CellStyle sheetHeaderStyle = workbook.createCellStyle();
             sheetHeaderStyle.setFont(font);
             sheetHeaderStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
-            sheetHeaderStyle.setBorderBottom(BorderStyle.DASHED);
+
 
             //Lets create the header rows for the table cells with their various names.
             Row headerRow = sheet.createRow(0);
@@ -292,6 +318,8 @@ public class DocumentGenerator {
             File file = new File(directoryPath, docName.concat(".xlsx"));
             FileOutputStream outputStream = new FileOutputStream(file);
             workbook.write(outputStream);
+
+            workbook.close();
             return statusCode;
         }catch (Exception e){
             statusCode = 404;
@@ -383,6 +411,73 @@ public class DocumentGenerator {
         }
     }
 
+    public int exportCollectionSheetAsExcel(String docName,  String collectionDate, TableView<CollectionSheetEntity> entityTableView) {
+        int status = 200;
+        try{
+            Workbook workbook = new HSSFWorkbook();
+            Sheet sheet = workbook.createSheet(docName);
+
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setFontName("Times New Roman");
+
+            CellStyle sheetHeaderStyle = workbook.createCellStyle();
+            sheetHeaderStyle.setFont(font);
+            sheetHeaderStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+            sheetHeaderStyle.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+
+            //create rows for the various parts where data and headers are going to be populated
+            Row letterReadRow = sheet.createRow(0);
+            Row nameAndDateRow = sheet.createRow(2);
+            Row nameAndDateRowData = sheet.createRow(3);
+            Row tableHeaders = sheet.createRow(4);
+
+            //Create cell mergers
+            letterReadRow.getSheet().addMergedRegion(new CellRangeAddress(0, 1, 0, 5));
+            nameAndDateRow.getSheet().addMergedRegion(new CellRangeAddress(2, 2, 0, 2));
+            nameAndDateRow.getSheet().addMergedRegion(new CellRangeAddress(2, 2, 3, 5));
+            nameAndDateRowData.getSheet().addMergedRegion(new CellRangeAddress(3, 3, 0, 2));
+            nameAndDateRowData.getSheet().addMergedRegion(new CellRangeAddress(3, 3, 3, 5));
+
+            //SET CELL VALUES
+            letterReadRow.createCell(0).setCellValue(excelDocumentHeader().toString());
+            nameAndDateRow.createCell(0).setCellValue("OFFICER'S NAME");
+            nameAndDateRowData.createCell(0).setCellValue(docName);
+            nameAndDateRow.createCell(3).setCellValue("COLLECTION DATE");
+            nameAndDateRowData.createCell(3).setCellValue(collectionDate);
+
+           int tableLength = entityTableView.getColumns().size();
+            for (int i = 0; i < tableLength; i++) {
+                tableHeaders.createCell(i).setCellValue(entityTableView.getColumns().get(i).getText());
+            }
+
+            //get table data and populate the cells...
+            int tableSize = entityTableView.getItems().size();
+            for (int i = 0; i < tableSize ; i++) {
+                Row tableData = sheet.createRow(5 + i);
+                tableData.createCell(0).setCellValue(entityTableView.getItems().get(i).getLoanId());
+                tableData.createCell(1).setCellValue(entityTableView.getItems().get(i).getLoanNo());
+                tableData.createCell(2).setCellValue(entityTableView.getItems().get(i).getCustomerName());
+                tableData.createCell(3).setCellValue(entityTableView.getItems().get(i).getInstallmentAmount());
+                tableData.createCell(4).setCellValue(entityTableView.getItems().get(i).getDueDateSelector().getValue());
+            }
+
+            File directoryPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "Collection Sheets" + File.separator);
+            if (!directoryPath.exists()) {
+                directoryPath.mkdir();
+            }
+
+            File file = new File(directoryPath, docName+"_".concat(collectionDate).concat(".xlsx"));
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+            workbook.close();
+            return status;
+        }catch (Exception e){
+            e.printStackTrace();
+            status = 404;
+        }
+        return status;
+    }
 
 
 

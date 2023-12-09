@@ -23,11 +23,8 @@
             <TableColumn fx:id="nameColumn" prefWidth="278.6666259765625" text="CUSTOMER NAME" />
             <TableColumn fx:id="installmentColumn" prefWidth="153.33331298828125" text="INSTALLMENT" />
             <TableColumn fx:id="dateColumn" minWidth="0.0" prefWidth="180.0" text="DUE DATE" />
-            <TableColumn fx:id="amountColumn" editable="false" minWidth="0.0" prefWidth="0.0" />
+            <TableColumn fx:id="amountColumn" editable="false" minWidth="0.0" prefWidth="0.0" text="AMOUNT" />
          </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
       </TableView>
       <Label alignment="CENTER" layoutX="294.0" layoutY="5.0" prefHeight="61.0" prefWidth="828.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="GENERATE COLLECTION SHEET FOR LOAN OFFICERS" textAlignment="CENTER" textFill="#570667" wrapText="true">
          <font>

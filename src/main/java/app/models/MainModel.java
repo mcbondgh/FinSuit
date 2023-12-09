@@ -19,6 +19,7 @@ import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.CheckBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -626,6 +627,59 @@ public class MainModel extends DbConnection {
             resultSet.close();
             getConnection().close();
         }catch (Exception e) {}
+        return data;
+    }
+    public ObservableList<TransactionsEntity> fetchTransactionLogsReport(LocalDate start, LocalDate end, int limit){
+        ObservableList<TransactionsEntity> data = new ObservableStack<>();
+        try {
+            String query1 = """
+                    SELECT id,
+                    account_number,\s
+                    transaction_id,\s
+                    transaction_type,\s
+                    payment_method,\s
+                    payment_gateway,\s
+                    cash_amount,\s
+                    ecash_amount,
+                    ecash_id,\s
+                     transaction_date,
+                     transaction_made_by,
+                     username FROM transaction_logs AS tl\s
+                    	INNER JOIN users AS u\s
+                        ON u.user_id = tl.user_id
+                    	WHERE (DATE(transaction_date) BETWEEN ? AND ? )
+                        LIMIT ?;
+                    """;
+            String query2 = """
+                    
+                    """;
+            preparedStatement = getConnection().prepareStatement(query1);
+            preparedStatement.setDate(1, Date.valueOf(start));
+            preparedStatement.setDate(2, Date.valueOf(end));
+            preparedStatement.setInt(3, limit);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String accountNo = resultSet.getString("account_number");
+                String transNo = resultSet.getString("transaction_id");
+                String type = resultSet.getString("transaction_type");
+                String method = resultSet.getString("payment_method");
+                String gateway = resultSet.getString("payment_gateway");
+                double cash = resultSet.getDouble("cash_amount");
+                double eCash = resultSet.getDouble("ecash_amount");
+                String ecashId = resultSet.getString("ecash_id");
+                Timestamp date = resultSet.getTimestamp("transaction_date");
+                String paidBy = resultSet.getString("transaction_made_by");
+                String username = resultSet.getString("username");
+                data.add(new TransactionsEntity(id, accountNo, transNo, type, method, gateway, cash, eCash, ecashId, date, paidBy, username ));
+            }
+
+        }catch (SQLException ignore){
+            logger.log(ignore.getMessage() + " -- failed from Fetching transaction Logs for Reports");
+        }
+
+
         return data;
     }
     public ObservableList<TransactionsEntity> getTodayTransactionLogs() {

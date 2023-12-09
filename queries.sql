@@ -61,6 +61,13 @@ CREATE TABLE IF NOT EXISTS loan_payment_logs(
     collected_by INT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS user_logs(
+	log_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    user_role VARCHAR(50) NOT NULL,
+    log_date DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+
 
 SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,
 loan_id, loan_no, loan_type, requested_amount, approved_amount,
@@ -84,6 +91,22 @@ INNER JOIN customer_data AS cd
 	ON ls.customer_id = cd.customer_id
 WHERE loan_status = 'active' AND work_id = '1000005'
 ;
+
+SELECT account_number, 
+transaction_id, 
+transaction_type, 
+payment_method, 
+payment_gateway, 
+cash_amount, 
+ecash_amount,
+ecash_id, 
+ transaction_date, 
+ username FROM transaction_logs AS tl 
+	INNER JOIN users AS u 
+    ON u.user_id = tl.user_id
+	WHERE (DATE(transaction_date) BETWEEN ? AND ? )
+    LIMIT ?;
+    
 
 SELECT monthly_installment, paid_amount, ls.loan_no, payment_date FROM loan_schedule ls
 INNER JOIN loan_payment_logs AS plogs

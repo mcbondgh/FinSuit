@@ -43,6 +43,7 @@ module app.finsuit {
     exports app.repositories.users;
     exports app.repositories.loans;
     exports app.enums;
+    exports app.controllers.reports.ui;
 
     opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;
@@ -53,6 +54,7 @@ module app.finsuit {
     opens app.controllers.loans;
     opens app.controllers.transactions;
     opens app.controllers.reports;
+    opens app.controllers.reports.ui;
     opens app.controllers.settings;
     opens app.controllers.resource;
     opens app.controllers.finance;

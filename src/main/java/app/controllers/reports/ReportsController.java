@@ -1,13 +1,16 @@
 package app.controllers.reports;
 
+import app.specialmethods.SpecialMethods;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.collections.ArrayChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 public class ReportsController implements Initializable {
@@ -19,6 +22,9 @@ public class ReportsController implements Initializable {
     private Label pageTitle;
     @FXML private Pane menuIcon;
     @FXML private VBox menuContainer;
+    @FXML private BorderPane borderPane;
+    @FXML private MFXButton transactionViewBtn, userEmployeesBtn, customersBtn, smsBtn, loanReportBtn;
+
     public static String pageTitlePlaceHolder;
 
     /*******************************************************************************************************************
@@ -46,13 +52,44 @@ public class ReportsController implements Initializable {
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
 
+
     void actionEventMethods() {
-        menuIcon.setOnMouseClicked(e -> {
-            menuContainer.setVisible(!isMenuContainerVisible());
+        userEmployeesBtn.setOnAction(actionEvent -> {
+            try {
+//            borderPane.getChildren().remove(0);
+                String fxmlFile = "views/reports/ui/user-logs.fxml";
+                SpecialMethods.FlipView(borderPane, fxmlFile );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
-        menuContainer.setOnMouseExited(e -> {
-            menuContainer.setVisible(false);
+
+        transactionViewBtn.setOnAction(actionEvent -> {
+            try {
+//            borderPane.getChildren().remove(0);
+                String fxmlFile = "views/reports/ui/transactional-statement.fxml";
+                SpecialMethods.FlipView(borderPane, fxmlFile );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
+
+
+
+
+
+
+
+
+
+
+
+//        menuIcon.setOnMouseClicked(e -> {
+//            menuContainer.setVisible(!isMenuContainerVisible());
+//        });
+//        menuContainer.setOnMouseExited(e -> {
+//            menuContainer.setVisible(false);
+//        });
     }
 
 }//end of class..

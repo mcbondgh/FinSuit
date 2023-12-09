@@ -24,6 +24,21 @@ public class TransactionsEntity {
     private LocalTime localTime;
 
     private Label transactionStatus = new Label();
+
+    public TransactionsEntity(long id, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double cash_amount, double ecash_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, String username){
+        this.id = id;
+        this.account_number = account_number;
+        this.transaction_date = transaction_date;
+        this.transaction_type = transaction_type;
+        this.transaction_id = transaction_id;
+        this.payment_gateway = payment_gateway;
+        this.ecash_id = ecash_id;
+        this.payment_method = payment_method;
+        this.username = username;
+        this.transaction_made_by = transaction_made_by;
+        this.ecash_amount = ecash_amount;
+        this.cash_amount = cash_amount;
+    }
     public TransactionsEntity(long id, String fullname, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double total_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, String nationalIdNumber, String username) {
         this.id = id;
         this.fullname = fullname;
@@ -42,6 +57,8 @@ public class TransactionsEntity {
         formatVariables();
     }
     public TransactionsEntity() {}
+
+
 
     public TransactionsEntity(String transaction_id, String transaction_type, double total_amount, LocalTime localTime) {
         this.transaction_id = transaction_id;

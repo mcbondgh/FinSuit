@@ -5,6 +5,7 @@ import app.enums.PaymentMethods;
 import app.models.MainModel;
 import app.repositories.BusinessInfoEntity;
 import app.repositories.roles.UserRolesData;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -117,7 +118,6 @@ public class SpecialMethods {
     public static void generateTime(Label dateLabel) {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
-            final int value = 0;
             @Override
             public void run() {
                 LocalTime time = LocalTime.now();
@@ -140,10 +140,18 @@ public class SpecialMethods {
         }
     }
 
+
+
     public static void setLoanType(ComboBox<String> comboBox) {
-        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan"};
+        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Student Loan"};
         Arrays.sort(items);
         for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+    public static void setTransactionTypes(MFXComboBox<String> comboBox){
+        String[] items = {"CASH DEPOSIT", "CASH WITHDRAWAL", "DISBURSED FUND", "REPAYMENT"};
+        for (String x : items){
             comboBox.getItems().add(x);
         }
     }

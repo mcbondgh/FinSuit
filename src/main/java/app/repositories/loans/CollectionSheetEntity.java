@@ -14,8 +14,8 @@ public class CollectionSheetEntity extends MainModel {
     private LocalDate sheetDate;
     private LocalDate dueDate;
     private double installmentAmount;
+    private double paidAmount;
     private ComboBox<Date> dueDateSelector = new ComboBox<>();
-
 
     public CollectionSheetEntity(int loanId, String loanNo, String customerName, String officerName,  double installmentAmount) {
         this.loanId = loanId;
@@ -43,6 +43,14 @@ public class CollectionSheetEntity extends MainModel {
         return loanNo;
     }
 
+    public double getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(double paidAmount) {
+        this.paidAmount = paidAmount;
+    }
+
     public void setLoanNo(String loanNo) {
         this.loanNo = loanNo;
     }
@@ -63,13 +71,6 @@ public class CollectionSheetEntity extends MainModel {
         this.sheetDate = sheetDate;
     }
 
-    public String getAmount() {
-        return officerName;
-    }
-
-    public void setAmount(String amount) {
-        this.officerName = amount;
-    }
 
     public double getInstallmentAmount() {
         return installmentAmount;
