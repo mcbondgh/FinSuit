@@ -65,11 +65,11 @@ public class BusinessInfoEntity {
         this.accountPassword = accountPassword;
     }
 
-    public double getTaxPercentage() {
+    public Double getTaxPercentage() {
         return taxPercentage;
     }
 
-    public void setTaxPercentage(double taxPercentage) {
+    public void setTaxPercentage(Double taxPercentage) {
         this.taxPercentage = taxPercentage;
     }
 

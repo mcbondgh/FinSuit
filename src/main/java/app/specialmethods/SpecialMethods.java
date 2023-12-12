@@ -149,12 +149,6 @@ public class SpecialMethods {
             comboBox.getItems().add(x);
         }
     }
-    public static void setTransactionTypes(MFXComboBox<String> comboBox){
-        String[] items = {"CASH DEPOSIT", "CASH WITHDRAWAL", "DISBURSED FUND", "REPAYMENT"};
-        for (String x : items){
-            comboBox.getItems().add(x);
-        }
-    }
     public static void setRelationshipTypes(ComboBox<String> comboBox) {
         String[] items = {"Father", "Mother", "Brother", "Sister", "Uncle", "Aunty", "Friend", "Cousin", "Other", "Guardian", "Relative"};
         Arrays.sort(items);

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="1230.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.ViewAccountController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="1230.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.ViewAccountController">
    <children>
       <Pane layoutX="13.0" layoutY="7.0" prefHeight="35.0" prefWidth="318.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
          <children>
@@ -28,17 +28,17 @@
             </TextField>
          </children>
       </Pane>
-      <MFXLegacyTableView fx:id="customersTable" fixedCellSize="35.0" layoutX="13.0" layoutY="51.0" prefHeight="510.0" prefWidth="1203.0" style="-fx-font-family: poppins; -fx-font-size: 14px; -fx-alignment: center;">
+      <MFXLegacyTableView fx:id="customersTable" fixedCellSize="35.0" layoutX="13.0" layoutY="51.0" onMouseEntered="#viewButtonClicked" prefHeight="493.0" prefWidth="1203.0" style="-fx-font-family: poppins; -fx-font-size: 14px; -fx-alignment: center;">
          <columns>
             <TableColumn fx:id="fullNameColumn" prefWidth="200.0" text="FULL NAME" />
-            <TableColumn fx:id="genderColumn" prefWidth="130.0" text="GENDER " />
-            <TableColumn fx:id="ageColumn" prefWidth="58.0" text="AGE" />
+            <TableColumn fx:id="genderColumn" prefWidth="101.33332824707031" text="GENDER " />
+            <TableColumn fx:id="ageColumn" prefWidth="86.66668701171875" text="AGE" />
             <TableColumn fx:id="mobileNumberColumn" maxWidth="250.0" prefWidth="130.0" text="MOBILE NUMBER" />
             <TableColumn fx:id="accountTypeColumn" prefWidth="147.33331298828125" text="ACCOUNT TYPE" />
             <TableColumn fx:id="accountNumberColumn" prefWidth="156.66668701171875" text="ACCOUNT NO." />
-            <TableColumn fx:id="idTypeColumn" prefWidth="130.0" text="ID TYPE" />
-            <TableColumn fx:id="registrationDateColumn" prefWidth="186.0" text="DATE REGISTERED" />
-            <TableColumn fx:id="actionColumn" prefWidth="62.6666259765625" style="-fx-alignment: center;" text="VIEW" />
+            <TableColumn fx:id="idTypeColumn" prefWidth="105.3333740234375" style="-fx-alignment: center;" text="ACC. STATUS" />
+            <TableColumn fx:id="registrationDateColumn" prefWidth="220.6666259765625" text="DATE REGISTERED" />
+            <TableColumn fx:id="actionColumn" prefWidth="48.666748046875" style="-fx-alignment: center;" text="VIEW" />
          </columns>
       </MFXLegacyTableView>
    </children>

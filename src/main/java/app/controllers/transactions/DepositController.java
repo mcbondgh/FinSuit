@@ -14,6 +14,7 @@ import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.documents.ReceiptsEntity;
+import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
@@ -72,10 +73,6 @@ public class DepositController extends TransactionModel implements Initializable
     @FXML private TextField cashField, eCashField, transactionIdField, depositorNameField, depositorIdField;
     @FXML private MFXButton saveButton;
     private String MOBILE_NUMBER, EMAIL_ADDRESS;
-
-
-
-
 
 
     /*******************************************************************************************************************
@@ -155,10 +152,10 @@ public class DepositController extends TransactionModel implements Initializable
      ********************************************************************************************************************/
     @FXML void setOnAccountNumberSelected() {
         String var1 = accountNumberField.getValue();
-        ArrayList<Object> items = getCustomerFullNameByAccountNumber(var1);
+        ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
 
         accountHolderName.setText(items.get(0).toString());
-        accountNumberHolder.setText(items.get(3).toString());
+        accountNumberHolder.setText(items.get(4).toString());
         CUSTOMER_ID = (int) items.get(1);
         MOBILE_NUMBER = items.get(4).toString();
         EMAIL_ADDRESS = items.get(5).toString();
@@ -199,7 +196,7 @@ public class DepositController extends TransactionModel implements Initializable
         try{
             int loggedInUserId = getUserIdByName(getCurrentUserPlaceholder());
             String clientName = accountHolderName.getText();
-            String accountNumber = accountNumberHolder.getText();
+            String accountNumber = accountNumberField.getValue();
             String paymentMethod = PaymentMethods.convertPayMethod(paymentSelector.getValue());
             String gateway = PaymentMethods.convertPayMethod(gatewaySelector.getValue());
             String transactionType = TransactionTypes.convertType(TransactionTypes.CASH_DEPOSIT);
@@ -276,6 +273,13 @@ public class DepositController extends TransactionModel implements Initializable
                     logsEntity.setMessage(message);
                     logsEntity.setSent_by(loggedInUserId);
                     MESSAGE_MODEL.logNotificationMessages(logsEntity);
+
+                    NotificationEntity notification = new NotificationEntity();
+                    notification.setLogged_by(loggedInUserId);
+                    notification.setMessage("Ghc"+ amount + " has been deposited into account number ".concat(accountNumber + " with transaction Id " + TRANSACTION_ID + " by " + AppController.activeUserPlaceHolder));
+                    notification.setTitle("CASH DEPOSIT");
+                    notification.setSender_method("SMS");
+                    logNotification(notification);
                 }
             }
         }catch (NumberFormatException ignore) {

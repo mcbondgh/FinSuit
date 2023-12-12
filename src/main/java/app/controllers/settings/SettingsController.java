@@ -340,7 +340,7 @@ public class SettingsController extends SettingModel implements Initializable{
             String operation = operationSelector.getValue();
             int temId = 0;
             for (TemplatesRepository item : fetchMessageTemplates()) {
-                if (tempTitle.matches(item.getMessageTitle())) {
+                if (tempTitle.equalsIgnoreCase(item.getMessageTitle())) {
                     temId = item.getTemplateId();
                     break;
                 }

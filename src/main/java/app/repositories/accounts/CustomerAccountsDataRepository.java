@@ -10,16 +10,18 @@ public class CustomerAccountsDataRepository {
     private String account_number, account_type;
     private double account_balance;
     private double previous_balance;
+    private String account_status;
     private Timestamp date_modified;
     private String formatted_date_modified;
     private int modified_by;
 
     public CustomerAccountsDataRepository() {}
-    public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String account_type, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
+    public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String account_type, String account_status, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
         this.customer_id = account_id;
         this.customer_id = customer_id;
         this.account_number = account_number;
         this.account_type = account_type;
+        this.account_status = account_status;
         this.account_balance = account_balance;
         this.previous_balance = previous_balance;
         this.date_modified = date_modified;
@@ -90,6 +92,14 @@ public class CustomerAccountsDataRepository {
 
     public void setFormatted_date_modified(String formatted_date_modified) {
         this.formatted_date_modified = formatted_date_modified;
+    }
+
+    public String getAccount_status() {
+        return account_status;
+    }
+
+    public void setAccount_status(String account_status) {
+        this.account_status = account_status;
     }
 
     public int getModified_by() {

@@ -6,6 +6,7 @@ import app.repositories.documents.ReceiptsEntity;
 import app.repositories.loans.CollectionSheetEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
+import app.repositories.transactions.TransactionsEntity;
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
@@ -33,13 +34,20 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DocumentGenerator {
 
     MainModel DAO = new MainModel();
+
+    public DocumentGenerator() {
+    }
     
     /*
     THE PURPOSE OF THIS CLASS IS TO ENABLE US GENERATE ALL REQUIRED DOCUMENT FORMAT ie excel, word, ppt and pdf FOR
@@ -419,7 +427,7 @@ public class DocumentGenerator {
 
             Font font = workbook.createFont();
             font.setBold(true);
-            font.setFontName("Times New Roman");
+            font.setFontName("Times");
 
             CellStyle sheetHeaderStyle = workbook.createCellStyle();
             sheetHeaderStyle.setFont(font);
@@ -474,6 +482,65 @@ public class DocumentGenerator {
             return status;
         }catch (Exception e){
             e.printStackTrace();
+            status = 404;
+        }
+        return status;
+    }
+
+    public int generateTransactionLogsReport(TableView<TransactionsEntity> tableView){
+        int tableSize = tableView.getItems().size();
+        int visibleColumnSize = tableView.getVisibleLeafColumns().size();
+        int status = 200;
+        try {
+            Workbook workbook = new HSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Transaction Report");
+
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setFontName("Times");
+
+            CellStyle sheetHeaderStyle = workbook.createCellStyle();
+            sheetHeaderStyle.setFont(font);
+
+            Row letterHead = sheet.createRow(0);
+            letterHead.getSheet().addMergedRegion(new CellRangeAddress(0, 1, 0, visibleColumnSize-1));
+            letterHead.createCell(0).setCellValue(excelDocumentHeader().toString());
+            letterHead.getCell(0).getCellStyle().setWrapText(true);
+
+            Row tableHeader = sheet.createRow(2);
+            for (int x = 0; x < visibleColumnSize; x++) {
+                tableHeader.createCell(x).setCellValue(tableView.getVisibleLeafColumn(x).getText());
+            }
+
+            for (int x = 0; x < tableSize; x++) {
+                Row tableData = sheet.createRow(3+x);
+                tableData.createCell(0).setCellValue(tableView.getItems().get(x).getId());
+                tableData.createCell(1).setCellValue(tableView.getItems().get(x).getTransaction_id());
+                tableData.createCell(2).setCellValue(tableView.getItems().get(x).getTransaction_type());
+                tableData.createCell(3).setCellValue(tableView.getItems().get(x).getAccount_number());
+                tableData.createCell(4).setCellValue(tableView.getItems().get(x).getPayment_method());
+                tableData.createCell(5).setCellValue(tableView.getItems().get(x).getPayment_gateway());
+                tableData.createCell(6).setCellValue(tableView.getItems().get(x).getCash_amount());
+                tableData.createCell(7).setCellValue(tableView.getItems().get(x).getEcash_amount());
+                tableData.createCell(8).setCellValue(tableView.getItems().get(x).getEcash_id());
+                tableData.createCell(9).setCellValue(tableView.getItems().get(x).getTransaction_date());
+                tableData.createCell(10).setCellValue(tableView.getItems().get(x).getUsername());
+                tableData.createCell(11).setCellValue(tableView.getItems().get(x).getTransaction_made_by());
+            }
+
+            String dateTime = LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)).concat(String.valueOf(LocalTime.now().getSecond()));
+
+            File directoryPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "Reports" + File.separator);
+            if (!directoryPath.exists()) {
+                directoryPath.mkdir();
+            }
+
+            File file = new File(directoryPath, "Transactions_Report_".concat(dateTime).concat(".xlsx"));
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+            workbook.close();
+            return status;
+        }catch (Exception e){
             status = 404;
         }
         return status;

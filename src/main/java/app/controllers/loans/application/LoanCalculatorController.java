@@ -389,7 +389,6 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
                     NOTIFY.informationNotification("EMPTY TABLE", "You cannot export an empty table, please generate a schedule first.");
                 } else {
                     exportLink.setDisable(true);
-
                     new DocumentGenerator().exportScheduleAsPdf(applicantFullnameLabel.getText(), scheduleTable, displayTotalLoanAmount.getText());
                     Thread.sleep(600);
                     exportLink.setDisable(false);

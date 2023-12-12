@@ -38,6 +38,7 @@ public class TransactionsEntity {
         this.transaction_made_by = transaction_made_by;
         this.ecash_amount = ecash_amount;
         this.cash_amount = cash_amount;
+        formatVariables();
     }
     public TransactionsEntity(long id, String fullname, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double total_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, String nationalIdNumber, String username) {
         this.id = id;

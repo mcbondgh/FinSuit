@@ -22,6 +22,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ActionCheck
 public class WithdrawalController extends TransactionModel implements Initializable {
@@ -46,9 +47,9 @@ public class WithdrawalController extends TransactionModel implements Initializa
      *********************************************** FXML NODE EJECTION
      ********************************************************************************************************************/
     @FXML private MFXFilterComboBox<String> accountNumberField;
-    @FXML private Label currentBalanceLabel, accountHolderName;
+    @FXML private Label chargeValue, accountHolderName, accountStatusLabel;
     @FXML private ComboBox<PaymentMethods> paymentSelector;
-    @FXML private TextField collectorsNameField, cashField;
+    @FXML private TextField collectorsNameField, cashField, transactionIdField, idNumberField;
     @FXML private MFXButton saveButton;
 
 
@@ -60,6 +61,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
     boolean isPaymentMethodEmpty() {return paymentSelector.getValue() == null;}
     boolean accountNumberEmpty() {return accountNumberField.getValue().isEmpty();}
     boolean collectorNameEmpty() {return collectorsNameField.getText().isEmpty();}
+    boolean idNumberEmpty() {return idNumberField.getText().isBlank();}
 
     
 
@@ -71,7 +73,12 @@ public class WithdrawalController extends TransactionModel implements Initializa
     
     @FXML void checkForEmptyFields() {
         try {
-            saveButton.setDisable(accountNumberEmpty() || isAmountEmpty() || isPaymentMethodEmpty() || collectorNameEmpty());
+            saveButton.setDisable(
+                    accountNumberEmpty() || isAmountEmpty() || isPaymentMethodEmpty() ||
+                            collectorNameEmpty() || accountStatusLabel.getText().equalsIgnoreCase("closed")
+                    || idNumberEmpty()
+            );
+            cashField.setDisable(accountStatusLabel.getText().equalsIgnoreCase("closed"));
         }catch (NullPointerException ignore){}
     }
  
@@ -81,7 +88,6 @@ public class WithdrawalController extends TransactionModel implements Initializa
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateFields();
-
     }
 
     private void populateFields() {
@@ -98,26 +104,41 @@ public class WithdrawalController extends TransactionModel implements Initializa
      ********************************************************************************************************************/
     @FXML void setOnAccountNumberSelected() {
         String var1 = accountNumberField.getValue();
-        ArrayList<Object> items = getCustomerFullNameByAccountNumber(var1);
+        ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
+        String status = getCustomerDetailsByAccountNumber(var1).get(6).toString();
+        AtomicReference<Double> withdrawalTax = new AtomicReference<>((double) 0);
+        getBusinessInfo().forEach(data -> {
+            withdrawalTax.set(data.getTaxPercentage());
+        });
+        accountStatusLabel.setText(status.toUpperCase());
+        accountStatusLabel.setStyle(status.equals("active") ? "-fx-text-fill:green; -fx-background-color:white; -fx-border-color:#ddd" :
+                "-fx-text-fill:red; -fx-background-color:white; -fx-border-color:#ddd");
         accountHolderName.setText(items.get(0).toString());
-        currentBalanceLabel.setText(String.valueOf(items.get(2)));
+        chargeValue.setText(String.valueOf(withdrawalTax.getAcquire()));
     }
     @FXML void setSelectedPaymentMethod() {
-
+        if (paymentSelector.getValue().equals(PaymentMethods.eCASH) || paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS)) {
+            transactionIdField.setDisable(false);
+        }else {
+            transactionIdField.setDisable(true);
+            transactionIdField.setText("null");
+        }
     }
 
     @FXML void saveButtonClicked() {
         try{
-            double currentBalance = Double.parseDouble(currentBalanceLabel.getText());
+            double transactionCharge = Double.parseDouble(chargeValue.getText());
             double withdrawalAmount = Double.parseDouble(cashField.getText());
-            double balance = currentBalance - withdrawalAmount;
-
-            if (balance < currentBalance) {
-                System.out.println(true);
+            double currentBalance = Double.parseDouble(getCustomerDetailsByAccountNumber(accountNumberField.getText()).get(2).toString());
+            double totalWithdrawalAmount = withdrawalAmount + transactionCharge;
+            double balance = currentBalance - totalWithdrawalAmount;
+            if (balance < 0) {
                 ALERTS = new UserAlerts("INVALID AMOUNT", "Sorry, please review your withdrawal amount, withdrawal amount cannot be greater current balance", "you cannot withdraw more then your current account balance.");
                 ALERTS.errorAlert();
                 cashField.deletePreviousChar();
-            } else System.out.println(false);
+            } else {
+                System.out.println("all clear for withdrawal");
+            };
         }catch (NumberFormatException ignore){}
         
     }

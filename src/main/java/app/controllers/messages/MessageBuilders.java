@@ -75,6 +75,18 @@ public class MessageBuilders {
         return stringBuilder.toString();
     }
 
+    public String updateCustomerData(List<Object> input) {
+        DAO.getMessageWithOperations().forEach(data -> {
+            if (data.getOperation_type().equalsIgnoreCase("Account Update")) {
+                message = data.getMessage().replace("[NAME]", input.get(0).toString())//customer name
+                    .replace("[ACCOUNT TYPE]", input.get(1).toString())//account type
+                    .replace("[ACCOUNT NO]", input.get(2).toString());//account number
+            stringBuilder.append(message);
+            }
+        });
+        return stringBuilder.toString();
+    }
+
 
 //    public static void main(String[] args) {
 //        GenerateMessageForOperation temp = new GenerateMessageForOperation();

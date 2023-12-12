@@ -2,11 +2,20 @@ package app.controllers.accounts;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.email.EmailAPI;
+import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
+import app.controllers.messages.MessageBuilders;
+import app.enums.MessageStatus;
+import app.errorLogger.ErrorLogger;
 import app.models.accounts.CustomerAccountModel;
+import app.models.message.MessagesModel;
+import app.repositories.SmsAPIEntity;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
+import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.specialmethods.SpecialMethods;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -29,7 +38,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -39,6 +51,10 @@ public class EditAccountController extends CustomerAccountModel implements Initi
     CustomersDataRepository customersDataRepository = new CustomersDataRepository();
     CustomerAccountsDataRepository balanceDataModel = new CustomerAccountsDataRepository();
     CustomersDocumentRepository documentRepository = new CustomersDocumentRepository();
+    SmsAPI SMS = new SmsAPI();
+    MessageLogsEntity MESSAGE_LOGS = new MessageLogsEntity();
+    MessagesModel MESSAGE_MODEL = new MessagesModel();
+    NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -46,7 +62,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
 
 
     @FXML
-    private Label accountNumberLabel, absoluteFilePathLabel;
+    private Label accountNumberLabel, absoluteFilePathLabel, accountStatusLabel;
     @FXML private MFXButton uploadButton, saveButton, cancelButton;
     @FXML private JFXButton previewItemButton;
     @FXML private MFXScrollPane scrollPane;
@@ -62,8 +78,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
     @FXML private TextField c_idNumberField, placeOfWorkField, institutionAddressField;
     @FXML private ComboBox<String> c_genderSelector, accountTypeSelector, c_idSelector, relationshipSelector, c_educationalBackgroundSelector;
     public JFXCheckBox editCheckBox, attachFileButton;
-    @FXML private JFXToggleButton sendNotificationButton;
-    @FXML private ComboBox<Double> initialDepositSelector;
+    @FXML private JFXToggleButton statusToggleButton;
     public ImageView imageView;
 
     @FXML
@@ -95,7 +110,6 @@ public class EditAccountController extends CustomerAccountModel implements Initi
     boolean isIdTypeEmpty(){return customerIdSelector.getValue() == null;}
     boolean isIdNumberEmpty() {return customerIdNumberField.getText().isEmpty();}
     boolean isEducationalStatusEmpty() {return customerEducationalBackground.getValue() == null;}
-    boolean isDepositEmpty() {return initialDepositSelector.getValue() == null;}
     boolean isFullNameEmpty() {return fullNameField.getText().isEmpty();}
     boolean isGurantorDobEmpty(){return c_DobSelector.getValue() == null;}
     boolean isGurantorNumberEmpty() {return c_numberField.getText().isEmpty();}
@@ -137,7 +151,6 @@ public class EditAccountController extends CustomerAccountModel implements Initi
         SpecialMethods.setGenderParameters(c_genderSelector);
         SpecialMethods.setQualification(customerEducationalBackground);
         SpecialMethods.setQualification(c_educationalBackgroundSelector);
-        SpecialMethods.setInitialDepositAmount(initialDepositSelector);
         accountNumberLabel.setText(ViewAccountController.selectedCustomerAccountNumber);
     }
     void populateTextFields() {
@@ -146,8 +159,16 @@ public class EditAccountController extends CustomerAccountModel implements Initi
             if (Objects.equals(value.getAccount_number(), accountNumber)) {
                 selectedCustomerId = value.getCustomer_id();
                 accountTypeSelector.setValue(value.getAccount_type());
-                initialDepositSelector.setValue(value.getAccount_balance());
-
+                accountStatusLabel.setText(value.getAccount_status().toUpperCase());
+                if (accountStatusLabel.getText().equalsIgnoreCase("active")) {
+                    accountStatusLabel.setStyle("-fx-text-fill: #009a4d;");
+                    statusToggleButton.setSelected(true);
+                    statusToggleButton.setText("Enable Account");
+                } else {
+                    accountStatusLabel.setStyle("-fx-text-fill:#ff0000");
+                    statusToggleButton.setSelected(false);
+                    statusToggleButton.setText("Close Account");
+                }
             }
         }
 
@@ -217,7 +238,6 @@ public class EditAccountController extends CustomerAccountModel implements Initi
         customerIdSelector.setValue(null);
         customerIdNumberField.clear();
         customerEducationalBackground.setValue(null);
-        initialDepositSelector.setValue(null);
         commentsField.clear();
         fullNameField.clear();
         c_numberField.clear();
@@ -245,7 +265,24 @@ public class EditAccountController extends CustomerAccountModel implements Initi
         }
     }
 
-
+    public void notificationLogger(String accountNumber) {
+        String statusText = statusToggleButton.isSelected() ? "ACTIVE"  : "CLOSED";
+        NOTIFY_ENTITY.setMessage("Bio data of account number ".concat(accountNumber).
+                concat( " has been updated with account status set to ".concat(statusText)+ " by user ").
+                concat(AppController.activeUserPlaceHolder));
+        NOTIFY_ENTITY.setLogged_by(currentUserId);
+        NOTIFY_ENTITY.setTitle("CUSTOMER BIO DATA UPDATE");
+        NOTIFY_ENTITY.setSender_method("SMS and EMAIL");
+        logNotification(NOTIFY_ENTITY);
+    }
+    void statusToggleButtonImplementation() {
+        String accountNo = accountNumberLabel.getText();
+        if (statusToggleButton.isSelected()) {
+            updateCustomerAccountData(accountNo, "active");
+        } else {
+            updateCustomerAccountData(accountNo, "closed");
+        }
+    }
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
@@ -305,6 +342,10 @@ public class EditAccountController extends CustomerAccountModel implements Initi
      ********************************************************************************************************************/
 
     void actionEventMethodsImplementation() {
+        statusToggleButton.setOnAction(actionEvent -> {
+            statusToggleButton.setText( statusToggleButton.isSelected() ? "Enable Account" : "Close Account");
+    });
+
         editCheckBox.setOnAction(event -> {
             applicantPane.setDisable(!isEditButtonChecked());
             filePane.setDisable(!isEditButtonChecked());
@@ -335,12 +376,12 @@ public class EditAccountController extends CustomerAccountModel implements Initi
                     isFullNameEmpty() || isGurantorDobEmpty() || isGurantorNumberEmpty() || isGurantorGenderEmpty() ||
                     isGurantorLandmarkEmpty() || isGurantorDigitalAddressEmpty() || isGurantorIdTypeEmpty() || isGurantorIdNumberEmpty() ||
                     isGurantorRelationshipTypeEmpty() || customerEmailAddressField.getStyle().equals(invalid) ||
-                    !isEditButtonChecked() || isDepositEmpty()
+                    !isEditButtonChecked()
             );
             if (isAttachFileButtonSelected()) {
                 saveButton.setDisable(isFileNameFieldEmpty() || isReasonFieldEmpty());
             }
-            sendNotificationButton.setDisable(isSaveButtonEnabled());
+//            sendNotificationButton.setDisable(isSaveButtonEnabled());
             previewItemButton.setDisable(isFileNameFieldEmpty());
 
 
@@ -350,7 +391,6 @@ public class EditAccountController extends CustomerAccountModel implements Initi
             int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
             String accountType = accountTypeSelector.getValue();
             String accountNumber = accountNumberLabel.getText();
-            double depositAmount = initialDepositSelector.getValue();
             String firstname = firstNameField.getText();
             String lastname = lastNameField.getText();
             String otherName = otherNameField.getText();
@@ -399,9 +439,73 @@ public class EditAccountController extends CustomerAccountModel implements Initi
                         throw new RuntimeException(e);
                     }
                 }
-
-                updateAccountType(accountType, accountNumber);
-
+                customersDataRepository.setFirstname(firstname);
+                customersDataRepository.setLastname(lastname);
+                customersDataRepository.setOthername(otherName);
+                customersDataRepository.setDob(Date.valueOf(customerDob));
+                customersDataRepository.setAge(age);
+                customersDataRepository.setPlace_of_birth(placeOfBirth);
+                customersDataRepository.setMobile_number(mobileNumber);
+                customersDataRepository.setOther_number(otherNumber);
+                customersDataRepository.setEmail(email);
+                customersDataRepository.setGender(gender);
+                customersDataRepository.setDigital_address(digitalAddress);
+                customersDataRepository.setResidential_address(residentialAddress);
+                customersDataRepository.setKey_landmark(landmark);
+                customersDataRepository.setMarital_status(maritalStatus);
+                customersDataRepository.setName_of_spouse(spouseName);
+                customersDataRepository.setId_type(idType);
+                customersDataRepository.setId_number(idNumber);
+                customersDataRepository.setEducational_background(qualification);
+                customersDataRepository.setAdditional_comment(comments);
+                customersDataRepository.setContact_person_fullname(fullname);
+                customersDataRepository.setContact_person_dob(Date.valueOf(c_dob));
+                customersDataRepository.setContact_person_gender(c_gender);
+                customersDataRepository.setContact_person_number(c_mobileNumber);
+                customersDataRepository.setContact_person_landmark(c_landMark);
+                customersDataRepository.setContact_person_education_level(c_qualification);
+                customersDataRepository.setContact_person_digital_address(c_digitalAddress);
+                customersDataRepository.setContact_person_id_type(c_idType);
+                customersDataRepository.setContact_person_id_number(c_idNumber);
+                customersDataRepository.setContact_person_place_of_work(placeOfWOrk);
+                customersDataRepository.setInstitution_address(institutionAddress);
+                customersDataRepository.setInstitution_number(institutionNumber);
+                customersDataRepository.setModified_by(currentUserId);
+                customersDataRepository.setRelationship_to_applicant(relationshipType);
+                customersDataRepository.setAccount_Id(selectedCustomerId);
+                int flag = updateCustomerData(customersDataRepository);
+                statusToggleButtonImplementation();
+                if(flag > 0) {
+                    NOTIFICATION.successNotification("DATA UPDATE", "You have successfully updated customer's bio data.");
+                    updateAccountType(accountType, accountNumber);
+                    String[] placeHolders = {firstname.concat(" " + lastname), accountType, accountNumber };
+                    String message = new MessageBuilders().updateCustomerData(List.of(placeHolders));
+                    String responseStatus = "";
+                    String result = "";
+                    try {
+                        responseStatus = SMS.sendSms(mobileNumber, message);
+                        result = MessageStatus.getMessageStatusResult(responseStatus).toString();
+                        MESSAGE_LOGS.setMessage(message);
+                        MESSAGE_LOGS.setRecipient(mobileNumber);
+                        MESSAGE_LOGS.setStatus(result);
+                        MESSAGE_LOGS.setTitle("CUSTOMER BIO DATA UPDATE");
+                        MESSAGE_LOGS.setSent_by(currentUserId);
+                        MESSAGE_MODEL.logNotificationMessages(MESSAGE_LOGS);
+                        new EmailAPI(email, "CUSTOMER BIO DATA UPDATE", message, "Please contact/call or walk by our office if you did not authorize this process.").sendEmail();
+                        notificationLogger(accountNumber);
+                    } catch (IOException | RuntimeException e) {
+                        notificationLogger(accountNumber);
+                        MESSAGE_LOGS.setMessage(message);
+                        MESSAGE_LOGS.setRecipient(mobileNumber);
+                        MESSAGE_LOGS.setStatus(result);
+                        MESSAGE_LOGS.setTitle("CUSTOMER BIO DATA UPDATE");
+                        MESSAGE_LOGS.setSent_by(currentUserId);
+                        MESSAGE_MODEL.logNotificationMessages(MESSAGE_LOGS);
+                        new ErrorLogger().log(e.getMessage().concat(" -> EditAccountController"));
+                    }
+                } else {
+                    NOTIFICATION.errorNotification("UPDATE FAILED", "Failed to update customer bio data");
+                }
             }//end of confirmation checker...
         });
 
@@ -442,6 +546,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
            uploadButton.setDisable(!isAttachFileButtonSelected());
         });
     }//end of action event methods implementation
+
 
 
 

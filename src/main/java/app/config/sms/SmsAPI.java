@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class SmsAPI {
             }.getType());
             status = map.get("code").toString();
         } catch (IOException e) {
-            throw new RuntimeException("Network failed, there seem to be no internet...");
+            return  "NO INTERNET";
         }
         return status;
     }

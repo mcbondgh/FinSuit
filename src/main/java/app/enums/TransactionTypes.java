@@ -3,16 +3,16 @@ package app.enums;
 public enum TransactionTypes {
     CASH_DEPOSIT,
     CASH_WITHDRAWAL,
-    LOAN_PAYMENT,
-    INVESTMENT;
+    REPAYMENT,
+    DISBURSED_FUND;
 
     public static String convertType(TransactionTypes type) {
         String value = "";
         switch (type) {
             case CASH_DEPOSIT -> value = "CASH DEPOSIT";
             case CASH_WITHDRAWAL -> value = "CASH WITHDRAWAL";
-            case LOAN_PAYMENT -> value = "LOAN PAYMENT";
-            case INVESTMENT -> value = "INVESTMENT";
+            case REPAYMENT -> value = "REPAYMENT";
+            case DISBURSED_FUND -> value = "DISBURSED FUND";
         }
         return value;
     }

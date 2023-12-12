@@ -5,21 +5,38 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="546.0" prefWidth="1227.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.reports.ui.TransactionReports">
    <children>
-      <TableView fx:id="transactionLogsTable" fixedCellSize="35.0" layoutX="11.0" layoutY="82.0" prefHeight="394.0" prefWidth="1208.0" style="-fx-font-size: 12;" tableMenuButtonVisible="true">
+      <Label layoutX="1069.0" layoutY="486.0" prefHeight="30.0" prefWidth="73.0" style="-fx-background-color: #04c738; -fx-background-radius: 5;" text="e-CASH: Ghc" textFill="WHITE">
+         <font>
+            <Font name="Roboto Black" size="10.0" />
+         </font>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <Label layoutX="915.0" layoutY="486.0" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: #1880c5; -fx-background-radius: 5 0 0 5;" text=" CASH: GHc" textFill="WHITE">
+         <font>
+            <Font name="Roboto Black" size="10.0" />
+         </font>
+         <padding>
+            <Insets bottom="5.0" left="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <TableView fx:id="transactionLogsTable" fixedCellSize="35.0" layoutX="11.0" layoutY="82.0" prefHeight="394.0" prefWidth="1208.0" style="-fx-font-size: 13; -fx-font-weight: bold;" tableMenuButtonVisible="true">
          <columns>
-            <TableColumn fx:id="transIndexColumn" prefWidth="63.33334541320801" text="INDEX" />
+            <TableColumn fx:id="indexColumn" prefWidth="63.33334541320801" text="INDEX" />
             <TableColumn fx:id="transIdColumn" prefWidth="125.0" text="TRANSACTION ID" />
             <TableColumn fx:id="transTypeColumn" prefWidth="125.0" text="TRANSACTION TYPE" />
             <TableColumn fx:id="transAccountNumberColumn" prefWidth="125.0" text="ACCOUNT NUMBER" />
@@ -29,11 +46,11 @@
             <TableColumn fx:id="ecashColumn" prefWidth="75.0" text="E-CASH" />
             <TableColumn fx:id="ecashIdColumn" prefWidth="120.66668701171875" text="E-CASH TRANS ID" />
             <TableColumn fx:id="transDateColumn" prefWidth="120.00006103515625" text="TRANS DATE" />
-            <TableColumn fx:id="initiatedByColumn" prefWidth="115.3333740234375" text="INITIATED BY" />
-            <TableColumn fx:id="paidByColumn" prefWidth="91.33331298828125" text="PAID BY" />
+            <TableColumn fx:id="initiatedByColumn" prefWidth="115.3333740234375" text="CASHIER" />
+            <TableColumn fx:id="paidByColumn" prefWidth="91.33331298828125" text="PAYER" />
          </columns>
       </TableView>
-      <HBox fx:id="transDetailedPane" layoutX="674.0" layoutY="8.0" prefHeight="63.0" prefWidth="541.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;" visible="false">
+      <HBox fx:id="transDetailedPane" disable="true" layoutX="548.0" layoutY="8.0" prefHeight="63.0" prefWidth="667.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;" visible="false">
          <children>
             <VBox prefHeight="49.0" prefWidth="170.0">
                <children>
@@ -42,7 +59,7 @@
                         <Font name="Roboto Bold" size="10.0" />
                      </font>
                   </Label>
-                  <MFXFilterComboBox fx:id="transactionTypeBox" allowEdit="true" editable="false" floatMode="DISABLED" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" selectable="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
+                  <MFXFilterComboBox fx:id="transactionTypeBox" allowEdit="true" editable="false" floatMode="DISABLED" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
                      <font>
                         <Font name="Roboto" size="11.0" />
                      </font>
@@ -92,12 +109,32 @@
                   <Insets top="5.0" />
                </padding>
             </VBox>
+            <VBox prefHeight="49.0" prefWidth="170.0">
+               <children>
+                  <Label text="CASHIER" textFill="#626262">
+                     <font>
+                        <Font name="Roboto Bold" size="10.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <MFXFilterComboBox fx:id="cashierSelector" allowEdit="true" editable="false" floatMode="DISABLED" prefHeight="40.0" prefWidth="200.0" scrollOnOpen="true" selectable="true" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
+                     <font>
+                        <Font name="Roboto" size="11.0" />
+                     </font>
+                  </MFXFilterComboBox>
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </VBox>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
-      <HBox alignment="CENTER" layoutX="165.0" layoutY="9.0" prefHeight="61.0" prefWidth="506.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+      <HBox alignment="CENTER" layoutX="123.0" layoutY="9.0" prefHeight="61.0" prefWidth="877.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
@@ -109,7 +146,7 @@
                         <Font name="Roboto Bold" size="10.0" />
                      </font>
                   </Label>
-                  <DatePicker fx:id="startDatePicker" editable="false" prefHeight="35.0" prefWidth="159.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 12; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                  <DatePicker fx:id="startDatePicker" editable="false" onAction="#dateValueChange" prefHeight="35.0" prefWidth="159.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 12; -fx-border-radius: 5; -fx-background-radius: 5;" />
                </children>
                <padding>
                   <Insets top="5.0" />
@@ -128,22 +165,37 @@
                   <Insets top="5.0" />
                </padding>
             </VBox>
-            <VBox prefHeight="49.0" prefWidth="80.0">
+            <CheckBox fx:id="transactionCheckBox" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="1.0" mnemonicParsing="false" onAction="#detailedLogsSelected" prefHeight="22.0" prefWidth="98.0" text="FILTER TABLE" textOverrun="CLIP">
+               <font>
+                  <Font name="Roboto Bold" size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </HBox.margin>
+            </CheckBox>
+            <Pane fx:id="searchPanel" disable="true" prefHeight="49.0" prefWidth="351.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
                <children>
-                  <Label text="LIMIT" textFill="#626262">
+                  <Label layoutX="10.0" layoutY="11.0" text="🔎" textFill="#828181">
                      <font>
-                        <Font name="Roboto Bold" size="10.0" />
+                        <Font size="18.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="limitSelector" editable="true" prefHeight="30.0" prefWidth="137.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins;" />
+                  <TextField fx:id="searchField" layoutX="37.0" layoutY="9.0" onKeyTyped="#filterTable" prefHeight="30.0" prefWidth="297.0" promptText="Filter by transaction type, id, cashier or account number" style="-fx-background-color: #fff; -fx-background-radius: 5;">
+                     <font>
+                        <Font name="Poppins Regular" size="12.0" />
+                     </font>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </TextField>
                </children>
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
-            </VBox>
+               <HBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </HBox.margin>
+            </Pane>
             <VBox prefHeight="49.0" prefWidth="71.0" spacing="5.0">
                <children>
-                  <MFXButton fx:id="transactionGenerateBtn" prefHeight="25.0" prefWidth="280.0" style="-fx-background-color: #1880c5;" text="Generate " textFill="WHITE">
+                  <MFXButton fx:id="transactionGenerateBtn" onAction="#generateReport" prefHeight="25.0" prefWidth="280.0" style="-fx-background-color: #1880c5;" text="Generate " textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -161,36 +213,39 @@
                   </MFXButton>
                </children>
             </VBox>
-            <CheckBox fx:id="transactionCheckBox" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="1.0" mnemonicParsing="false" onAction="#detailedLogsSelected" prefHeight="22.0" prefWidth="98.0" text="DETAILED LOGS" textOverrun="CLIP">
-               <font>
-                  <Font name="Roboto Bold" size="10.0" />
-               </font>
-            </CheckBox>
          </children>
       </HBox>
-      <Label fx:id="cashSumLabel" layoutX="931.0" layoutY="486.0" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #1880c5; -fx-background-radius: 5;" text=" CASH: GHc" textFill="WHITE">
+      <Label fx:id="cashSumLabel" layoutX="976.0" layoutY="486.0" prefHeight="30.0" prefWidth="81.0" style="-fx-background-color: #1880c5; -fx-background-radius: 0 5 5 0;" text="-" textFill="WHITE">
          <font>
             <Font name="Roboto Black" size="10.0" />
          </font>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" right="5.0" top="5.0" />
          </padding>
       </Label>
-      <Label fx:id="eCashSumLabel" layoutX="1083.0" layoutY="486.0" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #04c738; -fx-background-radius: 5;" text="e-CASH: Ghc" textFill="WHITE">
+      <Label fx:id="eCashSumLabel" layoutX="1136.0" layoutY="486.0" prefHeight="30.0" prefWidth="81.0" style="-fx-background-color: #04c738; -fx-background-radius: 5;" text="-" textFill="WHITE">
          <font>
             <Font name="Roboto Black" size="10.0" />
          </font>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" right="5.0" top="5.0" />
          </padding>
       </Label>
-      <Label alignment="CENTER" layoutX="14.0" layoutY="9.0" prefHeight="61.0" prefWidth="127.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="TRANSACTION REPORTS" textAlignment="CENTER" textFill="#570667" wrapText="true">
+      <Label layoutX="735.0" layoutY="486.0" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: #b70071; -fx-background-radius: 5 0 0 5;" text=" TOTAL: GHc" textFill="WHITE">
          <font>
-            <Font name="Roboto Bold" size="16.0" />
+            <Font name="Roboto Black" size="10.0" />
          </font>
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
+         <padding>
+            <Insets bottom="5.0" left="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <Label fx:id="totalSumLabel" layoutX="800.0" layoutY="486.0" prefHeight="30.0" prefWidth="105.0" style="-fx-background-color: #b70071; -fx-background-radius: 0 5 5 0;" text="-" textFill="WHITE">
+         <font>
+            <Font name="Roboto Black" size="10.0" />
+         </font>
+         <padding>
+            <Insets bottom="5.0" right="5.0" top="5.0" />
+         </padding>
       </Label>
    </children>
 </AnchorPane>

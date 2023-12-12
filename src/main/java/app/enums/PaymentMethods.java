@@ -1,7 +1,7 @@
 package app.enums;
 
 public enum PaymentMethods {
-    CASH,
+    CASH(),
     eCASH,
     BOTH_METHODS,
     MOMO,

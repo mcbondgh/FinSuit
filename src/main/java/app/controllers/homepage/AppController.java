@@ -24,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -34,7 +35,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AppController extends AppModel implements Initializable {
-
 
     AppStages APP_STAGES = new AppStages();
     public static String activeUserPlaceHolder;
@@ -52,10 +52,12 @@ public class AppController extends AppModel implements Initializable {
     @FXML private Pane signOutButton, userProfilePane;
     @FXML private ImageView siteLogo, logoImage;
     @FXML private BorderPane borderPane;
-    @FXML private MFXButton dashboardButton, customersButton, accountsButton, transactionButton, accountingButton;
+    @FXML private MFXButton dashboardButton, customersButton, accountsButton, transactionButton, financeButton;
     @FXML private MFXButton messageBoxButton, settingsButton, reportsButton, humanResourceButton;
     @FXML private JFXListView<String> sortCustomersListView;
     @FXML private MFXButton loansButton;
+    @FXML private HBox dashboardBox, customerBox, loanBox, accountBox;
+    @FXML private HBox transactionBox, financeBox, messageBox, settingsBox, reportBox, resourceBox;
 
 
 
@@ -87,6 +89,8 @@ public class AppController extends AppModel implements Initializable {
         DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
         activeUsername.setText(activeUserPlaceHolder);
         setVariables(appNameLabel, siteLogo);
+        sidebarPane.getChildren().remove(customerBox);
+
 
 //        try {
 //            SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
@@ -105,9 +109,9 @@ public class AppController extends AppModel implements Initializable {
                     throw new RuntimeException(e);
                 }
         });
-        accountingButton.setOnAction(event -> {
+        financeButton.setOnAction(event -> {
             try {
-                FinanceController.pageTitlePlaceHolder = accountingButton.getText();
+                FinanceController.pageTitlePlaceHolder = financeButton.getText();
                 SpecialMethods.FlipView("views/finance/finance-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -195,6 +199,7 @@ public class AppController extends AppModel implements Initializable {
     @FXML private void expandSidebar(MouseEvent mouseEvent) {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
         sidebarPane.setPrefWidth(170);
+        transition.setDelay(Duration.seconds(5000));
         transition.play();
         for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
             sidebarPane.getChildren().get(x).setVisible(true);
@@ -204,7 +209,7 @@ public class AppController extends AppModel implements Initializable {
 
     @FXML private void closeSidebar(MouseEvent mouseEvent) {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
-        sidebarPane.setPrefWidth(40);
+        sidebarPane.setPrefWidth(5);
         transition.play();
         for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
             sidebarPane.getChildren().get(x).setVisible(false);

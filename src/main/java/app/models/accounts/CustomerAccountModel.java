@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomerAccountModel extends MainModel {
 
@@ -72,8 +73,8 @@ public class CustomerAccountModel extends MainModel {
         ObservableList<ViewCustomersTableDataRepository> data = new ObservableStack<>();
         try {
             String query = "SELECT concat(firstname, \" \", lastname, \" \", othername) AS fullname, gender, age, mobile_number,\n" +
-                    "\tid_type, account_type, account_number, date_created FROM customer_data AS cd \n" +
-                    "    INNER JOIN customer_account_data AS cad ON cd.customer_id = cad.customer_id;";
+                    "\taccount_status, account_type, account_number, date_created FROM customer_data AS cd \n" +
+                    "    INNER JOIN customer_account_data AS cad USING(customer_id);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -81,11 +82,11 @@ public class CustomerAccountModel extends MainModel {
                 String gender = resultSet.getString("gender");
                 int age = resultSet.getInt("age");
                 String mobile = resultSet.getString("mobile_number");
-                String id_type = resultSet.getString("id_type");
+                String accountStatus = resultSet.getString("account_status");
                 String account_number = resultSet.getString("account_number");
                 String account_type = resultSet.getString("account_type");
                 Timestamp date = resultSet.getTimestamp("date_created");
-                data.add(new ViewCustomersTableDataRepository(fullname, gender, age, mobile, id_type, account_type, account_number, date));
+                data.add(new ViewCustomersTableDataRepository(fullname, gender, age, mobile, accountStatus, account_type, account_number, date));
             }
         }catch (SQLException ignore){}
         return data;
@@ -154,7 +155,7 @@ public class CustomerAccountModel extends MainModel {
         return flag;
     }
 
-    protected int updateCustomerAccountData(CustomersDataRepository repo) {
+    protected int updateCustomerData(CustomersDataRepository repo) {
         int flag = 0;
         try {
             //place_of_birth, mobile_number, other_number, email, digital_address, residential_address, key_landmark, marital_status,
@@ -163,7 +164,7 @@ public class CustomerAccountModel extends MainModel {
             // contact_person_digital_address, contact_person_id_type, contact_person_id_number, contact_person_place_of_work,
             // institution_address, institution_number, relationship_to_applicant, date_created, is_active, created_by, date_modified, modified_by
             String query = """
-                    UPDATE customer_data SET firstname = ?, lastname = ?, othername = ?, dob = ?, age = ?, place_of_birth = ?, mobile_number = ?, other_number = ?, 
+                    UPDATE customer_data SET firstname = ?, lastname = ?, othername = ?, dob = ?, gender = ?, age = ?, place_of_birth = ?, mobile_number = ?, other_number = ?, 
                     email = ?, digital_address = ?, residential_address = ?, key_landmark = ?, marital_status = ?, name_of_spouse = ?, id_type = ?, 
                     id_number = ?, educational_background = ?, additional_comment = ?, contact_person_fullname = ?, contact_person_dob = ?, contact_person_number = ?,
                     contact_person_gender = ?, contact_person_landmark = ?, contact_person_education_level = ?, contact_person_digital_address = ?, contact_person_id_type = ?,
@@ -175,37 +176,41 @@ public class CustomerAccountModel extends MainModel {
             preparedStatement.setString(2, repo.getLastname());
             preparedStatement.setString(3, repo.getOthername());
             preparedStatement.setDate(4, repo.getDob());
-            preparedStatement.setInt(5, repo.getAge());
-            preparedStatement.setString(6, repo.getPlace_of_birth());
-            preparedStatement.setString(7, repo.getMobile_number());
-            preparedStatement.setString(8, repo.getOther_number());
-            preparedStatement.setString(9, repo.getEmail());
-            preparedStatement.setString(10, repo.getDigital_address());
-            preparedStatement.setString(11, repo.getResidential_address());
-            preparedStatement.setString(12, repo.getKey_landmark());
-            preparedStatement.setString(13, repo.getMarital_status());
-            preparedStatement.setString(14, repo.getName_of_spouse());
-            preparedStatement.setString(15, repo.getId_type());
-            preparedStatement.setString(16, repo.getId_number());
-            preparedStatement.setString(17, repo.getEducational_background());
-            preparedStatement.setString(18, repo.getAdditional_comment());
-            preparedStatement.setString(19, repo.getContact_person_fullname());
-            preparedStatement.setDate(20, repo.getContact_person_dob());
-            preparedStatement.setString(21, repo.getContact_person_number());
-            preparedStatement.setString(22, repo.getContact_person_gender());
-            preparedStatement.setString(23, repo.getContact_person_landmark());
-            preparedStatement.setString(24, repo.getContact_person_education_level());
-            preparedStatement.setString(25, repo.getContact_person_digital_address());
-            preparedStatement.setString(26, repo.getContact_person_id_type());
-            preparedStatement.setString(27, repo.getContact_person_id_number());
-            preparedStatement.setString(28, repo.getContact_person_place_of_work());
-            preparedStatement.setString(29, repo.getInstitution_address());
-            preparedStatement.setString(30, repo.getInstitution_number());
-            preparedStatement.setString(31, repo.getRelationship_to_applicant());
-            preparedStatement.setLong(32, repo.getAccount_Id());
+            preparedStatement.setString(5, repo.getGender());
+            preparedStatement.setInt(6, repo.getAge());
+            preparedStatement.setString(7, repo.getPlace_of_birth());
+            preparedStatement.setString(8, repo.getMobile_number());
+            preparedStatement.setString(9, repo.getOther_number());
+            preparedStatement.setString(10, repo.getEmail());
+            preparedStatement.setString(11, repo.getDigital_address());
+            preparedStatement.setString(12, repo.getResidential_address());
+            preparedStatement.setString(13, repo.getKey_landmark());
+            preparedStatement.setString(14, repo.getMarital_status());
+            preparedStatement.setString(15, repo.getName_of_spouse());
+            preparedStatement.setString(16, repo.getId_type());
+            preparedStatement.setString(17, repo.getId_number());
+            preparedStatement.setString(18, repo.getEducational_background());
+            preparedStatement.setString(19, repo.getAdditional_comment());
+            preparedStatement.setString(20, repo.getContact_person_fullname());
+            preparedStatement.setDate(21, repo.getContact_person_dob());
+            preparedStatement.setString(22, repo.getContact_person_number());
+            preparedStatement.setString(23, repo.getContact_person_gender());
+            preparedStatement.setString(24, repo.getContact_person_landmark());
+            preparedStatement.setString(25, repo.getContact_person_education_level());
+            preparedStatement.setString(26, repo.getContact_person_digital_address());
+            preparedStatement.setString(27, repo.getContact_person_id_type());
+            preparedStatement.setString(28, repo.getContact_person_id_number());
+            preparedStatement.setString(29, repo.getContact_person_place_of_work());
+            preparedStatement.setString(30, repo.getInstitution_address());
+            preparedStatement.setString(31, repo.getInstitution_number());
+            preparedStatement.setString(32, repo.getRelationship_to_applicant());
+            preparedStatement.setInt(33, repo.getModified_by());
+            preparedStatement.setLong(34, repo.getAccount_Id());
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
-        }catch (Exception e) {rollBack();}
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            rollBack();}
         return flag;
     }
 
@@ -229,5 +234,18 @@ public class CustomerAccountModel extends MainModel {
         }
         return data;
     }
+
+    protected void updateCustomerAccountData(String accountNo, String accountStatus){
+        try{
+            String query = "UPDATE customer_account_data SET account_status = ? WHERE account_number = ?;";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, accountStatus);
+            preparedStatement.setString(2, accountNo);
+            preparedStatement.execute();
+
+        }catch (SQLException ignore){}
+    }
+
+
 
 }//end of class;

@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -55,7 +56,6 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateTable();
-        viewButtonClicked();
     }
 
     private void populateTable() {
@@ -63,7 +63,7 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         mobileNumberColumn.setCellValueFactory(new PropertyValueFactory<>("mobile_number"));
-        idTypeColumn.setCellValueFactory(new PropertyValueFactory<>("id_type"));
+        idTypeColumn.setCellValueFactory(new PropertyValueFactory<>("accountStatusLabel"));
         accountNumberColumn.setCellValueFactory(new PropertyValueFactory<>("account_number"));
         accountTypeColumn.setCellValueFactory(new PropertyValueFactory<>("account_type"));
         registrationDateColumn.setCellValueFactory(new PropertyValueFactory<>("formattedDate"));
@@ -73,10 +73,11 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
 
 
 
+
     //IMPLEMENTATION OF ACTION EVENT METHODS
     public void searchCustomerMethod(KeyEvent event) {
         try {
-            customersTable.getItems().clear();
+//            customersTable.getItems().clear();
             FilteredList<ViewCustomersTableDataRepository> filteredList =  new FilteredList<>(fetchCustomersDataSummary(), p -> true);
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredList.setPredicate(customersTableData -> {
@@ -88,7 +89,7 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
                         return true;
                     } else if (customersTableData.getFullname().toLowerCase().contains(searchKeyWord)) {
                         return true;
-                    } else return customersTableData.getId_type().toLowerCase().contains(searchKeyWord);
+                    } else return customersTableData.getAccount_status().toLowerCase().contains(searchKeyWord);
                 });
             });
             SortedList<ViewCustomersTableDataRepository> sortedResult = new SortedList<>(filteredList);
@@ -97,7 +98,7 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
         }catch (Exception ignored) {}
     }
 
-    void viewButtonClicked() {
+    @FXML void viewButtonClicked() {
         for (ViewCustomersTableDataRepository data : customersTable.getItems()) {
             data.getViewButton().setOnAction(event -> {
                selectedCustomerAccountNumber = data.getAccount_number();
@@ -107,6 +108,7 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
             });
         }
     }
+
 
 
 }// End of class

@@ -75,9 +75,9 @@ public class SettingModel extends MainModel {
             getConnection().close();
         }catch (SQLException ignore) {rollBack();}
     }
-    protected  void updateMessageOperation(int tempId, String operation) {
+    protected void updateMessageOperation(int tempId, String operation) {
         try {
-            String query = "UPDATE message_operations SET template_id = ? WHERE(operation = ?);";
+            String query = "UPDATE system_operations SET template_id = ? WHERE(operation_type = ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setInt(1, tempId);
             preparedStatement.setString(2, operation);
