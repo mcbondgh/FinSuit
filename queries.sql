@@ -92,7 +92,7 @@ INNER JOIN customer_data AS cd
 WHERE loan_status = 'active' AND work_id = '1000005'
 ;
 
-SELECT account_number, 
+SELECT id, account_number, 
 transaction_id, 
 transaction_type, 
 payment_method, 
@@ -100,7 +100,8 @@ payment_gateway,
 cash_amount, 
 ecash_amount,
 ecash_id, 
- transaction_date, 
+ transaction_date,
+ transaction_made_by,
  username FROM transaction_logs AS tl 
 	INNER JOIN users AS u 
     ON u.user_id = tl.user_id
@@ -112,3 +113,7 @@ SELECT monthly_installment, paid_amount, ls.loan_no, payment_date FROM loan_sche
 INNER JOIN loan_payment_logs AS plogs
 ON plogs.installment_month = ls.payment_date
 WHERE ls.loan_no = '2000000000006';
+
+
+UPDATE customer_account_data SET account_status = ? WHERE account_number = ?;
+

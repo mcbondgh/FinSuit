@@ -53,7 +53,7 @@ public class RepaymentController extends LoansModel implements Initializable {
     @FXML
     private Label loansCounter;
     @FXML private Label applicantName, disbursedAmount, applicantNumber,balanceAmount, paidAmount, loanStatus;
-    @FXML private MFXButton exportButton, smsButton;
+    @FXML private MFXButton exportButton, smsButton, terminateLoanBtn;
 
     @FXML private TableView<LoanScheduleEntity> scheduleTable;
     @FXML private TableColumn<LoanScheduleEntity, Long> indexColumn;
@@ -159,6 +159,8 @@ public class RepaymentController extends LoansModel implements Initializable {
             balanceAmount.setText(data.get("balance").toString());
             disbursedAmount.setText(data.get("approved_amount").toString());
             exportButton.setDisable(isListSelectionEmpty());
+            terminateLoanBtn.setDisable(isListSelectionEmpty());
+            smsButton.setDisable(isListSelectionEmpty());
             setScheduleTableProperties();
 
         }

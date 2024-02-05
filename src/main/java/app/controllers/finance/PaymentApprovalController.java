@@ -102,6 +102,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     private void loadListView() {
         listView.getItems().clear();
         for (PendingLoanApprovalEntity item : LOAN_MODEL.getLoansUnderPendingApproval()) {
+
             listView.getItems().add(item.getLoan_no());
         }
     }

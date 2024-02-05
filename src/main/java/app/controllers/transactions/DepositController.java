@@ -188,7 +188,6 @@ public class DepositController extends TransactionModel implements Initializable
         eCashField.setText("0.00");
         transactionIdField.setText("Unspecified");
         totalCashLabel.setText(decimalFormat.format(cashField.getText()));
-
     }
 
     @FXML void saveButtonClicked() {

@@ -120,15 +120,15 @@ public class AppStages {
         stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
-    public static Stage editCustomerDataStage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/accounts/edit-customer-details-view.fxml"));
+    public static void editCustomerDataStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/update-loan-details-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Edit Customer Data");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
-        return  stage;
+       stage.show();
     }
 
     public static Stage updateEmployeeDetailsStage() throws IOException {
@@ -141,6 +141,19 @@ public class AppStages {
         stage.centerOnScreen();
         return  stage;
     }
+    public static Stage showUpdateLoanApplicantView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/resource/updateEmployee-popup.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Update Employee Data");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        return  stage;
+    }
+
+
+
     public static Stage databaseFailedStage() {
         Stage stage = new Stage();
         try {

@@ -143,11 +143,9 @@ public class SpecialMethods {
 
 
     public static void setLoanType(ComboBox<String> comboBox) {
-        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Student Loan"};
+        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Agro Loan"};
         Arrays.sort(items);
-        for (String x : items) {
-            comboBox.getItems().add(x);
-        }
+        Arrays.stream(items).toList().forEach(item -> comboBox.getItems().add(item));
     }
     public static void setRelationshipTypes(ComboBox<String> comboBox) {
         String[] items = {"Father", "Mother", "Brother", "Sister", "Uncle", "Aunty", "Friend", "Cousin", "Other", "Guardian", "Relative"};
@@ -160,9 +158,9 @@ public class SpecialMethods {
         String transactionId = "";
         if (count <=9) {transactionId = "00000000000" + count; }
         else if(count <= 99) {transactionId = "0000000000" + count;}
-        else if (count == 100 || count <= 999) {transactionId = "000000000" + count;}//
-        else if(count == 1000 || count <= 9999) {transactionId = "00000000" + count;}
-        else if (count == 10000 || count <=99999) {transactionId = "0000000" + count;}
+        else if (count <= 999) {transactionId = "000000000" + count;}//
+        else if(count <= 9999) {transactionId = "00000000" + count;}
+        else if (count <=99999) {transactionId = "0000000" + count;}
         else if(count == 100000 || count <=999999) {transactionId = "000000" + count;}
         else if (count == 10000000 || count <= 9999999) {transactionId = "00000" + count;}
         else if (count == 100000000 || count <= 99999999) {transactionId = "0000" + count;}

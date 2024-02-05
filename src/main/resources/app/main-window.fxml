@@ -27,14 +27,14 @@
       <left>
          <VBox fx:id="sidebarPane" cache="true" cacheHint="QUALITY" fillWidth="false" onMouseEntered="#expandSidebar" onMouseExited="#closeSidebar" prefHeight="605.0" prefWidth="171.0" spacing="2.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
             <children>
-               <HBox fx:id="dashboardBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="dashboardBox" alignment="CENTER" prefHeight="31.0" prefWidth="171.0">
                   <children>
                      <ImageView fx:id="dashboardIcon" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-dashboard-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525">
+                     <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="18.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525">
                         <font>
                            <Font name="Poppins Bold" size="13.0" />
                         </font>
@@ -44,7 +44,7 @@
                      <Insets />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="financeBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="financeBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="dashboardIcon1" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -57,8 +57,11 @@
                         </font>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="messageBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="messageBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo131" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -71,8 +74,11 @@
                         </font>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="customerBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="customerBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo13" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -88,8 +94,11 @@
                         </padding>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="accountBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="accountBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo15" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -105,8 +114,11 @@
                         </padding>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="transactionBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="transactionBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo16" fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -122,8 +134,11 @@
                         </padding>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="loanBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="loanBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo17" fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -139,8 +154,11 @@
                         </padding>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="resourceBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="resourceBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo18" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -156,8 +174,11 @@
                         </padding>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="reportBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="reportBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo181" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -173,8 +194,11 @@
                         </padding>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
-               <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="41.0" prefWidth="173.0">
+               <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
                   <children>
                      <ImageView fx:id="siteLogo1811" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -187,8 +211,14 @@
                         </font>
                      </MFXButton>
                   </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                </HBox>
             </children>
+            <padding>
+               <Insets top="10.0" />
+            </padding>
          </VBox>
       </left>
       <center>

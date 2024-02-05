@@ -36,6 +36,7 @@ public class LoansModel extends MainModel {
                 data.add(resultSet.getDouble("disbursed_amount"));//1
                 data.add(resultSet.getDouble("total_payment"));//2
             }
+            getConnection().close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,7 +57,7 @@ public class LoansModel extends MainModel {
                 data.add(resultSet.getString(1));
                 data.add(resultSet.getString(2));
             }
-
+            getConnection().close();
         }catch (SQLException e) {
             rollBack();
         }
@@ -273,6 +274,7 @@ public class LoansModel extends MainModel {
             if (resultSet.next()) {
                 return resultSet.getInt("count");
             }
+            getConnection().close();
         }catch (SQLException ignore){}
         return 0;
     }
@@ -306,6 +308,7 @@ public class LoansModel extends MainModel {
                 data.add(resultSet.getString("id_number"));//14
                 data.add(resultSet.getString("educational_background"));//15
             }
+            getConnection().close();
         }catch (SQLException ignore) {
             ignore.printStackTrace();
         }
@@ -320,6 +323,7 @@ public class LoansModel extends MainModel {
             if (resultSet.next()) {
                 return resultSet.getInt("count");
             }
+            getConnection().close();
         }catch (SQLException ignore){}
         return 0;
     }
@@ -369,7 +373,8 @@ public class LoansModel extends MainModel {
             while(resultSet.next()) {
                 data.add(resultSet.getString(1));
             }
-        }catch (SQLException ignore){}
+            getConnection().close();
+        }catch (SQLException ignore){ignore.printStackTrace();}
         return data;
     }
     public ObservableList<PendingLoanApprovalEntity> getLoansUnderPendingApproval() {
@@ -397,6 +402,7 @@ public class LoansModel extends MainModel {
                 LocalDate date = resultSet.getDate("start_date").toLocalDate();
                 data.addAll(new PendingLoanApprovalEntity(loanNo, requestedNo, gross, statutory, remaining, deduction, amount, loanAmount, interest, period, processing, date));
             }
+                getConnection().close();
         }catch (Exception ignore){}
         return data;
     }
@@ -509,6 +515,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, loanNo);
             status = preparedStatement.executeUpdate();
+            getConnection().close();
         }catch (SQLException ignore){}
         return status;
     }
@@ -538,6 +545,8 @@ public class LoansModel extends MainModel {
                 data.put("total_payment", resultSet.getDouble("total_payment"));
                 data.put("balance", resultSet.getDouble("balance"));
             }
+            resultSet.close();
+            getConnection().close();
         }catch (SQLException e){e.printStackTrace();
             logError.log(e.getCause().getMessage());
         }

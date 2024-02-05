@@ -58,6 +58,8 @@ public class LoansTableEntity {
 
     }
 
+
+
     private void buttonStyling() {
         viewButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
                 "-fx-border-color:#eee; -fx-text-fill: #2b2929; -fx-background-color: #fff; -fx-font-family poppins; " +

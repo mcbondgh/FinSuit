@@ -30,12 +30,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
+import java.awt.font.NumericShaper;
 import java.io.*;
 import java.net.URL;
 import java.sql.Date;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -257,6 +260,15 @@ public class LoanApplicationController extends LoansModel implements Initializab
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
 
+    @FXML
+    public void deductionFieldChanged() {
+        try {
+            NumberFormat format = NumberFormat.getNumberInstance(Locale.US);
+            double result = Double.parseDouble(applicantGrossSalaryField.getText()) - Double.parseDouble(applicantTotalDeductionField.getText());
+            applicantNetSalaryField.setText(format.format(result));
+        }catch (NumberFormatException e){applicantNetSalaryField.setText("0");}
+    }
+
     @FXML void validateRequestAmountInput() {
         loanRequestField.setOnKeyTyped(keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9.]")) {
@@ -442,7 +454,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
         double basicSalary = Double.parseDouble(applicantBasicSalaryField.getText());
         double grossSalary = Double.parseDouble(applicantGrossSalaryField.getText());
         double totalDeduction = Double.parseDouble(applicantTotalDeductionField.getText());
-        double netSalary = Double.parseDouble(applicantNetSalaryField.getText());
+        double netSalary = Double.parseDouble(applicantNetSalaryField.getText().replace(",", ""));
         String contactFullName = contactPersonNameField.getText();
         String contactMobileNumber = contactPersonNumberField.getText();
         String contactGender = contactPersonGenderSelector.getValue();
@@ -553,8 +565,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
                 resetFields();
             }
         }
-
-
     }//end of save button...
     @FXML void resetButtonClicked() {
         ALERT = new UserAlerts("RESET FIELDS", "Do you wish to clear the form and reset all fields? ");
