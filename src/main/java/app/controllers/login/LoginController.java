@@ -54,8 +54,8 @@ public class LoginController extends MainModel implements Initializable{
     void setLoginParameters() {
         for (BusinessInfoEntity items : getBusinessInfo()) {
             appNameHeader.setText(items.getName());
-            String getImageSource = ImageReadWriter.displayImage(items.getLogo());
-            logoViewer.setImage(new Image(getImageSource));
+            String getImageSource = items.getLogo();
+//            logoViewer.setImage(new Image(getImageSource));
         }
     }
 

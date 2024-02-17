@@ -70,6 +70,7 @@ public class SmsAPI {
                 .url(sendSmsUrl + api + "&to=" + mobileNumber + "&from="+senderId + "&sms=" + messageBody) .build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+            assert response.body() != null;
             String responseBody = Objects.requireNonNull((response.body()).string());
             Map<String, Object> map = gson.fromJson(responseBody, new TypeToken<Map<String, Object>>() {
             }.getType());

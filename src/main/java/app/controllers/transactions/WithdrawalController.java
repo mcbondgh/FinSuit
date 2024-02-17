@@ -2,14 +2,24 @@ package app.controllers.transactions;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
+import app.controllers.messages.MessageBuilders;
+import app.enums.MessageStatus;
 import app.enums.PaymentMethods;
+import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
+import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
+import app.repositories.operations.MessageOperationsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -33,7 +43,6 @@ public class WithdrawalController extends TransactionModel implements Initializa
     TransactionsEntity transactions = new TransactionsEntity();
     CustomerAccountsDataRepository accountsDataRepository = new CustomerAccountsDataRepository();
 
-    final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public static String getCurrentUserPlaceholder() {
         return currentUserPlaceholder;
@@ -50,7 +59,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
     @FXML private Label chargeValue, accountHolderName, accountStatusLabel;
     @FXML private ComboBox<PaymentMethods> paymentSelector;
     @FXML private TextField collectorsNameField, cashField, transactionIdField, idNumberField;
-    @FXML private MFXButton saveButton;
+    @FXML private MFXButton saveButton, searchButton;
 
 
     /*******************************************************************************************************************
@@ -63,10 +72,8 @@ public class WithdrawalController extends TransactionModel implements Initializa
     boolean collectorNameEmpty() {return collectorsNameField.getText().isEmpty();}
     boolean idNumberEmpty() {return idNumberField.getText().isBlank();}
 
-    
-
     @FXML void validateInputFields(KeyEvent event) {
-        if (!event.getCharacter().matches("[0-9]")) {
+        if (!event.getCharacter().matches("[0-9.]")) {
             cashField.deletePreviousChar();
         }
     }
@@ -93,20 +100,23 @@ public class WithdrawalController extends TransactionModel implements Initializa
     private void populateFields() {
         setCurrentUserPlaceholder(AppController.activeUserPlaceHolder);
         SpecialMethods.setPaymentMethods(paymentSelector);
+        ObservableList<String> listItems = FXCollections.observableArrayList();
         for (CustomerAccountsDataRepository data : fetchCustomersAccountData()) {
-            accountNumberField.getItems().add(data.getAccount_number());
+            listItems.add(data.getAccount_number());
+            listItems.add(data.getLoanNo());
         }
+            accountNumberField.setItems(listItems);
     }
 
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION
      ********************************************************************************************************************/
-    @FXML void setOnAccountNumberSelected() {
+    @FXML void customerAccountSelected() {
         String var1 = accountNumberField.getValue();
         ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
         String status = getCustomerDetailsByAccountNumber(var1).get(6).toString();
-        AtomicReference<Double> withdrawalTax = new AtomicReference<>((double) 0);
+        AtomicReference<Double> withdrawalTax = new AtomicReference<>();
         getBusinessInfo().forEach(data -> {
             withdrawalTax.set(data.getTaxPercentage());
         });
@@ -126,21 +136,91 @@ public class WithdrawalController extends TransactionModel implements Initializa
     }
 
     @FXML void saveButtonClicked() {
-        try{
-            double transactionCharge = Double.parseDouble(chargeValue.getText());
-            double withdrawalAmount = Double.parseDouble(cashField.getText());
-            double currentBalance = Double.parseDouble(getCustomerDetailsByAccountNumber(accountNumberField.getText()).get(2).toString());
-            double totalWithdrawalAmount = withdrawalAmount + transactionCharge;
-            double balance = currentBalance - totalWithdrawalAmount;
-            if (balance < 0) {
-                ALERTS = new UserAlerts("INVALID AMOUNT", "Sorry, please review your withdrawal amount, withdrawal amount cannot be greater current balance", "you cannot withdraw more then your current account balance.");
-                ALERTS.errorAlert();
-                cashField.deletePreviousChar();
-            } else {
-                System.out.println("all clear for withdrawal");
-            };
-        }catch (NumberFormatException ignore){}
-        
+            try{
+                ArrayList<Object> customerData = getCustomerDetailsByAccountNumber(accountNumberField.getText());
+                int userId = getUserIdByName(getCurrentUserPlaceholder());
+
+                double transactionCharge = Double.parseDouble(chargeValue.getText());
+                double withdrawalAmount = Double.parseDouble(cashField.getText());
+                double currentBalance = Double.parseDouble(customerData.get(2).toString());
+                double totalWithdrawalAmount = withdrawalAmount + transactionCharge;
+                double balance = currentBalance - totalWithdrawalAmount;
+                String mobileNumber = customerData.get(4).toString();
+
+                String transId = SpecialMethods.getTransactionId(getTotalTransactionCount() +1);
+                String payMethod = paymentSelector.getValue().toString();
+                AtomicReference<String> accountNumber = new AtomicReference<>();
+                fetchCustomersAccountData().forEach(item -> {
+                    if (accountNumberField.getValue().equals(item.getLoanNo())) {
+                        accountNumber.set(item.getAccount_number());
+                    }
+                    if (accountNumberField.getValue().equals(item.getAccount_number())) {
+                        accountNumber.setRelease(item.getAccount_number());
+                    }
+                });
+                if (balance < 0) {
+                    ALERTS = new UserAlerts("INVALID AMOUNT", "INSUFFICIENT BALANCE, REVIEW WITHDRAWAL AMOUNT", "withdrawal amount cannot be greater than current account balance.");
+                    ALERTS.errorAlert();
+                    cashField.deletePreviousChar();
+                } else {
+                    ALERTS = new UserAlerts("CASH WITHDRAWAL", "DO YOU WISH TO CONFIRM WITHDRAWAL TRANSACTION", "Please confirm transaction to perform withdrawal else CANCEL to abort");
+                    if(ALERTS.confirmationAlert()) {
+                        NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
+                        MessageLogsEntity MSG_ENTITY = new MessageLogsEntity();
+                        SmsAPI SMS = new SmsAPI();
+
+                        //set parameters to update customer_account_data table
+                        accountsDataRepository.setPrevious_balance(currentBalance);
+                        accountsDataRepository.setAccount_balance(balance);
+                        accountsDataRepository.setAccount_number(accountNumber.get());
+                        accountsDataRepository.setModified_by(userId);
+                        int responseStatus = saveWithdrawal(accountsDataRepository);
+
+                        //set parameters to insert into the transaction_logs table
+                        transactions.setAccount_number(accountNumber.get());
+                        transactions.setEcash_amount(payMethod.equals("CASH") ? 0.00 : withdrawalAmount);
+                        transactions.setCash_amount(payMethod.equals("CASH") ? withdrawalAmount : 0.00);
+                        transactions.setTransactionTax(transactionCharge);
+                        transactions.setTransaction_type("CASH WITHDRAWAL");
+                        transactions.setNationalIdNumber(idNumberField.getText());
+                        transactions.setEcash_id(transactionIdField.getText());
+                        transactions.setPayment_method(payMethod);
+                        transactions.setTransaction_id(transId);
+                        transactions.setTransaction_made_by(collectorsNameField.getText());
+                        transactions.setUserId(userId);
+                        responseStatus += saveWithdrawalTransaction(transactions);
+
+                        //set parameters to send sms to account holder.
+                        try{
+                            String message = new MessageBuilders().cashWithdrawalMessage(withdrawalAmount, collectorsNameField.getText(), balance);
+                            String msgStatus = MessageStatus.getMessageStatusResult(SMS.sendSms(mobileNumber, message)).toString();
+                            NOTIFY_ENTITY.setSender_method("SMS");
+                            NOTIFY_ENTITY.setTitle("Cash Withdrawal");
+                            NOTIFY_ENTITY.setMessage(message);
+                            NOTIFY_ENTITY.setLogged_by(userId);
+                            logNotification(NOTIFY_ENTITY);
+
+                            MSG_ENTITY.setMessage(message);
+                            MSG_ENTITY.setRecipient(mobileNumber);
+                            MSG_ENTITY.setStatus(msgStatus);
+                            MSG_ENTITY.setSent_by(userId);
+                            MSG_ENTITY.setTitle("Cash Withdrawal");
+                            new MessagesModel().logNotificationMessages(MSG_ENTITY);
+
+                        }catch (Exception ignore) {}
+
+                        if (responseStatus == 2) {
+                            Platform.runLater(()-> {
+                                new UserAlerts("SUCCESSFUL WITHDRAWAL", "Nice cash withdrawal was successful")
+                                        .informationAlert();
+                                cashField.clear();
+                                accountNumberField.clear();
+                            });
+                        }
+                    };
+                }
+            }catch (NumberFormatException ignore){}
+
     }
 
 }

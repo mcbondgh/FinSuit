@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 import java.io.File;
 
 public class ImageReadWriter {
-
     static ErrorLogger log = new ErrorLogger();
     public static final String absolutePath = "C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\uploads";
     public static final File defaultImageName = new File("C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\images\\profile.png");

@@ -12,38 +12,37 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1196.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanDisbursementController">
    <children>
-      <Pane fx:id="pane" layoutX="280.0" layoutY="6.0" prefHeight="526.0" prefWidth="774.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
+      <Pane fx:id="pane" layoutX="179.0" layoutY="6.0" prefHeight="531.0" prefWidth="883.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
          <children>
-            <MFXButton fx:id="saveButton" alignment="CENTER" disable="true" layoutX="486.0" layoutY="477.0" onAction="#saveButtonClicked" prefHeight="28.0" prefWidth="85.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
+            <MFXButton fx:id="saveButton" alignment="CENTER" disable="true" layoutX="599.0" layoutY="494.0" onAction="#saveButtonClicked" prefHeight="18.0" prefWidth="82.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
                <font>
                   <Font name="Roboto Bold" size="12.0" />
                </font>
             </MFXButton>
-            <TableView fx:id="paymentTable" fixedCellSize="40.0" layoutX="28.0" layoutY="45.0" onMouseMoved="#CheckTableSelection" prefHeight="407.0" prefWidth="713.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 14px; -fx-font-weight: bold;">
+            <TableView fx:id="paymentTable" fixedCellSize="40.0" layoutX="28.0" layoutY="50.0" onMouseMoved="#CheckTableSelection" prefHeight="431.0" prefWidth="743.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
                <columns>
-                  <TableColumn fx:id="idColumn" prefWidth="62.0" style="-fx-font-size: 14; -fx-alignment: center;" text="NO." />
-                  <TableColumn fx:id="loanNumberColumn" prefWidth="158.66668701171875" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN NUMBER" />
-                  <TableColumn fx:id="amountColumn" prefWidth="120.6666259765625" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN AMOUNT" />
-                  <TableColumn fx:id="statusColumn" maxWidth="233.0" minWidth="92.666748046875" prefWidth="92.666748046875" style="-fx-font-size: 14; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="STATUS" />
-                  <TableColumn fx:id="methodColumn" maxWidth="233.0" minWidth="92.6666259765625" prefWidth="144.0" style="-fx-font-size: 14; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="PAYMENT METHOD" />
-                  <TableColumn fx:id="actionColumn" maxWidth="233.0" minWidth="92.6666259765625" prefWidth="129.99993896484375" style="-fx-font-size: 14; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="MAKE PAYMENT" />
+                  <TableColumn fx:id="idColumn" prefWidth="76.66668701171875" style="-fx-font-size: 12; -fx-alignment: center;" text="NO." />
+                  <TableColumn fx:id="loanNumberColumn" prefWidth="230.0" style="-fx-font-size: 12; -fx-alignment: center;" text="LOAN NUMBER" />
+                  <TableColumn fx:id="amountColumn" prefWidth="169.3333740234375" style="-fx-font-size: 12; -fx-alignment: center;" text="LOAN AMOUNT" />
+                  <TableColumn fx:id="statusColumn" maxWidth="233.0" minWidth="92.666748046875" prefWidth="173.33331298828125" style="-fx-font-size: 12; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="STATUS" />
+                  <TableColumn fx:id="actionColumn" maxWidth="233.0" minWidth="0.0" prefWidth="88.00006103515625" style="-fx-font-size: 12; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="PAY" />
                </columns>
             </TableView>
-            <MFXButton fx:id="clearButton" alignment="CENTER" layoutX="575.0" layoutY="477.0" onAction="#setClearButtonOnAction" prefHeight="28.0" prefWidth="85.0" rippleColor="#ffa99c" style="-fx-background-color: #e60000;" text="❌ Clear " textFill="WHITE">
+            <MFXButton fx:id="clearButton" alignment="CENTER" layoutX="690.0" layoutY="493.0" onAction="#setClearButtonOnAction" prefHeight="17.0" prefWidth="82.0" rippleColor="#ffa99c" style="-fx-background-color: #e60000;" text="❌ Clear " textFill="WHITE">
                <font>
                   <Font name="Roboto Bold" size="12.0" />
                </font>
             </MFXButton>
-            <CheckBox fx:id="selectAllBtn" layoutX="656.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectAllChecked" prefHeight="28.0" prefWidth="85.0" style="-fx-background-color: dodgerblue; -fx-padding: 2; -fx-background-radius: 3;" text="Select All" textFill="WHITE">
+            <CheckBox fx:id="selectAllBtn" layoutX="681.0" layoutY="20.0" mnemonicParsing="false" onAction="#selectAllChecked" prefHeight="28.0" prefWidth="88.0" style="-fx-padding: 2 5 2 5; -fx-border-color: #ddd; -fx-border-radius: 5px;" text="Select All" textFill="#969393">
                <font>
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </CheckBox>
          </children>
       </Pane>
-      <Label alignment="CENTER" layoutX="30.0" layoutY="5.0" prefHeight="83.0" prefWidth="229.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="LOAN DISBURSEMENT" textAlignment="CENTER" textFill="#570667" wrapText="true">
+      <Label alignment="CENTER" layoutX="15.0" layoutY="6.0" prefHeight="83.0" prefWidth="146.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="LOAN DISBURSEMENT" textAlignment="CENTER" textFill="#570667" wrapText="true">
          <font>
-            <Font name="Roboto Bold" size="16.0" />
+            <Font name="Roboto Bold" size="14.0" />
          </font>
          <cursor>
             <Cursor fx:constant="DEFAULT" />

@@ -2,11 +2,16 @@ package app.controllers.loans;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
+import app.controllers.messages.MessageBuilders;
+import app.enums.MessageStatus;
 import app.models.loans.LoansModel;
+import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
 import app.repositories.loans.DisbursementEntity;
 import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -19,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class LoanDisbursementController extends LoansModel implements Initializable {
 
@@ -27,6 +33,9 @@ public class LoanDisbursementController extends LoansModel implements Initializa
     TransactionModel TRANS_MODEL = new TransactionModel();
     TransactionsEntity TRANS_ENTITY = new TransactionsEntity();
     NotificationEntity LOGGER = new NotificationEntity();
+    DisbursementEntity DISBURSEMENT_ENTITY = new DisbursementEntity();
+    MessagesModel MSG_MODEL = new MessagesModel();
+    MessageLogsEntity MSG_ENTITY = new MessageLogsEntity();
     int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
 
 
@@ -40,7 +49,8 @@ public class LoanDisbursementController extends LoansModel implements Initializa
     @FXML private TableColumn<DisbursementEntity, Double> amountColumn;
     @FXML private TableColumn<DisbursementEntity, Label> statusColumn;
     @FXML private TableColumn<DisbursementEntity, CheckBox> actionColumn;
-    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> methodColumn;
+//    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> methodColumn;
+//    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> transactIdColumn;
     @FXML private MFXButton saveButton, clearButton;
 
 
@@ -65,7 +75,8 @@ public class LoanDisbursementController extends LoansModel implements Initializa
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("loanAmount"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("payBtn"));
-        methodColumn.setCellValueFactory(new PropertyValueFactory<>("method"));
+//        methodColumn.setCellValueFactory(new PropertyValueFactory<>("method"));
+//        transactIdColumn.setCellValueFactory(new PropertyValueFactory<>("transIdField"));
         paymentTable.setItems(getUnpaidLoans());
     }
 
@@ -93,44 +104,70 @@ public class LoanDisbursementController extends LoansModel implements Initializa
         });
     }
     @FXML private void saveButtonClicked() {
-        for (DisbursementEntity item : paymentTable.getItems()) {
-            try{
-                if (item.getPayBtn().isSelected() && item.getMethod().getValue().isEmpty()) {
-                    item.getMethod().setStyle(item.getMethod().getValue().isEmpty() ? "-fx-background-color:#ffe1e1" : "-fx-background-color:#eee");
-                    return;
-                }
-            }catch (NullPointerException e) {
-                NOTIFY.informationNotification("INVALID PAYMENT METHOD", "Please select a payment method");
-                return;
-            }
-        }
-
+//        for (DisbursementEntity item : paymentTable.getItems()) {
+//            try{
+//                if (item.getPayBtn().isSelected() && item.getMethod().getValue().isEmpty()) {
+//                    item.getMethod().setStyle(item.getMethod().getValue().isEmpty() ? "-fx-background-color:#ffe1e1" : "-fx-background-color:#eee");
+//                    return;
+//                }
+//                if(!(item.getTransIdField().isDisabled()) && item.getTransIdField().getText().isBlank()) {
+//                    ALERTS = new UserAlerts("EMPTY INPUT", "Please provide a transaction Id", "Transaction Id Field cannot be empty");
+//                    ALERTS.errorAlert();
+//                    return;
+//                }
+//            }catch (NullPointerException e) {
+//                NOTIFY.informationNotification("INVALID PAYMENT METHOD", "Please select a payment method");
+//                return;
+//            }
+//        }
         ALERTS = new UserAlerts("SAVE PAYMENT", "Do you wish to save selected loans as disbursed funds?", "please confirm your action to save operation else CANCEL to abort.");
         if (ALERTS.confirmationAlert()) {
             int status = 0;
             double disbursedAmount = 0.0;
             String loanNo = "";
+            AtomicReference<String> accountNumber = new AtomicReference<>();
            for (DisbursementEntity item : paymentTable.getItems()) {
+                //Check if a pay button is checked or not. If checked then proceed with payment else skip
                if (item.getPayBtn().isSelected()) {
                    String transId = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
-                   status = saveDisbursedLoans(item.getLoanNumber(), loggedInUserId);
-                       disbursedAmount = item.getLoanAmount();
-                       loanNo = item.getLoanNumber();
-                       String method = item.getMethod().getValue();
+                   loanNo = item.getLoanNumber();
+                   disbursedAmount = item.getLoanAmount();
+                   double currentBalance = item.getAccountBalance();
 
-                       TRANS_ENTITY.setUserId(loggedInUserId);
-                       TRANS_ENTITY.setAccount_number(loanNo);
-                       TRANS_ENTITY.setTransaction_id(transId);
-                       TRANS_ENTITY.setPayment_method(method);
-                       TRANS_ENTITY.setEcash_amount(method.equals("eCASH") ? disbursedAmount: 0.00);
-                       TRANS_ENTITY.setCash_amount(method.equals("CASH")? disbursedAmount : 0.00);
-                       TRANS_MODEL.saveDisbursementTransaction(TRANS_ENTITY);
+                   double newBalance = currentBalance + disbursedAmount;
+
+                   DISBURSEMENT_ENTITY.setAccountNumber(item.getAccountNumber());
+                   DISBURSEMENT_ENTITY.setAccountBalance(newBalance);
+                   DISBURSEMENT_ENTITY.setPreviousBalance(currentBalance);
+
+                   TRANS_ENTITY.setUserId(loggedInUserId);
+                   TRANS_ENTITY.setEcash_amount(disbursedAmount);
+                   TRANS_ENTITY.setTransaction_id(transId);
+                   TRANS_ENTITY.setAccount_number(item.getAccountNumber());
+
+                   status = saveDisbursedLoans(loanNo, loggedInUserId);
+                   status += updateCustomerAccountData(DISBURSEMENT_ENTITY);
+                   TRANS_MODEL.saveDisbursementTransaction(TRANS_ENTITY);
+
+                   try {
+                    String message = new MessageBuilders().loanDisbursementMessage("Applicant", loanNo, disbursedAmount);
+                    String response = new SmsAPI().sendSms(item.getMobileNumber(), message);
+                    String msgStatus = MessageStatus.getMessageStatusResult(response).toString();
+                    MSG_ENTITY.setSent_by(loggedInUserId);
+                    MSG_ENTITY.setStatus(msgStatus);
+                    MSG_ENTITY.setRecipient(item.getMobileNumber());
+                    MSG_ENTITY.setTitle("DISBURSED FUND");
+                    MSG_ENTITY.setMessage(message);
+                    MSG_MODEL.logNotificationMessages(MSG_ENTITY);
+
+                    LOGGER.setTitle("DISBURSED FUND");
+                    LOGGER.setMessage("Ghc"+disbursedAmount + " has successfully been disbursed to customer with loan no ".concat(loanNo).concat(" by employee no. ").concat(getWorkIdByUserId(loggedInUserId)));
+                    LOGGER.setLogged_by(loggedInUserId);
+                    logNotification(LOGGER);
+
+                   }catch (Exception e){e.printStackTrace();}
                }
            }
-           LOGGER.setTitle("DISBURSED FUND");
-           LOGGER.setMessage("Ghc"+disbursedAmount + " has successfully been paid to customer with loan no ".concat(loanNo).concat(" by employee no. ").concat(getWorkIdByUserId(loggedInUserId)));
-           LOGGER.setLogged_by(loggedInUserId);
-           logNotification(LOGGER);
            if (status > 0) {
                NOTIFY.successNotification("OPERATION SAVED", "You have successfully saved selected loan facilities as disbursed funds");
                populateTable();

@@ -3,16 +3,18 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="441.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.CheckAccountBalance">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="593.0" prefWidth="441.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.CheckAccountBalance">
    <children>
-      <Pane layoutX="71.0" prefHeight="56.0" prefWidth="441.0" style="-fx-background-color: #1d7979fc;" AnchorPane.bottomAnchor="520.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane layoutX="71.0" prefHeight="60.0" prefWidth="441.0" style="-fx-background-color: #1d7979fc;" AnchorPane.bottomAnchor="533.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="77.0" layoutY="13.0" text="📇 CHECK ACCOUNT BALANCE" textFill="WHITE">
                <font>
@@ -21,24 +23,27 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="30.0" layoutY="75.0" prefHeight="475.0" prefWidth="381.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-color: #eee;" AnchorPane.bottomAnchor="26.333333333333258" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="75.0">
+      <Pane layoutX="30.0" layoutY="75.0" prefHeight="485.0" prefWidth="381.0" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-color: #eee;" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="75.0">
          <children>
-            <MFXFilterComboBox fx:id="accountNumberField" floatMode="DISABLED" floatingText="enter account number" layoutX="21.0" layoutY="40.0" prefHeight="41.0" prefWidth="233.0" promptText="enter account number">
+            <MFXFilterComboBox fx:id="accountNumberField" floatMode="DISABLED" floatingText="enter account number" layoutX="21.0" layoutY="28.0" prefHeight="41.0" prefWidth="339.0" promptText="enter account number" scrollOnOpen="true" selectable="true">
                <font>
-                  <Font name="Poppins Bold" size="16.0" />
+                  <Font name="Poppins Bold" size="14.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </MFXFilterComboBox>
-            <Label layoutX="24.0" layoutY="26.0" text="Search Account Number *" textFill="#605e5e">
+            <Label layoutX="24.0" layoutY="14.0" text="Search Account Number *" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Label layoutX="24.0" layoutY="88.0" text="Account  Name" textFill="#605e5e">
+            <Label layoutX="24.0" layoutY="223.0" text="Account  Name" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="customerNameField" layoutX="21.0" layoutY="105.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="JAMES MENSAH ATSU SOGBOLISAH " textFill="#605e5e">
+            <Label fx:id="customerNameField" layoutX="21.0" layoutY="240.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
@@ -46,33 +51,33 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label fx:id="currentBalanceField" layoutX="21.0" layoutY="170.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #deffea; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Ghc 00.00" textFill="#186b36">
+            <Label fx:id="currentBalanceField" layoutX="21.0" layoutY="305.0" prefHeight="41.0" prefWidth="168.0" style="-fx-background-color: #deffea; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" textFill="#186b36">
                <font>
-                  <Font name="Poppins Bold" size="14.0" />
+                  <Font name="Poppins Bold" size="18.0" />
                </font>
                <padding>
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label layoutX="24.0" layoutY="156.0" text="Current Balance" textFill="#605e5e">
+            <Label layoutX="24.0" layoutY="291.0" text="Current Balance" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="previousBalanceField" layoutX="21.0" layoutY="238.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Ghc 00.00" textFill="#118a3f">
+            <Label fx:id="previousBalanceField" layoutX="193.0" layoutY="305.0" prefHeight="41.0" prefWidth="168.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" textFill="#118a3f">
                <font>
-                  <Font name="Poppins Bold" size="14.0" />
+                  <Font name="Poppins Bold" size="18.0" />
                </font>
                <padding>
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label layoutX="24.0" layoutY="224.0" text="Previous Balance" textFill="#605e5e">
+            <Label layoutX="196.0" layoutY="291.0" text="Previous Balance" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="lastWithdrawalAmountField" layoutX="21.0" layoutY="308.0" prefHeight="41.0" prefWidth="163.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Ghc 00.00" textFill="#db2525">
+            <Label fx:id="lastWithdrawalDateLabel" layoutX="21.0" layoutY="378.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Sun July 18, 1990" textFill="#db2525">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -80,59 +85,41 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label layoutX="24.0" layoutY="294.0" text="Last Withdral Amount" textFill="#605e5e">
+            <Label layoutX="24.0" layoutY="364.0" text="Last Withdral Date" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="lastWithdrawalDate" layoutX="203.0" layoutY="308.0" prefHeight="41.0" prefWidth="163.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Sun July 18, 1990" textFill="#db2525">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
-            <Label layoutX="203.0" layoutY="294.0" text="Last Withdral Date" textFill="#605e5e">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-            </Label>
-            <Pane layoutX="24.0" layoutY="414.0" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+            <Pane layoutX="23.0" layoutY="457.0" prefHeight="31.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                <children>
-                  <Label layoutX="19.0" layoutY="14.0" text="Export Data As:" textFill="#605e5e">
-                     <font>
-                        <Font name="Poppins Bold" size="10.0" />
-                     </font>
-                  </Label>
-                  <Hyperlink fx:id="receiptButton" layoutX="104.0" layoutY="10.0" prefHeight="24.0" prefWidth="58.0" text="🧾Receipt">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink fx:id="sendSmsButton" layoutX="174.0" layoutY="11.0" prefHeight="24.0" prefWidth="71.0" text="📨 SMS">
+                  <Hyperlink fx:id="sendSmsButton" layoutX="14.0" layoutY="4.0" onAction="#sendAccountBalanceViaSms" prefHeight="24.0" prefWidth="89.0" text="📨 Send SMS">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Hyperlink>
                </children>
             </Pane>
-            <Separator layoutX="23.0" layoutY="400.0" prefHeight="7.0" prefWidth="339.0" />
-            <Label layoutX="27.0" layoutY="363.0" text="Cashier" textFill="#0e8b80">
+            <MFXButton fx:id="getBalanceButton" layoutX="21.0" layoutY="163.0" onAction="#getBalanceButtonClicked" prefHeight="31.0" prefWidth="339.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Get Balance" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Bold" size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+            <Line endX="255.99996948242188" layoutX="125.0" layoutY="429.0" startX="-124.99999237060547" stroke="#bebebe" />
+            <PasswordField fx:id="pinNumberField" layoutX="21.0" layoutY="92.0" onKeyTyped="#checkPinNumberField" prefHeight="31.0" prefWidth="339.0" promptText="PIN NUMBER" />
+            <Line endX="255.99996948242188" layoutX="125.0" layoutY="205.0" startX="-124.99999237060547" stroke="#bebebe" />
+            <Label layoutX="24.0" layoutY="77.0" text="Account Holders PIN *" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="usernameLabel" layoutX="74.0" layoutY="362.0" text="Kofi Mensah Atsu Issah" textFill="#726e6e">
+            <Label fx:id="errorIndicator" alignment="CENTER" layoutX="23.0" layoutY="128.0" prefHeight="24.0" prefWidth="339.0" style="-fx-background-color: #ffe9e9;" text="Invalid Pin Number" textFill="#b30000" visible="false">
                <font>
-                  <Font name="Poppins Bold" size="11.0" />
+                  <Font name="Roboto" size="12.0" />
                </font>
             </Label>
-            <MFXButton fx:id="getBalanceButton" layoutX="265.0" layoutY="40.0" onAction="#getBalanceButtonClicked" prefHeight="41.0" prefWidth="95.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Get Balance" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="13.0" />
-               </font>
-            </MFXButton>
          </children>
       </Pane>
    </children>

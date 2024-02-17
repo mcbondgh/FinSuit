@@ -151,8 +151,8 @@ public class SettingsController extends SettingModel implements Initializable{
               double taxValue = item.getTaxPercentage();
               loanPercentageField.setText(String.valueOf(percentageValue));
               percentageIndicator.setText(percentageValue + "% of basic Salary" );
-              String getImageSource = ImageReadWriter.displayImage(item.getLogo());
-              logoViewer.setImage(new Image(getImageSource));
+//              String getImageSource = ImageReadWriter.displayImage(item.getLogo());
+//              logoViewer.setImage(new Image(getImageSource));
               withdrawalRateField.setText(String.valueOf(taxValue));
               taxIndicator.setText(taxValue + "% of withdrawal amount");
         }

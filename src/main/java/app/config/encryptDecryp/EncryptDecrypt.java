@@ -8,6 +8,7 @@ import java.util.Base64;
 
 public class EncryptDecrypt {
 
+    //default password = finsuit1244
     public static String hashPlainText(String plainText) {
         String saltValue = BCrypt.gensalt();
         return BCrypt.hashpw(plainText, saltValue);
@@ -47,6 +48,8 @@ public class EncryptDecrypt {
         byte[] hashedByte = decoder.decode(hashCode);
         return new String(hashedByte);
     }
+
+
 
 
 

@@ -67,6 +67,7 @@ public class UserAlerts {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
+        alert.getButtonTypes().add(ButtonType.CLOSE);
         alert.showAndWait();
     }
 

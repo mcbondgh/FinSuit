@@ -542,7 +542,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             //CREATE ACCOUNT FOR LOAN CLIENT
             accountRepository.setCustomer_id(totalCustomersCount());
             accountRepository.setAccount_number(SpecialMethods.generateAccountNumber(totalCustomersCount() + 1));
-            accountRepository.setAccount_type("Savings Account");
+            accountRepository.setAccount_type("Loan Servicing");
             accountRepository.setModified_by(currentUserId);
             flag += createAccountBalance(accountRepository);
 

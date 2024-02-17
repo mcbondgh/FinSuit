@@ -22,7 +22,6 @@ public class SettingModel extends MainModel {
             preparedStatement.setDouble(9, percentageValue);
             preparedStatement.setDouble(10, taxValue);
             flag = (byte) preparedStatement.executeUpdate();
-            commitTransaction();
         }catch (SQLException e) {
             rollBack();
         }
@@ -53,7 +52,6 @@ public class SettingModel extends MainModel {
             preparedStatement.setString(2, message);
             preparedStatement.setInt(3, userId);
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
             preparedStatement.close();
             getConnection().close();
         }catch (SQLException ignore) {
@@ -63,17 +61,15 @@ public class SettingModel extends MainModel {
     }
     protected void updateMessageTemplate(int id, String title, String body, int userId) {
         try {
-            String query = "UPDATE message_templates SET title = ?, message = ?, modified_by = ? WHERE( message_id = ?);";
+            String query = "UPDATE message_templates SET title = ?, message = ?, modified_by = ? WHERE(message_id = ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1,title);
             preparedStatement.setString(2, body);
             preparedStatement.setInt(3, userId);
             preparedStatement.setInt(4, id);
             preparedStatement.execute();
-            commitTransaction();
-            preparedStatement.close();
             getConnection().close();
-        }catch (SQLException ignore) {rollBack();}
+        }catch (SQLException ignore) {}
     }
     protected void updateMessageOperation(int tempId, String operation) {
         try {
@@ -82,7 +78,6 @@ public class SettingModel extends MainModel {
             preparedStatement.setInt(1, tempId);
             preparedStatement.setString(2, operation);
             preparedStatement.execute();
-            commitTransaction();
             preparedStatement.close();
             getConnection().close();
         }catch (Exception ignore) {}

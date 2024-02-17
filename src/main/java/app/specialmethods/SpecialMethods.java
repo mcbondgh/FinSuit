@@ -78,7 +78,7 @@ public class SpecialMethods {
         }
     }
     public static void setMaritalStatus(ComboBox<String> comboBox) {
-        String[] items = {"Single", "Married", "Divorced"};
+        String[] items = {"Single", "Married", "Divorced", "Separated"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);

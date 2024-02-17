@@ -11,14 +11,13 @@ import java.util.ResourceBundle;
 
 public class UpdateApplicantLoanController extends MainModel implements Initializable {
     @FXML
-    private static Label loanNumberLabel;
-    public static void setLoanNumber(String loanNumber) {
-        loanNumberLabel.setText(loanNumber);
-    }
+    private Label loanNumberLabel;
+
+    public static String setLoanNumber;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        loanNumberLabel.setText(setLoanNumber);
     }
 
 

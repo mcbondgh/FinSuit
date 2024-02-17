@@ -13,13 +13,15 @@ public class CustomerAccountsDataRepository {
     private String account_status;
     private Timestamp date_modified;
     private String formatted_date_modified;
+    private String loanNo;
     private int modified_by;
 
     public CustomerAccountsDataRepository() {}
-    public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String account_type, String account_status, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
+    public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String loanNo, String account_type, String account_status, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
         this.customer_id = account_id;
         this.customer_id = customer_id;
         this.account_number = account_number;
+        this.loanNo = loanNo;
         this.account_type = account_type;
         this.account_status = account_status;
         this.account_balance = account_balance;
@@ -48,6 +50,14 @@ public class CustomerAccountsDataRepository {
 
     public String getAccount_number() {
         return account_number;
+    }
+
+    public String getLoanNo() {
+        return loanNo;
+    }
+
+    public void setLoanNo(String loanNo) {
+        this.loanNo = loanNo;
     }
 
     public void setAccount_number(String account_number) {

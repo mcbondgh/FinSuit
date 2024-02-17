@@ -102,7 +102,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     private void loadListView() {
         listView.getItems().clear();
         for (PendingLoanApprovalEntity item : LOAN_MODEL.getLoansUnderPendingApproval()) {
-
+            System.out.println("loan no: ".concat(item.getLoan_no()));
             listView.getItems().add(item.getLoan_no());
         }
     }
@@ -158,7 +158,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
 
         scheduleTable.getItems().clear();
         try {
-            for (int x = 0; x < loanPeriod; ++x) {
+            for (int x = 0; x <= loanPeriod; x++) {
                 totalAmount = totalAmount - installment;
 
                 double formattedPrincipal = Double.parseDouble(decimalFormat.format(principal));
@@ -169,7 +169,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
 
                 //check for a negative value else just allow the value
                 double maxValue = Math.max(formattedLoanDifference, 0.0);
-                entity = new ScheduleTableValues(x, finalX, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x));
+                entity = new ScheduleTableValues(x+1, finalX, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x+1));
                 scheduleTable.getItems().add(entity);
             }
         }catch (IndexOutOfBoundsException ignore ) {}
@@ -270,6 +270,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         generateScheduleSheet();
     }
     public void saveButtonClicked() {
+        saveButton.setDisable(true);
         String selectedLoanNo = listView.getSelectionModel().getSelectedItem();
         int interest = interestRateSelector.getValue();
         int processing = processingRateSelector.getValue();
@@ -285,7 +286,8 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
             new Thread(() -> {
                 //SET LOAN ENTITY VALUES
                 LOANS_OBJ.setLoan_no(selectedLoanNo);
-                LOANS_OBJ.setDisbursed_amount(disbursedAmount);
+                LOANS_OBJ.setApproved_amount(loanAmount);
+                LOANS_OBJ.setTotal_loan_amount(disbursedAmount);
                 LOANS_OBJ.setApproved_by(loggedInUserId);
 
                 //SET QUALIFICATION ENTITY VALUES
@@ -302,7 +304,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                 NOTIFY_OBJ.setMessage("Disbursement of Ghc" + disbursedAmount + " has successfully been approved for loan number " + selectedLoanNo + " while awaiting payment");
                 NOTIFY_OBJ.setLogged_by(loggedInUserId);
 
-                String message = GENERATE_MESSAGE_OBJECT.createLoanDisbursementMessage(fullnameLabel.getText(), selectedLoanNo, disbursedAmount);
+                String message = GENERATE_MESSAGE_OBJECT.loanDisbursementMessage(fullnameLabel.getText(), selectedLoanNo, disbursedAmount);
                 logNotification(NOTIFY_OBJ);
                scheduleTable.getItems().forEach(item ->{
                     LOAN_MODEL.updateLoanSchedule(item.getMonthlyInstallment(), item.getPrincipal(), item.getInterestAmount(), item .getScheduleDate(),item.getBalance(), loggedInUserId, item.getScheduleId());
@@ -313,11 +315,11 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                     logsEntity.setRecipient(numberLabel.getText());
                     logsEntity.setSent_by(loggedInUserId);
                     logsEntity.setStatus(status);
-                    logsEntity.setTitle("LOAN DISBURSEMENT");
+                    logsEntity.setTitle("DISBURSEMENT APPROVAL");
                     logsEntity.setMessage(message);
                     MESSAGE_MODEL_OBJECT.logNotificationMessages(logsEntity);
                     int result = LOAN_MODEL.approveLoanForDisbursement(QUALIFICATION_OBJ, LOANS_OBJ);
-                    loadListView();
+                    Platform.runLater(this::loadListView);
                     scheduleTable.getItems().clear();
                     if( result > 0) {
                         Platform.runLater(() -> {

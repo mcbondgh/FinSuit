@@ -23,7 +23,7 @@ public class LoansTableEntity {
     private String status;
     private Label statusLabel;
     private String loanType;
-    private MFXButton viewButton = new MFXButton("View");
+    private MFXButton viewButton = new MFXButton("Cancel");
     private MFXButton editButton = new MFXButton("Edit");
     private ComboBox<String> supervisorSelector = new ComboBox<>();
 

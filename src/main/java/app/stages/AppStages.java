@@ -20,8 +20,8 @@ public class AppStages {
 //        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Homepage");
-        Image icon = SpecialMethods.setLogoImage();
-        stage.getIcons().add(icon);
+//        Image icon = SpecialMethods.setLogoImage();
+//        stage.getIcons().add(icon);
         stage.setScene(scene);
         stage.show();
         stage.getScene().getWindow().setOnCloseRequest(windowEvent -> {
@@ -120,17 +120,26 @@ public class AppStages {
         stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
-    public static void editCustomerDataStage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/update-loan-details-view.fxml"));
+    public static Stage editCustomerDataStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/accounts/edit-customer-details-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Edit Customer Data");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
-       stage.show();
+        return  stage;
     }
-
+    public static void editLoanApplicantDetails() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/update-loan-details-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Edit Loan Application");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
     public static Stage updateEmployeeDetailsStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/resource/updateEmployee-popup.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
@@ -141,18 +150,6 @@ public class AppStages {
         stage.centerOnScreen();
         return  stage;
     }
-    public static Stage showUpdateLoanApplicantView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/resource/updateEmployee-popup.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        Stage stage = new Stage();
-        stage.setTitle("Update Employee Data");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.centerOnScreen();
-        return  stage;
-    }
-
-
 
     public static Stage databaseFailedStage() {
         Stage stage = new Stage();

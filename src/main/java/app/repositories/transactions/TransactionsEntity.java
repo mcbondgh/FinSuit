@@ -13,6 +13,7 @@ public class TransactionsEntity {
     private String account_number;
     private String transaction_id, transaction_type, payment_method, payment_gateway;
     private double cash_amount, ecash_amount, total_amount;
+    private double transactionTax;
 
     private String ecash_id;
     private Timestamp transaction_date;
@@ -198,6 +199,14 @@ public class TransactionsEntity {
 
     public String getTransaction_made_by() {
         return transaction_made_by;
+    }
+
+    public double getTransactionTax() {
+        return transactionTax;
+    }
+
+    public void setTransactionTax(double transactionTax) {
+        this.transactionTax = transactionTax;
     }
 
     public void setTransaction_made_by(String transaction_made_by) {

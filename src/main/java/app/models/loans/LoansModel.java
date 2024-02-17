@@ -4,8 +4,6 @@ import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.loans.*;
-import app.repositories.notifications.NotificationEntity;
-import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +13,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoansModel extends MainModel {
     ErrorLogger logError = new ErrorLogger();
@@ -130,7 +128,6 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(26, customer.getRelationship_to_applicant());
             preparedStatement.setInt(27, customer.getCreated_by());
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
 
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setString(1, applicationEntity.getLoan_no());
@@ -158,8 +155,6 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(23, applicationEntity.getGuranter_institution_address());
             preparedStatement.setDouble(24, applicationEntity.getNet_salary());
             flag += preparedStatement.executeUpdate();
-            commitTransaction();
-
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e) {
@@ -181,7 +176,6 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(6, loanPurpose);
             preparedStatement.setInt(7, userId);
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
             preparedStatement.close();
             getConnection().close();
         } catch (SQLException e) {
@@ -193,7 +187,7 @@ public class LoansModel extends MainModel {
     protected ObservableList<LoansTableEntity> getLoansByApplicationStatus() {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, loan_purpose," +
+            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname, ' ', othername) AS fullname, loan_no, loan_type, loan_purpose," +
                     "DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
@@ -215,7 +209,7 @@ public class LoansModel extends MainModel {
             }
             resultSet.close();
             getConnection().close();
-        }catch (SQLException ignore) {}
+        }catch (SQLException ignore) {ignore.printStackTrace();}
         return data;
     }
     protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage (int user_id) {
@@ -339,7 +333,6 @@ public class LoansModel extends MainModel {
             preparedStatement.setInt(2, userId);
             preparedStatement.setString(3, loanNo);
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e){rollBack();
@@ -356,7 +349,6 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(2, loanNo);
             preparedStatement.setInt(3, userId);
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
             getConnection().close();
         }catch (Exception e){e.printStackTrace();}
         return flag;
@@ -364,7 +356,7 @@ public class LoansModel extends MainModel {
     public ObservableList<String> getGroupSupervisors(String employeeId) {
         ObservableList<String> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT gs.loan_id, emp_id FROM group_supervisors as gs\n" +
+            String query = "SELECT DISTINCT gs.loan_id, emp_id FROM group_supervisors as gs\n" +
                     "INNER JOIN loans AS ln\n" +
                     "ON gs.loan_id = ln.loan_no\n" +
                     "WHERE(gs.emp_id = '"+employeeId+"' AND application_status = 'processing');";
@@ -403,7 +395,7 @@ public class LoansModel extends MainModel {
                 data.addAll(new PendingLoanApprovalEntity(loanNo, requestedNo, gross, statutory, remaining, deduction, amount, loanAmount, interest, period, processing, date));
             }
                 getConnection().close();
-        }catch (Exception ignore){}
+        }catch (Exception ignore){ignore.printStackTrace();}
         return data;
     }
     protected void saveLoanSchedule(String loanNo, double monthlyInstallment, double principal, double interest, LocalDate date, double balance, int loggedInUserId) {
@@ -456,7 +448,7 @@ public class LoansModel extends MainModel {
         try{
             String query1 = """
                     UPDATE loans
-                    SET approved_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?
+                    SET approved_amount = ?, disbursed_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?
                     WHERE(loan_no = ?);""";
 
             String query2 = """
@@ -465,9 +457,10 @@ public class LoansModel extends MainModel {
                     WHERE(loan_no = ?);""";
 
             preparedStatement = getConnection().prepareStatement(query1);
-            preparedStatement.setDouble(1, loans.getDisbursed_amount());
-            preparedStatement.setInt(2, loans.getApproved_by());
-            preparedStatement.setString(3, loans.getLoan_no());
+            preparedStatement.setDouble(1, loans.getApproved_amount());
+            preparedStatement.setDouble(2, loans.getTotal_loan_amount());
+            preparedStatement.setInt(3, loans.getApproved_by());
+            preparedStatement.setString(4, loans.getLoan_no());
             status = preparedStatement.executeUpdate();
 
             preparedStatement = getConnection().prepareStatement(query2);
@@ -507,10 +500,26 @@ public class LoansModel extends MainModel {
         }
     }
 
+    protected int updateCustomerAccountData(DisbursementEntity var) {
+        AtomicInteger status = new AtomicInteger();
+        try {
+            String query = """
+                    UPDATE customer_account_data SET account_balance = ?,
+                    	previous_balance = ?, date_modified = DEFAULT WHERE account_number = ? ;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setDouble(1, var.getAccountBalance());
+            preparedStatement.setDouble(2, var.getPreviousBalance());
+            preparedStatement.setString(3, var.getAccountNumber());
+            status.set(preparedStatement.executeUpdate());
+        }catch (Exception ignore) {}
+        return status.get();
+    }
+
     protected int saveDisbursedLoans(String loanNo, int userId) {
         int status = 0;
         try{
-            String query = "UPDATE loans SET application_status = 'paid', date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
+            String query = "UPDATE loans SET application_status = 'disbursed', date_modified = DEFAULT, updated_by = ? WHERE(loan_no = ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, loanNo);
@@ -526,12 +535,11 @@ public class LoansModel extends MainModel {
             String query = """
                     SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,\s
                     	mobile_number,\s
-                    	approved_amount,
+                    	disbursed_amount,
                         loan_status,
                         total_payment,
-                        (approved_amount - total_payment) AS balance FROM customer_data AS cd
-                        INNER JOIN loans AS ln\s
-                        ON cd.customer_id = ln.customer_id
+                        (disbursed_amount - total_payment) AS balance FROM customer_data AS cd
+                        INNER JOIN loans AS ln USING(customer_id)
                         WHERE(loan_no = ?);
                     """;
             preparedStatement = getConnection().prepareStatement(query);
@@ -540,7 +548,7 @@ public class LoansModel extends MainModel {
             if (resultSet.next()) {
                 data.put("fullname", resultSet.getString("fullname"));
                 data.put("mobile_number", resultSet.getString("mobile_number"));
-                data.put("approved_amount", resultSet.getDouble("approved_amount"));
+                data.put("approved_amount", resultSet.getDouble("disbursed_amount"));
                 data.put("loan_status", resultSet.getString("loan_status"));
                 data.put("total_payment", resultSet.getDouble("total_payment"));
                 data.put("balance", resultSet.getDouble("balance"));

@@ -25,7 +25,7 @@
       </Pane>
       <Pane layoutX="30.0" layoutY="61.0" onMouseMoved="#checkForEmptyFields" prefHeight="499.0" prefWidth="381.0" style="-fx-border-radius: 5; -fx-background-color: #eee; -fx-background-radius: 5;" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="61.0">
          <children>
-            <MFXFilterComboBox fx:id="accountNumberField" allowEdit="true" floatMode="DISABLED" floatingText="enter account number" layoutX="22.0" layoutY="28.0" onAction="#setOnAccountNumberSelected" prefHeight="41.0" prefWidth="233.0" promptText="enter account number" selectable="true" style="-fx-border-color: #ddd;">
+            <MFXFilterComboBox fx:id="accountNumberField" allowEdit="true" floatMode="DISABLED" floatingText="enter account number" layoutX="22.0" layoutY="28.0" measureUnitGap="20.0" onAction="#customerAccountSelected" popupOffsetY="0.0" prefHeight="41.0" prefWidth="241.0" promptText="enter account number" scrollOnOpen="true" selectable="true" style="-fx-border-color: #ddd;">
                <font>
                   <Font name="Poppins Bold" size="14.0" />
                </font>
@@ -116,7 +116,7 @@
                   <Font name="Poppins Bold" size="13.0" />
                </font>
             </MFXButton>
-            <Label fx:id="accountStatusLabel" layoutX="264.0" layoutY="28.0" prefHeight="41.0" prefWidth="97.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" textFill="#605e5e">
+            <Label fx:id="accountStatusLabel" layoutX="269.0" layoutY="28.0" prefHeight="41.0" prefWidth="88.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="11.0" />
                </font>
@@ -124,7 +124,7 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label layoutX="271.0" layoutY="11.0" text="Account Status" textFill="#605e5e">
+            <Label layoutX="274.0" layoutY="11.0" text="Account Status" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>

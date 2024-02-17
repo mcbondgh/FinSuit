@@ -12,7 +12,7 @@ public class AppModel extends MainModel {
         for (BusinessInfoEntity items : getBusinessInfo()) {
             appName.setText(items.getName());
             String getImageSource = ImageReadWriter.absolutePath +"\\" + items.getLogo();
-            logo.setImage(new Image(getImageSource));
+//            logo.setImage(new Image(getImageSource));
         }
     }
 

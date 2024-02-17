@@ -6,7 +6,8 @@ public class LoansEntity {
     private int loan_id, customer_id;
     private String customerName;
     private String loan_no, loan_type;
-    private double requested_amount, disbursed_amount, total_payment;
+    private double requested_amount, approved_amount, total_payment;
+    private double total_loan_amount;
     private String application_status, loan_purpose, loan_status;
     private byte is_drafted;
     private Timestamp date_created, date_modified;
@@ -17,13 +18,13 @@ public class LoansEntity {
 
     public LoansEntity(){}
 
-    public LoansEntity(int loan_id, String customerName, String loan_no, String loan_type, double requested_amount, double disbursed_amount, double total_payment, String application_status, String loan_purpose, String loan_status, byte is_drafted, Timestamp date_created, Timestamp date_modified, int created_by, int updated_by, int approved_by) {
+    public LoansEntity(int loan_id, String customerName, String loan_no, String loan_type, double requested_amount, double approved_amount, double total_payment, String application_status, String loan_purpose, String loan_status, byte is_drafted, Timestamp date_created, Timestamp date_modified, int created_by, int updated_by, int approved_by) {
         this.loan_id = loan_id;
         this.customerName = customerName;
         this.loan_no = loan_no;
         this.loan_type = loan_type;
         this.requested_amount = requested_amount;
-        this.disbursed_amount = disbursed_amount;
+        this.approved_amount = approved_amount;
         this.total_payment = total_payment;
         this.application_status = application_status;
         this.loan_purpose = loan_purpose;
@@ -72,12 +73,12 @@ public class LoansEntity {
         this.requested_amount = requested_amount;
     }
 
-    public double getDisbursed_amount() {
-        return disbursed_amount;
+    public double getApproved_amount() {
+        return approved_amount;
     }
 
-    public void setDisbursed_amount(double disbursed_amount) {
-        this.disbursed_amount = disbursed_amount;
+    public void setApproved_amount(double approved_amount) {
+        this.approved_amount = approved_amount;
     }
 
     public double getTotal_payment() {
@@ -110,6 +111,14 @@ public class LoansEntity {
 
     public void setLoan_status(String loan_status) {
         this.loan_status = loan_status;
+    }
+
+    public double getTotal_loan_amount() {
+        return total_loan_amount;
+    }
+
+    public void setTotal_loan_amount(double total_loan_amount) {
+        this.total_loan_amount = total_loan_amount;
     }
 
     public byte getIs_drafted() {

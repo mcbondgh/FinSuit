@@ -1,6 +1,7 @@
 package app.controllers.loans;
 
 import app.controllers.homepage.AppController;
+import app.controllers.loans.application.UpdateApplicantLoanController;
 import app.models.loans.LoansModel;
 import app.repositories.loans.LoansTableEntity;
 import app.specialmethods.SpecialMethods;
@@ -101,7 +102,7 @@ public class LoansController extends LoansModel implements Initializable {
         int counter2 = countUnpaidLoans();
         loanRequestsButton.setText("Loan Requests (" + counter +")");
         generateScheduleButton.setText(generateScheduleButton.getText() + " (" + counter1 +")");
-        disburseFundBtn.setText("Disburse Fund(" + counter2 +")");
+        disburseFundBtn.setText(disburseFundBtn.getText () + " (" + counter2  + ")");
     }
 
     public void searchCustomerMethod(KeyEvent event) {
@@ -151,7 +152,12 @@ public class LoansController extends LoansModel implements Initializable {
                 });
                 //Handles click event for the edit-button
                 item.getEditButton().setOnAction(action -> {
-                    loanApplicationStage.show();
+                    try {
+                        UpdateApplicantLoanController.setLoanNumber = loanNumber;
+                        AppStages.editLoanApplicantDetails();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
             }
         }

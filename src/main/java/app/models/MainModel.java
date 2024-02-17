@@ -27,6 +27,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,16 +149,20 @@ public class MainModel extends DbConnection {
         }catch (Exception e){e.printStackTrace();}
         return "not found";
     }
-    protected ArrayList<Object> getCustomerDetailsByAccountNumber(String accountNumber) {
+    protected ArrayList<Object> getCustomerDetailsByAccountNumber(String searchParameter) {
         ArrayList<Object> data = new ArrayList<>();
         try {
-            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, account_number, mobile_number, email, account_balance, account_status, cd.customer_id AS accountNo FROM customer_data AS cd\n" +
+            String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, " +
+                    "account_number, mobile_number, email, account_balance, previous_balance, pinNumber, account_status, cd.customer_id AS accountNo " +
+                    "FROM customer_data AS cd\n" +
                     "JOIN customer_account_data AS cad USING(customer_id) \n" +
-                    "WHERE(cad.account_number = ? OR mobile_number = ?);";
+                    "JOIN loans AS ln USING(customer_id)" +
+                    "WHERE(cad.account_number = ? OR mobile_number = ? OR loan_no = ?);";
 
             preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setString(1, accountNumber);
-            preparedStatement.setString(2, accountNumber);
+            preparedStatement.setString(1, searchParameter);
+            preparedStatement.setString(2, searchParameter);
+            preparedStatement.setString(3, searchParameter);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 data.add(resultSet.getString("fullname"));//0
@@ -165,7 +171,9 @@ public class MainModel extends DbConnection {
                 data.add(resultSet.getString("account_number"));//3
                 data.add(resultSet.getString("mobile_number"));//4
                 data.add(resultSet.getString("email"));//5
-                data.add(resultSet.getString("account_status"));//
+                data.add(resultSet.getString("account_status"));//6
+                data.add(resultSet.getString("pinNumber"));//7
+                data.add(resultSet.getString("previous_balance"));//8
             }
             preparedStatement.close();
             resultSet.close();
@@ -173,6 +181,24 @@ public class MainModel extends DbConnection {
         }catch (SQLException e){e.printStackTrace();}
         return data;
     }
+
+    public String getLastWithdrawalDate(String accountNumber) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+        String dateTime = "";
+        try {
+            String query = "SELECT transaction_date FROM transaction_logs  " +
+                    "WHERE(account_number = '"+accountNumber+"' AND transaction_type = 'CASH WITHDRAWAL') " +
+                    "ORDER BY transaction_date DESC LIMIT 1;";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+               dateTime = resultSet.getTimestamp(1).toLocalDateTime().format(formatter);
+            }
+        }catch (SQLException ignore){}
+
+        return dateTime;
+    }
+
     public long totalCustomersCount() {
         long count = 0;
         try {
@@ -232,7 +258,7 @@ public class MainModel extends DbConnection {
 
     public long getTotalDisbursedLoanCount()  {
         try {
-            String query = "SELECT COUNT(loan_no) AS result FROM loans WHERE((application_status = 'paid' OR 'pending_payment') AND loan_status = 'active');\n";
+            String query = "SELECT COUNT(loan_no) AS result FROM loans WHERE((application_status = 'disbursed' OR 'pending_payment') AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -442,7 +468,8 @@ public class MainModel extends DbConnection {
     public ObservableList<CustomerAccountsDataRepository> fetchCustomersAccountData() {
         ObservableList<CustomerAccountsDataRepository> data = FXCollections.observableArrayList();
         try{
-            String query = "SELECT * FROM customer_account_data";
+            String query = "SELECT * FROM customer_account_data\n" +
+                    "CROSS JOIN loans USING(customer_id);";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 //            account_id, customer_id, account_type, account_number, current_balance, previous_balance, date_modified, modified_by
@@ -452,12 +479,13 @@ public class MainModel extends DbConnection {
                 String account_type = resultSet.getString("account_type");
                 String status = resultSet.getString("account_status");
                 String account_number = resultSet.getString("account_number");
-                Double current_balance = resultSet.getDouble("account_balance");
-                Double previous_balance = resultSet.getDouble("previous_balance");
+                String loanNo = resultSet.getString("loan_no");
+                double current_balance = resultSet.getDouble("account_balance");
+                double previous_balance = resultSet.getDouble("previous_balance");
                 Timestamp date_modified = resultSet.getTimestamp("date_modified");
                 int modified_by = resultSet.getInt("modified_by");
 
-                data.add(new CustomerAccountsDataRepository(account_id, customer_id, account_number, account_type, status, current_balance, previous_balance, date_modified, modified_by));
+                data.add(new CustomerAccountsDataRepository(account_id, customer_id, account_number, loanNo, account_type, status, current_balance, previous_balance, date_modified, modified_by));
             }
         }catch (Exception ignore){}return data;
     }
@@ -547,7 +575,6 @@ public class MainModel extends DbConnection {
             preparedStatement.setDouble(5, balanceDataModel.getPrevious_balance());
             preparedStatement.setDouble(6, balanceDataModel.getModified_by());
             flag = preparedStatement.executeUpdate();
-            commitTransaction();
         }catch (SQLException e) {
             e.printStackTrace();
             rollBack();
@@ -837,15 +864,25 @@ public class MainModel extends DbConnection {
     public ObservableList<DisbursementEntity> getUnpaidLoans() {
         ObservableList<DisbursementEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT loan_id, loan_no, approved_amount, application_status FROM loans WHERE(application_status = 'pending_payment');";
+            String query = """
+                    SELECT loan_id, loan_no, mobile_number, account_number,\s
+                    \t\tapproved_amount, account_balance, previous_balance, application_status FROM loans\s
+                            JOIN customer_account_data AS cad USING(customer_id)
+                            INNER JOIN customer_data USING(customer_id)
+                            WHERE(application_status = 'pending_payment');
+                    """;
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("loan_id");
                 String no = resultSet.getString("loan_no");
+                String accountNo = resultSet.getString("account_number");
+                String mobileNumber = resultSet.getString("mobile_number");
                 double amount = resultSet.getDouble("approved_amount");
+                double accountBalance = resultSet.getDouble("account_balance");
+                double preBalance = resultSet.getDouble("previous_balance");
                 String status = resultSet.getString("application_status");
-                data.add(new DisbursementEntity(id, no, amount, status));
+                data.add(new DisbursementEntity(id, no, accountNo, amount, accountBalance, preBalance, status, mobileNumber));
             }
         }catch (SQLException ignore){}
         return data;
@@ -853,7 +890,7 @@ public class MainModel extends DbConnection {
     public ObservableList<String> getDisbursedLoanNumbers() {
         ObservableList<String > data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT loan_no FROM loans WHERE((application_status = 'paid' OR 'pending_payment') AND loan_status = 'active');";
+            String query = "SELECT loan_no FROM loans WHERE((application_status = 'disbursed' OR 'pending_payment') AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -930,12 +967,11 @@ public class MainModel extends DbConnection {
         try {
             String query = """
                     SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,
-                    loan_id, loan_no, loan_type, requested_amount, approved_amount,
+                    loan_id, loan_no, loan_type, requested_amount, approved_amount, disbursed_amount,
                     total_payment, application_status, loan_purpose, loan_status,
                     is_drafted, ln.date_created,
                     ln.date_modified, ln.created_by, ln.updated_by, ln.approved_by FROM loans AS ln
-                    INNER JOIN customer_data AS cd\s
-                    ON ln.customer_id = cd.customer_id;
+                    INNER JOIN customer_data AS cd USING(customer_id);
                     """;
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();

@@ -2,6 +2,7 @@ package app.controllers.messages;
 
 import app.models.MainModel;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -50,7 +51,7 @@ public class MessageBuilders {
       return  stringBuilder.toString();
     }
 
-    public String createLoanDisbursementMessage(String fullName, String loanNo, double loanAmount) {
+    public String loanDisbursementMessage(String fullName, String loanNo, double loanAmount) {
         DAO.getMessageWithOperations().forEach(item -> {
             if (item.getOperation_type().equalsIgnoreCase("Loan Approval")) {
                 message = item.getMessage().replace("[NAME]", fullName).replace("[LOAN NO]", loanNo)
@@ -84,6 +85,20 @@ public class MessageBuilders {
             stringBuilder.append(message);
             }
         });
+        return stringBuilder.toString();
+    }
+
+    public String cashWithdrawalMessage(double amount, String name, double balance) {
+        DAO.getMessageWithOperations().forEach(data -> {
+            if (data.getOperation_type().equalsIgnoreCase("Cash Withdrawal")) {
+                message = data.getMessage().replace("[AMOUNT]", String.valueOf(amount))//amount withdrawn
+                        .replace("[NAME]", name)//name of collector
+                        .replace("[DATE]", dateTime)// date of withdrawal
+                                .replace("[BALANCE]", String.valueOf(balance));//account balance
+                stringBuilder.append(message);
+            }
+        });
+
         return stringBuilder.toString();
     }
 
