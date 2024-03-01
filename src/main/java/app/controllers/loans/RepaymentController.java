@@ -201,7 +201,6 @@ public class RepaymentController extends LoansModel implements Initializable {
         }
     }
     @FXML void terminateButtonClicked() {
-
         Map<String, Double> tableDataValues = new HashMap<>();
         double incrementPrincipal = 0;
         double incrementPenalty = 0;
@@ -236,7 +235,7 @@ public class RepaymentController extends LoansModel implements Initializable {
 
         try{
             AppStages.terminateLoanStage();
-        }catch (Exception ignore){}
+        }catch (Exception ignore){ ignore.printStackTrace();}
     }
 
 

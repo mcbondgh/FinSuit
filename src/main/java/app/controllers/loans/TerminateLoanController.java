@@ -20,7 +20,7 @@ public class TerminateLoanController extends TransactionModel implements Initial
      ******************************************************************************************************************/
     @FXML
     private Label principalLabel, interestLabel, penaltyLabel, nameLabel, loanNumberLabel;
-    @FXML private Label balanceLabel, accumulatedBalaceLabel;
+    @FXML private Label balanceLabel, totalPayableAmountLabel;
     @FXML private TextField interestWeaverField, penaltyWeaverField, balanceWeaverField;
     @FXML private MFXButton terminateButton;
     private static String applicantName, mobileNumber, loanNumber;
@@ -50,9 +50,10 @@ public class TerminateLoanController extends TransactionModel implements Initial
         interestLabel.setText(getAccumulatedTableValues().get("interest").toString());
         penaltyLabel.setText(getAccumulatedTableValues().get("penalty").toString());
         balanceLabel.setText(getAccumulatedTableValues().get("balance").toString());
-        accumulatedBalaceLabel.setText(principalLabel.getText());
+        double payable =  Double.parseDouble(principalLabel.getText()) + Double.parseDouble(balanceLabel.getText());
+        totalPayableAmountLabel.setText(String.valueOf(payable));
 
-        balanceWeaverField.setText(String.valueOf(0.00));
+//        balanceWeaverField.setText(String.valueOf(0.00));
         interestWeaverField.setText(String.valueOf(0.00));
         penaltyWeaverField.setText(String.valueOf(0.00));
 
@@ -64,13 +65,8 @@ public class TerminateLoanController extends TransactionModel implements Initial
         if (!event.getCharacter().matches("[0-9.]")) {
             interestWeaverField.deletePreviousChar();
             penaltyWeaverField.deletePreviousChar();
-            balanceWeaverField.deletePreviousChar();
         } else {
-            double interest = Double.parseDouble(interestWeaverField.getText());
-            double penalty = Double.parseDouble(penaltyWeaverField.getText());
-            double payable = Double.parseDouble(accumulatedBalaceLabel.getText());
 
-            accumulatedBalaceLabel.setText(String.valueOf(payable));
         }
 
     }

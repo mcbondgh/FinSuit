@@ -25,9 +25,17 @@ public class AppStages {
         stage.setScene(scene);
         stage.show();
         stage.getScene().getWindow().setOnCloseRequest(windowEvent -> {
-            windowEvent.consume();
-            UserAlerts alerts = new UserAlerts("SIGN OUT", "PLEASE CLOSE THE APPLICATION BY USING THE SIGN OUT BUTTON");
-            alerts.informationAlert();
+            try {
+                UserAlerts alerts = new UserAlerts("SIGN OUT", "Do you wish to sign out from Fin-Suit?");
+                if (alerts.confirmationAlert()) {
+                    AppStages.LoginStage();
+                } else windowEvent.consume();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+//            windowEvent.consume();
+//            UserAlerts alerts = new UserAlerts("SIGN OUT", "PLEASE CLOSE THE APPLICATION BY USING THE SIGN OUT BUTTON");
+//            alerts.informationAlert();
         });
     }
     public static void LoginStage() throws IOException {

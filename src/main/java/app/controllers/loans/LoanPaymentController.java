@@ -14,8 +14,6 @@ import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
-import com.itextpdf.layout.element.Div;
-import com.itextpdf.layout.element.Paragraph;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -33,7 +31,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class LoanPaymentController extends LoansModel implements Initializable {
 
@@ -84,10 +81,10 @@ public class LoanPaymentController extends LoansModel implements Initializable {
     @FXML private Label loanNumberField;
     @FXML private Label dateField, payableField;
     @FXML private ComboBox<String>methodSelector;
-    @FXML private CheckBox payableCheckBox;
-    @FXML private TextField paymentAmountField;
+    @FXML private CheckBox payableCheckBox, clearPenaltyBtn;
+    @FXML private TextField paymentAmountField, penaltyField;
     @FXML private MFXButton collectButton;
-    @FXML private Label penaltyLabel, successIndicator;
+    @FXML private Label successIndicator;
 
 
     /******************************************************************************************************************
@@ -98,7 +95,7 @@ public class LoanPaymentController extends LoansModel implements Initializable {
         loanNumberField.setText(getLoanNumber());
         dateField.setText(String.valueOf(getDueDate()));
         payableField.setText(String.valueOf(getPayableAmount()));
-        penaltyLabel.setText(String.valueOf(getPenaltyAmount()));
+        penaltyField.setText(String.valueOf(getPenaltyAmount()));
         payableCheckBoxChecked();
         methodSelector.getItems().add("CASH");
         methodSelector.getItems().add("eCASH");
@@ -153,10 +150,14 @@ public class LoanPaymentController extends LoansModel implements Initializable {
         });
     }//....end of method
 
+    @FXML private void writeOffButtonChecked() {
+        penaltyField.setDisable(!clearPenaltyBtn.isSelected());
+    }
+
     @FXML void collectButtonClicked() {
         collectButton.setDisable(true);
         double amount = Double.parseDouble(paymentAmountField.getText());
-        double penalty = Double.parseDouble(penaltyLabel.getText());
+        double penalty = Double.parseDouble(penaltyField.getText());
         Date date = Date.valueOf(dateField.getText());
         String payMethod = methodSelector.getValue();
         String loanNumber = loanNumberField.getText();
