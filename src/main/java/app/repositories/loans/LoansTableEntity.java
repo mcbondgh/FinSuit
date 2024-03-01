@@ -89,17 +89,21 @@ public class LoansTableEntity {
             statusLabel.setText("Processing");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #ffba27; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
-        if (status.equals("pending_disbursement")) {
-            statusLabel.setText("Pending Disbursement");
+        if (status.equals("pending_approval")) {
+            statusLabel.setText("Pending Approval");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#5e2eb0; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
-        if (status.equals("paid")) {
-            statusLabel.setText("Paid");
+        if (status.equals("pending_payment")) {
+            statusLabel.setText("Pending Payment");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#059d83; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("disbursed")) {
             statusLabel.setText("Disbursed");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#1b828d; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
+        }
+        if (status.equals("closed")) {
+            statusLabel.setText("closed");
+            statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:brown; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("rejected")) {
             statusLabel.setText("Cancelled");

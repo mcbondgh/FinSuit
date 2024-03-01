@@ -22,6 +22,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -72,6 +73,7 @@ public class DepositController extends TransactionModel implements Initializable
     @FXML private ComboBox<PaymentMethods> paymentSelector, gatewaySelector;
     @FXML private TextField cashField, eCashField, transactionIdField, depositorNameField, depositorIdField;
     @FXML private MFXButton saveButton;
+    @FXML private CheckBox accountOwnerCheckBox;
     private String MOBILE_NUMBER, EMAIL_ADDRESS;
 
 
@@ -150,6 +152,22 @@ public class DepositController extends TransactionModel implements Initializable
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION
      ********************************************************************************************************************/
+    @FXML void accountOwnerButtonChecked() {
+        try {
+            if (accountOwnerCheckBox.isSelected()) {
+                String var1 = accountNumberField.getValue();
+                ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
+                depositorIdField.setText(items.get(9).toString());
+                depositorNameField.setText(items.get(0).toString());
+            } else {
+                depositorIdField.clear();
+                depositorNameField.clear();
+            }
+        }catch (IndexOutOfBoundsException ex) {
+            new UserAlerts("EMPTY SELECTION", "Please select an account to get data").errorAlert();
+        }
+    }
+
     @FXML void setOnAccountNumberSelected() {
         String var1 = accountNumberField.getValue();
         ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);

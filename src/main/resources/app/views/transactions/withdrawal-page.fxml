@@ -3,6 +3,8 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -14,7 +16,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="441.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.WithdrawalController">
    <children>
-      <Pane layoutX="-4.0" prefHeight="41.0" prefWidth="449.0" style="-fx-background-color: #1d7979fc;" AnchorPane.bottomAnchor="533.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="-4.0" AnchorPane.topAnchor="0.0">
+      <Pane layoutX="-4.0" prefHeight="41.0" prefWidth="448.0" style="-fx-background-color: #1d7979fc;" AnchorPane.bottomAnchor="533.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="123.0" layoutY="8.0" text="💰 CASH WITHDRAWAL" textAlignment="CENTER" textFill="WHITE">
                <font>
@@ -48,13 +50,13 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="paymentSelector" layoutX="22.0" layoutY="155.0" onAction="#setSelectedPaymentMethod" prefHeight="41.0" prefWidth="339.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-weight: bold;" />
-            <Label layoutX="24.0" layoutY="139.0" text="Payment Method *" textFill="#605e5e">
+            <ComboBox fx:id="paymentSelector" layoutX="22.0" layoutY="155.0" onAction="#setSelectedPaymentMethod" prefHeight="41.0" prefWidth="181.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-weight: bold;" />
+            <Label layoutX="25.0" layoutY="139.0" text="Payment Method *" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
             </Label>
-            <Pane layoutX="22.0" layoutY="204.0" prefHeight="216.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+            <Pane layoutX="22.0" layoutY="204.0" prefHeight="236.0" prefWidth="339.0" style="-fx-background-color: white; -fx-border-color: #dddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                <children>
                   <TextField fx:id="cashField" alignment="CENTER" layoutX="13.0" layoutY="27.0" onKeyTyped="#validateInputFields" prefHeight="41.0" prefWidth="107.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
                      <font>
@@ -89,29 +91,37 @@
                         <Insets left="10.0" />
                      </padding>
                   </Label>
-                  <TextField fx:id="collectorsNameField" alignment="CENTER" layoutX="13.0" layoutY="97.0" prefHeight="41.0" prefWidth="312.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                  <CheckBox fx:id="accountOwnerCheckBox" layoutX="118.0" layoutY="86.0" mnemonicParsing="false" onAction="#accountOwnerButtonChecked" prefHeight="18.0" prefWidth="49.0" text="Self" textFill="#6b6a6a">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </CheckBox>
+                  <TextField fx:id="collectorsNameField" alignment="CENTER" layoutX="13.0" layoutY="107.0" prefHeight="41.0" prefWidth="312.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
                      <font>
                         <Font name="Poppins SemiBold" size="12.0" />
                      </font>
                   </TextField>
-                  <Label layoutX="16.0" layoutY="78.0" text="Collector's  Name *" textFill="#605e5e">
+                  <Label layoutX="16.0" layoutY="88.0" text="Collector's  Name *" textFill="#605e5e">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="idNumberField" alignment="CENTER" layoutX="16.0" layoutY="165.0" prefHeight="41.0" prefWidth="312.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                  <TextField fx:id="idNumberField" alignment="CENTER" layoutX="16.0" layoutY="177.0" prefHeight="41.0" prefWidth="312.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
                      <font>
                         <Font name="Poppins SemiBold" size="12.0" />
                      </font>
                   </TextField>
-                  <Label layoutX="19.0" layoutY="146.0" text="Collector's  Id Number *" textFill="#605e5e">
+                  <Label layoutX="19.0" layoutY="158.0" text="Collector's  Id Number *" textFill="#605e5e">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <MFXButton fx:id="saveButton" disable="true" layoutX="63.0" layoutY="441.0" onAction="#saveButtonClicked" prefHeight="41.0" prefWidth="256.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Withdraw Cash" textFill="WHITE">
+            <MFXButton fx:id="saveButton" disable="true" layoutX="63.0" layoutY="448.0" onAction="#saveButtonClicked" prefHeight="41.0" prefWidth="256.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Withdraw Cash" textFill="WHITE">
                <font>
                   <Font name="Poppins Bold" size="13.0" />
                </font>
@@ -125,6 +135,12 @@
                </padding>
             </Label>
             <Label layoutX="274.0" layoutY="11.0" text="Account Status" textFill="#605e5e">
+               <font>
+                  <Font name="Poppins Bold" size="10.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="gatewaySelector" disable="true" layoutX="213.0" layoutY="154.0" prefHeight="41.0" prefWidth="145.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-weight: bold;" />
+            <Label layoutX="216.0" layoutY="138.0" text="Pay.  Gateway *" textFill="#605e5e">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>

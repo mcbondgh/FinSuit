@@ -114,6 +114,13 @@ INNER JOIN loan_payment_logs AS plogs
 ON plogs.installment_month = ls.payment_date
 WHERE ls.loan_no = '2000000000006';
 
+SELECT * FROM loans
+CROSS JOIN customer_data AS cd
+USING(customer_id)
+CROSS JOIN loan_applicant_details
+USING(loan_no)
+WHERE loan_no = '2000000000004';
+
 
 UPDATE customer_account_data SET account_status = ? WHERE account_number = ?;
 

@@ -46,7 +46,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
     CustomersDataRepository customersDataRepository = new CustomersDataRepository();
 
     CustomersDocumentRepository documentRepository  = new CustomersDocumentRepository();
-    CustomerAccountsDataRepository balanceDataModel = new CustomerAccountsDataRepository();
+    CustomerAccountsDataRepository customerAccountRepository = new CustomerAccountsDataRepository();
     MessageBuilders GENERATE_MESSAGE_OBJECT = new MessageBuilders();
     SmsAPI SMS_OBJECT = new SmsAPI();
     ErrorLogger errorLogger = new ErrorLogger();
@@ -485,14 +485,14 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
 
                 int flag = createNewAccount(customersDataRepository);
 
-                balanceDataModel.setCustomer_id(totalCustomersCount());
-                balanceDataModel.setAccount_type(accountType);
-                balanceDataModel.setAccount_number(accountNumber);
-                balanceDataModel.setAccount_balance(depositAmount);
-                balanceDataModel.setPrevious_balance(depositAmount);
-                balanceDataModel.setModified_by(currentUserId);
+                customerAccountRepository.setCustomer_id(totalCustomersCount());
+                customerAccountRepository.setAccount_type(accountType);
+                customerAccountRepository.setAccount_number(accountNumber);
+                customerAccountRepository.setAccount_balance(depositAmount);
+                customerAccountRepository.setPrevious_balance(depositAmount);
+                customerAccountRepository.setModified_by(currentUserId);
 
-                flag += createAccountBalance(balanceDataModel);
+                flag += createAccount(customerAccountRepository);
 
 
                 //Check if the file attachment button is checked. this button enables you to upload a file to the system

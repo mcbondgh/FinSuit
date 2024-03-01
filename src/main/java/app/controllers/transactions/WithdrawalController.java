@@ -22,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -57,20 +58,21 @@ public class WithdrawalController extends TransactionModel implements Initializa
      ********************************************************************************************************************/
     @FXML private MFXFilterComboBox<String> accountNumberField;
     @FXML private Label chargeValue, accountHolderName, accountStatusLabel;
-    @FXML private ComboBox<PaymentMethods> paymentSelector;
+    @FXML private ComboBox<PaymentMethods> paymentSelector, gatewaySelector;
     @FXML private TextField collectorsNameField, cashField, transactionIdField, idNumberField;
     @FXML private MFXButton saveButton, searchButton;
+    @FXML private CheckBox accountOwnerCheckBox;
 
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
      ********************************************************************************************************************/
-
     boolean isAmountEmpty() {return cashField.getText().isEmpty();}
     boolean isPaymentMethodEmpty() {return paymentSelector.getValue() == null;}
     boolean accountNumberEmpty() {return accountNumberField.getValue().isEmpty();}
     boolean collectorNameEmpty() {return collectorsNameField.getText().isEmpty();}
     boolean idNumberEmpty() {return idNumberField.getText().isBlank();}
+    boolean isGatewayEmpty() {return gatewaySelector.getValue() == null;}
 
     @FXML void validateInputFields(KeyEvent event) {
         if (!event.getCharacter().matches("[0-9.]")) {
@@ -83,7 +85,9 @@ public class WithdrawalController extends TransactionModel implements Initializa
             saveButton.setDisable(
                     accountNumberEmpty() || isAmountEmpty() || isPaymentMethodEmpty() ||
                             collectorNameEmpty() || accountStatusLabel.getText().equalsIgnoreCase("closed")
-                    || idNumberEmpty()
+                    || idNumberEmpty() ||
+                            (paymentSelector.getValue().equals(PaymentMethods.eCASH) ||
+                            paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS) && isGatewayEmpty())
             );
             cashField.setDisable(accountStatusLabel.getText().equalsIgnoreCase("closed"));
         }catch (NullPointerException ignore){}
@@ -100,6 +104,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
     private void populateFields() {
         setCurrentUserPlaceholder(AppController.activeUserPlaceHolder);
         SpecialMethods.setPaymentMethods(paymentSelector);
+        SpecialMethods.setPaymentGateways(gatewaySelector);
         ObservableList<String> listItems = FXCollections.observableArrayList();
         for (CustomerAccountsDataRepository data : fetchCustomersAccountData()) {
             listItems.add(data.getAccount_number());
@@ -112,6 +117,23 @@ public class WithdrawalController extends TransactionModel implements Initializa
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION
      ********************************************************************************************************************/
+
+    @FXML void accountOwnerButtonChecked() {
+        try {
+            if (accountOwnerCheckBox.isSelected()) {
+                String var1 = accountNumberField.getValue();
+                ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
+                idNumberField.setText(items.get(9).toString());
+                collectorsNameField.setText(items.get(0).toString());
+            } else {
+                idNumberField.clear();
+                collectorsNameField.clear();
+            }
+        }catch (IndexOutOfBoundsException ex) {
+            new UserAlerts("EMPTY SELECTION", "Please select an account to get data").errorAlert();
+        }
+    }
+
     @FXML void customerAccountSelected() {
         String var1 = accountNumberField.getValue();
         ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
@@ -129,8 +151,11 @@ public class WithdrawalController extends TransactionModel implements Initializa
     @FXML void setSelectedPaymentMethod() {
         if (paymentSelector.getValue().equals(PaymentMethods.eCASH) || paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS)) {
             transactionIdField.setDisable(false);
+            gatewaySelector.setDisable(false);
         }else {
             transactionIdField.setDisable(true);
+            gatewaySelector.setDisable(true);
+            gatewaySelector.setValue(null);
             transactionIdField.setText("null");
         }
     }
@@ -149,6 +174,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
 
                 String transId = SpecialMethods.getTransactionId(getTotalTransactionCount() +1);
                 String payMethod = paymentSelector.getValue().toString();
+                String payGateway = gatewaySelector.getValue() == null ? "null" : gatewaySelector.getValue().toString();
                 AtomicReference<String> accountNumber = new AtomicReference<>();
                 fetchCustomersAccountData().forEach(item -> {
                     if (accountNumberField.getValue().equals(item.getLoanNo())) {
@@ -185,6 +211,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
                         transactions.setNationalIdNumber(idNumberField.getText());
                         transactions.setEcash_id(transactionIdField.getText());
                         transactions.setPayment_method(payMethod);
+                        transactions.setPayment_gateway(payGateway.isEmpty() ? "null": payGateway);
                         transactions.setTransaction_id(transId);
                         transactions.setTransaction_made_by(collectorsNameField.getText());
                         transactions.setUserId(userId);

@@ -5,9 +5,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
+
 public class DisbursementEntity {
 
-    private int id;
+    private int id, processing_rate;
     private String loanNumber;
     private double loanAmount;
     private String accountNumber;
@@ -18,22 +23,26 @@ public class DisbursementEntity {
     private ComboBox<String> method = new ComboBox<>();
     private TextField transIdField = new TextField();
     private String mobileNumber;
+    private double processingFee, loanAmountValue;
 
     public DisbursementEntity() {
     }
 
-    public DisbursementEntity(int id, String loanNumber, String accountNumber, double loanAmount, double accountBalance, double previousBalance, String appStatus,
-                              String mobileNumber) {
+    public DisbursementEntity(int id, String loanNumber, String accountNumber, double loanAmount,
+                              int processing_rate, double accountBalance,
+                              double previousBalance, String appStatus, String mobileNumber) {
         this.id = id;
         this.loanNumber = loanNumber;
         this.accountNumber = accountNumber;
         this.loanAmount = loanAmount;
         applicationStatus = appStatus;
+        this.processing_rate = processing_rate;
         this.accountBalance = accountBalance;
         this.previousBalance = previousBalance;
         this.mobileNumber = mobileNumber;
 //        comboBox();
         styleStatus();
+        computeRate();
 //        transactionTypeChangeListener();
     }
 
@@ -51,6 +60,11 @@ public class DisbursementEntity {
             status.setStyle("-fx-text-fill:#fff; -fx-background-color:#ff3939;-fx-alignment:center; " +
                     "-fx-padding:4px; -fx-background-radius: 5px; -fx-pref-width:70px; -fx-font-size:12px; -fx-font-family:roboto");
         }
+    }
+
+    private void computeRate() {
+        processingFee = (loanAmount / 100) * processing_rate;
+        loanAmountValue = loanAmount - processingFee;
     }
 
     private void transactionTypeChangeListener() {
@@ -153,4 +167,20 @@ public class DisbursementEntity {
     public void setPayBtn(CheckBox payBtn) {
         this.payBtn = payBtn;
     }
+    public double getProcessingFee() {
+        return processingFee;
+    }
+
+    public void setProcessingFee(double processingFee) {
+        this.processingFee = processingFee;
+    }
+
+    public double getLoanAmountValue() {
+        return loanAmountValue;
+    }
+
+    public void setLoanAmountValue(double loanAmountValue) {
+        this.loanAmountValue = loanAmountValue;
+    }
+
 }//end of class...

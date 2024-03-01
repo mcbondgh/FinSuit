@@ -11,6 +11,7 @@ import app.errorLogger.ErrorLogger;
 import app.models.finance.FinanceModel;
 import app.models.loans.LoansModel;
 import app.models.message.MessagesModel;
+import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.LoansEntity;
 import app.repositories.loans.PendingLoanApprovalEntity;
@@ -284,6 +285,15 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                 "please confirm to approve disbursement process else CANCEL to abort.");
         if (ALERT_OBJ.confirmationAlert()) {
             new Thread(() -> {
+                CustomerAccountsDataRepository accountRepository = new CustomerAccountsDataRepository();
+                //CREATE ACCOUNT FOR LOAN CLIENT
+                long customerCount = totalCustomersCount();
+                accountRepository.setCustomer_id(customerCount);
+                accountRepository.setAccount_number(SpecialMethods.generateAccountNumber(customerCount + 1));
+                accountRepository.setAccount_type("Loan Servicing");
+                accountRepository.setModified_by(loggedInUserId);
+                createAccount(accountRepository);
+
                 //SET LOAN ENTITY VALUES
                 LOANS_OBJ.setLoan_no(selectedLoanNo);
                 LOANS_OBJ.setApproved_amount(loanAmount);

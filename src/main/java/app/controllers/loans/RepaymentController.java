@@ -28,10 +28,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.function.UnaryOperator;
 
 public class RepaymentController extends LoansModel implements Initializable {
 
@@ -63,7 +63,7 @@ public class RepaymentController extends LoansModel implements Initializable {
     @FXML private TableColumn<LoanScheduleEntity, Double> penaltyColumn, amountColumn;
     @FXML private TableColumn<LoanScheduleEntity, Label> statusColumn;
     @FXML private TableColumn<LoanScheduleEntity, MFXButton>actionColumn;
-    @FXML private TableColumn<LoanScheduleEntity, MFXButton> logsColumn;
+    @FXML private TableColumn<LoanScheduleEntity, Double> balanceColumn;
 
     /*******************************************************************************************************************
      TRUE OR FALSE STATEMENTS
@@ -99,7 +99,7 @@ public class RepaymentController extends LoansModel implements Initializable {
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("monthly_payment"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("statusLabel"));
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("payBtn"));
-        logsColumn.setCellValueFactory(new PropertyValueFactory<>("logsBtn"));
+        balanceColumn.setCellValueFactory(new PropertyValueFactory<>("balance"));
         String selection = listView.getSelectionModel().getSelectedItem();
         scheduleTable.setItems(getRepaymentSchedule(selection));
     }
@@ -189,7 +189,6 @@ public class RepaymentController extends LoansModel implements Initializable {
         }
     }//-------END OF METHOD.
 
-
     @FXML void exportButtonClicked() {
         LocalDate datetime = LocalDate.now();
         String docName = applicantName.getText() + "_repayment_"+ datetime;
@@ -200,6 +199,44 @@ public class RepaymentController extends LoansModel implements Initializable {
             case 404 -> NOTIFY.informationNotification("FAILED EXPORT", "Failed to export schedule data, retry");
             default -> NOTIFY.successNotification("ERROR", "An error occurred while trying to export data, please contact system admin.");
         }
+    }
+    @FXML void terminateButtonClicked() {
+
+        Map<String, Double> tableDataValues = new HashMap<>();
+        double incrementPrincipal = 0;
+        double incrementPenalty = 0;
+        double incrementInterest = 0;
+        double incrementBalance = 0;
+        for(LoanScheduleEntity item : scheduleTable.getItems()) {
+            boolean matchesUnpaid = item.getStatusLabel().getText().matches("Unpaid");
+            boolean matchesPartPayment = item.getStatusLabel().getText().matches("Part Payment");
+            if (matchesUnpaid) {
+                incrementPrincipal += item.getPrincipal_amount() - item.getMonthly_payment();
+                incrementInterest += item.getInterest_amount();
+            }
+            if (matchesPartPayment) {
+                incrementBalance += item.getBalance() - item.getPenalty_amount();
+            }
+            if(matchesPartPayment || matchesUnpaid) {
+                incrementPenalty += item.getPenalty_amount();
+            }
+        }
+
+        //Parse Data to the TerminateLoanView
+        TerminateLoanController.setAccumulatedTableValue(tableDataValues);
+        TerminateLoanController.setApplicantName(applicantName.getText());
+        String loanNumber = listView.getSelectionModel().getSelectedItem();
+        TerminateLoanController.setLoanNumber(loanNumber);
+        TerminateLoanController.setMobileNumber(applicantNumber.getText());
+
+        tableDataValues.put("principal", incrementPrincipal);
+        tableDataValues.put("interest", incrementInterest);
+        tableDataValues.put("penalty", incrementPenalty);
+        tableDataValues.put("balance", incrementBalance);
+
+        try{
+            AppStages.terminateLoanStage();
+        }catch (Exception ignore){}
     }
 
 

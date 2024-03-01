@@ -20,10 +20,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class CheckAccountBalance extends TransactionModel implements Initializable {
@@ -35,7 +35,7 @@ public class CheckAccountBalance extends TransactionModel implements Initializab
     private MFXFilterComboBox<String> accountNumberField;
     @FXML private MFXButton getBalanceButton;
     @FXML private Label customerNameField, currentBalanceField, previousBalanceField;
-    @FXML private Label lastWithdrawalAmountField, lastWithdrawalDateLabel;
+    @FXML private Label transactionTypeLabel, lastWithdrawalDateLabel;
     @FXML private Label usernameLabel, errorIndicator;
     @FXML private TextField pinNumberField;
     @FXML Hyperlink sendSmsButton;
@@ -72,7 +72,7 @@ public class CheckAccountBalance extends TransactionModel implements Initializab
 
       public void getBalanceButtonClicked(ActionEvent actionEvent) {
         ArrayList<Object> customerData = getCustomerDetailsByAccountNumber(accountNumberField.getValue());
-        String lastWithdrawalDate = getLastWithdrawalDate(accountNumberField.getValue()).toString();
+        Map<String, Object> transactionData = getLastTrancactionDate(accountNumberField.getValue());
         String databasePin = customerData.get(7).toString();
         String userInputPin = pinNumberField.getText();
 
@@ -97,7 +97,9 @@ public class CheckAccountBalance extends TransactionModel implements Initializab
             customerNameField.setText(customerName);
             currentBalanceField.setText("Ghc ".concat(current_balance));
             previousBalanceField.setText("Ghc ".concat(previous_balance));
-            lastWithdrawalDateLabel.setText(lastWithdrawalDate);
+
+            lastWithdrawalDateLabel.setText(transactionData.get("dateTime").toString());
+            transactionTypeLabel.setText(transactionData.get("transType").toString());
 
             NotificationEntity NOTIFY = new NotificationEntity();
 
@@ -109,7 +111,6 @@ public class CheckAccountBalance extends TransactionModel implements Initializab
             logNotification(NOTIFY);
         }
     }
-
     @FXML void sendAccountBalanceViaSms() {
         ArrayList<Object> customerData = getCustomerDetailsByAccountNumber(accountNumberField.getValue());
         UserAlerts ALERT = new UserAlerts("SEND SMS", "Do you wish to send customer's account balance details via sms?", "please confirm to send via SMS else CANCEL to abort");
@@ -136,8 +137,6 @@ public class CheckAccountBalance extends TransactionModel implements Initializab
                 new MessagesModel().logNotificationMessages(MSG_OBJ);
             }catch (Exception ignore){}
         }
-
-
     }
 
 

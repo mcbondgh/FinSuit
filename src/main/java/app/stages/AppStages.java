@@ -102,12 +102,25 @@ public class AppStages {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/withdrawal-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
-        stage.setTitle("Make Deposit");
+        stage.setTitle("MAKE DEPOSIT");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UTILITY);
         stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
+    }
+
+    public static void terminateLoanStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-termination-page.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("LOAN TERMINATION");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+//        stage.initStyle(StageStyle.UNIFIED);
+//        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
     }
     public static Stage loanPaymentStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-payment-page.fxml"));

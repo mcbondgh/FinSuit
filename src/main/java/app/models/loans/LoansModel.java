@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -209,18 +210,18 @@ public class LoansModel extends MainModel {
             }
             resultSet.close();
             getConnection().close();
-        }catch (SQLException ignore) {ignore.printStackTrace();}
+        }catch (SQLException ignore) {}
         return data;
     }
-    protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage (int user_id) {
+    protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage(int user_id) {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname) AS fullname, loan_no, loan_type, DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, loan_purpose, application_status FROM loans AS ln\n" +
                     "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
-                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'application' AND (user_id = ? OR user_id = 1));";
+                    "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status != 'disbursed');";
             preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, user_id);
+//            preparedStatement.setInt(1, user_id);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 int no = resultSet.getInt("loan_id");
@@ -236,7 +237,7 @@ public class LoansModel extends MainModel {
             }
             resultSet.close();
             getConnection().close();
-        }catch (SQLException ignore) {}
+        }catch (SQLException ignore) {ignore.printStackTrace();}
         return data;
     }
     protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage() {
@@ -618,6 +619,29 @@ public class LoansModel extends MainModel {
         return status;
     }
 
+    protected Map<String, Object> getLoanApplicantDataByLoanNumber(String loanNo) {
+        Map<String, Object> applicantData = new HashMap<>();
+        try {
+            String query = "SELECT * FROM loans\n" +
+                    "CROSS JOIN customer_data AS cd\n" +
+                    "USING(customer_id)\n" +
+                    "CROSS JOIN loan_applicant_details\n" +
+                    "USING(loan_no)\n" +
+                    "WHERE loan_no = ?;\n";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, loanNo);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                // firstname, lastname, othername, gender, dob, age, place_of_birth, mobile_number, other_number, email, digital_address, residential_address, key_landmark, marital_status, name_of_spouse, id_type, id_number, educational_background, additional_comment, contact_person_fullname, contact_person_dob, contact_person_number, contact_person_gender, contact_person_landmark, contact_person_education_level, contact_person_digital_address, contact_person_id_type, contact_person_id_number, contact_person_place_of_work, institution_address, institution_number, relationship_to_applicant, date_created, created_by, date_modified, modified_by, id, profile_picture, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, basic_salary, gross_salary, total_deduction, net_salary, guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address, guarantor_residential_address, guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation, guarantor_place_of_work, guarantor_institution_address, guarantor_income
+                applicantData.put("loanType", resultSet.getString("loan_type"));
+                applicantData.put("amount", resultSet.getDouble("requested_amount"));
+                applicantData.put("loanPurpose", resultSet.getString("loan_purpose"));
+                applicantData.put("firstname", resultSet.getString("firstname"));
+            }
+        }catch (SQLException ignore) {}
+
+        return applicantData;
+    }
 
 
 }//end of class...

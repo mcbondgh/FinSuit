@@ -92,21 +92,22 @@ public class TransactionModel extends MainModel {
         try{
             String query = "INSERT INTO transaction_logs(\n" +
                     "\t\taccount_number, transaction_id, transaction_type,\n" +
-                    "        payment_method, cash_amount, ecash_amount, transaction_tax,\n" +
+                    "        payment_method, payment_gateway, cash_amount, ecash_amount, transaction_tax,\n" +
                     "        ecash_id, transaction_made_by, national_id_number, user_id)\n" +
-                    "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, var.getAccount_number());
             preparedStatement.setString(2, var.getTransaction_id());
             preparedStatement.setString(3, var.getTransaction_type());
             preparedStatement.setString(4, var.getPayment_method());
-            preparedStatement.setDouble(5, var.getCash_amount());
-            preparedStatement.setDouble(6, var.getEcash_amount());
-            preparedStatement.setDouble(7, var.getTransactionTax());
-            preparedStatement.setString(8, var.getEcash_id());
-            preparedStatement.setString(9, var.getTransaction_made_by());
-            preparedStatement.setString(10, var.getNationalIdNumber());
-            preparedStatement.setInt(11, var.getUserId());
+            preparedStatement.setString(5, var.getPayment_gateway());
+            preparedStatement.setDouble(6, var.getCash_amount());
+            preparedStatement.setDouble(7, var.getEcash_amount());
+            preparedStatement.setDouble(8, var.getTransactionTax());
+            preparedStatement.setString(9, var.getEcash_id());
+            preparedStatement.setString(10, var.getTransaction_made_by());
+            preparedStatement.setString(11, var.getNationalIdNumber());
+            preparedStatement.setInt(12, var.getUserId());
             status.setRelease(preparedStatement.executeUpdate());
         }catch (SQLException e){e.printStackTrace();}
 

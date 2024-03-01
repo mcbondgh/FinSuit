@@ -117,7 +117,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="terminateLoanBtn" disable="true" prefHeight="20.0" prefWidth="87.0" style="-fx-background-color: dodgerblue;" text="Terminate Loan" textFill="WHITE">
+                  <MFXButton fx:id="terminateLoanBtn" disable="true" onAction="#terminateButtonClicked" prefHeight="20.0" prefWidth="87.0" style="-fx-background-color: dodgerblue;" text="Terminate Loan" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="9.0" />
                      </font>
@@ -141,15 +141,16 @@
       <TableView fx:id="scheduleTable" fixedCellSize="0.0" layoutX="223.33333333333334" layoutY="112.0" onMouseEntered="#getClickedLoanValueFromTable" prefHeight="423.0" prefWidth="955.0" style="-fx-font-family: roboto; -fx-font-size: 12px; -fx-border-color: #eee; -fx-background-color: #fff; -fx-font-weight: bold;" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="223.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="112.0">
          <columns>
             <TableColumn fx:id="indexColumn" prefWidth="53.33339059352875" text="INDEX" />
-            <TableColumn fx:id="installmentColumn" prefWidth="125.33334732055664" text="INSTALLMENT" />
-            <TableColumn fx:id="principalColumn" prefWidth="99.33335876464844" text="PRINCIPAL" />
-            <TableColumn fx:id="interestColumn" prefWidth="154.00006103515625" text="INTEREST AMOUNT" />
-            <TableColumn fx:id="dateColumn" prefWidth="140.66671752929688" text="DUE DATE" />
-            <TableColumn fx:id="penaltyColumn" prefWidth="92.0" text="PENALTY" />
-            <TableColumn fx:id="amountColumn" prefWidth="105.99993896484375" text="AMOUNT PAID" />
-            <TableColumn fx:id="statusColumn" prefWidth="92.0" style="-fx-alignment: center;" text=" STATUS " />
-            <TableColumn fx:id="actionColumn" prefWidth="94.6666259765625" style="-fx-alignment: center;" text="ACTION" />
-            <TableColumn fx:id="logsColumn" minWidth="0.0" prefWidth="0.0" style="-fx-alignment: center;" text="LOGS" />
+            <TableColumn fx:id="installmentColumn" prefWidth="85.0" text="MON. INST" />
+            <TableColumn fx:id="principalColumn" prefWidth="85.0" text="PRINCIPAL" />
+            <TableColumn fx:id="interestColumn" prefWidth="85.0" text="INTEREST" />
+            <TableColumn fx:id="dateColumn" prefWidth="120.0" text="DUE DATE" />
+            <TableColumn fx:id="penaltyColumn" prefWidth="85.99993896484375" text="PENALTY" />
+            <TableColumn fx:id="amountColumn" prefWidth="85.0" text="AMOUNT PAID" />
+            <TableColumn fx:id="balanceColumn" prefWidth="114.66668701171875" style="-fx-alignment: center;" text="BAL" />
+            <TableColumn fx:id="statusColumn" prefWidth="134.6666259765625" style="-fx-alignment: center;" text=" STATUS " />
+            <TableColumn fx:id="actionColumn" maxWidth="150.6666259765625" prefWidth="100.666748046875" style="-fx-alignment: center;" text="ACTION" />
+            <TableColumn fx:id="logsColumn" minWidth="0.0" prefWidth="3.3333740234375" style="-fx-alignment: center;" text="LOGS" />
          </columns>
       </TableView>
       <ListView fx:id="listView" fixedCellSize="30.0" layoutX="9.0" layoutY="193.0" onMouseClicked="#getSelectedLoanNumber" prefHeight="339.0" prefWidth="201.0" style="-fx-background-radius: 5px; -fx-font-size: 14px; -fx-font-family: roboto; -fx-font-weight: bold;" />

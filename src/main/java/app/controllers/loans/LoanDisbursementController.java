@@ -49,6 +49,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
     @FXML private TableColumn<DisbursementEntity, Double> amountColumn;
     @FXML private TableColumn<DisbursementEntity, Label> statusColumn;
     @FXML private TableColumn<DisbursementEntity, CheckBox> actionColumn;
+    @FXML private TableColumn<DisbursementEntity, Double> processingFeeColumn;
 //    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> methodColumn;
 //    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> transactIdColumn;
     @FXML private MFXButton saveButton, clearButton;
@@ -72,10 +73,10 @@ public class LoanDisbursementController extends LoansModel implements Initializa
         paymentTable.getItems().clear();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         loanNumberColumn.setCellValueFactory(new PropertyValueFactory<>("loanNumber"));
-        amountColumn.setCellValueFactory(new PropertyValueFactory<>("loanAmount"));
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("loanAmountValue"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("payBtn"));
-//        methodColumn.setCellValueFactory(new PropertyValueFactory<>("method"));
+        processingFeeColumn.setCellValueFactory(new PropertyValueFactory<>("processingFee"));
 //        transactIdColumn.setCellValueFactory(new PropertyValueFactory<>("transIdField"));
         paymentTable.setItems(getUnpaidLoans());
     }
@@ -91,7 +92,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                 if (paymentTable.getItems().get(x).getPayBtn().isSelected()) {
                     checked ++;
                 }
-                }catch (NullPointerException ignore) {}
+            }catch (NullPointerException ignore) {}
         }
         saveButton.setDisable(checked == 0);
     }

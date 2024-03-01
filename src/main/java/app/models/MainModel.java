@@ -153,7 +153,7 @@ public class MainModel extends DbConnection {
         ArrayList<Object> data = new ArrayList<>();
         try {
             String query = "SELECT concat(firstname, ' ', lastname, ' ', othername) AS fullname, " +
-                    "account_number, mobile_number, email, account_balance, previous_balance, pinNumber, account_status, cd.customer_id AS accountNo " +
+                    "account_number, mobile_number, id_number, email, account_balance, previous_balance, pinNumber, account_status, cd.customer_id AS accountNo " +
                     "FROM customer_data AS cd\n" +
                     "JOIN customer_account_data AS cad USING(customer_id) \n" +
                     "JOIN loans AS ln USING(customer_id)" +
@@ -174,6 +174,7 @@ public class MainModel extends DbConnection {
                 data.add(resultSet.getString("account_status"));//6
                 data.add(resultSet.getString("pinNumber"));//7
                 data.add(resultSet.getString("previous_balance"));//8
+                data.add(resultSet.getString("id_number"));//9
             }
             preparedStatement.close();
             resultSet.close();
@@ -182,21 +183,24 @@ public class MainModel extends DbConnection {
         return data;
     }
 
-    public String getLastWithdrawalDate(String accountNumber) {
+    public Map<String, Object> getLastTrancactionDate(String accountNumber) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
-        String dateTime = "";
+        Map<String, Object> data = new HashMap<>();
         try {
-            String query = "SELECT transaction_date FROM transaction_logs  " +
-                    "WHERE(account_number = '"+accountNumber+"' AND transaction_type = 'CASH WITHDRAWAL') " +
+            String query = "SELECT transaction_type, transaction_date FROM transaction_logs\n" +
+                    "WHERE(account_number = '"+accountNumber+"')\n" +
                     "ORDER BY transaction_date DESC LIMIT 1;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-               dateTime = resultSet.getTimestamp(1).toLocalDateTime().format(formatter);
+            while (resultSet.next()) {
+               String dateTime = resultSet.getTimestamp("transaction_date").toLocalDateTime().format(formatter);
+               String type = resultSet.getString("transaction_type");
+               data.put("dateTime", dateTime);
+               data.put("transType", type);
             }
         }catch (SQLException ignore){}
 
-        return dateTime;
+        return data;
     }
 
     public long totalCustomersCount() {
@@ -461,8 +465,8 @@ public class MainModel extends DbConnection {
                         contact_person_id_number, contact_person_place_of_work, institution_address, institution_number,relationship_to_applicant,date_created,
                         created_by, date_modified, modified_by
                 ));
-                
             }
+            getConnection().close();
         }catch (Exception e) {}return data;
     }
     public ObservableList<CustomerAccountsDataRepository> fetchCustomersAccountData() {
@@ -563,7 +567,7 @@ public class MainModel extends DbConnection {
             e.printStackTrace();
         }
     }
-    public int createAccountBalance(CustomerAccountsDataRepository balanceDataModel) {
+    public int createAccount(CustomerAccountsDataRepository balanceDataModel) {
         int flag = 0;
         try {
             String query = "INSERT INTO customer_account_data(customer_id, account_type, account_number, account_balance, previous_balance, modified_by) VALUES(?, ?, ?, ?, ?, ?);";
@@ -865,11 +869,12 @@ public class MainModel extends DbConnection {
         ObservableList<DisbursementEntity> data = new ObservableStack<>();
         try {
             String query = """
-                    SELECT loan_id, loan_no, mobile_number, account_number,\s
-                    \t\tapproved_amount, account_balance, previous_balance, application_status FROM loans\s
-                            JOIN customer_account_data AS cad USING(customer_id)
-                            INNER JOIN customer_data USING(customer_id)
-                            WHERE(application_status = 'pending_payment');
+                    SELECT loan_id, loans.loan_no, mobile_number, account_number, processing_rate,
+                           approved_amount, account_balance, previous_balance, application_status FROM loans
+                           JOIN customer_account_data AS cad USING(customer_id)
+                           INNER JOIN customer_data USING(customer_id)
+                           INNER JOIN loan_qualification_values USING(loan_no)
+                           WHERE(application_status = 'pending_payment');
                     """;
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
@@ -881,8 +886,9 @@ public class MainModel extends DbConnection {
                 double amount = resultSet.getDouble("approved_amount");
                 double accountBalance = resultSet.getDouble("account_balance");
                 double preBalance = resultSet.getDouble("previous_balance");
+                int processingRate = resultSet.getInt("processing_rate");
                 String status = resultSet.getString("application_status");
-                data.add(new DisbursementEntity(id, no, accountNo, amount, accountBalance, preBalance, status, mobileNumber));
+                data.add(new DisbursementEntity(id, no, accountNo, amount, processingRate, accountBalance, preBalance, status, mobileNumber));
             }
         }catch (SQLException ignore){}
         return data;

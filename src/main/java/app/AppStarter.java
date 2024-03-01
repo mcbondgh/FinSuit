@@ -15,7 +15,7 @@ public class AppStarter extends Application {
            AppStages.databaseFailedStage().show();
         }
     }
-    public static void main(String[] args) {
+    public static void main(String [] args) {
         launch();
     }
     public void closeButton(ActionEvent event) {

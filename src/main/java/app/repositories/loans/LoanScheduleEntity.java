@@ -68,6 +68,7 @@ public class LoanScheduleEntity {
         if (penalty_amount != 0.0) {
             monthly_installment += penalty_amount;
         }
+        balance = monthly_installment - monthly_payment;
     }
 
     private void statusLogics() {

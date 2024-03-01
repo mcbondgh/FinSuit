@@ -30,7 +30,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
-import java.awt.font.NumericShaper;
 import java.io.*;
 import java.net.URL;
 import java.sql.Date;
@@ -336,11 +335,11 @@ public class LoanApplicationController extends LoansModel implements Initializab
                     || isMobileNumberEmpty() || isDigitalAddressEmpty() || isResidentialAddressEmpty() || isLandmarkEmpty() || isMaritalStatusEmpty()
                     || isIdNumberEmpty() || isIdTypeEmpty() || isCompanyNumberEmpty() || isCompanyNameEmpty() || isCompanyAddressEmpty() || isStaffIdEmpty()
                     || isOccupationEmpty() || isEmploymentDateEmpty() || isBasicSalaryEmpty() || isGrossSalaryEmpty() || isNetSalaryEmpty() || isTotalDeductionEmpty()
-                    || isContactPersonNameEmpty() || isContactPersonNumberEmpty() || isDigitalAddressEmpty() || isResidentialAddressEmpty() || isGuarantorRelationshipEmpty()
-                    || isContactIdNumberEmpty() || isContactIdTypeEmpty() || isContactPlaceOfWorkEmpty() || isContactInstitutionAddressEmpty()
-                    || isGuarantorNameEmpty() || isGuarantorNumberEmpty() || isGuarantorAddressEmpty() || isGuarantorDigitalAddressEmpty() || isGuarantorRelationshipEmpty()
-                    || isGuarantorIdNumberEmpty() || isGuarantorIdTypeEmpty() || isGuarantorRelationshipEmpty() || isGuarantorRelationshipEmpty() || isGuarantorOccupationEmpty()
-                    || isGuarantorPlaceOfWorkEmpty() || isGuarantorInstitutionAddressEmpty() || isNetSalaryEmpty() || isContactPersonAddressEmpty() || isContactPersonResidentialAddressEmpty() || isContactPersonRelationshipEmpty()
+                    || isContactPersonNameEmpty() || isContactPersonNumberEmpty() || isContactIdNumberEmpty() || isContactIdTypeEmpty() || isContactPlaceOfWorkEmpty()
+                    || isContactInstitutionAddressEmpty()|| isGuarantorNameEmpty() || isGuarantorNumberEmpty() || isGuarantorAddressEmpty() || isGuarantorDigitalAddressEmpty()
+                    || isGuarantorRelationshipEmpty() || isGuarantorIdNumberEmpty() || isGuarantorIdTypeEmpty() ||  isGuarantorOccupationEmpty()
+                    || isGuarantorPlaceOfWorkEmpty() || isGuarantorInstitutionAddressEmpty() || isNetSalaryEmpty() || isContactPersonAddressEmpty()
+                    || isContactPersonResidentialAddressEmpty() || isContactPersonRelationshipEmpty()
                     || isContactGenderEmpty() || isGuarantorGenderEmpty() || isPurposeFieldEmpty()
             );
         });
@@ -538,13 +537,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
             int flag = applyForLoan(applicationEntity, customerRepository);
             flag += createLoan( totalCustomersCount(), loanNumber, loanType, loanAmount, loanPurpose, currentUserId);
-
-            //CREATE ACCOUNT FOR LOAN CLIENT
-            accountRepository.setCustomer_id(totalCustomersCount());
-            accountRepository.setAccount_number(SpecialMethods.generateAccountNumber(totalCustomersCount() + 1));
-            accountRepository.setAccount_type("Loan Servicing");
-            accountRepository.setModified_by(currentUserId);
-            flag += createAccountBalance(accountRepository);
 
             String message = new MessageBuilders().loanApplicationMessageBuilder(firstName.concat(" ").concat(lastName), loanNumber,loanType, loanAmount);
             try {
