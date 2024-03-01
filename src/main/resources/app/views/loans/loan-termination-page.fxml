@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="581.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.TerminateLoanController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="581.0" prefWidth="483.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.TerminateLoanController">
    <children>
       <JFXClippedPane layoutY="-1.0" prefHeight="59.0" prefWidth="477.0" style="-fx-background-color: #1d7979fc;" AnchorPane.bottomAnchor="523.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
          <children>
@@ -24,7 +24,7 @@
             </Label>
          </children>
       </JFXClippedPane>
-      <VBox layoutX="18.0" layoutY="74.0" prefHeight="483.0" prefWidth="442.0" spacing="10.0" style="-fx-background-color: #ddd; -fx-background-radius: 5px;">
+      <VBox layoutX="21.0" layoutY="74.0" prefHeight="493.0" prefWidth="442.0" spacing="10.0" style="-fx-background-color: #ddd; -fx-background-radius: 5px;">
          <children>
             <HBox prefHeight="59.0" prefWidth="402.0" style="-fx-background-color: #ffff;">
                <children>
@@ -35,12 +35,12 @@
                   </ImageView>
                   <VBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="330.0" spacing="5.0" style="-fx-background-color: #fff;">
                      <children>
-                        <Label fx:id="nameLabel" text="CUSTOMER FULLNAME" textFill="#17597d">
+                        <Label fx:id="nameLabel" prefHeight="18.0" prefWidth="333.0" text="CUSTOMER FULLNAME" textFill="#17597d">
                            <font>
                               <Font name="Roboto Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="loanNumberLabel" prefHeight="20.0" prefWidth="83.0" text="LOAN NUMBER" textFill="#888888">
+                        <Label fx:id="loanNumberLabel" prefHeight="15.0" prefWidth="290.0" text="LOAN NUMBER" textFill="#888888">
                            <font>
                               <Font name="Roboto Bold" size="12.0" />
                            </font>
@@ -217,7 +217,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <MFXButton fx:id="terminateButton" contentDisplay="CENTER" prefHeight="33.0" prefWidth="423.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Terminate" textFill="WHITE">
+            <MFXButton fx:id="terminateButton" contentDisplay="CENTER" prefHeight="40.0" prefWidth="402.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Terminate" textFill="WHITE">
                <font>
                   <Font name="Poppins Bold" size="13.0" />
                </font>
