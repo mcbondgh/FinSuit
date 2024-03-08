@@ -21,6 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class LoansController extends LoansModel implements Initializable {
     public static String pageTitlePlaceHolder;
     @FXML private BorderPane borderPane;
     @FXML private HBox hBox;
-    @FXML private AnchorPane anchorPane;
+    @FXML private VBox anchorPane;
     @FXML
     private MFXButton addNewLoanButton, disburseFundBtn, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton,viewLoansButton;
    @FXML private MFXButton generateScheduleButton, viewLoansBtn;
@@ -104,7 +105,6 @@ public class LoansController extends LoansModel implements Initializable {
         generateScheduleButton.setText(generateScheduleButton.getText() + " (" + counter1 +")");
         disburseFundBtn.setText(disburseFundBtn.getText () + " (" + counter2  + ")");
     }
-
     public void searchCustomerMethod(KeyEvent event) {
         try {
             loanApplicantsTable.getItems().clear();
@@ -160,6 +160,15 @@ public class LoansController extends LoansModel implements Initializable {
                     }
                 });
             }
+        }
+    }
+    @FXML public void clearedLoansBtnClicked() {
+        try {
+            borderPane.getChildren().remove(0);
+            String fxmlFile = "views/loans/paid-loans-view.fxml";
+            SpecialMethods.FlipView(borderPane, fxmlFile );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     @FXML

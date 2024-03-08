@@ -944,7 +944,12 @@ public class MainModel extends DbConnection {
         return data;
     }
 
+
+    /*
+     This method when invoked, shall return all loan payments made by a client taking the loan number as a parameter.
+     */
     public double getLoanTotalRepaymentAmount(String loanNo){
+
         double value = 0;
         try{
             String query = "SELECT total_payment FROM loans WHERE loan_no ='"+loanNo+"'";
@@ -1035,6 +1040,17 @@ public class MainModel extends DbConnection {
                 data.add(new CollectionSheetEntity(id++, loanNo, fullname, officer, installment));
             }
         }catch (SQLException e){e.printStackTrace();}
+        return data;
+    }
+
+    protected ObservableList<LoansEntity> getClearedAndTerminatedLoans() {
+        ObservableList<LoansEntity> data = new ObservableStack<>();
+        try {
+            String query = "";
+            preparedStatement = getConnection().prepareStatement(query);
+
+        }catch (SQLException e) {e.printStackTrace();}
+
         return data;
     }
 }//END OF CLASS...

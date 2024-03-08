@@ -1,6 +1,10 @@
 package app.repositories.loans;
 
+import javafx.scene.control.Label;
+
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class LoansEntity {
     private int loan_id, customer_id;
@@ -9,9 +13,12 @@ public class LoansEntity {
     private double requested_amount, approved_amount, total_payment;
     private double total_loan_amount;
     private String application_status, loan_purpose, loan_status;
+    private Date lastPaymentDate;
     private byte is_drafted;
     private Timestamp date_created, date_modified;
    private int created_by, updated_by, approved_by;
+   private String termination_purpose;
+   private Label statusLabel = new Label();
    public int getLoan_id() {
         return loan_id;
     }
@@ -36,6 +43,30 @@ public class LoansEntity {
         this.updated_by = updated_by;
         this.approved_by = approved_by;
     }
+
+    public LoansEntity(int loan_id, String loan_no,String loan_status, String termination_purpose, double approved_amount, double total_payment, Date lastPaymentDate ) {
+       this.loan_id = loan_id;
+       this.loan_no = loan_no;
+       this.approved_amount = approved_amount;
+       this.total_payment = total_payment;
+       this.lastPaymentDate = lastPaymentDate;
+       this.loan_status = loan_status;
+       this.termination_purpose = termination_purpose;
+       setLoanStatusLabel();
+    }
+
+    private void setLoanStatusLabel() {
+       if (Objects.equals(loan_status, "cleared")) {
+           statusLabel.setText("Cleared");
+           statusLabel.setStyle("-fx-text-fill:#ffff; -fx-background-color: #1880c5; -fx-padding:5px: " +
+                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center");
+       } else {
+           statusLabel.setText("Terminated");
+           statusLabel.setStyle("-fx-text-fill:#ffff; -fx-background-color: #e60000; -fx-padding:5px: " +
+                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center");
+       }
+    }//end of method.
+
 
     public void setLoan_id(int loan_id) {
         this.loan_id = loan_id;
@@ -139,6 +170,14 @@ public class LoansEntity {
 
     public Timestamp getDate_modified() {
         return date_modified;
+    }
+
+    public String getTermination_purpose() {
+        return termination_purpose;
+    }
+
+    public void setTermination_purpose(String termination_purpose) {
+        this.termination_purpose = termination_purpose;
     }
 
     public void setDate_modified(Timestamp date_modified) {

@@ -562,6 +562,37 @@ public class LoansModel extends MainModel {
         return data;
     }
 
+    public int saveLoanTermination(LoansEntity loans, RepaymentEntity repay) {
+        int flag = 0;
+        try {
+            String query1 = "UPDATE loans \n" +
+                    "\tSET total_payment = ?, loan_status = 'terminated',\n" +
+                    "\ttermination_purpose = ?, date_modified = DEFAULT, updated_by = ?\n" +
+                    "WHERE(loan_no = ?);";
+
+            String query2 = "INSERT INTO loan_payment_logs(loan_no, paid_amount, write_offs, date_collected, collected_by)\n" +
+                    "VALUES(?, ?, ?, DEFAULT, ?);";
+
+            preparedStatement = getConnection().prepareStatement(query1);
+            preparedStatement.setDouble(1, loans.getTotal_payment());
+            preparedStatement.setString(2, loans.getTermination_purpose());
+            preparedStatement.setInt(3, loans.getUpdated_by());
+            preparedStatement.setString(4, loans.getLoan_no());
+            flag = preparedStatement.executeUpdate();
+
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setString(1, repay.getLoan_no());
+            preparedStatement.setDouble(2, repay.getPaid_amount());
+            preparedStatement.setDouble(3, repay.getWrite_offs());
+            preparedStatement.setInt(4, repay.getCollected_by());
+            flag += preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            getConnection().close();
+        }catch (SQLException e) {e.getMessage();}
+        return flag;
+    }
+
     protected int saveLoanPaymentTransaction(LoansEntity loans, TransactionsEntity trans, RepaymentEntity repay, double penalty) {
         int status = 0;
         try {
@@ -610,7 +641,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setDouble(1, penalty);
             preparedStatement.setDate(2, repay.getInstallment_month());
             status += preparedStatement.executeUpdate();
-
+            getConnection().close();
         }catch (SQLException e) {
             logError.log(e.getCause().getMessage());
             e.printStackTrace();
@@ -638,8 +669,8 @@ public class LoansModel extends MainModel {
                 applicantData.put("loanPurpose", resultSet.getString("loan_purpose"));
                 applicantData.put("firstname", resultSet.getString("firstname"));
             }
+            getConnection().close();
         }catch (SQLException ignore) {}
-
         return applicantData;
     }
 

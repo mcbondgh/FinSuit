@@ -19,7 +19,6 @@ public class MessagesModel extends MainModel {
         }catch (Exception e) {
             e.printStackTrace();
             rollBack();}
-
     }
 
 

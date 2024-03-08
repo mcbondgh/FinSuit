@@ -11,9 +11,7 @@ import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransactionModel extends MainModel {
-
     ErrorLogger logger = new ErrorLogger();
-
     protected int saveDepositTransaction(CustomerAccountsDataRepository account, TransactionsEntity transaction) {
         int flag = 0;
         try {

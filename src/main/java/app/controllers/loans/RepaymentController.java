@@ -8,9 +8,12 @@ import app.enums.MessageStatus;
 import app.models.loans.LoansModel;
 import app.repositories.documents.ReceiptsEntity;
 import app.repositories.loans.LoanScheduleEntity;
+import app.repositories.loans.RepaymentEntity;
+import app.repositories.loans.ScheduleTableValues;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.stages.AppStages;
+import io.github.palexdev.materialfx.collections.ObservableStack;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -74,6 +77,11 @@ public class RepaymentController extends LoansModel implements Initializable {
     boolean isListSelectionEmpty(){
         return listView.getSelectionModel().isEmpty();
     }
+
+    public ObservableList<LoanScheduleEntity> getRepaymentTable() {
+        return scheduleTable.getItems();
+    }
+
 
 
     /*******************************************************************************************************************
@@ -162,9 +170,7 @@ public class RepaymentController extends LoansModel implements Initializable {
             terminateLoanBtn.setDisable(isListSelectionEmpty());
             smsButton.setDisable(isListSelectionEmpty());
             setScheduleTableProperties();
-
         }
-
     }//........END OF METHOD
 
     @FXML private void getClickedLoanValueFromTable() {
@@ -201,11 +207,13 @@ public class RepaymentController extends LoansModel implements Initializable {
         }
     }
     @FXML void terminateButtonClicked() {
-        Map<String, Double> tableDataValues = new HashMap<>();
+        Map<String, Object> tableDataValues = new HashMap<>();
         double incrementPrincipal = 0;
         double incrementPenalty = 0;
         double incrementInterest = 0;
         double incrementBalance = 0;
+        List<Object> dueDates = new ArrayList<>();
+
         for(LoanScheduleEntity item : scheduleTable.getItems()) {
             boolean matchesUnpaid = item.getStatusLabel().getText().matches("Unpaid");
             boolean matchesPartPayment = item.getStatusLabel().getText().matches("Part Payment");
@@ -220,19 +228,18 @@ public class RepaymentController extends LoansModel implements Initializable {
                 incrementPenalty += item.getPenalty_amount();
             }
         }
+            //Parse Data to the TerminateLoanView
+            TerminateLoanController.setApplicantName(applicantName.getText());
+            String loanNumber = listView.getSelectionModel().getSelectedItem();
+            TerminateLoanController.setLoanNumber(loanNumber);
+            TerminateLoanController.setMobileNumber(applicantNumber.getText());
 
-        //Parse Data to the TerminateLoanView
-        TerminateLoanController.setAccumulatedTableValue(tableDataValues);
-        TerminateLoanController.setApplicantName(applicantName.getText());
-        String loanNumber = listView.getSelectionModel().getSelectedItem();
-        TerminateLoanController.setLoanNumber(loanNumber);
-        TerminateLoanController.setMobileNumber(applicantNumber.getText());
+            tableDataValues.put("principal", incrementPrincipal);
+            tableDataValues.put("interest", incrementInterest);
+            tableDataValues.put("penalty", incrementPenalty);
+            tableDataValues.put("balance", incrementBalance);
 
-        tableDataValues.put("principal", incrementPrincipal);
-        tableDataValues.put("interest", incrementInterest);
-        tableDataValues.put("penalty", incrementPenalty);
-        tableDataValues.put("balance", incrementBalance);
-
+            TerminateLoanController.setAccumulatedTableValue(tableDataValues);
         try{
             AppStages.terminateLoanStage();
         }catch (Exception ignore){ ignore.printStackTrace();}

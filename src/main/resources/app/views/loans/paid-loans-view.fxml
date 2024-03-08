@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1192.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ClearedAndTerminatedLoansController">
+   <children>
+      <HBox layoutX="102.0" layoutY="84.0" prefHeight="550.0" prefWidth="1192.0" spacing="5.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox fx:id="tableVBox" prefHeight="539.0" prefWidth="737.0" spacing="5.0" style="-fx-border-color: #ddd;">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="723.0" style="-fx-background-color: #eee;">
+                     <children>
+                        <VBox prefHeight="46.0" prefWidth="611.0" style="-fx-background-color: #eee;">
+                           <children>
+                              <Label prefHeight="30.0" prefWidth="318.0" text="CLEARED AND TERMINATED LOANS" textFill="#2c034a">
+                                 <font>
+                                    <Font name="Roboto Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Text fill="#7d7d7d" strokeType="OUTSIDE" strokeWidth="0.0" text="A view of all cleared and terminated loans as completed by customer" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </VBox>
+                        <MFXButton fx:id="loadTableButton" buttonType="RAISED" depthLevel="LEVEL1" onAction="#loadTableOnClick" prefHeight="29.0" prefWidth="87.0" rippleAnimateShadow="true" rippleColor="#32aaac" style="-fx-background-color: #278c8f;" text="Load Table" textFill="WHITE">
+                           <font>
+                              <Font name="Roboto Bold" size="12.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </MFXButton>
+                     </children>
+                  </HBox>
+                  <MFXLegacyTableView fx:id="summaryTable" prefHeight="465.0" prefWidth="705.0" style="-fx-font-size: 14px; -fx-font-family: roboto;">
+                     <columns>
+                        <TableColumn fx:id="tableIndexColumn" prefWidth="55.33334457874298" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="INDEX" />
+                        <TableColumn fx:id="loanNumberColumn" prefWidth="160.6666717529297" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="LOAN NUMBER" />
+                        <TableColumn fx:id="disbursedColumn" prefWidth="143.33326721191406" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="DISBURSED AMOUNT" />
+                        <TableColumn fx:id="totalPaymentColumn" prefWidth="119.3333740234375" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="TOTAL PAYMENT" />
+                        <TableColumn fx:id="statusColumn" prefWidth="94.0001220703125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="STATUS" />
+                        <TableColumn fx:id="finishedDateColumn" prefWidth="147.99991861979163" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="FINISHED DATE" />
+                     </columns>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </MFXLegacyTableView>
+               </children>
+            </VBox>
+            <VBox fx:id="summaryVBox" prefHeight="539.0" prefWidth="463.0" spacing="5.0" style="-fx-border-color: #ddd;">
+               <children>
+                  <VBox prefHeight="55.0" prefWidth="449.0" style="-fx-background-color: #eee;">
+                     <children>
+                        <Label prefHeight="30.0" prefWidth="318.0" text="PAYMENT LOGS" textFill="#2c034a">
+                           <font>
+                              <Font name="Roboto Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Text fill="#7d7d7d" strokeType="OUTSIDE" strokeWidth="0.0" text="Payments made by customer according to schedule and payment dates" wrappingWidth="410.2186584472656">
+                           <font>
+                              <Font name="Roboto" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </VBox>
+                  <MFXLegacyTableView fx:id="logsTable" prefHeight="353.0" prefWidth="438.0">
+                     <columns>
+                        <TableColumn fx:id="logsIndexColumn" prefWidth="55.33334457874298" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="INDEX" />
+                        <TableColumn fx:id="dueDateColumn" prefWidth="123.99994277954102" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="DUE DATE" />
+                        <TableColumn fx:id="logsAmountColumn" prefWidth="80.00004577636719" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="AMOUNT" />
+                        <TableColumn fx:id="writeOffColumn" prefWidth="73.333251953125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="WRITE OFF" />
+                        <TableColumn fx:id="logsPaymentDateColumn" prefWidth="113.33338419596356" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="PAYMENT DATE" />
+                     </columns>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </MFXLegacyTableView>
+                  <Label prefHeight="25.0" prefWidth="173.0" text="Reason For Loan Termination" textFill="#919191">
+                     <VBox.margin>
+                        <Insets bottom="-10.0" left="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Roboto Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="reasonBox" editable="false" prefHeight="97.0" prefWidth="449.0" wrapText="true">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </TextArea>
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -98,6 +98,17 @@ public class MessageBuilders {
                 stringBuilder.append(message);
             }
         });
+        return stringBuilder.toString();
+    }
+    public String loanTerminationMessage(String name, String loanNo) {
+        DAO.getMessageWithOperations().forEach(data -> {
+            if (data.getOperation_type().equalsIgnoreCase("Cash Withdrawal")) {
+                message = data.getMessage().replace("[NAME]", name)//name of collector
+                        .replace("[DATE]", dateTime)// date of withdrawal
+                        .replace("[LOAN NO]", loanNo);//loan Number
+                stringBuilder.append(message);
+            }
+        });
 
         return stringBuilder.toString();
     }
