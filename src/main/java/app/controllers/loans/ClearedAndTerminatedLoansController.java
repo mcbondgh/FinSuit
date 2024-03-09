@@ -8,6 +8,7 @@ import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
@@ -22,6 +23,7 @@ public class ClearedAndTerminatedLoansController extends LoansModel {
     *******************************************************************************************************************/
     @FXML private MFXButton loadTableButton;
     @FXML private VBox summaryVBox, tableVBox;
+    @FXML private TextArea reasonField;
     @FXML private MFXLegacyTableView<LoansEntity> summaryTable;
     @FXML private MFXLegacyTableView<LoanPaymentLogsEntity> logsTable;
 
@@ -34,7 +36,7 @@ public class ClearedAndTerminatedLoansController extends LoansModel {
     @FXML private TableColumn<LoansEntity, Timestamp> finishedDateColumn;
 
     //LOGS TABLE FIELDS
-    @FXML private TableColumn<LoanPaymentLogsEntity, Integer> logsIndexColumn;
+//    @FXML private TableColumn<LoanPaymentLogsEntity, Integer> logsIndexColumn;
     @FXML private TableColumn<LoanPaymentLogsEntity, Date> dueDateColumn;
     @FXML private TableColumn<LoanPaymentLogsEntity, Double> logsAmountColumn;
     @FXML private TableColumn<LoanPaymentLogsEntity, Double> writeOffColumn;
@@ -50,9 +52,16 @@ public class ClearedAndTerminatedLoansController extends LoansModel {
         disbursedColumn.setCellValueFactory(new PropertyValueFactory<>("approved_amount"));
         totalPaymentColumn.setCellValueFactory(new PropertyValueFactory<>("total_payment"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("statusLabel"));
+        finishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("lastPaymentDate"));
         summaryTable.setItems(getClearedAndTerminatedLoans());
     }
-    void populateLogsTable() {
+    void populateLogsTable(String loanNo) {
+//        logsIndexColumn.setCellValueFactory(new PropertyValueFactory<>("log_id"));
+        dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("installment_month"));
+        logsAmountColumn.setCellValueFactory(new PropertyValueFactory<>("paid_amount"));
+        writeOffColumn.setCellValueFactory(new PropertyValueFactory<>("write_offs"));
+        logsPaymentDateColumn.setCellValueFactory(new PropertyValueFactory<>("date_collected"));
+        logsTable.setItems(getLoanPaymentLogs(loanNo));
 
     }
 
@@ -60,7 +69,15 @@ public class ClearedAndTerminatedLoansController extends LoansModel {
      * ACTION EVENT METHODS
      *******************************************************************************************************************/
     @FXML private void loadTableOnClick() {
-
+        populateSummaryTable();
+    }
+    @FXML private void summaryTableItemSelected() {
+        try {
+            String loanNo = summaryTable.getSelectionModel().getSelectedItem().getLoan_no();
+            populateLogsTable(loanNo);
+            String reason = logsTable.getItems().get(0).getTerminationPurpose();
+            reasonField.setText(reason);
+        }catch (NullPointerException ignore) {}
     }
 
 

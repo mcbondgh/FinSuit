@@ -44,14 +44,14 @@
                         </MFXButton>
                      </children>
                   </HBox>
-                  <MFXLegacyTableView fx:id="summaryTable" prefHeight="465.0" prefWidth="705.0" style="-fx-font-size: 14px; -fx-font-family: roboto;">
+                  <MFXLegacyTableView fx:id="summaryTable" fixedCellSize="28.0" onMouseClicked="#summaryTableItemSelected" prefHeight="465.0" prefWidth="705.0" style="-fx-font-size: 13px; -fx-font-family: roboto;">
                      <columns>
-                        <TableColumn fx:id="tableIndexColumn" prefWidth="55.33334457874298" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="INDEX" />
-                        <TableColumn fx:id="loanNumberColumn" prefWidth="160.6666717529297" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="LOAN NUMBER" />
-                        <TableColumn fx:id="disbursedColumn" prefWidth="143.33326721191406" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="DISBURSED AMOUNT" />
-                        <TableColumn fx:id="totalPaymentColumn" prefWidth="119.3333740234375" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="TOTAL PAYMENT" />
-                        <TableColumn fx:id="statusColumn" prefWidth="94.0001220703125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="STATUS" />
-                        <TableColumn fx:id="finishedDateColumn" prefWidth="147.99991861979163" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="FINISHED DATE" />
+                        <TableColumn fx:id="tableIndexColumn" prefWidth="55.33334457874298" style="-fx-font-family: roboto;" text="INDEX" />
+                        <TableColumn fx:id="loanNumberColumn" prefWidth="160.6666717529297" style="-fx-font-family: roboto;" text="LOAN NUMBER" />
+                        <TableColumn fx:id="disbursedColumn" prefWidth="143.33326721191406" style="-fx-font-family: roboto;" text="DISBURSED AMOUNT" />
+                        <TableColumn fx:id="totalPaymentColumn" prefWidth="119.3333740234375" style="-fx-font-family: roboto;" text="TOTAL PAYMENT" />
+                        <TableColumn fx:id="statusColumn" prefWidth="94.0001220703125" style="-fx-font-family: roboto;" text="STATUS" />
+                        <TableColumn fx:id="finishedDateColumn" prefWidth="147.99991861979163" style="-fx-font-family: roboto;" text="FINISHED DATE" />
                      </columns>
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -78,13 +78,12 @@
                         <Insets left="10.0" />
                      </padding>
                   </VBox>
-                  <MFXLegacyTableView fx:id="logsTable" prefHeight="353.0" prefWidth="438.0">
+                  <MFXLegacyTableView fx:id="logsTable" prefHeight="353.0" prefWidth="438.0" style="-fx-font-size: 13px;">
                      <columns>
-                        <TableColumn fx:id="logsIndexColumn" prefWidth="55.33334457874298" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="INDEX" />
-                        <TableColumn fx:id="dueDateColumn" prefWidth="123.99994277954102" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="DUE DATE" />
-                        <TableColumn fx:id="logsAmountColumn" prefWidth="80.00004577636719" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="AMOUNT" />
-                        <TableColumn fx:id="writeOffColumn" prefWidth="73.333251953125" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="WRITE OFF" />
-                        <TableColumn fx:id="logsPaymentDateColumn" prefWidth="113.33338419596356" style="-fx-font-size: 12px; -fx-font-family: roboto;" text="PAYMENT DATE" />
+                        <TableColumn fx:id="dueDateColumn" prefWidth="108.66662216186523" style="-fx-font-family: roboto;" text="DUE DATE" />
+                        <TableColumn fx:id="logsAmountColumn" prefWidth="72.66668701171875" style="-fx-font-family: roboto;" text="AMOUNT" />
+                        <TableColumn fx:id="writeOffColumn" prefWidth="74.66664123535156" style="-fx-font-family: roboto;" text="WRITE OFF" />
+                        <TableColumn fx:id="logsPaymentDateColumn" prefWidth="179.99996948242188" style="-fx-font-family: roboto;" text="PAYMENT DATE" />
                      </columns>
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -98,10 +97,13 @@
                         <Font name="Roboto Bold" size="13.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="reasonBox" editable="false" prefHeight="97.0" prefWidth="449.0" wrapText="true">
+                  <TextArea fx:id="reasonField" editable="false" prefHeight="97.0" prefWidth="449.0" wrapText="true">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
+                     <font>
+                        <Font name="Roboto" size="13.0" />
+                     </font>
                   </TextArea>
                </children>
                <HBox.margin>

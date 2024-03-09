@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainModel extends DbConnection {
 
@@ -965,7 +966,7 @@ public class MainModel extends DbConnection {
     public void updateAllLoanStatus() {
         try {
             preparedStatement = getConnection().prepareStatement("UPDATE loans " +
-                    "SET loan_status = 'cleared' WHERE(total_payment >= approved_amount);");
+                    "SET loan_status = 'cleared' WHERE(total_payment >= disbursed_amount AND loan_status != 'terminated');");
             preparedStatement.execute();
             preparedStatement.close();
             getConnection().close();
@@ -1046,11 +1047,66 @@ public class MainModel extends DbConnection {
     protected ObservableList<LoansEntity> getClearedAndTerminatedLoans() {
         ObservableList<LoansEntity> data = new ObservableStack<>();
         try {
-            String query = "";
+            String query = "SELECT loan_no, disbursed_amount, total_payment, loan_status, Date(date_modified) AS modified_date\n" +
+                    "FROM loans WHERE(loan_status = 'cleared' || loan_status = 'terminated');";
             preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            AtomicInteger index = new AtomicInteger();
+            while(resultSet.next()) {
+                String loanNo = resultSet.getString("loan_no");
+                double disbursedAmount = resultSet.getDouble("disbursed_amount");
+                double totalPayment = resultSet.getDouble("total_payment");
+                String loanStatus = resultSet.getString("loan_status");
+                Date modifiedDate = resultSet.getDate("modified_date");
+                data.add(new LoansEntity(index.incrementAndGet(), loanNo, loanStatus, disbursedAmount, totalPayment, modifiedDate));
+            }
 
-        }catch (SQLException e) {e.printStackTrace();}
-
+        }catch (SQLException ignore) {}
         return data;
     }
+
+    public ObservableList<LoanPaymentLogsEntity> getLoanPaymentLogs(String loanNo) {
+        ObservableList<LoanPaymentLogsEntity> data = new ObservableStack();
+        try {
+            String query = "SELECT  termination_purpose, \n" +
+                    "\t\tinstallment_month, \n" +
+                    "        paid_amount, write_offs, \n" +
+                    "        date_collected, collected_by\n" +
+                    "FROM loan_payment_logs AS pl\n" +
+                    "INNER JOIN loans AS l\n" +
+                    "ON pl.loan_no = l.loan_no\n" +
+                    "WHERE (pl.loan_no = '"+loanNo+"');";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            AtomicInteger index = new AtomicInteger();
+            while(resultSet.next()) {
+                String purpose = resultSet.getString("termination_purpose");
+                Date installmentDate = resultSet.getDate("installment_month");
+                double amount = resultSet.getDouble("paid_amount");
+                double writeOff = resultSet.getDouble("write_offs");
+                Timestamp dateCollected = resultSet.getTimestamp("date_collected");
+                data.add(new LoanPaymentLogsEntity(index.incrementAndGet(), purpose, installmentDate, amount, writeOff, dateCollected));
+            }
+        }catch (SQLException ignore){ignore.getMessage();}
+        return data;
+    }
+
+    public Map<String, Object> getBusinessAccountInformation() {
+        Map<String, Object> data = new HashMap<>();
+        try {
+            String query = "SELECT account_password, account_balance, previous_balance, account_date_modified\n" +
+                    "FROM business_info;";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()){
+                data.put("password", resultSet.getString("account_password"));
+                data.put("accountBalance", resultSet.getDouble("account_balance"));
+                data.put("previousBalance", resultSet.getDouble("previous_balance"));
+                data.put("date_modified", resultSet.getTimestamp("account_date_modified"));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
+
 }//END OF CLASS...

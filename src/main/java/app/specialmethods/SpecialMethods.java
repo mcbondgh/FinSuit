@@ -154,6 +154,21 @@ public class SpecialMethods {
             comboBox.getItems().add(x);
         }
     }
+
+    public static void setTransactionType(ComboBox<String> comboBox) {
+        String[] items = {"Withdrawal", "Deposit", "Transfer"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+    public static void setBanks(ComboBox<String> comboBox) {
+        String[] items = {"ADB", "Commercial Bank", "CBG", "Mobile Money", "UMB", "Fidelity Bank", "Access Bank", "ABSA Bank", "Rural Bank"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
     public static String getTransactionId(long count) {
         String transactionId = "";
         if (count <=9) {transactionId = "00000000000" + count; }

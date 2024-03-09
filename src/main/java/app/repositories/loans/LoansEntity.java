@@ -44,27 +44,27 @@ public class LoansEntity {
         this.approved_by = approved_by;
     }
 
-    public LoansEntity(int loan_id, String loan_no,String loan_status, String termination_purpose, double approved_amount, double total_payment, Date lastPaymentDate ) {
+    public LoansEntity(int loan_id, String loan_no,String loan_status,double approved_amount, double total_payment, Date lastPaymentDate ) {
        this.loan_id = loan_id;
        this.loan_no = loan_no;
        this.approved_amount = approved_amount;
        this.total_payment = total_payment;
        this.lastPaymentDate = lastPaymentDate;
        this.loan_status = loan_status;
-       this.termination_purpose = termination_purpose;
        setLoanStatusLabel();
     }
 
     private void setLoanStatusLabel() {
        if (Objects.equals(loan_status, "cleared")) {
            statusLabel.setText("Cleared");
-           statusLabel.setStyle("-fx-text-fill:#ffff; -fx-background-color: #1880c5; -fx-padding:5px: " +
-                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center");
+           statusLabel.setStyle("-fx-text-fill:#1880c5; -fx-background-color: #d4edff; -fx-padding:5px; " +
+                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center; -fx-background-radius: 3px");
        } else {
            statusLabel.setText("Terminated");
-           statusLabel.setStyle("-fx-text-fill:#ffff; -fx-background-color: #e60000; -fx-padding:5px: " +
-                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center");
+           statusLabel.setStyle("-fx-text-fill:#e60000; -fx-background-color: #ffe0e0; -fx-padding:5px; " +
+                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center; -fx-background-radius: 3px");
        }
+
     }//end of method.
 
 
@@ -210,6 +210,22 @@ public class LoansEntity {
 
     public int getApproved_by() {
         return approved_by;
+    }
+
+    public Date getLastPaymentDate() {
+        return lastPaymentDate;
+    }
+
+    public void setLastPaymentDate(Date lastPaymentDate) {
+        this.lastPaymentDate = lastPaymentDate;
+    }
+
+    public Label getStatusLabel() {
+        return statusLabel;
+    }
+
+    public void setStatusLabel(Label statusLabel) {
+        this.statusLabel = statusLabel;
     }
 
     public void setApproved_by(int approved_by) {

@@ -5,29 +5,30 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class LoanPaymentLogsEntity {
-    private BigInteger log_id;
+    private int log_id;
     private String loan_no;
     private Date installment_month;
     private double paid_amount, write_offs;
     private Timestamp date_collected;
     private int collected_by;
+    private  String terminationPurpose;
 
     public LoanPaymentLogsEntity() {}
 
-    public LoanPaymentLogsEntity(BigInteger log_id, String loan_no, Date installment_month, double paid_amount, double write_offs, Timestamp date_collected, int collected_by) {
+    public LoanPaymentLogsEntity(int log_id, String terminationPurpose, Date installment_month, double paid_amount, double write_offs, Timestamp date_collected) {
         this.log_id = log_id;
-        this.loan_no = loan_no;
         this.installment_month = installment_month;
         this.paid_amount = paid_amount;
         this.write_offs = write_offs;
         this.date_collected = date_collected;
-        this.collected_by = collected_by;
+        this.terminationPurpose = terminationPurpose;
+
     }
 
-    public BigInteger getLog_id() {
+    public int getLog_id() {
         return log_id;
     }
-    public void setLog_id(BigInteger log_id) {
+    public void setLog_id(int log_id) {
         this.log_id = log_id;
     }
     public String getLoan_no() {
@@ -65,5 +66,13 @@ public class LoanPaymentLogsEntity {
     }
     public void setCollected_by(int collected_by) {
         this.collected_by = collected_by;
+    }
+
+    public String getTerminationPurpose() {
+        return terminationPurpose;
+    }
+
+    public void setTerminationPurpose(String terminationPurpose) {
+        this.terminationPurpose = terminationPurpose;
     }
 }//end of class
