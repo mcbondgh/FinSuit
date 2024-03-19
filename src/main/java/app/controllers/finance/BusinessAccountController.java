@@ -161,7 +161,6 @@ public class BusinessAccountController extends FinanceModel implements Initializ
            previousBalanceIndicator.setText(null);
         }
     }
-
     @FXML private void saveTransactionButtonClicked() {
         Map<String, Object> data = getBusinessAccountInformation();
         double accountBal = Double.parseDouble(data.get("accountBalance").toString());
