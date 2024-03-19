@@ -3,9 +3,8 @@ package app.specialmethods;
 import app.AppStarter;
 import app.enums.PaymentMethods;
 import app.models.MainModel;
-import app.repositories.BusinessInfoEntity;
+import app.repositories.business.BusinessInfoEntity;
 import app.repositories.roles.UserRolesData;
-import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -155,15 +154,15 @@ public class SpecialMethods {
         }
     }
 
-    public static void setTransactionType(ComboBox<String> comboBox) {
-        String[] items = {"Withdrawal", "Deposit", "Transfer"};
+    public static void setTransferTypes(ComboBox<String> comboBox) {
+        String[] items = {"To Bank", "Load Account"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);
         }
     }
     public static void setBanks(ComboBox<String> comboBox) {
-        String[] items = {"ADB", "Commercial Bank", "CBG", "Mobile Money", "UMB", "Fidelity Bank", "Access Bank", "ABSA Bank", "Rural Bank"};
+        String[] items = {"ADB", "Commercial Bank", "CBG", "Mobile Money", "UMB", "Fidelity Bank", "Zenith Bank", "Access Bank", "ABSA Bank", "Rural Bank"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);

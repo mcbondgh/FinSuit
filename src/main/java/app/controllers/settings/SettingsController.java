@@ -7,7 +7,7 @@ import app.controllers.homepage.AppController;
 import app.documents.ImageReadWriter;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
-import app.repositories.BusinessInfoEntity;
+import app.repositories.business.BusinessInfoEntity;
 import app.repositories.SmsAPIEntity;
 import app.repositories.settings.TemplatesRepository;
 import com.jfoenix.controls.JFXTextArea;

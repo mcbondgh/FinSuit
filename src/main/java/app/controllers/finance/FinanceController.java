@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -48,5 +49,11 @@ public class FinanceController implements Initializable {
             SpecialMethods.FlipView(borderPane, "views/finance/payment-approval-view.fxml");
         }catch (Exception ignored){}
     }
+    @FXML void businessAccountButtonClicked() {
+        try {
+            SpecialMethods.FlipView(borderPane, "views/finance/business-account-view.fxml");
+        } catch (IOException ignore) {}
 
-}
+    }
+
+}//end of class...

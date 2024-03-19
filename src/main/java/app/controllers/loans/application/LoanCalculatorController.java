@@ -5,7 +5,7 @@ import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
 import app.documents.DocumentGenerator;
 import app.models.loans.LoansModel;
-import app.repositories.BusinessInfoEntity;
+import app.repositories.business.BusinessInfoEntity;
 import app.repositories.loans.LoansTableEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.specialmethods.SpecialMethods;

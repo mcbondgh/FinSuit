@@ -1,4 +1,6 @@
-package app.repositories;
+package app.repositories.business;
+
+import java.sql.Timestamp;
 
 public class BusinessInfoEntity {
     private String name;
@@ -7,10 +9,14 @@ public class BusinessInfoEntity {
     String email;
     String accountPassword;
     String digital;
+    double accountBalance, previousBalance;
+    Timestamp account_modified_date;
 
     double loanPercentage, taxPercentage;
     String location;
     String logo;
+
+    public BusinessInfoEntity() {}
 
     public BusinessInfoEntity(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double loanPercentage, double texPercentage) {
         this.name = name;
@@ -51,6 +57,30 @@ public class BusinessInfoEntity {
 
     public String getEmail() {
         return email;
+    }
+
+    public double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
+    public double getPreviousBalance() {
+        return previousBalance;
+    }
+
+    public void setPreviousBalance(double previousBalance) {
+        this.previousBalance = previousBalance;
+    }
+
+    public Timestamp getAccount_modified_date() {
+        return account_modified_date;
+    }
+
+    public void setAccount_modified_date(Timestamp account_modified_date) {
+        this.account_modified_date = account_modified_date;
     }
 
     public void setEmail(String email) {

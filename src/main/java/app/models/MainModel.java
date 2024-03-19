@@ -2,11 +2,12 @@ package app.models;
 
 import app.config.db.DbConnection;
 import app.errorLogger.ErrorLogger;
-import app.repositories.BusinessInfoEntity;
+import app.repositories.business.BusinessInfoEntity;
 import app.repositories.SmsAPIEntity;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
+import app.repositories.business.BusinessTransactionLogs;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.loans.*;
 import app.repositories.notifications.NotificationEntity;
@@ -1060,7 +1061,9 @@ public class MainModel extends DbConnection {
                 Date modifiedDate = resultSet.getDate("modified_date");
                 data.add(new LoansEntity(index.incrementAndGet(), loanNo, loanStatus, disbursedAmount, totalPayment, modifiedDate));
             }
-
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
         }catch (SQLException ignore) {}
         return data;
     }
@@ -1087,7 +1090,10 @@ public class MainModel extends DbConnection {
                 Timestamp dateCollected = resultSet.getTimestamp("date_collected");
                 data.add(new LoanPaymentLogsEntity(index.incrementAndGet(), purpose, installmentDate, amount, writeOff, dateCollected));
             }
-        }catch (SQLException ignore){ignore.getMessage();}
+            resultSet.close();
+            preparedStatement.close();
+            getConnection().close();
+        }catch (SQLException ignore){}
         return data;
     }
 
@@ -1105,7 +1111,38 @@ public class MainModel extends DbConnection {
                 data.put("previousBalance", resultSet.getDouble("previous_balance"));
                 data.put("date_modified", resultSet.getTimestamp("account_date_modified"));
             }
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
         }catch (SQLException ignore){}
+        return data;
+    }
+
+    public ObservableList<BusinessTransactionLogs> getBusinessTransactionLogs() {
+        ObservableList<BusinessTransactionLogs> data = new ObservableStack<>();
+        try{
+            String query = "SELECT id, transaction_type, bank_name, amount, transaction_id, account_number, \n" +
+                    "transaction_date, notes, username, btl.date_created\n" +
+                    "FROM business_transaction_logs AS btl\n" +
+                    "INNER JOIN users AS u \n" +
+                    "ON created_by = user_id LIMIT 50";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String type = resultSet.getString("transaction_type");
+                String bank = resultSet.getNString("bank_name");
+                String note = resultSet.getString("notes");
+                String transId = resultSet.getString("transaction_id");
+                String accountNum = resultSet.getString("account_number");
+                Date transDate = resultSet.getDate("transaction_date");
+                double amount = resultSet.getDouble("amount");
+                String username = resultSet.getString("username");
+                Timestamp dateCreated = resultSet.getTimestamp("btl.date_created");
+                data.add(new BusinessTransactionLogs(id, type, bank, amount, transId,accountNum, username, transDate, note, dateCreated));
+            }
+        }catch (SQLException ignore){}
+
         return data;
     }
 

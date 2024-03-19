@@ -1,8 +1,7 @@
 package app.controllers.login;
 
 import app.controllers.homepage.AppController;
-import app.documents.ImageReadWriter;
-import app.repositories.BusinessInfoEntity;
+import app.repositories.business.BusinessInfoEntity;
 import app.models.MainModel;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -11,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
