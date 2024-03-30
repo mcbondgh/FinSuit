@@ -12,6 +12,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.draw.DottedLine;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.Paragraph;
@@ -27,11 +28,13 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 public class DocumentGenerator {
 
@@ -337,10 +340,12 @@ public class DocumentGenerator {
             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
             Document document = new Document(pdfDocument, PageSize.A4);
 
+            NumberFormat formatValue = NumberFormat.getInstance();
+
             Table table = new Table(6).useAllAvailableWidth();
-            table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN PAYMENT SCHEDULE ").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));
+            table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN REPAYMENT SCHEDULE").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));
             table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc".concat(totalLoanAmount)).setTextAlignment(TextAlignment.CENTER)));
+            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc" + formatValue.parse(totalLoanAmount)).setTextAlignment(TextAlignment.CENTER)));
             table.addCell(new Cell().add(new Paragraph("NO").setFontSize(10).setBold()));
             table.addCell(new Cell().add(new Paragraph("MONTHLY INSTALLMENT").setBold().setFontSize(10)));
             table.addCell(new Cell().add(new Paragraph("PRINCIPAL").setFontSize(10).setBold()));
@@ -351,10 +356,10 @@ public class DocumentGenerator {
             for (ScheduleTableValues items : tableView.getItems()) {
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getIndex()))));
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getMonthlyInstallment()))));
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getPrincipal()))));
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getInterestAmount()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(formatValue.format(items.getPrincipal())))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(formatValue.format(items.getInterestAmount())))));
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getScheduleDate()))));
-                table.addCell(new Cell().add(new Paragraph(String.valueOf(items.getBalance()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(formatValue.format(items.getBalance())))));
             }
             document.add(documentHeader()).add(table);
             document.close();

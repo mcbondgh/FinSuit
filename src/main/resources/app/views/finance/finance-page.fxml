@@ -22,9 +22,9 @@
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
-            <HBox fx:id="hBox" alignment="CENTER" layoutX="924.0" layoutY="7.0" prefHeight="36.0" prefWidth="298.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+            <HBox fx:id="hBox" alignment="CENTER" layoutX="924.0" layoutY="9.0" prefHeight="36.0" prefWidth="297.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                <children>
-                  <MFXButton fx:id="loadTableButton" prefHeight="25.0" prefWidth="81.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
+                  <MFXButton fx:id="loadTableButton" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -32,7 +32,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="accountsButton" onAction="#businessAccountButtonClicked" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #278c8f;" text="Transactions" textFill="WHITE">
+                  <MFXButton fx:id="accountsButton" onAction="#businessAccountButtonClicked" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #278c8f;" text="My Account" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -40,7 +40,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MFXButton>
-                  <MFXButton fx:id="viewLoansButton" onAction="#viewLoansButtonClicked" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #278c8f;" text="Queued Loans" textFill="WHITE">
+                  <MFXButton fx:id="viewLoansButton" onAction="#viewLoansButtonClicked" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #278c8f;" text="Queued Loans" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>

@@ -8,6 +8,7 @@ import app.repositories.loans.DisbursementEntity;
 import app.repositories.transactions.TransactionsEntity;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransactionModel extends MainModel {
@@ -48,7 +49,7 @@ public class TransactionModel extends MainModel {
         return flag;
     }
 
-    public void saveDisbursementTransaction(TransactionsEntity var1) {
+    public void saveDisbursementTransaction(TransactionsEntity var1, Map<String, Object> var2) {
         try {
             String query = "INSERT INTO transaction_logs(account_number, transaction_id, transaction_type, ecash_amount, user_id)\n" +
                     "VALUES(?, ?, ?, ?, ?);";
@@ -58,6 +59,22 @@ public class TransactionModel extends MainModel {
             preparedStatement.setString(3, "DISBURSED FUND");
             preparedStatement.setDouble(4, var1.getEcash_amount());
             preparedStatement.setInt(5, var1.getUserId());
+            preparedStatement.execute();
+
+            String query2 = "UPDATE operations_account \n" +
+                    "SET account_balance = ?, updated_by = ?, date_updated = DEFAULT; ";
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setDouble(1, Double.parseDouble(var2.get("balance").toString()));
+            preparedStatement.setInt(2, Integer.parseInt(var2.get("userId").toString()));
+            preparedStatement.execute();
+
+            String query3 = "INSERT INTO operations_transaction_logs(reference_number, entry_type, amount, entered_by)\n" +
+                    "VALUES(?,?,?,?);";
+            preparedStatement = getConnection().prepareStatement(query3);
+            preparedStatement.setString(1, var2.get("referenceNumber").toString());
+            preparedStatement.setString(2, var2.get("entryType").toString());
+            preparedStatement.setDouble(3, Double.parseDouble(var2.get("amount").toString()));
+            preparedStatement.setInt(4, Integer.parseInt(var2.get("userId").toString()));
             preparedStatement.execute();
         }catch (SQLException e){
             e.printStackTrace();

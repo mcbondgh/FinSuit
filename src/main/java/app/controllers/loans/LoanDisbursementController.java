@@ -23,6 +23,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -125,20 +127,41 @@ public class LoanDisbursementController extends LoansModel implements Initializa
         if (ALERTS.confirmationAlert()) {
             int status = 0;
             double disbursedAmount = 0.0;
+            double processingFee = 0.0;
             String loanNo = "";
-            AtomicReference<String> accountNumber = new AtomicReference<>();
+
+            //CREATE A MAP TO STORE RETURNED RESULT FROM THE DATABASE THAT HOLDS THE operations_account data.
+            Map<String, Object> operationsAccountData = getOperationsAccountDetails();
+
+            /*CREATE A MAP THAT WOULD BE POPULATED WITH THE REQUIRED DATA TO UPDATE AND INSERT INTO THE
+            operations_account AND operations_transaction_logs
+            */
+            Map<String, Object> operationsMap = new HashMap<>();
+
            for (DisbursementEntity item : paymentTable.getItems()) {
                 //Check if a pay button is checked or not. If checked then proceed with payment else skip
                if (item.getPayBtn().isSelected()) {
+
                    String transId = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
                    loanNo = item.getLoanNumber();
-                   disbursedAmount = item.getLoanAmount();
-                   double currentBalance = item.getAccountBalance();
+                   disbursedAmount = item.getLoanAmountValue();
+                   processingFee = item.getProcessingFee();
+                   double operationsAccountBalance = Double.parseDouble(operationsAccountData.get("balance").toString());
 
-                   double newBalance = currentBalance + disbursedAmount;
+                   double currentBalance = item.getAccountBalance();
+                   double customerUpdatedAccountBalance = currentBalance + disbursedAmount;
+                   double operationsUpdatedAccountBalance = processingFee + operationsAccountBalance;
+
+                   //SET VALUES FOR THE operationsMap
+                    operationsMap.put("balance", operationsUpdatedAccountBalance);
+                    operationsMap.put("userId", loggedInUserId);
+                    operationsMap.putIfAbsent("referenceNumber", loanNo);
+                    operationsMap.putIfAbsent("entryType", "Processing Fee");
+                    operationsMap.putIfAbsent("amount", processingFee);
+                    operationsMap.putIfAbsent("userId", loggedInUserId);
 
                    DISBURSEMENT_ENTITY.setAccountNumber(item.getAccountNumber());
-                   DISBURSEMENT_ENTITY.setAccountBalance(newBalance);
+                   DISBURSEMENT_ENTITY.setAccountBalance(customerUpdatedAccountBalance);
                    DISBURSEMENT_ENTITY.setPreviousBalance(currentBalance);
 
                    TRANS_ENTITY.setUserId(loggedInUserId);
@@ -148,7 +171,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
 
                    status = saveDisbursedLoans(loanNo, loggedInUserId);
                    status += updateCustomerAccountData(DISBURSEMENT_ENTITY);
-                   TRANS_MODEL.saveDisbursementTransaction(TRANS_ENTITY);
+                   TRANS_MODEL.saveDisbursementTransaction(TRANS_ENTITY, operationsMap);
 
                    try {
                     String message = new MessageBuilders().loanDisbursementMessage("Applicant", loanNo, disbursedAmount);
@@ -162,7 +185,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                     MSG_MODEL.logNotificationMessages(MSG_ENTITY);
 
                     LOGGER.setTitle("DISBURSED FUND");
-                    LOGGER.setMessage("Ghc"+disbursedAmount + " has successfully been disbursed to customer with loan no ".concat(loanNo).concat(" by employee no. ").concat(getWorkIdByUserId(loggedInUserId)));
+                    LOGGER.setMessage("Ghc"+disbursedAmount + " has successfully been loaded into customer's account referencing loan no ".concat(loanNo).concat(" by employee no. ").concat(getWorkIdByUserId(loggedInUserId)));
                     LOGGER.setLogged_by(loggedInUserId);
                     logNotification(LOGGER);
 

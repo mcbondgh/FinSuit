@@ -4,6 +4,8 @@ import app.repositories.users.UsersData;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class BusinessTransactionLogs {
     private int id;
@@ -15,10 +17,12 @@ public class BusinessTransactionLogs {
     private String account_number;
     private Date transaction_date;
     String notes;
+    String formattedAmount;
     int created_by;
     Timestamp date_created;
 
     public BusinessTransactionLogs() {
+        formatCurrency();
     }
 
     public BusinessTransactionLogs(int id, String transaction_type, String bank_name, double amount, String transaction_id, String account_number, String username, Date transaction_date, String notes, Timestamp date_created) {
@@ -32,6 +36,11 @@ public class BusinessTransactionLogs {
         this.username = username;
         this.notes = notes;
         this.date_created = date_created;
+        formatCurrency();
+    }
+
+    private void formatCurrency() {
+       formattedAmount = NumberFormat.getInstance(Locale.US).format(amount);
     }
 
     public int getId() {
@@ -112,6 +121,14 @@ public class BusinessTransactionLogs {
 
     public void setCreated_by(int created_by) {
         this.created_by = created_by;
+    }
+
+    public String getFormattedAmount() {
+        return formattedAmount;
+    }
+
+    public void setFormattedAmount(String formattedAmount) {
+        this.formattedAmount = formattedAmount;
     }
 
     public Timestamp getDate_created() {

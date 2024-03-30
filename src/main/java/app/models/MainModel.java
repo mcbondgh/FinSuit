@@ -21,7 +21,7 @@ import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -30,11 +30,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 public class MainModel extends DbConnection {
 
@@ -66,6 +65,7 @@ public class MainModel extends DbConnection {
         }
         return data;
     }
+
     public ArrayList<SmsAPIEntity> getSmsApi() throws IOException {
         ArrayList<SmsAPIEntity> data = new ArrayList<SmsAPIEntity>();
         try {
@@ -521,6 +521,31 @@ public class MainModel extends DbConnection {
         }catch (Exception ignore){}return data;
     }
 
+    public ObservableList<UsersData> fetchAllUsers() {
+        ObservableList<UsersData> data = new ObservableStack<>();
+        try {
+            String query= "SELECT * FROM users AS u\n" +
+                    "CROSS JOIN roles using(role_id);";
+            preparedStatement = getConnection().prepareStatement( query);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("user_id");
+                String empId = resultSet.getString("emp_id");
+                String role = resultSet.getString("role_name");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("user_password");
+                byte active = resultSet.getByte("is_active");
+                byte deleted = resultSet.getByte("is_deleted");
+                Timestamp dateCreated = resultSet.getTimestamp("date_created");
+                int addedBy = resultSet.getInt("added_by");
+                Timestamp dateModified = resultSet.getTimestamp("date_modified");
+                int modifiedBy = resultSet.getInt("modified_by");
+                data.add(new UsersData(id, empId, role, username, password, active, deleted,  dateCreated, addedBy, dateModified, modifiedBy));
+            }
+        }catch(SQLException ignore){}
+
+        return data;
+    }
     public ObservableList<UsersData> fetchAssignedUsersOnly() {
         ObservableList<UsersData> data = FXCollections.observableArrayList();
         try {
@@ -1145,5 +1170,51 @@ public class MainModel extends DbConnection {
 
         return data;
     }
+
+    public Map<String, Object> getOperationsAccountDetails() {
+        Map<String, Object> data = new HashMap<>();
+        try{
+            String query = "SELECT * FROM operations_account";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                data.put("accountId", resultSet.getInt("id"));
+                data.put("balance", resultSet.getDouble("account_balance"));
+                data.put("userId", resultSet.getInt("updated_by"));
+                data.put("date", resultSet.getTimestamp("date_updated"));
+            }
+            preparedStatement.close();
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException e){}
+        return data;
+    }
+    public Map<String, List<Object>> getTemporalCashierTableData() {
+        Map<String, List<Object>> data = new HashMap<>();
+        try{
+            String query = "SELECT * FROM temporal_cashier_account";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()){
+                String tellerNames = resultSet.getString("teller");
+                List<Object> tableData = new ArrayList<>();
+                tableData.add(resultSet.getInt("id"));
+                tableData.add(resultSet.getDouble("amount"));
+                tableData.add(resultSet.getTimestamp("entry_date"));
+                data.put(tellerNames, tableData);
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore){}
+        return data;
+    }
+
+//    public static void main(String[] args) throws InterruptedException, IOException {
+//        MainModel model = new MainModel();
+//        AtomicReference<Double> amountValue = new AtomicReference<>(0.0);
+//        model.getTemporalCashierTableData().forEach((key, value) -> {
+//            amountValue.set(key.equals("lebron") ? Double.parseDouble(value.get(1).toString()) : amountValue.get());
+//        });
+//        System.out.println(amountValue.get());
+//    }
 
 }//END OF CLASS...

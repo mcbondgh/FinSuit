@@ -305,13 +305,15 @@ public class SettingsController extends SettingModel implements Initializable{
                 }
             } else {
                 int templateId = 0;
+                String updatedTitle = "";
                 for (TemplatesRepository item : fetchMessageTemplates()) {
                     if (title.matches(item.getMessageTitle())) {
+                        updatedTitle = messageTitleField.getText();
                         templateId = item.getTemplateId();
                         break;
                     }
                 }
-                updateMessageTemplate(templateId, title, message, userId);
+                updateMessageTemplate(templateId, updatedTitle, message, userId);
                 NOTIFICATION_OBJECT.successNotification("UPDATE SUCCESSFUL", "Message template successfully update.");
             }
         }

@@ -7,7 +7,9 @@ import app.controllers.homepage.AppController;
 import app.models.finance.FinanceModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.business.BusinessTransactionLogs;
+import app.repositories.business.DomesticTransactionLogsEntity;
 import app.repositories.notifications.NotificationEntity;
+import app.repositories.users.UsersData;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
@@ -16,15 +18,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BusinessAccountController extends FinanceModel implements Initializable {
     /*******************************************************************************************************************
@@ -41,6 +48,10 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     @FXML private TextField accountNumberField;
     @FXML private TextArea notesField;
     @FXML private TabPane tabPane;
+    @FXML private ComboBox<String>domesticTransTypeSelector, domesticOptionSelector;
+    @FXML private VBox domesticOptionBox;
+    @FXML private TextField domesticAmountField;
+    @FXML private MFXButton saveDomesticTransactionBtn;
 
     @FXML private TableView<BusinessTransactionLogs> businessTransactionTable;
     @FXML private TableColumn<BusinessTransactionLogs, BigInteger> businessLogIdColumn;
@@ -65,6 +76,9 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     boolean isBankSelectorEmpty() {return bankSelector.getValue().isEmpty();}
     boolean isAccountNumberEmpty() {return accountNumberField.getText().isEmpty();}
     boolean isTransIdEmpty() {return transactionIdField.getText().isEmpty();}
+    boolean isTransferToEmpty() {return domesticTransTypeSelector.getValue().isBlank();}
+    boolean isDomesticOptionsEmpty(){return domesticOptionSelector.getValue().isBlank();}
+    boolean isDomesticAmountFieldEmpty(){return domesticAmountField.getText().isBlank();}
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS
@@ -74,19 +88,22 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         checkPasswordField();
         SpecialMethods.setBanks(bankSelector);
         SpecialMethods.setTransferTypes(transTypeSelector);
+        SpecialMethods.setDomesticTransactionType(domesticTransTypeSelector);
         populateAccountsTransactionsTable();
+        setTableColor();
     }
 
     void populateAccountsTransactionsTable() {
         businessLogIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         transferTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_type"));
         bankNameColumn.setCellValueFactory( new PropertyValueFactory<>("bank_name"));
-        transferAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        transferAmountColumn.setCellValueFactory(new PropertyValueFactory<>("formattedAmount"));
         transIdColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
         transactionDateColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_date"));
         businessTransactionTable.setItems(getBusinessTransactionLogs());
     }
 
+    //PROGRESS BAR IMPLEMENTATION
     void runProgressTaskIndicator(String accountBalance,String previousBalance) {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -95,10 +112,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             public void run() {
                 number +=0.3;
                 Platform.runLater(()-> {
+                    progressBar.setAnimationSpeed(10.0);
+                    submitButton.setDisable(true);
                     progressBar.setProgress(number);
                     if (number >= 1) {
                         this.cancel();
                         progressBar.setProgress(0);
+                        submitButton.setDisable(false);
                         accountBalanceIndicator.setText("Ghc ".concat( formatCurrency.format(Double.parseDouble(accountBalance))));
                         previousBalanceIndicator.setText("Ghc ".concat( formatCurrency.format(Double.parseDouble(previousBalance))));
                     }
@@ -114,13 +134,36 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         notesField.clear();
     }
 
+    void setTableColor() {
+        businessTransactionTable.setRowFactory(item -> new TableRow<>(){
+            @Override
+            protected void updateItem(BusinessTransactionLogs transactionLogs, boolean b) {
+                super.updateItem(transactionLogs, b);
+               if (!b && transactionLogs !=null) {
+                   Date dateCreated = Date.valueOf(transactionLogs.getDate_created().toLocalDateTime().toLocalDate());
+                   if (Objects.equals(dateCreated, Date.valueOf(LocalDate.now()))) {
+                       setStyle("-fx-background-color:#c6f4cc");
+                   }else setStyle("");
+               }
+            }
+        });
+    }
+
+    double computeTellerAccountBalance(String tellerName) {
+        AtomicReference<Double> amountValue = new AtomicReference<>(0.0);
+        getTemporalCashierTableData().forEach((key, value)-> {
+            amountValue.set(key.equals(tellerName) ? Double.parseDouble(value.get(1).toString()) : amountValue.get());
+        });
+        return amountValue.get();
+    }
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS.
      ********************************************************************************************************************/
     @FXML void validateAmountField(KeyEvent event) {
         if (!event.getCharacter().matches("[0-9.]")) {
-            transactionAmountField.deletePreviousChar() ;
+            transactionAmountField.deletePreviousChar();
+            domesticAmountField.deletePreviousChar();
         }
     }
     @FXML void tabItemSelected() {
@@ -143,6 +186,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                 isTransferTypeEmpty() || isTransDateEmpty()
         );
     }
+
+    @FXML void checkForEmptyFieldsInDomesticTransaction() {
+        try{
+            saveDomesticTransactionBtn.setDisable(isDomesticOptionsEmpty() || isDomesticAmountFieldEmpty());
+        }catch (NullPointerException ignore){}
+    }
+
     @FXML private void submitButtonClicked() {
         Map<String, Object> data = getBusinessAccountInformation();
         String inputPassword = passwordField.getText();
@@ -208,7 +258,9 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                 notificationEntity.setLogged_by(currentUserId);
 
                 //call method to execute transaction
-                if (executeSystemAccountTransaction(businessInfoEntity, transactionLogs, notificationEntity) == 3) {
+                int responseStatus = updateBusinessAccount(businessInfoEntity);
+                responseStatus += executeSystemAccountTransaction(transactionLogs, notificationEntity);
+                if ( responseStatus == 3) {
                     showPopup.successNotification("TRANSFER SUCCESSFUL", "Nice, you have successfully executed this transaction.");
                     resetAccountFields();
                     populateAccountsTransactionsTable();
@@ -228,15 +280,86 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                 int id = businessTransactionTable.getSelectionModel().getSelectedItem().getId();
                 for (BusinessTransactionLogs items: businessTransactionTable.getItems()) {
                     if (id == items.getId()) {
-                        showPopup.informationNotification("NOTES", items.getNotes());
+                        //we will process this for later update.
+                        //This block is intended to show a pop-up form that contains detailed view about the
+                        //selected item in the table
                     }
                 }
             }
         }
     }
 
-    @FXML void savePersonnelTransactionButtonClicked() {
+    //ON ACTION, LOAD THE SELECTION OPTION WITH EITHER BRANCH NAMES OR IN-HOUSE-PERSONNEL NAMES.
+    @FXML void domesticTransferTypeOnAction() {
+        domesticOptionBox.setDisable(domesticTransTypeSelector.getValue() == null);
+        String option = domesticTransTypeSelector.getValue();
+        domesticOptionSelector.getItems().clear();
+        if(Objects.equals(option, "Cashier")) {
+           SpecialMethods.setDomesticTransactionTypes(domesticOptionSelector);
+        }else {
+//            SpecialMethods.setBranches(domesticOptionSelector);
+            new UserAlerts("EMPTY LIST", "You do not have branches in your system").informationAlert();
+        }
+    }
 
+    @FXML void saveDomesticTransactionButtonOnClick() {
+        BusinessInfoEntity businessInfoEntity = new BusinessInfoEntity();
+        NotificationEntity notificationEntity = new NotificationEntity();
+        Map<String, Object> data = getBusinessAccountInformation();
+        DomesticTransactionLogsEntity domesticTransactionLogs = new DomesticTransactionLogsEntity();
+
+        //COLLECT DATA
+        String transferType = domesticTransTypeSelector.getValue();
+        String transferTo = domesticOptionSelector.getValue();
+        double transferAmount = Double.parseDouble(domesticAmountField.getText());
+
+        //Get current business account balance
+        double currentBalance = Double.parseDouble(data.get("accountBalance").toString());
+
+        //check if transfer is a valid transaction else reject transaction
+        boolean isTransactionValid = currentBalance > transferAmount;
+        if(!isTransactionValid) {
+            showPopup.errorNotification("INVALID TRANSACTION", "Transfer amount cannot be greater than current account balance. adjust figure");
+        } else {
+            ALERTS = new UserAlerts("INTERNAL TRANSFER", "Do you wish to perform this transaction? ", "please confirm to EXECUTE, else abort to CANCEL");
+            if(ALERTS.confirmationAlert()) {
+                double updatedBalance = currentBalance - transferAmount;
+
+                //set parameters for the various entities
+                businessInfoEntity.setAccountBalance(updatedBalance);
+                businessInfoEntity.setPreviousBalance(currentBalance);
+
+                domesticTransactionLogs.setAmount(transferAmount);
+                domesticTransactionLogs.setEnteredBy(currentUserId);
+                domesticTransactionLogs.setTransferTO(transferTo);
+                domesticTransactionLogs.setTransferTypes(transferType);
+
+                notificationEntity.setLogged_by(currentUserId);
+                notificationEntity.setTitle("DOMESTIC TRANSFER");
+                notificationEntity.setMessage("Domestic transfer of " + transferAmount + " was successfully transferred to " + transferType + " with the name " + transferTo);
+                notificationEntity.setSender_method("INTERNAL OPERATION");
+
+                int responseStatus = updateBusinessAccount(businessInfoEntity);
+                responseStatus += saveDomesticTransferLog(domesticTransactionLogs);
+
+                //Get tellers current balance and insert or update based on the method's condition...
+                double tellerAmount = computeTellerAccountBalance(transferTo) + transferAmount;
+                modifyTemporalCashierAccount(transferTo, tellerAmount);
+
+                //check if query executed successfully. if true show success notification else error
+                if(responseStatus == 2) {
+                    logNotification(notificationEntity);
+                    showPopup.successNotification("TRANSFER SUCCESSFUL", "Nice, you have successfully executed this transaction.");
+                    domesticAmountField.clear();
+                    if (!accountBalanceIndicator.getText().isEmpty()) {
+                        submitButtonClicked();
+                    }
+                } else {
+                    showPopup.errorNotification("TRANSFER FAILED", "Oops, transaction was unsuccessful, please contact system admin for assistance.");
+                }
+
+            }
+        }
     }
 
 }//end of class...

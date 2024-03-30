@@ -2,6 +2,7 @@ package app.controllers.transactions;
 
 import app.models.transactions.TransactionModel;
 import app.repositories.transactions.TransactionsEntity;
+import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
@@ -16,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,6 +35,8 @@ public class TransactionController extends TransactionModel implements Initializ
     @FXML private BorderPane borderPane;
     @FXML private ComboBox<Integer> tableLimitSelector;
     @FXML private TextField searchField;
+    @FXML private MFXButton dashboardButton, viewTransactionsButton;
+    @FXML private VBox tableVbox;
 
     @FXML private MFXLegacyTableView<TransactionsEntity> transactionsTable;
     @FXML private TableColumn<TransactionsEntity, String> transactionIdColumn;
@@ -136,12 +140,12 @@ public class TransactionController extends TransactionModel implements Initializ
         });
     }
 
-    @FXML void viewTransactionOnAction() {
-        try {
-            AppStages.accountBalanceStage().show();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+    @FXML void showTransactionTable() throws IOException {
+        SpecialMethods.FlipView(tableVbox, borderPane);
+    }
+    @FXML void showTellerDashboard() throws IOException {
+        String viewPath = "views/transactions/teller-dashboard-view.fxml";
+        SpecialMethods.FlipView(borderPane, viewPath);
     }
 
 }//end of class...

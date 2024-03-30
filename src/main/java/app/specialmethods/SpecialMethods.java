@@ -5,9 +5,11 @@ import app.enums.PaymentMethods;
 import app.models.MainModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.roles.UserRolesData;
+import app.repositories.users.UsersData;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -51,6 +53,13 @@ public class SpecialMethods {
         fadeTransition.play();
     }
 
+    public static void FlipView(Node node, BorderPane borderPane) throws IOException {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000),borderPane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1.0);
+        borderPane.setCenter(node);
+        fadeTransition.play();
+    }
 
     public static void setUserRoleParameters(ComboBox<String> comboBox) {
         List<String> x = new ArrayList<>();
@@ -156,6 +165,28 @@ public class SpecialMethods {
 
     public static void setTransferTypes(ComboBox<String> comboBox) {
         String[] items = {"To Bank", "Load Account"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+
+    public static void setDomesticTransactionTypes(ComboBox<String> comboBox) {
+        for (UsersData data : new MainModel().fetchAllUsers()) {
+            if (Objects.equals(data.getRole(), "Cashier")) {
+                comboBox.getItems().add(data.getUsername());
+            }
+        }
+    }
+    public static void setBranches(ComboBox<String> comboBox) {
+        String[] items = {"Branch 1", "Branch 2", "Branch 3"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
+    public static void setDomesticTransactionType(ComboBox<String> comboBox) {
+        String[] items = {"Local Branch", "Cashier"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);

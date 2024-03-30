@@ -39,15 +39,15 @@
                   <Font name="Roboto Medium" size="12.0" />
                </font>
             </CheckBox>
+            <Label alignment="CENTER" layoutX="38.0" layoutY="10.0" prefHeight="35.0" prefWidth="164.0" style="-fx-background-color: #fff;" text="LOAN DISBURSEMENT" textAlignment="CENTER" textFill="#570667" wrapText="true">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
          </children>
       </Pane>
-      <Label alignment="CENTER" layoutX="15.0" layoutY="6.0" prefHeight="83.0" prefWidth="146.0" style="-fx-background-color: #fff; -fx-background-radius: 5; -fx-border-color: #ddd; -fx-border-radius: 5;" text="LOAN DISBURSEMENT" textAlignment="CENTER" textFill="#570667" wrapText="true">
-         <font>
-            <Font name="Roboto Bold" size="14.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
-      </Label>
    </children>
 </AnchorPane>
