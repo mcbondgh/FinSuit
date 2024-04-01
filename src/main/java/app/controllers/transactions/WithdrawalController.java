@@ -85,12 +85,12 @@ public class WithdrawalController extends TransactionModel implements Initializa
             saveButton.setDisable(
                     accountNumberEmpty() || isAmountEmpty() || isPaymentMethodEmpty() ||
                             collectorNameEmpty() || accountStatusLabel.getText().equalsIgnoreCase("closed")
-                    || idNumberEmpty() ||
-                            (paymentSelector.getValue().equals(PaymentMethods.eCASH) ||
-                            paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS) && isGatewayEmpty())
+                    || idNumberEmpty() || !((paymentSelector.getValue().equals(PaymentMethods.eCASH) ||
+                            paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS) && isGatewayEmpty()
+                                    && transactionIdField.getText().isBlank()))
             );
             cashField.setDisable(accountStatusLabel.getText().equalsIgnoreCase("closed"));
-        }catch (NullPointerException ignore){}
+        } catch (NullPointerException ignore){}
     }
  
     /*******************************************************************************************************************

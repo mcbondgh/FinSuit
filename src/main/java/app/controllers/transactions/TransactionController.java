@@ -1,5 +1,7 @@
 package app.controllers.transactions;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
 import app.models.transactions.TransactionModel;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
@@ -35,7 +37,7 @@ public class TransactionController extends TransactionModel implements Initializ
     @FXML private BorderPane borderPane;
     @FXML private ComboBox<Integer> tableLimitSelector;
     @FXML private TextField searchField;
-    @FXML private MFXButton dashboardButton, viewTransactionsButton;
+    @FXML private MFXButton dashboardButton, viewTransactionsButton, exportButton;
     @FXML private VBox tableVbox;
 
     @FXML private MFXLegacyTableView<TransactionsEntity> transactionsTable;
@@ -101,6 +103,8 @@ public class TransactionController extends TransactionModel implements Initializ
                         return true;}
                         else if (transactions.getTransaction_type().toLowerCase().contains(searchKeyWord)) {
                             return true;
+                    } else if (transactions.getUsername().toLowerCase().contains(searchKeyWord)) {
+                        return true;
                     } else return transactions.getAccount_number().toLowerCase().contains(searchKeyWord);
                 });
             });
@@ -138,6 +142,9 @@ public class TransactionController extends TransactionModel implements Initializ
                 throw new RuntimeException(ex);
             }
         });
+    }
+    @FXML void exportTableToPdfOnClick() {
+            new UserNotification().informationNotification("Button Pressed", "Table Data Successfully exported.");
     }
 
     @FXML void showTransactionTable() throws IOException {

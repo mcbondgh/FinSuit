@@ -48,18 +48,23 @@
                               <Insets left="5.0" />
                            </padding>
                         </TextField>
+                        <MFXButton fx:id="exportButton" layoutX="1075.0" layoutY="8.0" onAction="#exportTableToPdfOnClick" prefHeight="25.0" prefWidth="96.0" text="Export As PDF" textFill="RED">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font>
+                        </MFXButton>
                      </children>
                   </Pane>
                   <MFXLegacyTableView fx:id="transactionsTable" onMouseEntered="#reloadTableOnLimit" prefHeight="477.0" prefWidth="1189.0" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" tableMenuButtonVisible="true">
                      <columns>
                         <TableColumn fx:id="transactionIdColumn" prefWidth="133.9999839067459" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANSACTION ID" />
-                        <TableColumn fx:id="customerNameColumn" minWidth="92.66670227050781" prefWidth="217.33338928222656" style="-fx-font-size: 14; -fx-alignment: center;" text="CUSTOMER NAME" />
-                        <TableColumn fx:id="accountNumberColumn" minWidth="67.3333740234375" prefWidth="173.33322143554688" style="-fx-font-size: 14; -fx-alignment: center;" text="ACCOUNT NUMBER" />
-                        <TableColumn fx:id="transactionTypeColumn" minWidth="100.66665649414062" prefWidth="151.3333740234375" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANSACTION TYPE" />
-                        <TableColumn fx:id="methodColumn" minWidth="116.0" prefWidth="116.0" style="-fx-font-size: 14; -fx-alignment: center;" text="PAYMENT METHOD" />
-                        <TableColumn fx:id="amountColumn" minWidth="89.33331298828125" prefWidth="95.33331298828125" style="-fx-font-size: 14; -fx-alignment: center;" text="AMOUNT" />
-                        <TableColumn fx:id="transactionDateColumn" minWidth="124.00006103515625" prefWidth="170.666748046875" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANSACTION DATE" />
-                        <TableColumn fx:id="cashierColumn" minWidth="127.9998779296875" prefWidth="133.333251953125" style="-fx-font-size: 14; -fx-alignment: center;" text="CASHIER" />
+                        <TableColumn fx:id="customerNameColumn" minWidth="92.66670227050781" prefWidth="196.6667022705078" style="-fx-font-size: 14; -fx-alignment: center;" text="CUSTOMER NAME" />
+                        <TableColumn fx:id="accountNumberColumn" minWidth="67.3333740234375" prefWidth="177.33331298828125" style="-fx-font-size: 14; -fx-alignment: center;" text="ACC NUMBER" />
+                        <TableColumn fx:id="transactionTypeColumn" minWidth="100.66665649414062" prefWidth="153.99996948242188" style="-fx-font-size: 14; -fx-alignment: center;" text="TRANS TYPE" />
+                        <TableColumn fx:id="methodColumn" minWidth="116.0" prefWidth="132.0" style="-fx-font-size: 14; -fx-alignment: center;" text="PAYMENT METD" />
+                        <TableColumn fx:id="amountColumn" minWidth="89.33331298828125" prefWidth="117.33331298828125" style="-fx-font-size: 14; -fx-alignment: center;" text="AMOUNT" />
+                        <TableColumn fx:id="transactionDateColumn" minWidth="112.66668701171875" prefWidth="150.66656494140625" style="-fx-font-size: 14; -fx-alignment: center;" text="DATE" />
+                        <TableColumn fx:id="cashierColumn" minWidth="127.9998779296875" prefWidth="133.33349609375" style="-fx-font-size: 14; -fx-alignment: center;" text="CASHIER" />
             
                            </columns>
                      <padding>

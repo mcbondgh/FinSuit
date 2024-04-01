@@ -9,7 +9,6 @@ import app.repositories.business.BusinessInfoEntity;
 import app.repositories.business.BusinessTransactionLogs;
 import app.repositories.business.DomesticTransactionLogsEntity;
 import app.repositories.notifications.NotificationEntity;
-import app.repositories.users.UsersData;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
@@ -18,12 +17,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Date;
@@ -40,30 +36,40 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     @FXML private MFXProgressBar progressBar;
     @FXML private PasswordField passwordField;
     @FXML private Label accountBalanceIndicator, passwordErrorIndicator, previousBalanceIndicator;
-    @FXML private MFXButton submitButton, saveTransactionButton;
+    @FXML private MFXButton checkBalanceBtn, bankTransferButton;
 
     @FXML private DatePicker transDatePicker;
     @FXML private ComboBox<String> transTypeSelector, bankSelector;
-    @FXML private TextField transactionAmountField, transactionIdField;
+    @FXML private TextField transferAmountField, transactionIdField;
     @FXML private TextField accountNumberField;
     @FXML private TextArea notesField;
     @FXML private TabPane tabPane;
-    @FXML private ComboBox<String>domesticTransTypeSelector, domesticOptionSelector;
+    @FXML private ComboBox<String>domesticTransTypeSelector, cashierSelector;
     @FXML private VBox domesticOptionBox;
     @FXML private TextField domesticAmountField;
     @FXML private MFXButton saveDomesticTransactionBtn;
 
+    //BUSINESS TRANSACTION TABLE NODES...
     @FXML private TableView<BusinessTransactionLogs> businessTransactionTable;
-    @FXML private TableColumn<BusinessTransactionLogs, BigInteger> businessLogIdColumn;
+    @FXML private TableColumn<BusinessTransactionLogs, BigInteger> bIdColumn;
     @FXML private TableColumn<BusinessTransactionLogs, String> transferTypeColumn;
     @FXML private TableColumn<BusinessTransactionLogs, String> bankNameColumn;
     @FXML private TableColumn<BusinessTransactionLogs, Double> transferAmountColumn;
     @FXML private TableColumn<BusinessTransactionLogs, Timestamp> transIdColumn;
     @FXML private TableColumn<BusinessTransactionLogs, Timestamp> transactionDateColumn;
+
+    //CASHIER TRANSACTION TABLE NODES
+    @FXML private TableView<DomesticTransactionLogsEntity> cashierTransferTable;
+    @FXML private TableColumn<DomesticTransactionLogsEntity, String> cashierTransTypeColumn;
+    @FXML private TableColumn<DomesticTransactionLogsEntity, String> cashierNameColumn;
+    @FXML private TableColumn<DomesticTransactionLogsEntity, String> amountColumn;
+    @FXML private TableColumn<DomesticTransactionLogsEntity, Date> timeColumn;
+    @FXML private TableColumn<DomesticTransactionLogsEntity, Integer> cashierIdColumn;
+
     NumberFormat formatCurrency = NumberFormat.getNumberInstance(Locale.ENGLISH);
     UserNotification showPopup = new UserNotification();
     UserAlerts ALERTS;
-    private int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+    private final int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -71,13 +77,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     boolean isTransDateEmpty() {
         return transDatePicker.getValue() == null;
     }
-    boolean isTransAmountFieldEmpty() {return transactionAmountField.getText().isEmpty();}
+    boolean isTransAmountFieldEmpty() {return transferAmountField.getText().isEmpty();}
     boolean isTransferTypeEmpty() {return transTypeSelector.getValue().isBlank();}
     boolean isBankSelectorEmpty() {return bankSelector.getValue().isEmpty();}
     boolean isAccountNumberEmpty() {return accountNumberField.getText().isEmpty();}
     boolean isTransIdEmpty() {return transactionIdField.getText().isEmpty();}
     boolean isTransferToEmpty() {return domesticTransTypeSelector.getValue().isBlank();}
-    boolean isDomesticOptionsEmpty(){return domesticOptionSelector.getValue().isBlank();}
+    boolean isDomesticOptionsEmpty(){return cashierSelector.getValue().isBlank();}
     boolean isDomesticAmountFieldEmpty(){return domesticAmountField.getText().isBlank();}
 
     /*******************************************************************************************************************
@@ -90,17 +96,26 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         SpecialMethods.setTransferTypes(transTypeSelector);
         SpecialMethods.setDomesticTransactionType(domesticTransTypeSelector);
         populateAccountsTransactionsTable();
+        populateCashierTransactionTable();
         setTableColor();
     }
 
     void populateAccountsTransactionsTable() {
-        businessLogIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        bIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         transferTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_type"));
         bankNameColumn.setCellValueFactory( new PropertyValueFactory<>("bank_name"));
         transferAmountColumn.setCellValueFactory(new PropertyValueFactory<>("formattedAmount"));
         transIdColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_id"));
         transactionDateColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_date"));
         businessTransactionTable.setItems(getBusinessTransactionLogs());
+    }
+    void populateCashierTransactionTable() {
+        cashierIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        cashierTransTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transferTypes"));
+        cashierNameColumn.setCellValueFactory(new PropertyValueFactory<>("transferTO"));
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        cashierTransferTable.setItems(getAllInternalTransfersToCashier());
     }
 
     //PROGRESS BAR IMPLEMENTATION
@@ -113,12 +128,12 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                 number +=0.3;
                 Platform.runLater(()-> {
                     progressBar.setAnimationSpeed(10.0);
-                    submitButton.setDisable(true);
+                    checkBalanceBtn.setDisable(true);
                     progressBar.setProgress(number);
                     if (number >= 1) {
                         this.cancel();
                         progressBar.setProgress(0);
-                        submitButton.setDisable(false);
+                        checkBalanceBtn.setDisable(false);
                         accountBalanceIndicator.setText("Ghc ".concat( formatCurrency.format(Double.parseDouble(accountBalance))));
                         previousBalanceIndicator.setText("Ghc ".concat( formatCurrency.format(Double.parseDouble(previousBalance))));
                     }
@@ -128,7 +143,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         timer.schedule(timerTask, 0, 1000);
     }
     void resetAccountFields() {
-        transactionAmountField.clear();
+        transferAmountField.clear();
         accountNumberField.clear();
         transactionIdField.clear();
         notesField.clear();
@@ -148,7 +163,6 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             }
         });
     }
-
     double computeTellerAccountBalance(String tellerName) {
         AtomicReference<Double> amountValue = new AtomicReference<>(0.0);
         getTemporalCashierTableData().forEach((key, value)-> {
@@ -162,7 +176,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
      ********************************************************************************************************************/
     @FXML void validateAmountField(KeyEvent event) {
         if (!event.getCharacter().matches("[0-9.]")) {
-            transactionAmountField.deletePreviousChar();
+            transferAmountField.deletePreviousChar();
             domesticAmountField.deletePreviousChar();
         }
     }
@@ -177,11 +191,11 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     }
     @FXML void checkPasswordField() {
         passwordField.setOnKeyTyped(keyEvent -> {
-            submitButton.setDisable(passwordField.getText().isBlank());
+            checkBalanceBtn.setDisable(passwordField.getText().isBlank());
         });
     }
     @FXML void checkForEmptyFields() {
-        saveTransactionButton.setDisable(
+        bankTransferButton.setDisable(
                 isAccountNumberEmpty() || isBankSelectorEmpty() || isTransIdEmpty() || isTransAmountFieldEmpty() ||
                 isTransferTypeEmpty() || isTransDateEmpty()
         );
@@ -193,7 +207,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         }catch (NullPointerException ignore){}
     }
 
-    @FXML private void submitButtonClicked() {
+    @FXML private void checkBalanceBtnClicked() {
         Map<String, Object> data = getBusinessAccountInformation();
         String inputPassword = passwordField.getText();
         String encryptedPassword = data.get("password").toString();
@@ -211,7 +225,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
            previousBalanceIndicator.setText(null);
         }
     }
-    @FXML private void saveTransactionButtonClicked() {
+    @FXML private void saveBankTransfer() {
         Map<String, Object> data = getBusinessAccountInformation();
         double accountBal = Double.parseDouble(data.get("accountBalance").toString());
         double previousBal = Double.parseDouble(data.get("previousBalance").toString());
@@ -220,7 +234,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         Date transDate = Date.valueOf(transDatePicker.getValue());
         String transferType = transTypeSelector.getValue();
         String bank = bankSelector.getValue();
-        double amount = Double.parseDouble(transactionAmountField.getText());
+        double amount = Double.parseDouble(transferAmountField.getText());
         String transId = transactionIdField.getText();
         String accountNumber = accountNumberField.getText();
         String notes = notesField.getText();
@@ -265,7 +279,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                     resetAccountFields();
                     populateAccountsTransactionsTable();
                     if (!accountBalanceIndicator.getText().isEmpty()) {
-                        submitButtonClicked();
+                        checkBalanceBtnClicked();
                     }
                 } else {
                     showPopup.errorNotification("TRANSFER FAILED", "Transfer was unsuccessful, please report to system admin if problem persists.");
@@ -288,20 +302,18 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             }
         }
     }
-
     //ON ACTION, LOAD THE SELECTION OPTION WITH EITHER BRANCH NAMES OR IN-HOUSE-PERSONNEL NAMES.
     @FXML void domesticTransferTypeOnAction() {
         domesticOptionBox.setDisable(domesticTransTypeSelector.getValue() == null);
         String option = domesticTransTypeSelector.getValue();
-        domesticOptionSelector.getItems().clear();
+        cashierSelector.getItems().clear();
         if(Objects.equals(option, "Cashier")) {
-           SpecialMethods.setDomesticTransactionTypes(domesticOptionSelector);
+           SpecialMethods.setDomesticTransactionTypes(cashierSelector);
         }else {
 //            SpecialMethods.setBranches(domesticOptionSelector);
             new UserAlerts("EMPTY LIST", "You do not have branches in your system").informationAlert();
         }
     }
-
     @FXML void saveDomesticTransactionButtonOnClick() {
         BusinessInfoEntity businessInfoEntity = new BusinessInfoEntity();
         NotificationEntity notificationEntity = new NotificationEntity();
@@ -310,7 +322,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
 
         //COLLECT DATA
         String transferType = domesticTransTypeSelector.getValue();
-        String transferTo = domesticOptionSelector.getValue();
+        String transferTo = cashierSelector.getValue();
         double transferAmount = Double.parseDouble(domesticAmountField.getText());
 
         //Get current business account balance
@@ -351,15 +363,17 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                     logNotification(notificationEntity);
                     showPopup.successNotification("TRANSFER SUCCESSFUL", "Nice, you have successfully executed this transaction.");
                     domesticAmountField.clear();
+                    populateCashierTransactionTable();
                     if (!accountBalanceIndicator.getText().isEmpty()) {
-                        submitButtonClicked();
+                        checkBalanceBtnClicked();
                     }
                 } else {
                     showPopup.errorNotification("TRANSFER FAILED", "Oops, transaction was unsuccessful, please contact system admin for assistance.");
                 }
-
             }
         }
     }
+
+
 
 }//end of class...

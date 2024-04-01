@@ -8,6 +8,7 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.business.BusinessTransactionLogs;
+import app.repositories.business.DomesticTransactionLogsEntity;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.loans.*;
 import app.repositories.notifications.NotificationEntity;
@@ -22,6 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -1208,13 +1210,45 @@ public class MainModel extends DbConnection {
         return data;
     }
 
-//    public static void main(String[] args) throws InterruptedException, IOException {
-//        MainModel model = new MainModel();
-//        AtomicReference<Double> amountValue = new AtomicReference<>(0.0);
-//        model.getTemporalCashierTableData().forEach((key, value) -> {
-//            amountValue.set(key.equals("lebron") ? Double.parseDouble(value.get(1).toString()) : amountValue.get());
-//        });
-//        System.out.println(amountValue.get());
-//    }
+    public Map<String, List<Double>> getCashierCurrentAndLoadedBalance() {
+        Map<String, List<Double>> data = new HashMap<>();
+        try{
+            String query = "SELECT transferred_to AS `name`, SUM(dtl.amount) AS loaded_amount, tca.amount AS current_balance FROM domestic_transfer_logs AS dtl\n" +
+                    "INNER JOIN temporal_cashier_account as tca\n" +
+                    "ON transferred_to = teller\n" +
+                    "WHERE DATE(dtl.entry_date) = CURRENT_DATE() GROUP BY `name`;";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()){
+                String tellerNames = resultSet.getString("name");
+                List<Double> tableData = new ArrayList<>();
+                tableData.add(resultSet.getDouble("loaded_amount"));
+                tableData.add(resultSet.getDouble("current_balance"));
+                data.put(tellerNames, tableData);
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore){}
+        return data;
+    }
 
+    public ObservableList<DomesticTransactionLogsEntity> getAllInternalTransfersToCashier() {
+        ObservableList<DomesticTransactionLogsEntity> data = new ObservableStack<>();
+        try{
+            String query = "SELECT *, TIME(entry_date) AS time FROM domestic_transfer_logs WHERE DATE(entry_date) = CURRENT_DATE();";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String type = resultSet.getString("transfer_type");
+                String to = resultSet.getString("transferred_to");
+                double amount = resultSet.getDouble("amount");
+                int enteredBy = resultSet.getInt("entered_by");
+                Timestamp entry_date = resultSet.getTimestamp("entry_date");
+                LocalTime time = resultSet.getTime("time").toLocalTime();
+                data.add(new DomesticTransactionLogsEntity(id, type, to, amount, enteredBy, entry_date, time));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch(SQLException ignore){}
+        return data;
+    }
 }//END OF CLASS...

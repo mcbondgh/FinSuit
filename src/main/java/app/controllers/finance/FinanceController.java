@@ -51,7 +51,7 @@ public class FinanceController implements Initializable {
     }
     @FXML void businessAccountButtonClicked() {
         try {
-            SpecialMethods.FlipView(borderPane, "views/finance/business-account-view.fxml");
+            SpecialMethods.FlipView(borderPane, "views/finance/internal-transaction-view.fxml");
         } catch (IOException ignore) {}
 
     }

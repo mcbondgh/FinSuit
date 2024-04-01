@@ -121,6 +121,11 @@ CROSS JOIN loan_applicant_details
 USING(loan_no)
 WHERE loan_no = '2000000000004';
 
-
+--
 UPDATE customer_account_data SET account_status = ? WHERE account_number = ?;
+--
+SELECT transferred_to AS `Name`, SUM(dtl.amount) AS start_amount, tca.amount AS current_balance FROM domestic_transfer_logs AS dtl
+INNER JOIN temporal_cashier_account as tca
+ON transferred_to = teller
+WHERE transferred_to = 'allotey@example.com' AND DATE(dtl.entry_date) = CURRENT_DATE();
 

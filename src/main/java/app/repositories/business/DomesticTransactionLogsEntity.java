@@ -2,32 +2,35 @@ package app.repositories.business;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 
 public class DomesticTransactionLogsEntity {
-//    id, transfer_type, transferred_to, amount, entered_by, entry_date
-    private BigInteger id;
+//    id, transfer_type, transferred_to, amount, entered_by, entry_date, time
+    private int id;
     private  String transferTypes;
     private String transferTO;
     private double amount;
     private int enteredBy;
     private Timestamp entryDate;
+    private LocalTime time;
 
     public DomesticTransactionLogsEntity() {
     }
-    public DomesticTransactionLogsEntity(BigInteger id, String transferTypes, String transferTO, double amount, int enteredBy, Timestamp entryDate) {
+    public DomesticTransactionLogsEntity(int id, String transferTypes, String transferTO, double amount, int enteredBy, Timestamp entryDate, LocalTime time) {
         this.id = id;
         this.transferTypes = transferTypes;
         this.transferTO = transferTO;
         this.amount = amount;
         this.enteredBy = enteredBy;
         this.entryDate = entryDate;
+        this.time = time;
     }
 
-    public BigInteger getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -69,5 +72,13 @@ public class DomesticTransactionLogsEntity {
 
     public void setEntryDate(Timestamp entryDate) {
         this.entryDate = entryDate;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 }//end of class...
