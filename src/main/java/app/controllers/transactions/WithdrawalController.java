@@ -7,6 +7,7 @@ import app.controllers.homepage.AppController;
 import app.controllers.messages.MessageBuilders;
 import app.enums.MessageStatus;
 import app.enums.PaymentMethods;
+import app.models.finance.FinanceModel;
 import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
@@ -71,6 +72,12 @@ public class WithdrawalController extends TransactionModel implements Initializa
     boolean isPaymentMethodEmpty() {return paymentSelector.getValue() == null;}
     boolean accountNumberEmpty() {return accountNumberField.getValue().isEmpty();}
     boolean collectorNameEmpty() {return collectorsNameField.getText().isEmpty();}
+
+    boolean eTransactionParameters() {
+        return paymentSelector.getValue().equals(PaymentMethods.eCASH)  && transactionIdField.getText().isBlank() && isGatewayEmpty()
+                || paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS)
+                && transactionIdField.getText().isBlank() && isGatewayEmpty();
+    }
     boolean idNumberEmpty() {return idNumberField.getText().isBlank();}
     boolean isGatewayEmpty() {return gatewaySelector.getValue() == null;}
 
@@ -83,11 +90,8 @@ public class WithdrawalController extends TransactionModel implements Initializa
     @FXML void checkForEmptyFields() {
         try {
             saveButton.setDisable(
-                    accountNumberEmpty() || isAmountEmpty() || isPaymentMethodEmpty() ||
-                            collectorNameEmpty() || accountStatusLabel.getText().equalsIgnoreCase("closed")
-                    || idNumberEmpty() || !((paymentSelector.getValue().equals(PaymentMethods.eCASH) ||
-                            paymentSelector.getValue().equals(PaymentMethods.BOTH_METHODS) && isGatewayEmpty()
-                                    && transactionIdField.getText().isBlank()))
+                    accountNumberEmpty() || isAmountEmpty() || isPaymentMethodEmpty() || collectorNameEmpty()
+                    || idNumberEmpty() || eTransactionParameters()
             );
             cashField.setDisable(accountStatusLabel.getText().equalsIgnoreCase("closed"));
         } catch (NullPointerException ignore){}
@@ -111,6 +115,16 @@ public class WithdrawalController extends TransactionModel implements Initializa
             listItems.add(data.getLoanNo());
         }
             accountNumberField.setItems(listItems);
+    }
+
+    String checkIfUserIsCashier() {
+        AtomicReference<String> cashierName = new AtomicReference<>();
+        getTemporalCashierTableData().forEach((key, value) -> {
+           if (key.equals(getCurrentUserPlaceholder())) {
+               cashierName.set(key);
+           }
+        });
+        return cashierName.get();
     }
 
 
@@ -161,6 +175,10 @@ public class WithdrawalController extends TransactionModel implements Initializa
     }
 
     @FXML void saveButtonClicked() {
+        if (checkIfUserIsCashier() == null) {
+                new UserAlerts("NOT A CASHIER", "You cannot perform transaction as your access to this operation is denied by your role", "you are restricted to access this operation because you are not a cashier.")
+                        .warningAlert();
+        } else {
             try{
                 ArrayList<Object> customerData = getCustomerDetailsByAccountNumber(accountNumberField.getText());
                 int userId = getUserIdByName(getCurrentUserPlaceholder());
@@ -191,6 +209,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
                 } else {
                     ALERTS = new UserAlerts("CASH WITHDRAWAL", "DO YOU WISH TO CONFIRM WITHDRAWAL TRANSACTION", "Please confirm transaction to perform withdrawal else CANCEL to abort");
                     if(ALERTS.confirmationAlert()) {
+
                         NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
                         MessageLogsEntity MSG_ENTITY = new MessageLogsEntity();
                         SmsAPI SMS = new SmsAPI();
@@ -236,6 +255,10 @@ public class WithdrawalController extends TransactionModel implements Initializa
 
                         }catch (Exception ignore) {}
 
+                        // get current cashier balance, add withdrawal amount and update cashier's balance.
+                        double cashierBalance = SpecialMethods.getCashierCurrentBalance(getCurrentUserPlaceholder());
+                        new FinanceModel().modifyTemporalCashierAccount(getCurrentUserPlaceholder(), (cashierBalance + withdrawalAmount));
+
                         if (responseStatus == 2) {
                             Platform.runLater(()-> {
                                 new UserAlerts("SUCCESSFUL WITHDRAWAL", "Nice cash withdrawal was successful")
@@ -247,6 +270,7 @@ public class WithdrawalController extends TransactionModel implements Initializa
                     };
                 }
             }catch (NumberFormatException ignore){}
+        }
 
     }
 

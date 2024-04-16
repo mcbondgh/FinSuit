@@ -3,8 +3,8 @@ package app.repositories.business;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
-public class ClosedTellerTransactionLogs {
-//    id, start_amount, closed_amount, physical_cash, e_cash, overage_amount, shortage_amount, closure_date, entered_by
+public class ClosedTellerTransactionEntity {
+//    id, start_amount, closed_amount, physical_cash, e_cash, overage_amount, shortage_amount, entry_date, closure_date, entered_by
     private BigInteger id;
     private double startAmount;
     private double closedAmount;
@@ -12,13 +12,14 @@ public class ClosedTellerTransactionLogs {
     private double eCash;
     private double overageAmount;
     private double shortageAmount;
-    private Timestamp closureDate;
+    private Timestamp closureDate, entryDate;
     private int enteredBy;
+    private String notes;
 
-    public ClosedTellerTransactionLogs() {
+    public ClosedTellerTransactionEntity() {
     }
 
-    public ClosedTellerTransactionLogs(BigInteger id, double startAmount, double closedAmount, double physicalCash, double eCash, double overageAmount, double shortageAmount, Timestamp closureDate, int enteredBy) {
+    public ClosedTellerTransactionEntity(BigInteger id, double startAmount, double closedAmount, double physicalCash, double eCash, double overageAmount, double shortageAmount, Timestamp closureDate, int enteredBy) {
         this.id = id;
         this.startAmount = startAmount;
         this.closedAmount = closedAmount;
@@ -89,6 +90,12 @@ public class ClosedTellerTransactionLogs {
     public Timestamp getClosureDate() {
         return closureDate;
     }
+
+    public Timestamp getEntryDate(){return entryDate;}
+    public String getNotes(){return this.notes;}
+    public void setNotes(String notes){this.notes = notes;}
+
+    public void setEntryDate(Timestamp entryDate){this.entryDate = entryDate;}
 
     public void setClosureDate(Timestamp closureDate) {
         this.closureDate = closureDate;

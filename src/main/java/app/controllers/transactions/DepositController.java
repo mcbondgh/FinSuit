@@ -9,10 +9,10 @@ import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
 import app.enums.PaymentMethods;
 import app.enums.TransactionTypes;
+import app.models.finance.FinanceModel;
 import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
-import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.documents.ReceiptsEntity;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
@@ -20,6 +20,7 @@ import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -37,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DepositController extends TransactionModel implements Initializable {
     UserAlerts ALERTS;
@@ -61,14 +63,14 @@ public class DepositController extends TransactionModel implements Initializable
 
 
 
-    public static String getCurrentUserPlaceholder() {
+    public static String getLoggedInUsername() {
         return currentUserPlaceholder;
     }
-    public static void setCurrentUserPlaceholder(String placeholder) {
+    public static void setLoggedInUsername(String placeholder) {
         currentUserPlaceholder = placeholder;
     }
     @FXML
-    private MFXFilterComboBox<String>accountNumberField;
+    private MFXFilterComboBox<String> accountNumberField;
     @FXML private Label accountHolderName, totalCashLabel, accountNumberHolder;
     @FXML private ComboBox<PaymentMethods> paymentSelector, gatewaySelector;
     @FXML private TextField cashField, eCashField, transactionIdField, depositorNameField, depositorIdField;
@@ -101,16 +103,16 @@ public class DepositController extends TransactionModel implements Initializable
     }
     private void populateFields() {
 
-        setCurrentUserPlaceholder(AppController.activeUserPlaceHolder);
+        setLoggedInUsername(AppController.activeUserPlaceHolder);
 
         accountNumberField.setResetOnPopupHidden(true);
         accountNumberField.getItems().clear();
         for (CustomerAccountsDataRepository data : fetchCustomersAccountData()) {
             accountNumberField.getItems().add(data.getAccount_number());
         }
-        for (CustomersDataRepository data : fetchCustomersData()) {
-            accountNumberField.getItems().add(data.getMobile_number());
-        }
+//        for (CustomersDataRepository data : fetchCustomersData()) {
+//            accountNumberField.getItems().add(data.getMobile_number());
+//        }
         SpecialMethods.setPaymentMethods(paymentSelector);
         SpecialMethods.setPaymentGateways(gatewaySelector);
     }
@@ -124,9 +126,10 @@ public class DepositController extends TransactionModel implements Initializable
         totalCashLabel.setText("0.00");
         transactionIdField.clear();
         depositorNameField.clear();
-        accountNumberHolder.setText("--------------");
+        accountNumberHolder.setText("------------ ");
         depositorIdField.clear();
     }
+
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATION
@@ -168,10 +171,9 @@ public class DepositController extends TransactionModel implements Initializable
         }
     }
 
-    @FXML void setOnAccountNumberSelected() {
+    @FXML void setOnAccountNumberSelected() throws IndexOutOfBoundsException{
         String var1 = accountNumberField.getValue();
         ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
-
         accountHolderName.setText(items.get(0).toString());
         accountNumberHolder.setText(items.get(4).toString());
         CUSTOMER_ID = (int) items.get(1);
@@ -211,7 +213,7 @@ public class DepositController extends TransactionModel implements Initializable
     @FXML void saveButtonClicked() {
         saveButton.setDisable(true);
         try{
-            int loggedInUserId = getUserIdByName(getCurrentUserPlaceholder());
+            int loggedInUserId = getUserIdByName(getLoggedInUsername());
             String clientName = accountHolderName.getText();
             String accountNumber = accountNumberField.getValue();
             String paymentMethod = PaymentMethods.convertPayMethod(paymentSelector.getValue());
@@ -224,86 +226,99 @@ public class DepositController extends TransactionModel implements Initializable
             String depositorIdNumber = depositorIdField.getText();
             double totalAmount = Double.parseDouble(totalCashLabel.getText());
 
-            //RECEIPT VARIABLES...
-            DocumentGenerator documentGenerator = new DocumentGenerator();
-            ReceiptsEntity receiptsEntity = new ReceiptsEntity();
-            String work_id = getEmployeeIdByUsername(getCurrentUserPlaceholder());
-            String pdfName = TRANSACTION_ID + " " + LocalDate.now() + ".pdf";
 
-            String cashierName = getEmployeeFullNameByWorkId(work_id);
-            String transactionDate = LocalDateTime.now().format(formatter);
+            //CHECK IF CASHIER HAS ENOUGH BALANCE TO PERFORM TRANSACTION ELSE REJECT TRANSACTION
+            double cashierCurrentBalance = SpecialMethods.getCashierCurrentBalance(getLoggedInUsername());
+            if(cashierCurrentBalance > totalAmount) {
+                //RECEIPT VARIABLES...
+                DocumentGenerator documentGenerator = new DocumentGenerator();
+                ReceiptsEntity receiptsEntity = new ReceiptsEntity();
+                String work_id = getEmployeeIdByUsername(getLoggedInUsername());
+                String pdfName = TRANSACTION_ID + " " + LocalDate.now() + ".pdf";
 
-            // get the user's current account balance by their account number...
-            double currentBalance = 0;
-            for (CustomerAccountsDataRepository data : fetchCustomersAccountData()) {
-                if (data.getAccount_number().equals(accountNumber)) {
-                    currentBalance = data.getAccount_balance();
+                String cashierName = getEmployeeFullNameByWorkId(work_id);
+                String transactionDate = LocalDateTime.now().format(formatter);
+
+                // get the customer's current account balance by their account number...
+                double currentBalance = 0;
+                for (CustomerAccountsDataRepository data : fetchCustomersAccountData()) {
+                    if (data.getAccount_number().equals(accountNumber)) {
+                        currentBalance = data.getAccount_balance();
+                    }
                 }
-            }
 
-            //SET VALUES FOR accountRepository to update current customer's account balance details..
-            double newAccountBalance = totalAmount + currentBalance;
-            accountsDataRepository.setAccount_balance(newAccountBalance);
-            accountsDataRepository.setPrevious_balance(currentBalance);
-            accountsDataRepository.setModified_by(loggedInUserId);
-            accountsDataRepository.setAccount_number(accountNumber);
+                //SET VALUES FOR accountRepository to update current customer's account balance details..
+                double newAccountBalance = totalAmount + currentBalance;
+                accountsDataRepository.setAccount_balance(newAccountBalance);
+                accountsDataRepository.setPrevious_balance(currentBalance);
+                accountsDataRepository.setModified_by(loggedInUserId);
+                accountsDataRepository.setAccount_number(accountNumber);
 
-            //SET VALUES FOR transactionEntity to insert into the transaction_logs table...
-            transactions.setAccount_number(accountNumber);
-            transactions.setTransaction_id(TRANSACTION_ID);
-            transactions.setTransaction_type(transactionType);
-            transactions.setPayment_method(paymentMethod);
-            transactions.setPayment_gateway(gateway);
-            transactions.setCash_amount(amount);
-            transactions.setEcash_amount(eCash);
-            transactions.setEcash_id(eCashId);
-            transactions.setTransaction_made_by(depositorName);
-            transactions.setNationalIdNumber(depositorIdNumber);
-            transactions.setUserId(loggedInUserId);
+                //SET VALUES FOR transactionEntity to insert into the transaction_logs table...
+                transactions.setAccount_number(accountNumber);
+                transactions.setTransaction_id(TRANSACTION_ID);
+                transactions.setTransaction_type(transactionType);
+                transactions.setPayment_method(paymentMethod);
+                transactions.setPayment_gateway(gateway);
+                transactions.setCash_amount(amount);
+                transactions.setEcash_amount(eCash);
+                transactions.setEcash_id(eCashId);
+                transactions.setTransaction_made_by(depositorName);
+                transactions.setNationalIdNumber(depositorIdNumber);
+                transactions.setUserId(loggedInUserId);
 
-            //SET VALUES FOR receiptEntity to create receipt file..
-            receiptsEntity.setCustomerName(clientName);
-            receiptsEntity.setAccountNumber(accountNumber);
-            receiptsEntity.setTransactionType("Cash Deposit");
-            receiptsEntity.setPaymentMethod(paymentMethod);
-            receiptsEntity.setAmount(String.valueOf(totalAmount));
-            receiptsEntity.setDepositorName(depositorName);
-            receiptsEntity.setDepositorIdNumber(depositorIdNumber);
-            receiptsEntity.setTransactionDate(transactionDate);
-            receiptsEntity.setTransactionStatus("SUCCESSFUL");
-            receiptsEntity.setCashierName(cashierName);
-            receiptsEntity.setTransactionNumber(TRANSACTION_ID);
+                //SET VALUES FOR receiptEntity to create receipt file..
+                receiptsEntity.setCustomerName(clientName);
+                receiptsEntity.setAccountNumber(accountNumber);
+                receiptsEntity.setTransactionType("Cash Deposit");
+                receiptsEntity.setPaymentMethod(paymentMethod);
+                receiptsEntity.setAmount(String.valueOf(totalAmount));
+                receiptsEntity.setDepositorName(depositorName);
+                receiptsEntity.setDepositorIdNumber(depositorIdNumber);
+                receiptsEntity.setTransactionDate(transactionDate);
+                receiptsEntity.setTransactionStatus("SUCCESSFUL");
+                receiptsEntity.setCashierName(cashierName);
+                receiptsEntity.setTransactionNumber(TRANSACTION_ID);
 
-            ALERTS = new UserAlerts("SAVE TRANSACTION", "Do you wish to save current deposit transaction?",
-                    "please confirm your action to save transaction else CANCEL to abort.");
-            if(ALERTS.confirmationAlert()) {
-                if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
-                    documentGenerator.generateTransactionReceipt(pdfName, receiptsEntity);
-                    NOTIFY.successNotification("TRANSACTION SUCCESSFUL", "Customer account number " + accountNumber + " has been credited with a deposit of Ghc" + totalAmount);
+                ALERTS = new UserAlerts("SAVE TRANSACTION", "Do you wish to save current deposit transaction?",
+                        "please confirm your action to save transaction else CANCEL to abort.");
+                if(ALERTS.confirmationAlert()) {
+                    // subtract the deposited amount from cashier's account and update cashier's balance
+                    double cashierBalance = cashierCurrentBalance - totalAmount;
+                     new FinanceModel().modifyTemporalCashierAccount(getLoggedInUsername(), cashierBalance);
 
-                    String message = MESSAGE_TEMPLATES.cashDepositMessageBuilder(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
-                    String status = SMS_GATEWAY.sendSms(MOBILE_NUMBER, message);
-                    String messageStatus = MessageStatus.getMessageStatusResult(status).toString();
-                    logsEntity.setRecipient(MOBILE_NUMBER);
-                    logsEntity.setStatus(messageStatus);
-                    logsEntity.setTitle("Cash Deposit");
-                    logsEntity.setMessage(message);
-                    logsEntity.setSent_by(loggedInUserId);
-                    MESSAGE_MODEL.logNotificationMessages(logsEntity);
+                    if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
+                        documentGenerator.generateTransactionReceipt(pdfName, receiptsEntity);
+                        NOTIFY.successNotification("TRANSACTION SUCCESSFUL", "Customer account number " + accountNumber + " has been credited with a deposit of Ghc" + totalAmount);
 
-                    NotificationEntity notification = new NotificationEntity();
-                    notification.setLogged_by(loggedInUserId);
-                    notification.setMessage("Ghc"+ amount + " has been deposited into account number ".concat(accountNumber + " with transaction Id " + TRANSACTION_ID + " by " + AppController.activeUserPlaceHolder));
-                    notification.setTitle("CASH DEPOSIT");
-                    notification.setSender_method("SMS");
-                    logNotification(notification);
+                        String message = MESSAGE_TEMPLATES.cashDepositMessageBuilder(clientName, String.valueOf(amount), accountNumber, depositorName, TRANSACTION_ID, newAccountBalance);
+                        String status = SMS_GATEWAY.sendSms(MOBILE_NUMBER, message);
+                        String messageStatus = MessageStatus.getMessageStatusResult(status).toString();
+                        logsEntity.setRecipient(MOBILE_NUMBER);
+                        logsEntity.setStatus(messageStatus);
+                        logsEntity.setTitle("Cash Deposit");
+                        logsEntity.setMessage(message);
+                        logsEntity.setSent_by(loggedInUserId);
+                        MESSAGE_MODEL.logNotificationMessages(logsEntity);
+
+                        NotificationEntity notification = new NotificationEntity();
+                        notification.setLogged_by(loggedInUserId);
+                        notification.setMessage("Ghc"+ amount + " has been deposited into account number ".concat(accountNumber + " with transaction Id " + TRANSACTION_ID + " by " + AppController.activeUserPlaceHolder));
+                        notification.setTitle("CASH DEPOSIT");
+                        notification.setSender_method("SMS");
+                        logNotification(notification);
+                        Platform.runLater(this::clearFields);
+                    }
                 }
+            } else {
+                ALERTS = new UserAlerts("LOW BALANCE", "Sorry, you do not have enough balance to perform deposit", "please load your account to perform this transaction");
+                ALERTS.informationAlert();
             }
         }catch (NumberFormatException ignore) {
             eCashField.setText("0.00");
             transactionIdField.setText("Unspecified");
         } catch (IOException ignore) {}
-        clearFields();
+
     }
 
 }//end of class..

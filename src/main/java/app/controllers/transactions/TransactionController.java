@@ -122,12 +122,16 @@ public class TransactionController extends TransactionModel implements Initializ
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
     @FXML void depositButtonClicked() throws IOException {
+        String file = "views/transactions/deposit-page.fxml";
+//        SpecialMethods.FlipView(borderPane, file);
         AppStages.depositStage().show();
     }
 
     void withdrawalButtonClicked() {
+        String file = "views/transactions/withdrawal-page.fxml";
         withdrawalButton.setOnAction(e -> {
             try {
+//                SpecialMethods.FlipView(borderPane, file);
                 AppStages.withdrawalStage().show();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -135,16 +139,19 @@ public class TransactionController extends TransactionModel implements Initializ
         });
     }
     void checkBalanceButtonClicked() {
+        String file = "views/transactions/check-balance-page.fxml";
         checkBalanceButton.setOnAction(e -> {
             try {
+//                SpecialMethods.FlipView(borderPane, file);
                 AppStages.accountBalanceStage().show();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
     }
-    @FXML void exportTableToPdfOnClick() {
-            new UserNotification().informationNotification("Button Pressed", "Table Data Successfully exported.");
+    @FXML void exportTableToPdfOnClick() throws IOException {
+        String viewPath = "views/transactions/cashier-transactions-table-view.fxml";
+        SpecialMethods.FlipView(borderPane, viewPath);
     }
 
     @FXML void showTransactionTable() throws IOException {

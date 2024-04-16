@@ -3,6 +3,7 @@ package app.models.finance;
 import app.models.MainModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.business.BusinessTransactionLogs;
+import app.repositories.business.ClosedTellerTransactionEntity;
 import app.repositories.business.DomesticTransactionLogsEntity;
 import app.repositories.notifications.NotificationEntity;
 
@@ -77,7 +78,7 @@ public class FinanceModel extends MainModel {
     }
 
     //this method when invoked shall take to parameters to insert or update the temporal_cashier_account based on the cashier's name
-    protected void modifyTemporalCashierAccount(String name, double amount) {
+    public void modifyTemporalCashierAccount(String name, double amount) {
         try {
             String query = "INSERT INTO temporal_cashier_account(teller, amount)\n" +
                     "\tVALUES('"+name+"', '"+amount+"')\n" +
@@ -85,6 +86,29 @@ public class FinanceModel extends MainModel {
                     "\tamount = '"+amount+"';";
             getConnection().createStatement().execute(query);
         }catch (SQLException e){e.printStackTrace();}
+    }
+
+    public int closeCashierTransactions(ClosedTellerTransactionEntity entity) {
+        try {
+            String query = "INSERT INTO closed_teller_transaction_logs(\n" +
+                    "\tstart_amount, closed_amount, physical_cash,\n" +
+                    "\t e_cash, overage_amount, shortage_amount, `comment`,\n" +
+                    "\t entered_by\n" +
+                    " )\n" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
+
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setDouble(1, entity.getStartAmount());
+            preparedStatement.setDouble(2, entity.getClosedAmount());
+            preparedStatement.setDouble(3, entity.getPhysicalCash());
+            preparedStatement.setDouble(4, entity.geteCash());
+            preparedStatement.setDouble(5, entity.getOverageAmount());
+            preparedStatement.setDouble(6, entity.getShortageAmount());
+            preparedStatement.setString(7, entity.getNotes());
+            preparedStatement.setInt(8, entity.getEnteredBy());
+            return preparedStatement.executeUpdate();
+        }catch (SQLException e){e.printStackTrace();}
+        return 0;
     }
 
 

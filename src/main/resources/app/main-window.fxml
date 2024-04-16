@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
@@ -224,59 +225,69 @@
       <center>
          <Pane prefHeight="605.0" prefWidth="1121.0" BorderPane.alignment="CENTER">
             <children>
-               <ImageView fitHeight="451.0" fitWidth="1287.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+               <ImageView fitHeight="451.0" fitWidth="1291.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@uploads/1140X400-articles-picture-final1632021%20copy.jpg" />
                   </image>
                </ImageView>
-               <Label alignment="CENTER" layoutX="197.0" layoutY="173.0" prefHeight="237.0" prefWidth="829.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="FIN-SUIT GHANA">
-                  <font>
-                     <Font name="Poppins Bold" size="60.0" />
-                  </font>
-                  <effect>
-                     <DropShadow height="59.93" radius="28.9775" width="57.98">
-                        <color>
-                           <Color opacity="0.1218273788690567" />
-                        </color>
-                     </DropShadow>
-                  </effect>
-                  <textFill>
-                     <LinearGradient endX="1.0" endY="1.0" startY="0.3312302831595629">
-                        <stops>
-                           <Stop>
+               <StackPane layoutX="170.0" layoutY="144.0">
+                  <children>
+                     <Label fx:id="appNameLabel" alignment="CENTER" prefHeight="237.0" prefWidth="829.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="FIN-SUIT GHANA">
+                        <font>
+                           <Font name="Poppins Bold" size="60.0" />
+                        </font>
+                        <effect>
+                           <DropShadow height="59.93" radius="28.9775" width="57.98">
                               <color>
-                                 <Color red="0.41999998688697815" green="0.03359999880194664" blue="0.36300668120384216" />
+                                 <Color opacity="0.1218273788690567" />
                               </color>
-                           </Stop>
-                           <Stop offset="1.0">
-                              <color>
-                                 <Color red="0.6822070479393005" green="0.03259692341089249" blue="0.7543859481811523" />
-                              </color>
-                           </Stop>
-                        </stops>
-                     </LinearGradient>
-                  </textFill>
-               </Label>
-               <Label layoutX="490.0" layoutY="324.0" text="All In One Financial Suit For Your Business." textFill="#660569">
-                  <font>
-                     <Font name="Arial" size="16.0" />
-                  </font>
-               </Label>
+                           </DropShadow>
+                        </effect>
+                        <textFill>
+                           <LinearGradient endX="1.0" endY="1.0" startY="0.3312302831595629">
+                              <stops>
+                                 <Stop>
+                                    <color>
+                                       <Color red="0.41999998688697815" green="0.03359999880194664" blue="0.36300668120384216" />
+                                    </color>
+                                 </Stop>
+                                 <Stop offset="1.0">
+                                    <color>
+                                       <Color red="0.6822070479393005" green="0.03259692341089249" blue="0.7543859481811523" />
+                                    </color>
+                                 </Stop>
+                              </stops>
+                           </LinearGradient>
+                        </textFill>
+                     </Label>
+                     <Label text="All In One Financial Suit For Your Business." textFill="#660569">
+                        <font>
+                           <Font name="Arial" size="16.0" />
+                        </font>
+                        <StackPane.margin>
+                           <Insets top="100.0" />
+                        </StackPane.margin>
+                     </Label>
+                     <Label text="2023 | finsuit ghana" textFill="#1f1f1f">
+                        <font>
+                           <Font name="Arial Bold" size="10.0" />
+                        </font>
+                        <StackPane.margin>
+                           <Insets top="150.0" />
+                        </StackPane.margin>
+                     </Label>
+                  </children>
+               </StackPane>
                <ImageView fx:id="logoImage" fitHeight="83.0" fitWidth="96.0" layoutX="527.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@images/applicationIcon-256.png" />
                   </image>
                </ImageView>
-               <Label layoutX="570.0" layoutY="356.0" text="2023 | finsuit ghana" textFill="#1f1f1f">
-                  <font>
-                     <Font name="Arial Bold" size="10.0" />
-                  </font>
-               </Label>
             </children>
          </Pane>
       </center>
    </BorderPane>
-   <Pane fx:id="searchCustomersField" layoutX="-6.0" prefHeight="41.0" prefWidth="1287.0" style="-fx-background-color: #9423a1;">
+   <Pane fx:id="searchCustomersField" layoutX="-6.0" prefHeight="42.0" prefWidth="1280.0" style="-fx-background-color: #9423a1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
          <Circle fx:id="notificationPane" fill="WHITE" layoutX="754.0" layoutY="21.0" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE" />
          <Circle fill="WHITE" layoutX="1180.0" layoutY="20.0" onMouseClicked="#showUserProfile" radius="15.0" stroke="TRANSPARENT" strokeType="INSIDE">
@@ -294,7 +305,7 @@
                <Font name="Poppins Black" size="14.0" />
             </font>
          </Label>
-         <Label layoutX="410.0" layoutY="9.0" text="🔎" textFill="WHITE">
+         <Label layoutX="410.0" layoutY="7.0" text="🔎" textFill="WHITE">
             <font>
                <Font size="18.0" />
             </font>
@@ -378,7 +389,7 @@
             <effect>
                <DropShadow>
                   <color>
-                     <Color red="0.8771929740905762" green="0.8771929740905762" blue="0.8771929740905762" />
+                     <Color red="0.44736841320991516" green="0.44736841320991516" blue="0.44736841320991516" />
                   </color>
                </DropShadow>
             </effect>

@@ -170,7 +170,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
 
                 //check for a negative value else just allow the value
                 double maxValue = Math.max(formattedLoanDifference, 0.0);
-                entity = new ScheduleTableValues(x+1, finalX, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x+1));
+                entity = new ScheduleTableValues( x++, finalX, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x+1));
                 scheduleTable.getItems().add(entity);
             }
         }catch (IndexOutOfBoundsException ignore ) {}

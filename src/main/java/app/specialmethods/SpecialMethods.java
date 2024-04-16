@@ -3,6 +3,7 @@ package app.specialmethods;
 import app.AppStarter;
 import app.enums.PaymentMethods;
 import app.models.MainModel;
+import app.models.finance.FinanceModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.roles.UserRolesData;
 import app.repositories.users.UsersData;
@@ -22,6 +23,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SpecialMethods {
 
@@ -271,6 +273,15 @@ public class SpecialMethods {
         comboBox.getItems().add(PaymentMethods.MOMO);
         comboBox.getItems().add(PaymentMethods.AIRTELTIGO);
         comboBox.getItems().add(PaymentMethods.VODA_CASH);
+    }
+
+    //fetch and return cashier balance based on the current active user who is a cashier by role.
+    public static double getCashierCurrentBalance(String cashierName) {
+        AtomicReference<Double> amount = new AtomicReference<>(0.00);
+        new FinanceModel().getTemporalCashierTableData().forEach((key, value) -> {
+            amount.set(key.equals(cashierName) ? Double.parseDouble(value.get(1).toString()) : amount.get());
+        });
+        return amount.get();
     }
 
 

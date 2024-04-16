@@ -6,6 +6,7 @@ import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
 import app.controllers.messages.MessageBuilders;
 import app.enums.MessageStatus;
+import app.models.finance.FinanceModel;
 import app.models.loans.LoansModel;
 import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
@@ -15,18 +16,20 @@ import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 
 public class LoanDisbursementController extends LoansModel implements Initializable {
 
@@ -39,7 +42,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
     MessagesModel MSG_MODEL = new MessagesModel();
     MessageLogsEntity MSG_ENTITY = new MessageLogsEntity();
     int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
-
+    private String getLoggedInUsername() {return AppController.activeUserPlaceHolder;}
 
     /*******************************************************************************************************************
      *********************************************** FXML FILE EJECTIONS
@@ -55,7 +58,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
 //    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> methodColumn;
 //    @FXML private  TableColumn<DisbursementEntity, ComboBox<String>> transactIdColumn;
     @FXML private MFXButton saveButton, clearButton;
-
+    @FXML private Label cashierBalanceLabel;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -70,17 +73,24 @@ public class LoanDisbursementController extends LoansModel implements Initializa
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateTable();
+        setCashierBalanceLabel();
     }
     void populateTable() {
         paymentTable.getItems().clear();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         loanNumberColumn.setCellValueFactory(new PropertyValueFactory<>("loanNumber"));
-        amountColumn.setCellValueFactory(new PropertyValueFactory<>("loanAmountValue"));
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("disbursementAmount"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("payBtn"));
         processingFeeColumn.setCellValueFactory(new PropertyValueFactory<>("processingFee"));
 //        transactIdColumn.setCellValueFactory(new PropertyValueFactory<>("transIdField"));
         paymentTable.setItems(getUnpaidLoans());
+    }
+
+    private void setCashierBalanceLabel() {
+        double cashierCurrentBalance = SpecialMethods.getCashierCurrentBalance(getLoggedInUsername());
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        cashierBalanceLabel.setText(numberFormat.format(cashierCurrentBalance));
     }
 
     /*******************************************************************************************************************
@@ -123,80 +133,105 @@ public class LoanDisbursementController extends LoansModel implements Initializa
 //                return;
 //            }
 //        }
-        ALERTS = new UserAlerts("SAVE PAYMENT", "Do you wish to save selected loans as disbursed funds?", "please confirm your action to save operation else CANCEL to abort.");
-        if (ALERTS.confirmationAlert()) {
-            int status = 0;
-            double disbursedAmount = 0.0;
-            double processingFee = 0.0;
-            String loanNo = "";
 
-            //CREATE A MAP TO STORE RETURNED RESULT FROM THE DATABASE THAT HOLDS THE operations_account data.
-            Map<String, Object> operationsAccountData = getOperationsAccountDetails();
+        try{
+            //CHECK IF CASHIER HAS ENOUGH BALANCE TO PERFORM TRANSACTION, ELSE REJECT TRANSACTION
+            AtomicReference<Double> accumulatedDisbursementAmount = new AtomicReference<>(0.00);
+            double cashierCurrentBalance = Double.parseDouble(cashierBalanceLabel.getText().replace(",", ""));
+            paymentTable.getItems().forEach(item -> {
+                if (item.getPayBtn().isSelected()) {
+                    accumulatedDisbursementAmount.updateAndGet(value -> value + item.getDisbursementAmount());
+                }
+            });
+            boolean hasEnoughBalance = cashierCurrentBalance > accumulatedDisbursementAmount.get();
+            //*********************************/
+            if (hasEnoughBalance) {
+                ALERTS = new UserAlerts("SAVE PAYMENT", "Do you wish to disburse loan to customer account?", "please confirm your action to save operation else CANCEL to abort.");
+                if (ALERTS.confirmationAlert()) {
+                    int status = 0;
+                    double disbursedAmount = 0.0;
+                    double processingFee = 0.0;
+                    String loanNo = "";
 
-            /*CREATE A MAP THAT WOULD BE POPULATED WITH THE REQUIRED DATA TO UPDATE AND INSERT INTO THE
-            operations_account AND operations_transaction_logs
-            */
-            Map<String, Object> operationsMap = new HashMap<>();
+                    //CREATE A MAP TO STORE RETURNED RESULT FROM THE DATABASE THAT HOLDS THE operations_account data.
+                    Map<String, Object> operationsAccountData = getOperationsAccountDetails();
 
-           for (DisbursementEntity item : paymentTable.getItems()) {
-                //Check if a pay button is checked or not. If checked then proceed with payment else skip
-               if (item.getPayBtn().isSelected()) {
+                    /*CREATE A MAP THAT WOULD BE POPULATED WITH THE REQUIRED DATA TO UPDATE AND INSERT INTO THE
+                    operations_account AND operations_transaction_logs
+                    */
+                    Map<String, Object> operationsMap = new HashMap<>();
 
-                   String transId = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
-                   loanNo = item.getLoanNumber();
-                   disbursedAmount = item.getLoanAmountValue();
-                   processingFee = item.getProcessingFee();
-                   double operationsAccountBalance = Double.parseDouble(operationsAccountData.get("balance").toString());
+                    for (DisbursementEntity item : paymentTable.getItems()) {
+                        //Check if a pay button is checked or not. If checked then proceed with payment else skip
+                        if (item.getPayBtn().isSelected()) {
 
-                   double currentBalance = item.getAccountBalance();
-                   double customerUpdatedAccountBalance = currentBalance + disbursedAmount;
-                   double operationsUpdatedAccountBalance = processingFee + operationsAccountBalance;
+                            String transId = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
+                            loanNo = item.getLoanNumber();
+                            disbursedAmount = item.getDisbursementAmount();
+                            processingFee = item.getProcessingFee();
+                            double operationsAccountBalance = Double.parseDouble(operationsAccountData.get("balance").toString());
 
-                   //SET VALUES FOR THE operationsMap
-                    operationsMap.put("balance", operationsUpdatedAccountBalance);
-                    operationsMap.put("userId", loggedInUserId);
-                    operationsMap.putIfAbsent("referenceNumber", loanNo);
-                    operationsMap.putIfAbsent("entryType", "Processing Fee");
-                    operationsMap.putIfAbsent("amount", processingFee);
-                    operationsMap.putIfAbsent("userId", loggedInUserId);
+                            double currentBalance = item.getAccountBalance();
+                            double customerUpdatedAccountBalance = currentBalance + disbursedAmount;
+                            double operationsUpdatedAccountBalance = processingFee + operationsAccountBalance;
 
-                   DISBURSEMENT_ENTITY.setAccountNumber(item.getAccountNumber());
-                   DISBURSEMENT_ENTITY.setAccountBalance(customerUpdatedAccountBalance);
-                   DISBURSEMENT_ENTITY.setPreviousBalance(currentBalance);
+                            //SET VALUES FOR THE operationsMap
+                            operationsMap.put("balance", operationsUpdatedAccountBalance);
+                            operationsMap.put("userId", loggedInUserId);
+                            operationsMap.putIfAbsent("referenceNumber", loanNo);
+                            operationsMap.putIfAbsent("entryType", "Processing Fee");
+                            operationsMap.putIfAbsent("amount", processingFee);
+                            operationsMap.putIfAbsent("userId", loggedInUserId);
 
-                   TRANS_ENTITY.setUserId(loggedInUserId);
-                   TRANS_ENTITY.setEcash_amount(disbursedAmount);
-                   TRANS_ENTITY.setTransaction_id(transId);
-                   TRANS_ENTITY.setAccount_number(item.getAccountNumber());
+                            DISBURSEMENT_ENTITY.setAccountNumber(item.getAccountNumber());
+                            DISBURSEMENT_ENTITY.setAccountBalance(customerUpdatedAccountBalance);
+                            DISBURSEMENT_ENTITY.setPreviousBalance(currentBalance);
 
-                   status = saveDisbursedLoans(loanNo, loggedInUserId);
-                   status += updateCustomerAccountData(DISBURSEMENT_ENTITY);
-                   TRANS_MODEL.saveDisbursementTransaction(TRANS_ENTITY, operationsMap);
+                            TRANS_ENTITY.setUserId(loggedInUserId);
+                            TRANS_ENTITY.setEcash_amount(disbursedAmount);
+                            TRANS_ENTITY.setTransaction_id(transId);
+                            TRANS_ENTITY.setAccount_number(item.getAccountNumber());
 
-                   try {
-                    String message = new MessageBuilders().loanDisbursementMessage("Applicant", loanNo, disbursedAmount);
-                    String response = new SmsAPI().sendSms(item.getMobileNumber(), message);
-                    String msgStatus = MessageStatus.getMessageStatusResult(response).toString();
-                    MSG_ENTITY.setSent_by(loggedInUserId);
-                    MSG_ENTITY.setStatus(msgStatus);
-                    MSG_ENTITY.setRecipient(item.getMobileNumber());
-                    MSG_ENTITY.setTitle("DISBURSED FUND");
-                    MSG_ENTITY.setMessage(message);
-                    MSG_MODEL.logNotificationMessages(MSG_ENTITY);
+                            status = saveDisbursedLoans(loanNo, loggedInUserId);
+                            status += updateCustomerAccountData(DISBURSEMENT_ENTITY);
+                            TRANS_MODEL.saveDisbursementTransaction(TRANS_ENTITY, operationsMap);
 
-                    LOGGER.setTitle("DISBURSED FUND");
-                    LOGGER.setMessage("Ghc"+disbursedAmount + " has successfully been loaded into customer's account referencing loan no ".concat(loanNo).concat(" by employee no. ").concat(getWorkIdByUserId(loggedInUserId)));
-                    LOGGER.setLogged_by(loggedInUserId);
-                    logNotification(LOGGER);
+                                String message = new MessageBuilders().loanDisbursementMessage("Applicant", loanNo, disbursedAmount);
+                                String response = new SmsAPI().sendSms(item.getMobileNumber(), message);
+                                String msgStatus = MessageStatus.getMessageStatusResult(response).toString();
+                                MSG_ENTITY.setSent_by(loggedInUserId);
+                                MSG_ENTITY.setStatus(msgStatus);
+                                MSG_ENTITY.setRecipient(item.getMobileNumber());
+                                MSG_ENTITY.setTitle("DISBURSED FUND");
+                                MSG_ENTITY.setMessage(message);
+                                MSG_MODEL.logNotificationMessages(MSG_ENTITY);
 
-                   }catch (Exception e){e.printStackTrace();}
-               }
-           }
-           if (status > 0) {
-               NOTIFY.successNotification("OPERATION SAVED", "You have successfully saved selected loan facilities as disbursed funds");
-               populateTable();
-           }
+                                LOGGER.setTitle("DISBURSED FUND");
+                                LOGGER.setMessage("Ghc"+disbursedAmount + " has successfully been loaded into customer's account referencing loan no ".concat(loanNo).concat(" by employee no. ").concat(getWorkIdByUserId(loggedInUserId)));
+                                LOGGER.setLogged_by(loggedInUserId);
+                                logNotification(LOGGER);
+                        }
+                    }
+                    if (status > 0) {
+                        //update cashier's account after successful disbursement
+                        double cashierBalance = cashierCurrentBalance - accumulatedDisbursementAmount.get();
+                        new FinanceModel().modifyTemporalCashierAccount(getLoggedInUsername(), cashierBalance);
+                        Platform.runLater(this::setCashierBalanceLabel);
+                        NOTIFY.successNotification("OPERATION SAVED", "You have successfully saved selected loan facilities as disbursed funds");
+                        populateTable();
+                    }
+                }
+            } else {
+                ALERTS = new UserAlerts("LOW BALANCE", "Sorry, you do not have enough balance to perform deposit", "please load your account to perform this transaction");
+                ALERTS.informationAlert();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            ALERTS = new UserAlerts("INVALID PROCESS", "You do not have permission to perform loan disbursement.", "access to this operation has been denied.");
+            ALERTS.informationAlert();
         }
+
+
     }
     @FXML private void selectAllChecked() {
         paymentTable.getItems().forEach(item -> {

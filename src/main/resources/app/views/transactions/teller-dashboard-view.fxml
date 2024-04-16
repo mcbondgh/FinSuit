@@ -3,8 +3,11 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
@@ -15,11 +18,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.TellerDashboardController">
+<VBox prefHeight="549.0" prefWidth="1217.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.TellerDashboardController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="1005.0" spacing="5.0" style="-fx-background-color: #eee;">
          <children>
-            <ImageView fitHeight="25.0" fitWidth="25.0">
+            <ImageView fitHeight="20.0" fitWidth="18.0">
                <image>
                   <Image url="@../../images/dashboard.png" />
                </image>
@@ -27,9 +30,9 @@
                   <Glow />
                </effect>
             </ImageView>
-            <Label prefHeight="34.0" prefWidth="175.0" text="DASHBOARD" textFill="#989292">
+            <Label prefHeight="34.0" text="TRANSACTIONS PORTAL" textFill="#989292">
                <font>
-                  <Font name="Roboto Black" size="28.0" />
+                  <Font name="Roboto Black" size="24.0" />
                </font>
             </Label>
          </children>
@@ -37,9 +40,9 @@
             <Insets left="20.0" />
          </padding>
       </HBox>
-      <SplitPane cache="true" cacheHint="QUALITY" dividerPositions="0.18683510638297873">
+      <SplitPane cache="true" cacheHint="QUALITY" dividerPositions="0.17486702127659576" prefHeight="498.0" prefWidth="1217.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="484.0" prefWidth="327.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="484.0" prefWidth="165.0">
                <children>
                   <VBox alignment="TOP_CENTER" layoutX="44.0" layoutY="33.0" prefHeight="484.0" prefWidth="288.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -76,11 +79,25 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="59.0" prefWidth="167.0" style="-fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                        <VBox fx:id="container" alignment="CENTER" prefHeight="51.0" prefWidth="199.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                            <children>
-                              <Label alignment="CENTER" prefHeight="16.0" prefWidth="135.0" text="Status" textAlignment="CENTER" textFill="#747474">
+                              <Label fx:id="balanceLabel1" alignment="CENTER" prefHeight="21.0" prefWidth="135.0" text="Total Transactions" textAlignment="CENTER" textFill="#929394">
                                  <font>
-                                    <Font name="Poppins Regular" size="13.0" />
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="totalTransactionsLabel" text="0,000,000.00" textFill="#4591b5">
+                                 <font>
+                                    <Font name="Roboto Black" size="17.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="62.0" prefWidth="199.0" style="-fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="27.0" prefWidth="166.0" text="Transaction Account Status" textAlignment="CENTER" textFill="#747474">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
                               <Label fx:id="tellerAccountStatus" prefHeight="13.0" text="OPEN" textFill="#36ce25">
@@ -102,143 +119,192 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="484.0" prefWidth="423.0">
                <children>
-                  <VBox layoutX="89.0" layoutY="42.0" prefHeight="484.0" prefWidth="708.0" style="-fx-background-color: #fbfeff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <HBox alignment="CENTER" focusTraversable="true" prefHeight="61.0" prefWidth="708.0" spacing="400.0" style="-fx-background-color: #eedd;">
+                        <VBox spacing="5.0">
                            <children>
-                              <Label text="Close Daily Transaction Portal" textFill="#989898">
-                                 <font>
-                                    <Font name="Arial Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" />
-                           </padding>
-                        </HBox>
-                        <VBox prefHeight="425.0" prefWidth="584.0" style="-fx-border-color: #eee; -fx-border-radius: 10px;">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="100.0" right="100.0" top="5.0" />
-                           </VBox.margin>
-                           <children>
-                              <VBox prefHeight="62.0" prefWidth="617.0">
+                              <HBox alignment="CENTER" focusTraversable="true" prefHeight="130.0" prefWidth="651.0" spacing="100.0" style="-fx-background-color: #eedd;">
                                  <children>
-                                    <Label text="Cash Amount *">
+                                    <Label prefHeight="16.0" prefWidth="393.0" text="YOUR TRANSACTIONS FOR TODAY" textFill="#989898">
                                        <font>
-                                          <Font name="Poppins Regular" size="13.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField prefHeight="34.0" prefWidth="617.0">
+                                    <Button fx:id="exportButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#exportTableToPdf" prefHeight="25.0" prefWidth="101.0" style="-fx-background-color: #fff;" text="EXPORT PDF" textFill="RED" underline="true" wrapText="true">
                                        <font>
-                                          <Font name="Poppins Medium" size="12.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets top="3.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets left="10.0" right="10.0" top="5.0" />
-                                 </VBox.margin>
-                              </VBox>
-                              <VBox prefHeight="62.0" prefWidth="617.0">
-                                 <children>
-                                    <Label text="Overage Amount *">
-                                       <font>
-                                          <Font name="Poppins Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField prefHeight="34.0" prefWidth="617.0">
-                                       <font>
-                                          <Font name="Poppins Medium" size="12.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets top="3.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets left="10.0" right="10.0" top="5.0" />
-                                 </VBox.margin>
-                              </VBox>
-                              <VBox prefHeight="62.0" prefWidth="617.0">
-                                 <children>
-                                    <Label text="Shortage Amount *">
-                                       <font>
-                                          <Font name="Poppins Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField prefHeight="34.0" prefWidth="617.0">
-                                       <font>
-                                          <Font name="Poppins Medium" size="12.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets top="3.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets left="10.0" right="10.0" top="5.0" />
-                                 </VBox.margin>
-                              </VBox>
-                              <VBox prefHeight="106.0" prefWidth="597.0">
-                                 <children>
-                                    <Label text="Note ">
-                                       <font>
-                                          <Font name="Poppins Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <TextArea prefHeight="83.0" prefWidth="597.0" wrapText="true" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets left="10.0" right="10.0" top="5.0" />
-                                 </VBox.margin>
-                              </VBox>
-                              <VBox prefHeight="69.0" prefWidth="597.0">
-                                 <children>
-                                    <Label text="Closing Balance" textFill="RED">
-                                       <font>
-                                          <Font name="Poppins Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label alignment="CENTER" prefHeight="42.0" prefWidth="1005.0" style="-fx-background-color: red; -fx-background-radius: 5;" text="0.00" textAlignment="CENTER" textFill="WHITE">
-                                       <font>
-                                          <Font name="Poppins Bold" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </VBox.margin>
-                              </VBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="617.0" spacing="5.0" style="-fx-border-radius: 5px;">
-                                 <children>
-                                    <MFXButton prefHeight="30.0" prefWidth="100.0" rippleBackgroundOpacity="0.5" rippleColor="#45d2d2" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-background-color: #39b1b3;" text="Save" textFill="WHITE">
-                                       <font>
-                                          <Font name="Poppins Medium" size="12.0" />
+                                          <Font name="Poppins Regular" size="10.0" />
                                        </font>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
-                                       </cursor></MFXButton>
-                                    <MFXButton prefHeight="30.0" prefWidth="100.0" rippleBackgroundOpacity="0.5" rippleColor="#d7d4d4" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px;" text="Clear">
-                                       <font>
-                                          <Font name="Poppins Medium Italic" size="12.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor></MFXButton>
+                                       </cursor>
+                                    </Button>
                                  </children>
-                                 <VBox.margin>
-                                    <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
-                                 </VBox.margin>
                                  <padding>
-                                    <Insets right="10.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" />
                                  </padding>
                               </HBox>
+                              <TableView fx:id="transactionsTable" fixedCellSize="30.0" prefHeight="495.0" prefWidth="655.0" style="-fx-font-size: 14px; -fx-font-family: roboto;">
+                                 <columns>
+                                    <TableColumn fx:id="counterColumn" editable="false" prefWidth="66.66665637493134" style="-fx-font-family: roboto;" text="No." />
+                                    <TableColumn fx:id="transIdColumn" editable="false" prefWidth="116.66668701171875" style="-fx-font-family: roboto;" text="Trans Id" />
+                                    <TableColumn fx:id="transTypeColumn" editable="false" prefWidth="137.99996948242188" style="-fx-font-family: roboto;" text="Trans Type" />
+                                    <TableColumn fx:id="amountColumn" editable="false" prefWidth="102.66668701171875" style="-fx-font-family: roboto;" text="Amount" />
+                                    <TableColumn fx:id="payMethodColumn" editable="false" prefWidth="130.66668701171875" style="-fx-font-family: roboto;" text="Payment Mtd" />
+                                    <TableColumn fx:id="timeColumn" editable="false" prefWidth="102.6666259765625" style="-fx-font-family: roboto;" text="Time" />
+                                 </columns>
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin>
+                              </TableView>
+                           </children>
+                           <HBox.margin>
+                              <Insets bottom="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox prefHeight="484.0" prefWidth="348.0" style="-fx-background-color: #fbfeff;">
+                           <children>
+                              <HBox alignment="CENTER" focusTraversable="true" prefHeight="61.0" prefWidth="708.0" spacing="400.0" style="-fx-background-color: #eedd;">
+                                 <children>
+                                    <Label text="CLOSE TRANSACTION PORTAL" textFill="#989898">
+                                       <font>
+                                          <Font name="Arial Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" />
+                                 </padding>
+                              </HBox>
+                              <VBox prefHeight="419.0" prefWidth="196.0" style="-fx-border-color: #eee; -fx-border-radius: 10px;">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <VBox prefHeight="62.0" prefWidth="617.0">
+                                       <children>
+                                          <Label text="Cash Amount *">
+                                             <font>
+                                                <Font name="Poppins Regular" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="cashField" onKeyTyped="#validateCashField" prefHeight="34.0" prefWidth="617.0">
+                                             <font>
+                                                <Font name="Poppins Medium" size="12.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="3.0" />
+                                             </VBox.margin>
+                                          </TextField>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" top="5.0" />
+                                       </VBox.margin>
+                                    </VBox>
+                                    <VBox prefHeight="62.0" prefWidth="617.0">
+                                       <children>
+                                          <Label text="Overage Amount *">
+                                             <font>
+                                                <Font name="Poppins Regular" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="overageField" onKeyTyped="#validateOverageField" prefHeight="34.0" prefWidth="617.0" text="0.00">
+                                             <font>
+                                                <Font name="Poppins Medium" size="12.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="3.0" />
+                                             </VBox.margin>
+                                          </TextField>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" top="5.0" />
+                                       </VBox.margin>
+                                    </VBox>
+                                    <VBox prefHeight="62.0" prefWidth="617.0">
+                                       <children>
+                                          <Label text="Shortage Amount *">
+                                             <font>
+                                                <Font name="Poppins Regular" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="shortageField" onKeyTyped="#validateShortageField" prefHeight="34.0" prefWidth="617.0" text="0.00">
+                                             <font>
+                                                <Font name="Poppins Medium" size="12.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="3.0" />
+                                             </VBox.margin>
+                                          </TextField>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" top="5.0" />
+                                       </VBox.margin>
+                                    </VBox>
+                                    <VBox prefHeight="106.0" prefWidth="597.0">
+                                       <children>
+                                          <Label text="Note ">
+                                             <font>
+                                                <Font name="Poppins Regular" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <TextArea fx:id="commentsField" prefHeight="83.0" prefWidth="597.0" wrapText="true">
+                                             <font>
+                                                <Font name="Poppins Medium" size="12.0" />
+                                             </font></TextArea>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" top="5.0" />
+                                       </VBox.margin>
+                                    </VBox>
+                                    <VBox prefHeight="69.0" prefWidth="597.0">
+                                       <children>
+                                          <Label text="Closing Balance" textFill="RED">
+                                             <font>
+                                                <Font name="Poppins Regular" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="closingBalanceLabel" alignment="CENTER" prefHeight="39.0" prefWidth="309.0" style="-fx-background-color: red; -fx-background-radius: 5;" text="0.00" textAlignment="CENTER" textFill="WHITE">
+                                             <font>
+                                                <Font name="Poppins Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </VBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="617.0" spacing="5.0" style="-fx-border-radius: 5px;">
+                                       <children>
+                                          <MFXButton fx:id="closeAccountButton" disable="true" onAction="#closeCashierTransactions" prefHeight="30.0" prefWidth="120.0" rippleBackgroundOpacity="0.5" rippleColor="#45d2d2" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-background-color: #39b1b3;" text="Close Account" textFill="WHITE">
+                                             <font>
+                                                <Font name="Poppins Medium" size="12.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </MFXButton>
+                                          <MFXButton fx:id="cancelButton" prefHeight="30.0" prefWidth="120.0" rippleBackgroundOpacity="0.5" rippleColor="#d7d4d4" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px;" text="Clear">
+                                             <font>
+                                                <Font name="Poppins Medium" size="13.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </MFXButton>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </VBox.margin>
+                                       <padding>
+                                          <Insets right="10.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
             </AnchorPane>
         </items>

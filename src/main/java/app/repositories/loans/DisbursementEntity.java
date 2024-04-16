@@ -5,11 +5,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Currency;
-import java.util.Locale;
-
 public class DisbursementEntity {
 
     private int id, processing_rate;
@@ -23,7 +18,7 @@ public class DisbursementEntity {
     private ComboBox<String> method = new ComboBox<>();
     private TextField transIdField = new TextField();
     private String mobileNumber;
-    private double processingFee, loanAmountValue;
+    private double processingFee, disbursementAmount;
 
     public DisbursementEntity() {
     }
@@ -57,14 +52,13 @@ public class DisbursementEntity {
         payBtn.setStyle("-fx-font-family:roboto; -fx-font-size:12px; -fx-font-weight:bold;");
         if (value) {
             status.setText("Unpaid");
-            status.setStyle("-fx-text-fill:#fff; -fx-background-color:#ff3939;-fx-alignment:center; " +
-                    "-fx-padding:4px; -fx-background-radius: 5px; -fx-pref-width:70px; -fx-font-size:12px; -fx-font-family:roboto");
+            status.setStyle("-fx-text-fill:red; -fx-alignment:center; -fx-pref-width:70px; -fx-font-size:12px; -fx-font-family:roboto");
         }
     }
 
     private void computeRate() {
         processingFee = (loanAmount / 100) * processing_rate;
-        loanAmountValue = loanAmount - processingFee;
+        disbursementAmount = loanAmount - processingFee;
     }
 
     private void transactionTypeChangeListener() {
@@ -175,12 +169,12 @@ public class DisbursementEntity {
         this.processingFee = processingFee;
     }
 
-    public double getLoanAmountValue() {
-        return loanAmountValue;
+    public double getDisbursementAmount() {
+        return disbursementAmount;
     }
 
-    public void setLoanAmountValue(double loanAmountValue) {
-        this.loanAmountValue = loanAmountValue;
+    public void setDisbursementAmount(double disbursementAmount) {
+        this.disbursementAmount = disbursementAmount;
     }
 
 }//end of class...

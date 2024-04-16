@@ -129,3 +129,11 @@ INNER JOIN temporal_cashier_account as tca
 ON transferred_to = teller
 WHERE transferred_to = 'allotey@example.com' AND DATE(dtl.entry_date) = CURRENT_DATE();
 
+-- INSERT DATA INTO THE TABLE...
+INSERT INTO closed_teller_transaction_logs(
+	start_amount, closed_amount, physical_cash,
+	 e_cash, overage_amount, shortage_amount, `comment`,
+	 entered_by
+ )
+VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+

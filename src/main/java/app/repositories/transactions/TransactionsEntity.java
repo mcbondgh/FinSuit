@@ -14,7 +14,6 @@ public class TransactionsEntity {
     private String transaction_id, transaction_type, payment_method, payment_gateway;
     private double cash_amount, ecash_amount, total_amount;
     private double transactionTax;
-
     private String ecash_id;
     private Timestamp transaction_date;
     private String transaction_made_by, nationalIdNumber;
@@ -23,9 +22,7 @@ public class TransactionsEntity {
     private String formattedDate;
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
     private LocalTime localTime;
-
     private Label transactionStatus = new Label();
-
     public TransactionsEntity(long id, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double cash_amount, double ecash_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, String username){
         this.id = id;
         this.account_number = account_number;
@@ -40,6 +37,14 @@ public class TransactionsEntity {
         this.ecash_amount = ecash_amount;
         this.cash_amount = cash_amount;
         formatVariables();
+    }
+    public TransactionsEntity(long id, String transaction_id, String transaction_type, String payment_method, double total_amount, LocalTime localTime) {
+        this.id = id;
+        this.transaction_id = transaction_id;
+        this.transaction_type = transaction_type;
+        this.payment_method = payment_method;
+        this.total_amount = total_amount;
+        this.localTime = localTime;
     }
     public TransactionsEntity(long id, String fullname, String account_number, String transaction_id, String transaction_type, String payment_method, String payment_gateway, double total_amount, String ecash_id, Timestamp transaction_date, String transaction_made_by, String nationalIdNumber, String username) {
         this.id = id;
@@ -60,8 +65,6 @@ public class TransactionsEntity {
     }
     public TransactionsEntity() {}
 
-
-
     public TransactionsEntity(String transaction_id, String transaction_type, double total_amount, LocalTime localTime) {
         this.transaction_id = transaction_id;
         this.transaction_type = transaction_type;
@@ -73,17 +76,13 @@ public class TransactionsEntity {
         transactionStatus.setText(transaction_type);
         switch(transaction_type) {
             case "CASH DEPOSIT" ->
-                transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color:#278c8f;" +
-                        "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
+                transactionStatus.setStyle("-fx-font-size:12px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-text-fill:#278c8f; -fx-alignment:center");
             case "CASH WITHDRAWAL" ->
-                    transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color: orange;" +
-                            "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
+                    transactionStatus.setStyle("-fx-font-size:12px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-text-fill:brown; -fx-background-radius:5px; -fx-alignment:center");
             case "REPAYMENT" ->
-                    transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color: #117bdd;" +
-                            "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
+                    transactionStatus.setStyle("-fx-font-size:12px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-text-fill:#117bdd; -fx-background-radius:5px; -fx-alignment:center");
             case "DISBURSED FUND" ->
-                    transactionStatus.setStyle("-fx-font-size:9px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-padding:5px; -fx-background-color:#25aa04;" +
-                            "-fx-text-fill:#fff; -fx-background-radius:5px; -fx-alignment:center");
+                    transactionStatus.setStyle("-fx-font-size:12px; -fx-font-family:roboto; -fx-font-weight:bold; -fx-text-fill: #25aa04; -fx-background-radius:5px; -fx-alignment:center");
         }
 
     }

@@ -1191,6 +1191,7 @@ public class MainModel extends DbConnection {
         }catch (SQLException e){}
         return data;
     }
+
     public Map<String, List<Object>> getTemporalCashierTableData() {
         Map<String, List<Object>> data = new HashMap<>();
         try{
@@ -1199,9 +1200,9 @@ public class MainModel extends DbConnection {
             while (resultSet.next()){
                 String tellerNames = resultSet.getString("teller");
                 List<Object> tableData = new ArrayList<>();
-                tableData.add(resultSet.getInt("id"));
-                tableData.add(resultSet.getDouble("amount"));
-                tableData.add(resultSet.getTimestamp("entry_date"));
+                tableData.add(resultSet.getInt("id"));//0
+                tableData.add(resultSet.getDouble("amount"));//1
+                tableData.add(resultSet.getTimestamp("entry_date"));//2
                 data.put(tellerNames, tableData);
             }
             resultSet.close();
@@ -1250,5 +1251,45 @@ public class MainModel extends DbConnection {
             getConnection().close();
         }catch(SQLException ignore){}
         return data;
+    }
+
+    public ObservableList<TransactionsEntity> fetchTodayTransactionByCashierName(String name) {
+        ObservableList<TransactionsEntity> data = new ObservableStack<>();
+        try {
+            String query = "SELECT id, transaction_id, transaction_type, payment_method, \n" +
+                    "SUM(ecash_amount + cash_amount) AS total, Time(transaction_date) AS `time`, username FROM \n" +
+                    "transaction_logs AS tlogs\n" +
+                    "INNER JOIN users AS u \n" +
+                    "USING(user_id)\n" +
+                    "WHERE(DATE(transaction_date) = CURRENT_DATE()  AND username = ? ) GROUP BY id;";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, name);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                long id = resultSet.getInt("id");
+                String transId = resultSet.getString("transaction_id");
+                String type = resultSet.getString("transaction_type");
+                String method = resultSet.getString("payment_method");
+                double total = resultSet.getDouble("total");
+                LocalTime time = resultSet.getTime("time").toLocalTime();
+                data.add(new TransactionsEntity(id, transId, type, method, total, time));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
+
+    //This method when invoked shall check if cashier closed their account for the day or not based on the
+    //current date.
+    public boolean isCashierTransactionClosed(Date currentDate, int cashierId) {
+        try {
+            String query = "SELECT Date(entry_date) as `Entry Date`" +
+                    "FROM closed_teller_transaction_logs " +
+                    "WHERE (DATE('"+currentDate+"') = current_date() AND entered_by = '"+cashierId+"')";
+             resultSet = getConnection().createStatement().executeQuery(query);
+             if (resultSet.next()) {
+                 return resultSet.getDate("Entry Date").toLocalDate().equals(LocalDate.now());
+             }
+        }catch (SQLException ignore) {ignore.printStackTrace();}
+        return false;
     }
 }//END OF CLASS...

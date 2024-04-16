@@ -48,7 +48,7 @@
                               <Insets left="5.0" />
                            </padding>
                         </TextField>
-                        <MFXButton fx:id="exportButton" layoutX="1075.0" layoutY="8.0" onAction="#exportTableToPdfOnClick" prefHeight="25.0" prefWidth="96.0" text="Export As PDF" textFill="RED">
+                        <MFXButton fx:id="exportButton" layoutX="1075.0" layoutY="8.0" onAction="#exportTableToPdfOnClick" prefHeight="25.0" prefWidth="96.0" text="Export As PDF" textFill="RED" visible="false">
                            <font>
                               <Font name="Poppins Medium" size="12.0" />
                            </font>

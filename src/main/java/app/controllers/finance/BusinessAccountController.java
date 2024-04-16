@@ -11,6 +11,7 @@ import app.repositories.business.DomesticTransactionLogsEntity;
 import app.repositories.notifications.NotificationEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXCheckListView;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -48,6 +49,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     @FXML private VBox domesticOptionBox;
     @FXML private TextField domesticAmountField;
     @FXML private MFXButton saveDomesticTransactionBtn;
+    @FXML private MFXCheckListView<Object> cashierListView;
 
     //BUSINESS TRANSACTION TABLE NODES...
     @FXML private TableView<BusinessTransactionLogs> businessTransactionTable;
@@ -163,13 +165,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             }
         });
     }
-    double computeTellerAccountBalance(String tellerName) {
-        AtomicReference<Double> amountValue = new AtomicReference<>(0.0);
-        getTemporalCashierTableData().forEach((key, value)-> {
-            amountValue.set(key.equals(tellerName) ? Double.parseDouble(value.get(1).toString()) : amountValue.get());
-        });
-        return amountValue.get();
-    }
+//    double computeTellerAccountBalance(String tellerName) {
+//        AtomicReference<Double> amountValue = new AtomicReference<>(0.0);
+//        getTemporalCashierTableData().forEach((key, value)-> {
+//            amountValue.set(key.equals(tellerName) ? Double.parseDouble(value.get(1).toString()) : amountValue.get());
+//        });
+//        return amountValue.get();
+//    }
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS.
@@ -355,7 +357,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                 responseStatus += saveDomesticTransferLog(domesticTransactionLogs);
 
                 //Get tellers current balance and insert or update based on the method's condition...
-                double tellerAmount = computeTellerAccountBalance(transferTo) + transferAmount;
+                double tellerAmount = SpecialMethods.getCashierCurrentBalance(transferTo) + transferAmount;
                 modifyTemporalCashierAccount(transferTo, tellerAmount);
 
                 //check if query executed successfully. if true show success notification else error

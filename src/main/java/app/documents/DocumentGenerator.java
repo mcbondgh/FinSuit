@@ -7,23 +7,29 @@ import app.repositories.loans.CollectionSheetEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.repositories.transactions.TransactionsEntity;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.draw.DottedLine;
+import com.itextpdf.kernel.pdf.colorspace.PdfColorSpace;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Div;
-import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.BorderCollapsePropertyValue;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BackgroundFill;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,15 +97,72 @@ public class DocumentGenerator {
         }
         String addressText = email.concat(" | ").concat(digitalAddress);
         builder.append(businessName).append("\n").append(mobileNumbers).append("\n").append(addressText);
-
-
         return builder;
     }
 
     /*******************************************************************************************************************
      *************************************** DEPOSIT RECEIPT CREATION API *************************************************
      ******************************************************************************************************************/
+    public int generateCashierTransactionSummarySheet(String documentName, String cashierName, TableView<TransactionsEntity> tableView) {
+        int status = 200;
+        try {
+            Table table = new Table(6);
+            table.setFontSize(10).useAllAvailableWidth().setVerticalAlignment(VerticalAlignment.MIDDLE);
+            table.setMarginTop(5.0F);
 
+            String todayDate = LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+
+            //Create Table Cells
+           table.addHeaderCell(new Cell(0, 6).add(new Paragraph("YOUR DAILY TRANSACTION LOGS").setBold()).setTextAlignment(TextAlignment.CENTER));
+           table.addHeaderCell(new Cell(0, 3).add(new Paragraph("CASHIER NAME")).setBold().setVerticalAlignment(VerticalAlignment.MIDDLE));
+           table.addHeaderCell(new Cell(0, 3).add(new Paragraph(cashierName)));
+           table.addHeaderCell(new Cell(0, 3).add(new Paragraph("DATE")).setBold().setVerticalAlignment(VerticalAlignment.MIDDLE));
+           table.addHeaderCell(new Cell(0, 3).add(new Paragraph(todayDate)));
+           table.addHeaderCell(new Paragraph("NO.").setBold());
+           table.addHeaderCell(new Paragraph("TRANSACTION ID").setBold());
+           table.addHeaderCell(new Paragraph("TRANSACTION TYPE").setBold());
+           table.addHeaderCell(new Paragraph("PAYMENT METHOD").setBold());
+           table.addHeaderCell(new Paragraph("AMOUNT").setBold());
+           table.addHeaderCell(new Paragraph("TIME").setBold());
+
+           NumberFormat numberFormat = NumberFormat.getInstance();
+
+           //iterate through the table and get each value for the table
+            for(TransactionsEntity item : tableView.getItems()) {
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getId()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getTransaction_id()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getTransaction_type()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getPayment_method()))));
+                table.addCell(new Cell().add(new Paragraph(numberFormat.format(item.getTotal_amount()))));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getLocalTime()))));
+            }
+
+            //CREATE FILE DIRECTORY IF NOT EXIST.
+            File cashierSheetFolder = new File(createDirectoryIfNotExist().getPath() + File.separator + "cashier summary sheets\\");
+            var document = getDocument(documentName, cashierSheetFolder);
+
+            document.add(documentHeader()).add(table);
+            document.close();
+        }catch (Exception e) {status = 400;}
+        return status;
+    }
+
+    @NotNull
+    private static Document getDocument(String documentName, File cashierSheetFolder) throws FileNotFoundException {
+        if (!cashierSheetFolder.exists()) {
+            cashierSheetFolder.mkdir();
+        }
+
+        //WRITE FILE TO THE CREATED DIRECTORY
+        File pdfFile = new File(cashierSheetFolder, documentName.concat(".pdf"));
+        PdfWriter pdfWriter = new PdfWriter(pdfFile);
+
+        //CREATE A PDF-DOCUMENT ENVIRONMENT FOR THE FILE TO BE WRITTEN INTO
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+
+        //CREATE A DOCUMENT ENVIRONMENT FOR THE PDF-FILE TO BE WRITTEN INTO AND SPECIFY THE PAPER SIZE OR PAGE SIZE.
+        return new Document(pdfDocument, PageSize.A4);
+    }
 
     public void generateTransactionReceipt(String documentName, ReceiptsEntity receiptsEntity) {
         try {
@@ -118,7 +181,7 @@ public class DocumentGenerator {
             Table table = new Table(2).setHorizontalAlignment(HorizontalAlignment.CENTER)
                     .setVerticalAlignment(VerticalAlignment.MIDDLE)
                     .setFontSize(10).setPadding(6f)
-                    .useAllAvailableWidth();
+                    .useAllAvailableWidth().setBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
 
             Div receiptBodyContainer = new Div();
 
@@ -153,7 +216,10 @@ public class DocumentGenerator {
             receiptContentContainer.setMarginLeft(32f);
 
             receiptBodyContainer.add(combinedParagraph).add(receiptContentContainer);
-            document.add(documentHeader()).add(receiptBodyContainer);
+            document.add(documentHeader())
+                    .add(receiptBodyContainer)
+                    .add(new Paragraph("---"))
+                    .add(receiptBodyContainer);
             document.close();
         } catch (Exception ignore) {
         }
@@ -363,7 +429,7 @@ public class DocumentGenerator {
             }
             document.add(documentHeader()).add(table);
             document.close();
-        }catch (Exception e) {e.printStackTrace();}
+        }catch (Exception ignore) {}
     }
 
     public void generateLoanRepaymentReceipt(String documentName, ReceiptsEntity receiptsEntity) {
