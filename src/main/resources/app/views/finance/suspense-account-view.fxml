@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.SuspenseAccountController">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: #a2d5ff;">
+         <children>
+            <ImageView blendMode="OVERLAY" fitHeight="38.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/cybersecurity.png" />
+               </image>
+            </ImageView>
+            <Label text="SUSPENSE ACCOUNT" textFill="#4289db">
+               <font>
+                  <Font name="Arial Black" size="16.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </HBox>
+      <HBox prefHeight="521.0" prefWidth="682.0" spacing="5.0" style="-fx-border-radius: 5px; -fx-border-color: #ddd;">
+         <children>
+            <TableView fx:id="accountTable" fixedCellSize="30.0" prefHeight="452.0" prefWidth="570.0" style="-fx-font-size: 14px; -fx-font-family: arial; -fx-background-color: #eee; -fx-alignment: center-left;">
+              <columns>
+                <TableColumn fx:id="idColumn" prefWidth="75.0" text="Susp Id" />
+                <TableColumn fx:id="nameColumn" prefWidth="170.6666488647461" text="Cashier" />
+                  <TableColumn fx:id="statusColumn" prefWidth="130.00001525878906" text="Status" />
+                  <TableColumn fx:id="dateColumn" prefWidth="190.66668701171875" text="Entry Date" />
+              </columns>
+            </TableView>
+            <VBox alignment="TOP_CENTER" prefHeight="452.0" prefWidth="226.0" spacing="5.0" style="-fx-background-color: #f6fbff;">
+               <children>
+                  <Label text="ACCOUNT VALUES" textFill="#95a9ba">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <VBox prefHeight="67.0" prefWidth="288.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="22.0" text="Overage Amount *" textFill="#555555">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="overageField" onKeyTyped="#validateOverageField" prefHeight="34.0" prefWidth="617.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 3px;" text="0.00">
+                           <font>
+                              <Font name="Poppins Medium" size="15.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="67.0" prefWidth="288.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="22.0" text="Shortage Amount *" textFill="#555555">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="shortageField" onKeyTyped="#validateShortageField" prefHeight="34.0" prefWidth="617.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 3px;" text="0.00">
+                           <font>
+                              <Font name="Poppins Medium" size="15.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="67.0" prefWidth="288.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="22.0" text="Closure Amount" textFill="#555555">
+                           <font>
+                              <Font name="Poppins Regular" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="closureField" editable="false" onKeyTyped="#validateShortageField" prefHeight="34.0" prefWidth="617.0" style="-fx-background-color: #ff9999; -fx-border-radius: 3px;">
+                           <font>
+                              <Font name="Poppins Medium" size="15.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                     </padding>
+                  </VBox>
+                  <MFXButton fx:id="closeAccountButton" depthLevel="LEVEL0" onAction="#clearAccountButtonClicked" prefHeight="31.0" prefWidth="245.0" rippleBackgroundOpacity="0.5" rippleColor="#45d2d2" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-background-color: #39b1b3;" text="Clear Account" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </MFXButton>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

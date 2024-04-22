@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1200.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.BusinessAccountController">
+   <children>
+      <SplitPane dividerPositions="0.1856904231625835" layoutX="14.0" layoutY="14.0" prefHeight="550.0" prefWidth="1200.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="225.0">
+               <children>
+                  <VBox layoutX="75.0" layoutY="-21.0" prefHeight="562.6666666666666" prefWidth="231.33333333333334" spacing="5.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="41.0" prefWidth="231.0" style="-fx-background-color: #eee;">
+                           <children>
+                              <Label prefHeight="24.0" text="BUSINESS ACCOUNT" textFill="#828282">
+                                 <font>
+                                    <Font name="Poppins Medium" size="17.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <MFXProgressBar fx:id="progressBar" animationSpeed="0.7" prefHeight="7.0" prefWidth="668.0" progress="0.0" />
+                        <VBox alignment="CENTER" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #93baad; -fx-border-color: #green; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+                           <children>
+                              <Label text="Previous Balance" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins SemiBold" size="11.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="previousBalanceIndicator" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins SemiBold" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="89.0" prefWidth="221.0" style="-fx-background-color: #d0ffd5; -fx-border-color: #green; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+                           <children>
+                              <Label text="Current Balance" textFill="#90bca7">
+                                 <font>
+                                    <Font name="Poppins SemiBold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="accountBalanceIndicator" textFill="#29a385">
+                                 <font>
+                                    <Font name="Poppins SemiBold" size="21.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox prefHeight="148.0" prefWidth="231.0" style="-fx-background-color: #eee; -fx-border-color: #green; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+                           <children>
+                              <Label text="Account Password *" textFill="#7d7878">
+                                 <font>
+                                    <Font name="Poppins Medium" size="11.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <PasswordField fx:id="passwordField" prefHeight="34.0" prefWidth="221.0" />
+                              <MFXButton fx:id="checkBalanceBtn" onAction="#checkBalanceBtnClicked" prefHeight="33.0" prefWidth="653.0" rippleAnimationSpeed="2.0" rippleBackgroundOpacity="0.5" rippleColor="#14c0bd" style="-fx-background-color: #278c8f;" text="Check Balance" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </MFXButton>
+                              <Label fx:id="passwordErrorIndicator" alignment="CENTER" prefHeight="26.0" prefWidth="223.0" style="-fx-background-color: #ffdede;" text="Incorrect password" textFill="#960b0b" visible="false">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="7.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TabPane fx:id="tabPane" layoutY="26.0" onMouseClicked="#tabItemSelected" prefHeight="562.6666666666666" prefWidth="960.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab style="-fx-backgorund-color: #fff; -fx-font-family: poppins Medium; -fx-padding: 2 5 2 5;" text="Business Transfers">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="972.0">
+                                 <children>
+                                    <HBox layoutX="14.0" layoutY="67.0" prefHeight="516.0" prefWidth="972.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <VBox alignment="TOP_CENTER" onMouseMoved="#checkForEmptyFields" prefHeight="505.0" prefWidth="325.0" spacing="4.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="33.0" prefWidth="373.0" style="-fx-background-color: #eee;" text="BANK - BUSINESS ACCOUNT TRANSFERS" textFill="#7d7d7d">
+                                                   <font>
+                                                      <Font name="Poppins Medium" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <HBox prefHeight="75.0" prefWidth="307.0" spacing="5.0">
+                                                   <children>
+                                                      <VBox prefHeight="100.0" prefWidth="138.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                         <children>
+                                                            <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer Date *">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="10.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <DatePicker fx:id="transDatePicker" prefHeight="31.0" prefWidth="114.0" promptText="date" style="-fx-font-family: poppins medium; -fx-font-size: 13px;" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                      <VBox prefHeight="66.0" prefWidth="193.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                         <children>
+                                                            <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer To *">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="10.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <ComboBox fx:id="transTypeSelector" prefHeight="33.0" prefWidth="161.0" style="-fx-background-color: #eee; -fx-font-family: poppins medium; -fx-font-family: 13px;" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <VBox prefHeight="69.0" prefWidth="185.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                   <children>
+                                                      <Label cache="true" style="-fx-font-family: poppins medium;" text="Select Bank *">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <ComboBox fx:id="bankSelector" prefHeight="33.0" prefWidth="352.0" style="-fx-background-color: #eee; -fx-font-family: poppins medium; -fx-font-family: 13px;" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <VBox.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </VBox.margin>
+                                                </VBox>
+                                                <HBox prefHeight="75.0" prefWidth="307.0" spacing="5.0">
+                                                   <children>
+                                                      <VBox prefHeight="69.0" prefWidth="195.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                         <children>
+                                                            <Label cache="true" style="-fx-font-family: poppins medium;" text="Account Number *">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="10.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="accountNumberField" prefHeight="31.0">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="13.0" />
+                                                               </font>
+                                                            </TextField>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                      <VBox prefHeight="69.0" prefWidth="195.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                         <children>
+                                                            <Label cache="true" style="-fx-font-family: poppins medium;" text="Transaction No. *">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="10.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="transactionIdField" prefHeight="31.0">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="13.0" />
+                                                               </font>
+                                                            </TextField>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <VBox prefHeight="69.0" prefWidth="195.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                   <children>
+                                                      <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer Amount *">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="transferAmountField" prefHeight="31.0">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="13.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <VBox.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </VBox.margin>
+                                                </VBox>
+                                                <VBox prefHeight="107.0" prefWidth="307.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                   <children>
+                                                      <Label cache="true" style="-fx-font-family: poppins medium;" text="Add Note (Optional)">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextArea fx:id="notesField" prefHeight="82.0" prefWidth="295.0" promptText="Wirte your comments here" wrapText="true">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="13.0" />
+                                                         </font>
+                                                      </TextArea>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                   <VBox.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </VBox.margin>
+                                                </VBox>
+                                                <MFXButton fx:id="bankTransferButton" onAction="#saveBankTransfer" prefHeight="33.0" prefWidth="357.0" rippleAnimationSpeed="2.0" rippleBackgroundOpacity="0.5" rippleColor="#14c0bd" style="-fx-background-color: #278c8f;" text="Transfer Fund" textFill="WHITE">
+                                                   <font>
+                                                      <Font name="Poppins Medium" size="12.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </VBox.margin>
+                                                </MFXButton>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox layoutX="10.0" layoutY="10.0" prefHeight="516.0" prefWidth="661.0" spacing="5.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="33.0" prefWidth="954.0" style="-fx-background-color: #eee;" text="TRANSFER LOGS" textFill="#7d7d7d">
+                                                   <font>
+                                                      <Font name="Poppins Medium" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <TableView fx:id="businessTransactionTable" fixedCellSize="35.0" onMouseClicked="#getSelectedTableItem" prefHeight="460.0" prefWidth="643.0" style="-fx-font-family: poppins medium; -fx-font-size: 13px;" tableMenuButtonVisible="true">
+                                                  <columns>
+                                                    <TableColumn fx:id="bIdColumn" prefWidth="56.66668713092804" text="No." />
+                                                    <TableColumn fx:id="transferTypeColumn" prefWidth="113.33331298828125" text="Transferred To" />
+                                                      <TableColumn fx:id="bankNameColumn" prefWidth="120.66659545898438" text="Bank Name" />
+                                                      <TableColumn fx:id="transferAmountColumn" prefWidth="82.00006103515625" text="Amount" />
+                                                      <TableColumn fx:id="transIdColumn" prefWidth="146.6666259765625" text="Transaction Id" />
+                                                      <TableColumn fx:id="transactionDateColumn" prefWidth="106.666748046875" text="Date" />
+                                                  </columns>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children></AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab style="-fx-backgorund-color: #fff; -fx-font-family: poppins Medium; -fx-padding: 2 5 2 5;" text="Internal Transfers">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox layoutX="308.0" layoutY="89.0" prefHeight="516.0" prefWidth="972.0" spacing="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <VBox alignment="TOP_CENTER" onMouseMoved="#checkForEmptyFieldsInDomesticTransaction" prefHeight="505.0" prefWidth="403.0" spacing="4.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="33.0" prefWidth="373.0" style="-fx-background-color: #eee;" text="ACCONT - CASHIER TRANSFERS" textFill="#7d7d7d">
+                                                   <font>
+                                                      <Font name="Poppins Medium" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <HBox prefHeight="75.0" prefWidth="307.0" spacing="5.0">
+                                                   <children>
+                                                      <VBox prefHeight="65.0" prefWidth="332.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                         <children>
+                                                            <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer Type *">
+                                                               <font>
+                                                                  <Font name="Poppins Medium" size="10.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <ComboBox fx:id="domesticTransTypeSelector" onAction="#domesticTransferTypeOnAction" prefHeight="33.0" prefWidth="445.0" style="-fx-background-color: #eee; -fx-font-family: poppins medium; -fx-font-family: 13px;" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </HBox>
+                                                <VBox fx:id="domesticOptionBox" disable="true" prefHeight="69.0" prefWidth="185.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                   <children>
+                                                      <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer To *">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <ComboBox fx:id="cashierSelector" prefHeight="33.0" prefWidth="352.0" style="-fx-background-color: #eee; -fx-font-family: poppins medium; -fx-font-family: 13px;" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </VBox>
+                                                <VBox prefHeight="69.0" prefWidth="195.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                   <children>
+                                                      <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer Amount">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <TextField fx:id="domesticAmountField" onKeyTyped="#validateTransactionAmountField" prefHeight="34.0" prefWidth="277.0" promptText="0.00">
+                                                         <font>
+                                                            <Font name="Poppins Medium" size="13.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding>
+                                                </VBox>
+                                                <MFXButton fx:id="saveDomesticTransactionBtn" disable="true" onAction="#saveDomesticTransactionButtonOnClick" prefHeight="33.0" prefWidth="357.0" rippleAnimationSpeed="2.0" rippleBackgroundOpacity="0.5" rippleColor="#14c0bd" style="-fx-background-color: #278c8f;" text="Transfer Fund" textFill="WHITE">
+                                                   <font>
+                                                      <Font name="Poppins Medium" size="12.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </VBox.margin>
+                                                </MFXButton>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox prefHeight="505.0" prefWidth="775.0" spacing="5.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                             <children>
+                                                <Label alignment="CENTER" prefHeight="38.0" prefWidth="697.0" style="-fx-background-color: #eee;" text="CASHIER TRANSFER LOGS" textFill="#7d7d7d">
+                                                   <font>
+                                                      <Font name="Poppins Medium" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <TableView fx:id="cashierTransferTable" fixedCellSize="35.0" prefHeight="463.0" prefWidth="653.0" style="-fx-font-family: poppins medium; -fx-font-size: 13px;">
+                                                  <columns>
+                                                    <TableColumn fx:id="cashierIdColumn" prefWidth="67.33331549167633" text="No." />
+                                                    <TableColumn fx:id="cashierTransTypeColumn" prefWidth="160.0" text="Transfer Type" />
+                                                      <TableColumn fx:id="cashierNameColumn" prefWidth="160.0" text="Transferred To" />
+                                                      <TableColumn fx:id="amountColumn" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Amount" />
+                                                      <TableColumn fx:id="cashColumn" prefWidth="89.99993896484375" text="Cash" visible="false" />
+                                                      <TableColumn fx:id="eCashColumn" prefWidth="88.66656494140625" text="E-Cash" visible="false" />
+                                                      <TableColumn fx:id="timeColumn" maxWidth="1.7976931348623157E308" prefWidth="139.33334350585938" text="Time" />
+                                                  </columns>
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </VBox.margin>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children></AnchorPane>
+                        </content>
+                      </Tab>
+                        <Tab style="-fx-backgorund-color: #fff; -fx-font-family: poppins Medium; -fx-padding: 2 5 2 5;" text="Income Account">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox layoutX="41.0" layoutY="73.0" prefHeight="516.0" prefWidth="972.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <VBox prefHeight="516.0" prefWidth="298.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding></HBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
