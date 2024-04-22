@@ -3,6 +3,7 @@ package app.stages;
 import app.AppStarter;
 import app.alerts.UserAlerts;
 import app.specialmethods.SpecialMethods;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -48,7 +49,7 @@ public class AppStages {
         stage.show();
     }
     public static void testPage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/fileUpload.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/imageupload.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Test Page");
@@ -191,6 +192,16 @@ public class AppStages {
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("Update Employee Data");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        return  stage;
+    }
+    public static Stage suspenseAccountStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/finance/suspense-account-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Suspense Account Stage");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.centerOnScreen();

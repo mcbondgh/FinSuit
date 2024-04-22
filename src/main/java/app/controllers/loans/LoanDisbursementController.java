@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.UnaryOperator;
 
 public class LoanDisbursementController extends LoansModel implements Initializable {
 
@@ -215,7 +214,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                     if (status > 0) {
                         //update cashier's account after successful disbursement
                         double cashierBalance = cashierCurrentBalance - accumulatedDisbursementAmount.get();
-                        new FinanceModel().modifyTemporalCashierAccount(getLoggedInUsername(), cashierBalance);
+                        new FinanceModel().updateCashierCurrentBalanceAfterTransaction(getLoggedInUsername(), cashierBalance);
                         Platform.runLater(this::setCashierBalanceLabel);
                         NOTIFY.successNotification("OPERATION SAVED", "You have successfully saved selected loan facilities as disbursed funds");
                         populateTable();

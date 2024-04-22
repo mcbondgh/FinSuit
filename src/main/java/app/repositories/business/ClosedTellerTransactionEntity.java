@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 public class ClosedTellerTransactionEntity {
 //    id, start_amount, closed_amount, physical_cash, e_cash, overage_amount, shortage_amount, entry_date, closure_date, entered_by
-    private BigInteger id;
+    private long id;
     private double startAmount;
     private double closedAmount;
     private double physicalCash;
@@ -14,12 +14,16 @@ public class ClosedTellerTransactionEntity {
     private double shortageAmount;
     private Timestamp closureDate, entryDate;
     private int enteredBy;
+    private int closedBy;
     private String notes;
+    private byte isClosed;
 
     public ClosedTellerTransactionEntity() {
     }
 
-    public ClosedTellerTransactionEntity(BigInteger id, double startAmount, double closedAmount, double physicalCash, double eCash, double overageAmount, double shortageAmount, Timestamp closureDate, int enteredBy) {
+    public ClosedTellerTransactionEntity(long id, double startAmount, double closedAmount, double physicalCash,
+                                         double eCash, double overageAmount, double shortageAmount, Timestamp closureDate,
+                                         int enteredBy, int closedBy) {
         this.id = id;
         this.startAmount = startAmount;
         this.closedAmount = closedAmount;
@@ -29,13 +33,14 @@ public class ClosedTellerTransactionEntity {
         this.shortageAmount = shortageAmount;
         this.closureDate = closureDate;
         this.enteredBy = enteredBy;
+        this.closedBy = closedBy;
     }
 
-    public BigInteger getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -107,5 +112,21 @@ public class ClosedTellerTransactionEntity {
 
     public void setEnteredBy(int enteredBy) {
         this.enteredBy = enteredBy;
+    }
+
+    public int getClosedBy() {
+        return closedBy;
+    }
+
+    public void setClosedBy(int closedBy) {
+        this.closedBy = closedBy;
+    }
+
+    public byte getIsClosed() {
+        return isClosed;
+    }
+
+    public void setIsClosed(byte isClosed) {
+        this.isClosed = isClosed;
     }
 }//end of class...

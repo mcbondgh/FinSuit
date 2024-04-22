@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1179.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.CloseCashierTransactionController">
+   <children>
+      <HBox layoutX="41.0" layoutY="73.0" prefHeight="573.0" prefWidth="1146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="563.0" prefWidth="256.0" spacing="5.0" style="-fx-background-color: #fff; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <effect>
+                  <DropShadow height="19.05" radius="8.0525" width="15.16">
+                     <color>
+                        <Color red="0.859649121761322" green="0.8516893982887268" blue="0.8516893982887268" />
+                     </color>
+                  </DropShadow>
+               </effect>
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" prefHeight="55.0" prefWidth="1000.0" style="-fx-background-color: #eee;" text="Cashier List" textFill="#307a8d">
+                     <font>
+                        <Font name="Arial Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <MFXLegacyListView fx:id="cashierListView" depthLevel="LEVEL0" hideAfter="1700.0ms" prefHeight="551.0" prefWidth="223.0" style="-fx-background-color: #fff; -fx-background-radius: 5px; -fx-font-family: roboto; -fx-font-size: 13px; -fx-font-weight: bold; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-color: dodgerblue;">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                     </VBox.margin>
+                  </MFXLegacyListView>
+               </children>
+            </VBox>
+            <VBox prefHeight="563.0" prefWidth="637.0" spacing="5.0" style="-fx-background-color: #fff; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+               <effect>
+                  <DropShadow height="19.05" radius="8.0525" width="15.16">
+                     <color>
+                        <Color red="0.859649121761322" green="0.8516893982887268" blue="0.8516893982887268" />
+                     </color>
+                  </DropShadow>
+               </effect>
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" prefHeight="50.0" prefWidth="1000.0" style="-fx-background-color: #eee;" text="Transaction Logs" textFill="#307a8d">
+                     <font>
+                        <Font name="Arial Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="transactionsTable" fixedCellSize="30.0" prefHeight="541.0" prefWidth="616.0" style="-fx-font-size: 14px; -fx-font-family: roboto;">
+                     <columns>
+                        <TableColumn fx:id="noColumn" editable="false" prefWidth="93.99999511241913" style="-fx-font-family: roboto;" text="No." />
+                        <TableColumn fx:id="transIdColumn" editable="false" prefWidth="172.6666717529297" style="-fx-font-family: roboto;" text="Trans Id" />
+                        <TableColumn fx:id="transTypeColumn" editable="false" prefWidth="140.0" style="-fx-font-family: roboto;" text="Trans Type" />
+                        <TableColumn fx:id="amountColumn" editable="false" prefWidth="105.3333740234375" style="-fx-font-family: roboto;" text="Amount" />
+                        <TableColumn fx:id="timeColumn" editable="false" prefWidth="102.66671752929688" style="-fx-font-family: roboto;" text="Time" />
+                     </columns>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox prefHeight="563.0" prefWidth="286.0" style="-fx-background-color: #fff; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+               <effect>
+                  <DropShadow height="19.05" radius="8.0525" width="15.16">
+                     <color>
+                        <Color red="0.859649121761322" green="0.8516893982887268" blue="0.8516893982887268" />
+                     </color>
+                  </DropShadow>
+               </effect>
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0" prefWidth="275.0" style="-fx-background-color: #eee;" text="Suspens Account" textFill="#307a8d">
+                     <font>
+                        <Font name="Arial Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <VBox prefHeight="401.0" prefWidth="275.0" style="-fx-border-color: #eee; -fx-border-radius: 10px;">
+                     <children>
+                        <VBox prefHeight="62.0" prefWidth="617.0">
+                           <children>
+                              <Label text="Overage Amount">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="overageField" onKeyTyped="#validateOverageField" prefHeight="34.0" prefWidth="617.0" style="-fx-background-color: lightgreen;" text="0.00">
+                                 <font>
+                                    <Font name="Poppins Medium" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox prefHeight="62.0" prefWidth="617.0">
+                           <children>
+                              <Label text="Shortage Amount">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="shortageField" onKeyTyped="#validateShortageField" prefHeight="34.0" prefWidth="617.0" style="-fx-background-color: #ffc7c7;" text="0.00">
+                                 <font>
+                                    <Font name="Poppins Medium" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox prefHeight="106.0" prefWidth="245.0">
+                           <children>
+                              <Label text="Note ">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextArea fx:id="commentsField" editable="false" mouseTransparent="true" prefHeight="83.0" prefWidth="597.0" wrapText="true">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <HBox alignment="CENTER" spacing="5.0">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <VBox prefHeight="69.0" prefWidth="161.0">
+                                 <children>
+                                    <Label text="Balance" textFill="RED">
+                                       <font>
+                                          <Font name="Poppins Regular" size="13.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="2.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label fx:id="closingBalanceLabel" alignment="CENTER" prefHeight="39.0" prefWidth="176.0" style="-fx-background-color: red; -fx-background-radius: 5;" text="0.00" textAlignment="CENTER" textFill="WHITE">
+                                       <font>
+                                          <Font name="Poppins Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                              <CheckBox fx:id="suspendCheckBox" contentDisplay="TOP" mnemonicParsing="false" prefHeight="17.0" prefWidth="81.0" style="-fx-border-color: #eee; -fx-border-radius: 5;" text="Suspend">
+                                 <font>
+                                    <Font name="Roboto Medium" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <HBox.margin>
+                                    <Insets top="7.0" />
+                                 </HBox.margin>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="617.0" spacing="5.0" style="-fx-border-radius: 5px;">
+                           <children>
+                              <MFXButton fx:id="closeAccountButton" buttonType="RAISED" depthLevel="LEVEL1" disable="true" onAction="#closeCashierTransactions" prefHeight="30.0" prefWidth="308.0" rippleBackgroundOpacity="0.5" rippleColor="#45d2d2" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-background-color: #39b1b3;" text="Close Account" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins Medium" size="14.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </MFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <MFXButton fx:id="suspenseAccountButton" buttonType="RAISED" depthLevel="LEVEL1" onAction="#viewSuspenseAccount" prefHeight="34.0" prefWidth="265.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="View Suspens Account" textFill="#4191a6">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Roboto" size="13.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MFXButton>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

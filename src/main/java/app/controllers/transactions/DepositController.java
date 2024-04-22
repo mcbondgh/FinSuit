@@ -31,13 +31,13 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DepositController extends TransactionModel implements Initializable {
@@ -57,7 +57,6 @@ public class DepositController extends TransactionModel implements Initializable
 
     final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-    private static int CUSTOMER_ID;
     private String TRANSACTION_ID = "";
     DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 
@@ -130,6 +129,13 @@ public class DepositController extends TransactionModel implements Initializable
         depositorIdField.clear();
     }
 
+    //Check if cashier has closed account for the day or not. If TRUE diny transaction execution else allow transaction
+    public boolean checkIfCashierAccountIsClosed() {
+        Map<String, Object> cashierData = new FinanceModel().getCashierClosureDetailsByName(getLoggedInUsername());
+        Date closureDate = Date.valueOf(cashierData.getOrDefault("entryDate", LocalDate.now().minusDays(1)).toString());
+        return Objects.equals(LocalDate.now(), closureDate.toLocalDate());
+    }
+
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATION
@@ -150,6 +156,15 @@ public class DepositController extends TransactionModel implements Initializable
         }catch (NumberFormatException ignore){}
     }
 
+    String checkIfUserIsCashier() {
+        AtomicReference<String> cashierName = new AtomicReference<>();
+        getTemporalCashierTableData().forEach((key, value) -> {
+            if (key.equals(getLoggedInUsername())) {
+                cashierName.set(key);
+            }
+        });
+        return cashierName.get();
+    }
 
 
     /*******************************************************************************************************************
@@ -176,7 +191,7 @@ public class DepositController extends TransactionModel implements Initializable
         ArrayList<Object> items = getCustomerDetailsByAccountNumber(var1);
         accountHolderName.setText(items.get(0).toString());
         accountNumberHolder.setText(items.get(4).toString());
-        CUSTOMER_ID = (int) items.get(1);
+        int CUSTOMER_ID = (int) items.get(1);
         MOBILE_NUMBER = items.get(4).toString();
         EMAIL_ADDRESS = items.get(5).toString();
     }
@@ -212,6 +227,17 @@ public class DepositController extends TransactionModel implements Initializable
 
     @FXML void saveButtonClicked() {
         saveButton.setDisable(true);
+        if(checkIfCashierAccountIsClosed()) {
+            new UserNotification().errorNotification("ACCOUNT CLOSED","You cannot perform this transaction because account is closed for the day.");
+            return;
+        }
+
+        //check if the current user is a cashier or not...
+        if (checkIfUserIsCashier() == null) {
+            new UserAlerts("NOT A CASHIER", "You cannot perform transaction as your access to this operation is denied by your role", "you are restricted to access this operation because you are not a cashier.")
+                    .warningAlert();
+            return;
+        }
         try{
             int loggedInUserId = getUserIdByName(getLoggedInUsername());
             String clientName = accountHolderName.getText();
@@ -284,8 +310,8 @@ public class DepositController extends TransactionModel implements Initializable
                         "please confirm your action to save transaction else CANCEL to abort.");
                 if(ALERTS.confirmationAlert()) {
                     // subtract the deposited amount from cashier's account and update cashier's balance
-                    double cashierBalance = cashierCurrentBalance - totalAmount;
-                     new FinanceModel().modifyTemporalCashierAccount(getLoggedInUsername(), cashierBalance);
+                    double cashierBalance = cashierCurrentBalance + totalAmount;
+                     new FinanceModel().updateCashierCurrentBalanceAfterTransaction(getLoggedInUsername(), cashierBalance);
 
                     if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
                         documentGenerator.generateTransactionReceipt(pdfName, receiptsEntity);
@@ -312,7 +338,7 @@ public class DepositController extends TransactionModel implements Initializable
                 }
             } else {
                 ALERTS = new UserAlerts("LOW BALANCE", "Sorry, you do not have enough balance to perform deposit", "please load your account to perform this transaction");
-                ALERTS.informationAlert();
+                ALERTS.errorAlert();
             }
         }catch (NumberFormatException ignore) {
             eCashField.setText("0.00");

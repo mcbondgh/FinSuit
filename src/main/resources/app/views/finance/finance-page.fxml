@@ -22,7 +22,7 @@
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
-            <HBox fx:id="hBox" alignment="CENTER" layoutX="924.0" layoutY="9.0" prefHeight="36.0" prefWidth="297.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+            <HBox fx:id="hBox" alignment="CENTER" layoutX="818.0" layoutY="9.0" prefHeight="36.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                <children>
                   <MFXButton fx:id="loadTableButton" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
                      <font>
@@ -33,6 +33,14 @@
                      </cursor>
                   </MFXButton>
                   <MFXButton fx:id="accountsButton" onAction="#businessAccountButtonClicked" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #278c8f;" text="My Account" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MFXButton>
+                  <MFXButton fx:id="cashierSummaryBtn" onAction="#viewCashierSummary" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: #278c8f;" text="Cashier Summary" textFill="WHITE">
                      <font>
                         <Font name="Poppins Bold" size="10.0" />
                      </font>
@@ -56,6 +64,9 @@
                      </color>
                   </DropShadow>
                </effect>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
             </HBox>
          </children>
       </Pane>

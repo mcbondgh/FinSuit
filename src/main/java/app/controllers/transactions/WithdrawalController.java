@@ -13,7 +13,6 @@ import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
-import app.repositories.operations.MessageOperationsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -31,7 +30,6 @@ import javafx.scene.input.KeyEvent;
 import org.controlsfx.control.action.ActionCheck;
 
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
@@ -179,6 +177,12 @@ public class WithdrawalController extends TransactionModel implements Initializa
                 new UserAlerts("NOT A CASHIER", "You cannot perform transaction as your access to this operation is denied by your role", "you are restricted to access this operation because you are not a cashier.")
                         .warningAlert();
         } else {
+            //Check if cashier has closed account for the day. If true then diny transaction else allow transaction.
+            boolean isAccountClosed = new DepositController().checkIfCashierAccountIsClosed();
+            if(isAccountClosed) {
+                new UserNotification().errorNotification("ACCOUNT CLOSED","You cannot perform this transaction because account is closed for the day.");
+                return;
+            }
             try{
                 ArrayList<Object> customerData = getCustomerDetailsByAccountNumber(accountNumberField.getText());
                 int userId = getUserIdByName(getCurrentUserPlaceholder());
@@ -254,10 +258,9 @@ public class WithdrawalController extends TransactionModel implements Initializa
                             new MessagesModel().logNotificationMessages(MSG_ENTITY);
 
                         }catch (Exception ignore) {}
-
-                        // get current cashier balance, add withdrawal amount and update cashier's balance.
+                        // get current cashier balance, subtract withdrawal amount and update cashier's balance.
                         double cashierBalance = SpecialMethods.getCashierCurrentBalance(getCurrentUserPlaceholder());
-                        new FinanceModel().modifyTemporalCashierAccount(getCurrentUserPlaceholder(), (cashierBalance + withdrawalAmount));
+                        new FinanceModel().updateCashierCurrentBalanceAfterTransaction(getCurrentUserPlaceholder(), (cashierBalance - withdrawalAmount));
 
                         if (responseStatus == 2) {
                             Platform.runLater(()-> {

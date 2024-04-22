@@ -1,6 +1,5 @@
 package app.repositories.business;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalTime;
 
@@ -9,18 +8,20 @@ public class DomesticTransactionLogsEntity {
     private int id;
     private  String transferTypes;
     private String transferTO;
-    private double amount;
+    private double amount, cashAmount, eCashAmount;
     private int enteredBy;
     private Timestamp entryDate;
     private LocalTime time;
 
     public DomesticTransactionLogsEntity() {
     }
-    public DomesticTransactionLogsEntity(int id, String transferTypes, String transferTO, double amount, int enteredBy, Timestamp entryDate, LocalTime time) {
+    public DomesticTransactionLogsEntity(int id, String transferTypes, String transferTO, double amount, double cashAmount, double eCashAmount, int enteredBy, Timestamp entryDate, LocalTime time) {
         this.id = id;
         this.transferTypes = transferTypes;
         this.transferTO = transferTO;
         this.amount = amount;
+        this.cashAmount = cashAmount;
+        this.eCashAmount = eCashAmount;
         this.enteredBy = enteredBy;
         this.entryDate = entryDate;
         this.time = time;
@@ -68,6 +69,22 @@ public class DomesticTransactionLogsEntity {
 
     public Timestamp getEntryDate() {
         return entryDate;
+    }
+
+    public double getCashAmount() {
+        return cashAmount;
+    }
+
+    public void setCashAmount(double cashAmount) {
+        this.cashAmount = cashAmount;
+    }
+
+    public double getECashAmount() {
+        return eCashAmount;
+    }
+
+    public void setEcashAmount(double eCashAmount) {
+        this.eCashAmount = eCashAmount;
     }
 
     public void setEntryDate(Timestamp entryDate) {

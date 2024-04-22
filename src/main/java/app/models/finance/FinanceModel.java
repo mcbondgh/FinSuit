@@ -1,13 +1,15 @@
 package app.models.finance;
 
 import app.models.MainModel;
-import app.repositories.business.BusinessInfoEntity;
-import app.repositories.business.BusinessTransactionLogs;
-import app.repositories.business.ClosedTellerTransactionEntity;
-import app.repositories.business.DomesticTransactionLogsEntity;
+import app.repositories.business.*;
 import app.repositories.notifications.NotificationEntity;
+import io.github.palexdev.materialfx.collections.ObservableStack;
+import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FinanceModel extends MainModel {
 
@@ -78,12 +80,22 @@ public class FinanceModel extends MainModel {
     }
 
     //this method when invoked shall take to parameters to insert or update the temporal_cashier_account based on the cashier's name
-    public void modifyTemporalCashierAccount(String name, double amount) {
+    public void modifyTemporalCashierAccountWhenLoaded(String name, double amount) {
         try {
-            String query = "INSERT INTO temporal_cashier_account(teller, amount)\n" +
-                    "\tVALUES('"+name+"', '"+amount+"')\n" +
+            String query = "INSERT INTO temporal_cashier_account(teller, amount, e_cash)\n" +
+                    "\tVALUES('"+name+"', '"+amount+"', DEFAULT)\n" +
                     "ON DUPLICATE KEY UPDATE\n" +
-                    "\tamount = '"+amount+"';";
+                    "\tamount = '"+amount+"' ;";
+            getConnection().createStatement().execute(query);
+        }catch (SQLException e){e.printStackTrace();}
+    }
+
+    public void updateCashierCurrentBalanceAfterTransaction(String cashier, double amount) {
+        try {
+            String query = "INSERT INTO temporal_cashier_account(teller, amount, e_cash)\n" +
+                    "\tVALUES('"+cashier+"', '"+amount+"', DEFAULT)\n" +
+                    "ON DUPLICATE KEY UPDATE\n" +
+                    "\te_cash = '"+amount+"' ;";
             getConnection().createStatement().execute(query);
         }catch (SQLException e){e.printStackTrace();}
     }
@@ -111,7 +123,75 @@ public class FinanceModel extends MainModel {
         return 0;
     }
 
+    public Map<String, Object> getCashierClosureDetailsByName(String cashierName) {
+        Map<String, Object> data = new HashMap<>();
+        try{
+            String query = "SELECT shortage_amount, overage_amount, closed_amount, `comment`, DATE(entry_date) AS entry_date \n" +
+                    "FROM closed_teller_transaction_logs\n" +
+                    "INNER JOIN users AS u\n" +
+                    "ON u.user_id = entered_by\n" +
+                    "WHERE username = '"+cashierName+"';";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            if (resultSet.next()) {
+                data.put("shortageAmount", resultSet.getDouble("shortage_amount"));
+                data.put("overageAmount", resultSet.getDouble("overage_amount"));
+                data.put("balance", resultSet.getDouble("closed_amount"));
+                data.put("comment", resultSet.getString("comment"));
+                data.put("entryDate", resultSet.getDate("entry_date"));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore) {}
 
+        return data;
+    }
 
+    protected ObservableList<SuspenseAccountEntity> fetchSuspenseAccountData() {
+        ObservableList<SuspenseAccountEntity> data = new ObservableStack<>();
+        try{
+            String query = "SELECT tlogs.id, closed_amount, overage_amount, shortage_amount, entry_date, username\n" +
+                    "FROM closed_teller_transaction_logs tlogs\n" +
+                    "INNER JOIN users AS u\n" +
+                    "ON u.user_id = entered_by\n" +
+                    "WHERE is_closed = 0;";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("tlogs.id");
+                double closedAmount = resultSet.getDouble("closed_amount");
+                double overage = resultSet.getDouble("overage_amount");
+                double shortage = resultSet.getDouble("shortage_amount");
+                Timestamp date = resultSet.getTimestamp("entry_date");
+                String username = resultSet.getString("username");
+                data.add(new SuspenseAccountEntity(id, username, date, overage, shortage, closedAmount));
+            }
+        }catch (SQLException ignore) {}
+
+        return data;
+    }
+    protected void deleteCashierFromTemporalCashierTable(String cashierName){
+        try{
+            String query = "DELETE FROM temporal_cashier_account WHERE teller = '"+cashierName+"';";
+            getConnection().createStatement().execute(query);
+        }catch (Exception ignore){}
+    }
+
+    protected int updateClosureTable(ClosedTellerTransactionEntity entity) {
+        try{
+            String query = "UPDATE closed_teller_transaction_logs \n" +
+                    "SET overage_amount = ?, shortage_amount = ?, closed_amount = ?,\n" +
+                    "closed_by = ?, is_closed = ? \n" +
+                    "WHERE id = ?";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setDouble(1, entity.getOverageAmount());
+            preparedStatement.setDouble(2, entity.getShortageAmount());
+            preparedStatement.setDouble(3, entity.getClosedAmount());
+            preparedStatement.setInt(4, entity.getClosedBy());
+            preparedStatement.setByte(5, entity.getIsClosed());
+            preparedStatement.setLong(6, entity.getId());
+            return preparedStatement.executeUpdate();
+        }catch (SQLException e){e.printStackTrace();}
+
+        return 0;
+    }
 
 }//end of class...

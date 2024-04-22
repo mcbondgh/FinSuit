@@ -209,8 +209,8 @@ public class DocumentGenerator {
             receiptContentContainer.add(new Paragraph("PAID AMOUNT: Ghc".concat(receiptsEntity.getAmount())));
             receiptContentContainer.add(new Paragraph("PAYMENT METHOD: ".concat(receiptsEntity.getPaymentMethod())));
             receiptContentContainer.add(new Paragraph("PAYER'S NAME: ".concat(receiptsEntity.getDepositorName())));
-            receiptContentContainer .add(new Paragraph("PAYER'S ID NO: ".concat(receiptsEntity.getDepositorIdNumber())));
-            receiptContentContainer.add(new Paragraph("CASHIER'S NAME: ".concat(receiptsEntity.getCashierName())));
+            receiptContentContainer .add(new Paragraph("PAYER'S ID NO.: ".concat(receiptsEntity.getDepositorIdNumber())));
+            receiptContentContainer.add(new Paragraph("CASHIER: ".concat(receiptsEntity.getCashierName())));
             receiptContentContainer.add(new Paragraph("-----------------------------------------------------------------------------------------------------------").setTextAlignment(TextAlignment.CENTER));
             receiptContentContainer.add(new Paragraph("THANK YOU DEAR CUSTOMER, WE APPRECIATE YOU!!!").setFontSize(6).setMarginTop(5).setTextAlignment(TextAlignment.CENTER));
             receiptContentContainer.setMarginLeft(32f);

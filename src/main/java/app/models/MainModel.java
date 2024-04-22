@@ -8,6 +8,7 @@ import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
 import app.repositories.business.BusinessTransactionLogs;
+import app.repositories.business.ClosedTellerTransactionEntity;
 import app.repositories.business.DomesticTransactionLogsEntity;
 import app.repositories.human_resources.EmployeesData;
 import app.repositories.loans.*;
@@ -23,7 +24,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -34,8 +34,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 public class MainModel extends DbConnection {
 
@@ -1202,7 +1200,8 @@ public class MainModel extends DbConnection {
                 List<Object> tableData = new ArrayList<>();
                 tableData.add(resultSet.getInt("id"));//0
                 tableData.add(resultSet.getDouble("amount"));//1
-                tableData.add(resultSet.getTimestamp("entry_date"));//2
+                tableData.add(resultSet.getDouble("e_cash"));//2
+                tableData.add(resultSet.getTimestamp("entry_date"));//3
                 data.put(tellerNames, tableData);
             }
             resultSet.close();
@@ -1211,19 +1210,51 @@ public class MainModel extends DbConnection {
         return data;
     }
 
+    public List<String> getCashierNamesWithUnclosedAccountStatus() {
+        List<String> data = new ArrayList<>();
+        try{
+            String query = "Select username FROM closed_teller_transaction_logs AS cttl\n" +
+                    "INNER JOIN users AS u\n" +
+                    "ON u.user_id = cttl.entered_by\n" +
+                    "WHERE Date(entry_date) = current_date() AND is_closed = 0;";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()){
+                data.add(resultSet.getString("username"));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore){}
+        return data;
+    }
+
+    public long getClosureTableIdByCashierId(int cashierId) {
+        try {
+            String query = "SELECT id FROM closed_teller_transaction_logs \n" +
+                    "WHERE entered_by = '"+cashierId+"' AND DATE(entry_date) = CURRENT_DATE()";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            if (resultSet.next()) {
+                return resultSet.getLong("id");
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore) {}
+        return 0;
+    }
+
     public Map<String, List<Double>> getCashierCurrentAndLoadedBalance() {
         Map<String, List<Double>> data = new HashMap<>();
         try{
-            String query = "SELECT transferred_to AS `name`, SUM(dtl.amount) AS loaded_amount, tca.amount AS current_balance FROM domestic_transfer_logs AS dtl\n" +
-                    "INNER JOIN temporal_cashier_account as tca\n" +
+            String query = "SELECT transferred_to AS `name`, SUM(dtl.amount) AS loaded_amount , tca.e_cash AS e_cash\n" +
+                    "FROM domestic_transfer_logs AS dtl\n" +
+                    "     INNER JOIN temporal_cashier_account as tca\n" +
                     "ON transferred_to = teller\n" +
                     "WHERE DATE(dtl.entry_date) = CURRENT_DATE() GROUP BY `name`;";
             resultSet = getConnection().createStatement().executeQuery(query);
             while (resultSet.next()){
                 String tellerNames = resultSet.getString("name");
                 List<Double> tableData = new ArrayList<>();
-                tableData.add(resultSet.getDouble("loaded_amount"));
-                tableData.add(resultSet.getDouble("current_balance"));
+                tableData.add(resultSet.getDouble("loaded_amount"));//0
+                tableData.add(resultSet.getDouble("e_cash"));//1
                 data.put(tellerNames, tableData);
             }
             resultSet.close();
@@ -1245,7 +1276,9 @@ public class MainModel extends DbConnection {
                 int enteredBy = resultSet.getInt("entered_by");
                 Timestamp entry_date = resultSet.getTimestamp("entry_date");
                 LocalTime time = resultSet.getTime("time").toLocalTime();
-                data.add(new DomesticTransactionLogsEntity(id, type, to, amount, enteredBy, entry_date, time));
+                double cash = resultSet.getDouble("cash");
+                double ecash = resultSet.getDouble("e_cash");
+                data.add(new DomesticTransactionLogsEntity(id, type, to, amount, cash, ecash, enteredBy, entry_date, time));
             }
             resultSet.close();
             getConnection().close();
@@ -1289,7 +1322,46 @@ public class MainModel extends DbConnection {
              if (resultSet.next()) {
                  return resultSet.getDate("Entry Date").toLocalDate().equals(LocalDate.now());
              }
-        }catch (SQLException ignore) {ignore.printStackTrace();}
+             resultSet.close();
+             getConnection().close();
+        }catch (SQLException ignore) {}
         return false;
     }
+
+    public ObservableList<ClosedTellerTransactionEntity> getClosedCashierSummeryIdByCashierId() {
+        ObservableList<ClosedTellerTransactionEntity> data = new ObservableStack<>();
+        try {
+            String query = "";
+            resultSet = getConnection().createStatement().executeQuery(query);
+
+
+        }catch (SQLException ignore){}
+
+        return data;
+    }
+
+//    public int insertImage(String fileName, byte[] content) {
+//        try{
+//            preparedStatement = getConnection().prepareStatement("INSERT INTO image_table \n" +
+//                    "VALUES(DEFAULT, ?,?)");
+//            preparedStatement.setString(1, fileName);
+//            preparedStatement.setBytes(2, content);
+//            return preparedStatement.executeUpdate();
+//        }catch (SQLException e) {e.printStackTrace();}
+//        return 0;
+//    }
+//
+//    public List<Object> retrieveImage(int id) {
+//        List<Object>data = new ArrayList<>();
+//        try{
+//            resultSet = getConnection().prepareStatement("SELECT * FROM image_table WHERE id = '"+id+"'").executeQuery();
+//            if (resultSet.next()) {
+//                String name = resultSet.getString(2);
+//                byte[] content = resultSet.getBytes(3);
+//                data.add(name);//0
+//                data.add(content);//1
+//            }
+//        }catch (Exception e){e.printStackTrace();}
+//        return data;
+//    }
 }//END OF CLASS...

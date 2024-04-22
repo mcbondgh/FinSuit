@@ -20,7 +20,7 @@
 
 <VBox prefHeight="549.0" prefWidth="1217.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.transactions.TellerDashboardController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="1005.0" spacing="5.0" style="-fx-background-color: #eee;">
+      <HBox alignment="CENTER" prefHeight="51.0" prefWidth="1005.0" spacing="5.0" style="-fx-background-color: #eee;">
          <children>
             <ImageView fitHeight="20.0" fitWidth="18.0">
                <image>
@@ -30,21 +30,24 @@
                   <Glow />
                </effect>
             </ImageView>
-            <Label prefHeight="34.0" text="TRANSACTIONS PORTAL" textFill="#989292">
+            <Label prefHeight="25.0" prefWidth="149.0" text="CASHIER PORTAL" textFill="#989292">
                <font>
-                  <Font name="Roboto Black" size="24.0" />
+                  <Font name="Roboto Black" size="18.0" />
                </font>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
             </Label>
          </children>
          <padding>
             <Insets left="20.0" />
          </padding>
       </HBox>
-      <SplitPane cache="true" cacheHint="QUALITY" dividerPositions="0.17486702127659576" prefHeight="498.0" prefWidth="1217.0">
+      <SplitPane cache="true" cacheHint="QUALITY" dividerPositions="0.1797475301866081" prefHeight="498.0" prefWidth="1217.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="484.0" prefWidth="165.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="495.0" prefWidth="196.0">
                <children>
-                  <VBox alignment="TOP_CENTER" layoutX="44.0" layoutY="33.0" prefHeight="484.0" prefWidth="288.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox alignment="TOP_CENTER" layoutX="44.0" layoutY="33.0" prefHeight="495.0" prefWidth="197.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label text="Transaction Summary" textFill="#968e8e">
                            <font>
@@ -67,12 +70,12 @@
                         </VBox>
                         <VBox fx:id="tellerBalanceContainer" alignment="CENTER" prefHeight="85.0" prefWidth="167.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                            <children>
-                              <Label fx:id="balanceLabel" alignment="CENTER" prefHeight="31.0" prefWidth="135.0" text="Current Balance" textAlignment="CENTER" textFill="#929394">
+                              <Label fx:id="balanceLabel" alignment="CENTER" prefHeight="31.0" prefWidth="135.0" text="Balance" textAlignment="CENTER" textFill="#929394">
                                  <font>
-                                    <Font name="Poppins Regular" size="14.0" />
+                                    <Font name="Poppins Medium" size="14.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="currentBalaceLabel" text="0,000,000.00" textFill="#4591b5">
+                              <Label fx:id="eCashBalanceLabel" text="0,000,000.00" textFill="#4591b5">
                                  <font>
                                     <Font name="Roboto Black" size="25.0" />
                                  </font>
@@ -81,12 +84,26 @@
                         </VBox>
                         <VBox fx:id="container" alignment="CENTER" prefHeight="51.0" prefWidth="199.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                            <children>
-                              <Label fx:id="balanceLabel1" alignment="CENTER" prefHeight="21.0" prefWidth="135.0" text="Total Transactions" textAlignment="CENTER" textFill="#929394">
+                              <Label fx:id="balanceLabel1" alignment="CENTER" prefHeight="21.0" prefWidth="135.0" text="Total Deposit" textAlignment="CENTER" textFill="#929394">
                                  <font>
-                                    <Font name="Poppins Regular" size="12.0" />
+                                    <Font name="Poppins Medium" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="totalTransactionsLabel" text="0,000,000.00" textFill="#4591b5">
+                              <Label fx:id="depositCountLabel" text="0.00" textFill="#4591b5">
+                                 <font>
+                                    <Font name="Roboto Black" size="17.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="container1" alignment="CENTER" prefHeight="51.0" prefWidth="199.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+                           <children>
+                              <Label fx:id="balanceLabel11" alignment="CENTER" prefHeight="21.0" prefWidth="135.0" text="Total Withdrawal" textAlignment="CENTER" textFill="#929394">
+                                 <font>
+                                    <Font name="Poppins Medium" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="withdrawalCountLabel" text="0.00" textFill="#4591b5">
                                  <font>
                                     <Font name="Roboto Black" size="17.0" />
                                  </font>
@@ -95,7 +112,7 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="62.0" prefWidth="199.0" style="-fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-background-color: #fff;">
                            <children>
-                              <Label alignment="CENTER" prefHeight="27.0" prefWidth="166.0" text="Transaction Account Status" textAlignment="CENTER" textFill="#747474">
+                              <Label alignment="CENTER" prefHeight="27.0" prefWidth="166.0" text="Account Status" textAlignment="CENTER" textFill="#747474">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
@@ -121,9 +138,9 @@
                <children>
                   <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <VBox spacing="5.0">
+                        <VBox prefHeight="490.0" prefWidth="796.0" spacing="5.0">
                            <children>
-                              <HBox alignment="CENTER" focusTraversable="true" prefHeight="130.0" prefWidth="651.0" spacing="100.0" style="-fx-background-color: #eedd;">
+                              <HBox alignment="CENTER" focusTraversable="true" prefHeight="62.0" prefWidth="718.0" spacing="100.0" style="-fx-background-color: #eedd;">
                                  <children>
                                     <Label prefHeight="16.0" prefWidth="393.0" text="YOUR TRANSACTIONS FOR TODAY" textFill="#989898">
                                        <font>
@@ -143,14 +160,14 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" />
                                  </padding>
                               </HBox>
-                              <TableView fx:id="transactionsTable" fixedCellSize="30.0" prefHeight="495.0" prefWidth="655.0" style="-fx-font-size: 14px; -fx-font-family: roboto;">
+                              <TableView fx:id="transactionsTable" fixedCellSize="30.0" prefHeight="417.0" prefWidth="713.0" style="-fx-font-size: 14px; -fx-font-family: roboto;">
                                  <columns>
                                     <TableColumn fx:id="counterColumn" editable="false" prefWidth="66.66665637493134" style="-fx-font-family: roboto;" text="No." />
-                                    <TableColumn fx:id="transIdColumn" editable="false" prefWidth="116.66668701171875" style="-fx-font-family: roboto;" text="Trans Id" />
-                                    <TableColumn fx:id="transTypeColumn" editable="false" prefWidth="137.99996948242188" style="-fx-font-family: roboto;" text="Trans Type" />
-                                    <TableColumn fx:id="amountColumn" editable="false" prefWidth="102.66668701171875" style="-fx-font-family: roboto;" text="Amount" />
-                                    <TableColumn fx:id="payMethodColumn" editable="false" prefWidth="130.66668701171875" style="-fx-font-family: roboto;" text="Payment Mtd" />
-                                    <TableColumn fx:id="timeColumn" editable="false" prefWidth="102.6666259765625" style="-fx-font-family: roboto;" text="Time" />
+                                    <TableColumn fx:id="transIdColumn" editable="false" prefWidth="138.66667938232422" style="-fx-font-family: roboto;" text="Trans Id" />
+                                    <TableColumn fx:id="transTypeColumn" editable="false" prefWidth="163.99998474121094" style="-fx-font-family: roboto;" text="Trans Type" />
+                                    <TableColumn fx:id="amountColumn" editable="false" prefWidth="108.66668701171875" style="-fx-font-family: roboto;" text="Amount" />
+                                    <TableColumn fx:id="payMethodColumn" editable="false" prefWidth="124.66665649414062" style="-fx-font-family: roboto;" text="Payment Mtd" />
+                                    <TableColumn fx:id="timeColumn" editable="false" prefWidth="105.33331298828125" style="-fx-font-family: roboto;" text="Time" />
                                  </columns>
                                  <VBox.margin>
                                     <Insets right="5.0" />

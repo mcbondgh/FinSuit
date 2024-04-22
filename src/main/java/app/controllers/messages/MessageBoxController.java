@@ -4,10 +4,12 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.models.message.MessagesModel;
 import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.notifications.NotificationEntity;
 import app.repositories.settings.TemplatesRepository;
 import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,6 +65,16 @@ public class MessageBoxController extends MessagesModel implements Initializable
     boolean isTitleFieldEmpty(){return messageTitleField.getText().isEmpty();}
     boolean isMessageBodyEmpty() {return messageBodyField.getText().isEmpty();}
     boolean listViewEmpty() {return listView.getItems().isEmpty() || listView.getItems().size() == 0;}
+
+    @FXML
+    MFXLegacyTableView<NotificationEntity> notificationTable;
+    @FXML TableColumn<NotificationEntity, Integer> notiNoColumn;
+    @FXML TableColumn<NotificationEntity, Integer> notiTypeColumn;
+    @FXML TableColumn<NotificationEntity, Integer> notiContentColumn;
+    @FXML TableColumn<NotificationEntity, Integer> notiDateColumn;
+    @FXML Label notificationTitle, notificationSentBy;
+    @FXML ComboBox<Integer> limitSelector;
+    @FXML TextField searchNotificationField;
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.

@@ -7,7 +7,6 @@ import app.documents.DocumentGenerator;
 import app.models.finance.FinanceModel;
 import app.repositories.business.ClosedTellerTransactionEntity;
 import app.repositories.notifications.NotificationEntity;
-import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
@@ -38,9 +37,9 @@ public class TellerDashboardController extends FinanceModel implements Initializ
      *********************************************** FXML FILE EJECTIONS
      ********************************************************************************************************************/
     @FXML
-    private Label currentBalaceLabel, loadedBalanceLabel, tellerAccountStatus, closingBalanceLabel;
+    private Label eCashBalanceLabel, loadedBalanceLabel, tellerAccountStatus, closingBalanceLabel;
     @FXML private VBox tellerBalanceContainer;
-    @FXML private Label totalTransactionsLabel;
+    @FXML private Label depositCountLabel, withdrawalCountLabel;
     @FXML private Button exportButton;
 
     @FXML private TextField cashField, overageField, shortageField;
@@ -65,11 +64,12 @@ public class TellerDashboardController extends FinanceModel implements Initializ
             cashField.deletePreviousChar();
         }
         try {
-            double currentBal = Double.parseDouble(currentBalaceLabel.getText().replace(",", ""));
-            double result = currentBal + Double.parseDouble(cashField.getText());
-            closingBalanceLabel.setText(currency.format(result));
+//            double currentBal = Double.parseDouble(eCashBalanceLabel.getText().replace(",", ""));
+//            double difference = Double.parseDouble(depositCountLabel.getText().replaceAll(",", "")) - Double.parseDouble(withdrawalCountLabel.getText().replaceAll(",", ""));
+//            double result = Double.parseDouble(cashField.getText()) - difference;
+            closingBalanceLabel.setText(currency.format(Double.parseDouble(cashField.getText())));
         }catch (NumberFormatException ignore) {
-            closingBalanceLabel.setText(currentBalaceLabel.getText());
+            closingBalanceLabel.setText(eCashBalanceLabel.getText());
         }
     }
     @FXML void validateOverageField(KeyEvent event) {
@@ -91,11 +91,18 @@ public class TellerDashboardController extends FinanceModel implements Initializ
         setCashierDashboardParameters();
         populateTable();
 
-        AtomicReference<Double> totalTransactions = new AtomicReference<>(0.00);
+        AtomicReference<Double> var1 = new AtomicReference<>(0.00);
+        AtomicReference<Double> var2 = new AtomicReference<>(0.00);
         transactionsTable.getItems().forEach(item -> {
-            totalTransactions.updateAndGet(v -> (v + item.getTotal_amount()));
+            if (item.getTransaction_type().equalsIgnoreCase("CASH DEPOSIT")) {
+                var1.getAndUpdate(x -> x + item.getTotal_amount());
+            }
+            if (item.getTransaction_type().equalsIgnoreCase("CASH WITHDRAWAL")) {
+                var2.getAndUpdate(x -> x + item.getTotal_amount());
+            }
         });
-        totalTransactionsLabel.setText(currency.format(totalTransactions.get()));
+        depositCountLabel.setText(currency.format(var1.get()));
+        withdrawalCountLabel.setText(currency.format(var2.get()));
     }
 
     void populateTable() {
@@ -128,18 +135,18 @@ public class TellerDashboardController extends FinanceModel implements Initializ
             double lessThan75 = (loadedAmount * 75) / 100;
 
             if(currentAmount < lessThan50) {
-                currentBalaceLabel.setStyle("-fx-text-fill:#ff0000");
+                eCashBalanceLabel.setStyle("-fx-text-fill:#ff0000");
                 tellerBalanceContainer.setStyle("-fx-background-color:#ffe3e3; -fx-border-color:#ddd; -fx-border-radius:5px; -fx-background-radius:5px;");
             } else if(currentAmount >= lessThan50 && currentAmount < lessThan75) {
-                currentBalaceLabel.setStyle("-fx-text-fill:#b28446");
+                eCashBalanceLabel.setStyle("-fx-text-fill:#b28446");
                 tellerBalanceContainer.setStyle("-fx-background-color:#fff; -fx-border-color:#ddd; -fx-border-radius:5px; -fx-background-radius:5px;");
             } else {
-                currentBalaceLabel.setStyle("-fx-text-fill:#4591b5");
+                eCashBalanceLabel.setStyle("-fx-text-fill:#4591b5");
                 tellerBalanceContainer.setStyle("-fx-background-color:#fff; -fx-border-color:#ddd; -fx-border-radius:5px; -fx-background-radius:5px;");
             }
             if (key.equals(userName)){
                 loadedBalanceLabel.setText(currency.format(loadedAmount));
-                currentBalaceLabel.setText(currency.format(currentAmount));
+                eCashBalanceLabel.setText(currency.format(currentAmount));
             }
         });
         Platform.runLater(this::updateCashierAccountClosureStatus);
@@ -187,7 +194,7 @@ public class TellerDashboardController extends FinanceModel implements Initializ
     @FXML void closeCashierTransactions() {
         double loadedBalance = Double.parseDouble(loadedBalanceLabel.getText().replaceAll(",", ""));
         double cashAmount = Double.parseDouble(cashField.getText());
-        double eCashAmount = Double.parseDouble(currentBalaceLabel.getText().replace(",", ""));
+        double eCashAmount = Double.parseDouble(eCashBalanceLabel.getText().replace(",", ""));
         double closingBalance = Double.parseDouble(closingBalanceLabel.getText().replace(",", ""));
         double overageAmount = Double.parseDouble(overageField.getText());
         double shortageAmount = Double.parseDouble(shortageField.getText());
@@ -199,7 +206,7 @@ public class TellerDashboardController extends FinanceModel implements Initializ
         //check if the cashier's account has been loaded for the day. If TRUE proceed else diny the closure of the account.
         if (loadedBalance == 0.0) {
             new UserNotification().errorNotification("TRANSACTIONS CLOSURE FAILED",
-                    "Sorry, you cannot close a empty account. Your start amount is 0.00");
+                    "Sorry, you cannot close an empty account. Your start balance is 0.00, please load your account first");
             return;
         }
 

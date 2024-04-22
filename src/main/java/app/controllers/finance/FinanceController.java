@@ -20,7 +20,7 @@ public class FinanceController implements Initializable {
     private Label pageTitle;
     public static String pageTitlePlaceHolder;
     @FXML private BorderPane borderPane;
-    @FXML private MFXButton loadTableButton, accountsButton, viewLoansButton;
+    @FXML private MFXButton loadTableButton, accountsButton, viewLoansButton, viewCashierSummaryBtn;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -54,6 +54,11 @@ public class FinanceController implements Initializable {
             SpecialMethods.FlipView(borderPane, "views/finance/internal-transaction-view.fxml");
         } catch (IOException ignore) {}
 
+    }
+    @FXML void viewCashierSummary() {
+        try{
+            SpecialMethods.FlipView(borderPane, "views/finance/cashier-transactions-view.fxml");
+        }catch (IOException ignore){}
     }
 
 }//end of class...

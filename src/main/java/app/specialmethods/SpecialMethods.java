@@ -279,10 +279,16 @@ public class SpecialMethods {
     public static double getCashierCurrentBalance(String cashierName) {
         AtomicReference<Double> amount = new AtomicReference<>(0.00);
         new FinanceModel().getTemporalCashierTableData().forEach((key, value) -> {
-            amount.set(key.equals(cashierName) ? Double.parseDouble(value.get(1).toString()) : amount.get());
+            if (key.equals(cashierName)) {
+                double loadedAmount = Double.parseDouble(value.get(1).toString());
+                double e_cash = Double.parseDouble(value.get(2).toString());
+                amount.set(e_cash == 0.0 ? loadedAmount : e_cash);
+            }
+            amount.set(amount.get());
         });
         return amount.get();
     }
+
 
 
 }//end of clas
