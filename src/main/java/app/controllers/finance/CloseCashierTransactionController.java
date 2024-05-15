@@ -1,5 +1,6 @@
 package app.controllers.finance;
 
+import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
 import app.models.finance.FinanceModel;
@@ -41,7 +42,7 @@ public class CloseCashierTransactionController extends FinanceModel implements I
 
     @FXML private TextField overageField, shortageField;
     @FXML private TextArea commentsField;
-    @FXML private Label closingBalanceLabel;
+    @FXML private TextField closingBalanceField;
     @FXML private MFXButton closeAccountButton,suspenseAccountButton ;
     @FXML private CheckBox suspendCheckBox;
 
@@ -104,7 +105,7 @@ public class CloseCashierTransactionController extends FinanceModel implements I
                 overageField.setText(cashierData.getOrDefault("overageAmount", "0.00").toString());
                 shortageField.setText(cashierData.getOrDefault("shortageAmount", "0.00").toString());
                 commentsField.setText(cashierData.getOrDefault("comment", "").toString());
-                closingBalanceLabel.setText(cashierData.getOrDefault("balance", "0.00").toString());
+                closingBalanceField.setText(cashierData.getOrDefault("balance", "0.00").toString());
             }
         });
     }
@@ -114,7 +115,7 @@ public class CloseCashierTransactionController extends FinanceModel implements I
         double overage = Double.parseDouble(overageField.getText() == null ? "0.00" : overageField.getText());
         double shortage = Double.parseDouble(shortageField.getText() == null ? "0.00" : shortageField.getText());
         double currentBal = Double.parseDouble(businessAccount.get("accountBalance").toString());
-        double closureBal = Double.parseDouble(closingBalanceLabel.getText());
+        double closureBal = Double.parseDouble(closingBalanceField.getText());
 
         //GET ID FROM closed_teller_transaction_logs table to update the closure account associated to teller.
         String cashierName = cashierListView.getSelectionModel().getSelectedItem();
@@ -123,46 +124,48 @@ public class CloseCashierTransactionController extends FinanceModel implements I
         BusinessInfoEntity businessInfoEntity = new BusinessInfoEntity();
         ClosedTellerTransactionEntity cashierEntity = new ClosedTellerTransactionEntity();
 
-        //set parameters to update database entities...
-        cashierEntity.setClosedAmount(closureBal);
-        cashierEntity.setShortageAmount(shortage);
-        cashierEntity.setOverageAmount(overage);
-        cashierEntity.setClosedBy(USER_ID);
-        cashierEntity.setId(closureTableId);
-
-        //Check If the suspend button has been checked.
-        if (suspendCheckBox.isSelected()) {
-            cashierEntity.setIsClosed((byte) 0);
-            deleteCashierFromTemporalCashierTable(cashierName);
-            int responseStatus = updateClosureTable(cashierEntity);
-            if (responseStatus > 0) {
-                notify.successNotification("CLOSURE SUSPENDED", "You have successfully suspended cashier's transaction closure.");
-                getActiveCashiers();
-            }
-        }else {
+        UserAlerts ALERTS = new UserAlerts("CLOSE ACCOUNT", "Do you wish to close cashier's account for the day?");
+        if (ALERTS.confirmationAlert()) {
+            //set parameters to update database entities...
+            cashierEntity.setClosedAmount(closureBal);
+            cashierEntity.setShortageAmount(shortage);
+            cashierEntity.setOverageAmount(overage);
+            cashierEntity.setClosedBy(USER_ID);
+            cashierEntity.setId(closureTableId);
             double newBalance = currentBal + closureBal;
 
             //set parameters to update database entities...
             businessInfoEntity.setAccountBalance(newBalance);
             businessInfoEntity.setPreviousBalance(currentBal);
 
-            cashierEntity.setIsClosed((byte)1);
-            
-            //execute queries...
-            int responseStatus = updateBusinessAccount(businessInfoEntity);
-            responseStatus += updateClosureTable(cashierEntity);
-            deleteCashierFromTemporalCashierTable(cashierName);
-            
-            if (responseStatus == 2) {
-                notify.successNotification("TRANSACTION CLOSURE PROCESS", "Nice, you have successfully closed cashier's transactions.");
-                getActiveCashiers();
+            //Check If the suspend button has been checked.
+            if (suspendCheckBox.isSelected()) {
+                cashierEntity.setIsClosed((byte) 0);
+                cashierEntity.setIsSuspended((byte) 1);
+                deleteCashierFromTemporalCashierTable(cashierName);
+                int responseStatus = updateClosureTable(cashierEntity);
+                responseStatus += updateBusinessAccount(businessInfoEntity);
+                if (responseStatus > 0) {
+                    notify.successNotification("CLOSURE SUSPENDED", "You have successfully suspended cashier's transaction closure.");
+                    getActiveCashiers();
+                }
             }else {
-                notify.errorNotification("FAILED CLOSURE PROCESS", "An error occurred while trying to close cashier's transaction account.");
+                cashierEntity.setIsClosed((byte)1);
+                cashierEntity.setIsSuspended((byte) 0);
+
+                //execute queries...
+                int responseStatus = updateBusinessAccount(businessInfoEntity);
+                responseStatus += updateClosureTable(cashierEntity);
+                deleteCashierFromTemporalCashierTable(cashierName);
+
+                if (responseStatus == 2) {
+                    notify.successNotification("TRANSACTION CLOSURE PROCESS", "Nice, you have successfully closed cashier's transactions.");
+                    getActiveCashiers();
+                }else {
+                    notify.errorNotification("FAILED CLOSURE PROCESS", "An error occurred while trying to close cashier's transaction account.");
+                }
             }
         }
-
-
-
     }
 
     @FXML void viewSuspenseAccount() throws IOException {

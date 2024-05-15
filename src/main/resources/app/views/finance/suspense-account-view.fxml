@@ -13,16 +13,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.SuspenseAccountController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="849.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.SuspenseAccountController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-background-color: #a2d5ff;">
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="849.0" spacing="5.0" style="-fx-background-color: #a2d5ff;">
          <children>
-            <ImageView blendMode="OVERLAY" fitHeight="38.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView blendMode="SOFT_LIGHT" fitHeight="38.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../images/cybersecurity.png" />
                </image>
             </ImageView>
-            <Label text="SUSPENSE ACCOUNT" textFill="#4289db">
+            <Label text="SUSPENSE ACCOUNT" textFill="#456c98">
                <font>
                   <Font name="Arial Black" size="16.0" />
                </font>
@@ -40,12 +40,12 @@
       </HBox>
       <HBox prefHeight="521.0" prefWidth="682.0" spacing="5.0" style="-fx-border-radius: 5px; -fx-border-color: #ddd;">
          <children>
-            <TableView fx:id="accountTable" fixedCellSize="30.0" prefHeight="452.0" prefWidth="570.0" style="-fx-font-size: 14px; -fx-font-family: arial; -fx-background-color: #eee; -fx-alignment: center-left;">
+            <TableView fx:id="accountTable" fixedCellSize="30.0" prefHeight="452.0" prefWidth="589.0" style="-fx-font-size: 14px; -fx-font-family: arial; -fx-background-color: #eee; -fx-alignment: center-left;">
               <columns>
                 <TableColumn fx:id="idColumn" prefWidth="75.0" text="Susp Id" />
                 <TableColumn fx:id="nameColumn" prefWidth="170.6666488647461" text="Cashier" />
-                  <TableColumn fx:id="statusColumn" prefWidth="130.00001525878906" text="Status" />
-                  <TableColumn fx:id="dateColumn" prefWidth="190.66668701171875" text="Entry Date" />
+                  <TableColumn fx:id="statusColumn" prefWidth="130.00001525878906" style="-fx-alignment: center;" text="Status" />
+                  <TableColumn fx:id="dateColumn" prefWidth="192.0" text="Entry Date" />
               </columns>
             </TableView>
             <VBox alignment="TOP_CENTER" prefHeight="452.0" prefWidth="226.0" spacing="5.0" style="-fx-background-color: #f6fbff;">
@@ -109,9 +109,9 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                      </padding>
                   </VBox>
-                  <MFXButton fx:id="closeAccountButton" depthLevel="LEVEL0" onAction="#clearAccountButtonClicked" prefHeight="31.0" prefWidth="245.0" rippleBackgroundOpacity="0.5" rippleColor="#45d2d2" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-background-color: #39b1b3;" text="Clear Account" textFill="WHITE">
+                  <MFXButton fx:id="closeAccountButton" depthLevel="LEVEL0" onAction="#clearAccountButtonClicked" prefHeight="37.0" prefWidth="215.0" rippleBackgroundOpacity="0.5" rippleColor="#45d2d2" rippleRadius="10.0" rippleRadiusMultiplier="1.0" style="-fx-background-color: #39b1b3;" text="Clear Account" textFill="WHITE">
                      <font>
-                        <Font name="Arial" size="12.0" />
+                        <Font name="Poppins Medium" size="14.0" />
                      </font>
                      <cursor>
                         <Cursor fx:constant="HAND" />

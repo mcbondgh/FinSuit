@@ -271,8 +271,8 @@ public class SpecialMethods {
     public static void setPaymentGateways(ComboBox<PaymentMethods> comboBox) {
         comboBox.getItems().add(PaymentMethods.BANK_TRANSFER);
         comboBox.getItems().add(PaymentMethods.MOMO);
-        comboBox.getItems().add(PaymentMethods.AIRTELTIGO);
-        comboBox.getItems().add(PaymentMethods.VODA_CASH);
+        comboBox.getItems().add(PaymentMethods.AT_CASH);
+        comboBox.getItems().add(PaymentMethods.T_CASH);
     }
 
     //fetch and return cashier balance based on the current active user who is a cashier by role.
@@ -280,11 +280,8 @@ public class SpecialMethods {
         AtomicReference<Double> amount = new AtomicReference<>(0.00);
         new FinanceModel().getTemporalCashierTableData().forEach((key, value) -> {
             if (key.equals(cashierName)) {
-                double loadedAmount = Double.parseDouble(value.get(1).toString());
-                double e_cash = Double.parseDouble(value.get(2).toString());
-                amount.set(e_cash == 0.0 ? loadedAmount : e_cash);
+                amount.set(Double.parseDouble(value.get(1).toString()));
             }
-            amount.set(amount.get());
         });
         return amount.get();
     }

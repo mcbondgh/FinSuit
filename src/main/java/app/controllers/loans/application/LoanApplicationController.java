@@ -424,7 +424,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             personalInformationPane.setDisable(true);
         }catch (Exception ignore){}
     }
-    @FXML private void saveButtonClicked() {
+    @FXML private void saveButtonClicked() throws IOException {
         int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
         String loanNumber = loanNumberLabel.getText();
         String loanType = loanTypeSelector.getValue();
@@ -481,7 +481,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
         ALERT = new UserAlerts("LOAN APPLICATION", "You have initiated a loan request for '" + firstName.toUpperCase() +" " + lastName.toUpperCase() +"', do you wish to apply now?", "please confirm your decision to apply else CANCEL to abort.");
         if (ALERT.confirmationAlert()) {
-            saveUploadedImage();
+//            saveUploadedImage();
             customerRepository.setFirstname(firstName);
             customerRepository.setLastname(lastName);
             customerRepository.setOthername(otherName);
@@ -510,8 +510,10 @@ public class LoanApplicationController extends LoansModel implements Initializab
             customerRepository.setRelationship_to_applicant(contactRelationshipType);
             customerRepository.setCreated_by(currentUserId);
 
+
             applicationEntity.setLoan_no(loanNumber);
             applicationEntity.setProfile_picture(imageFile.getName());
+            applicationEntity.setImage(getImageStream().readAllBytes());
             applicationEntity.setCompany_name(companyName);
             applicationEntity.setCompany_mobile_number(companyContact);
             applicationEntity.setCompany_address(companyAddress);

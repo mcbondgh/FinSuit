@@ -211,66 +211,74 @@ public class WithdrawalController extends TransactionModel implements Initializa
                     ALERTS.errorAlert();
                     cashField.deletePreviousChar();
                 } else {
-                    ALERTS = new UserAlerts("CASH WITHDRAWAL", "DO YOU WISH TO CONFIRM WITHDRAWAL TRANSACTION", "Please confirm transaction to perform withdrawal else CANCEL to abort");
-                    if(ALERTS.confirmationAlert()) {
+                    // get current cashier balance, subtract withdrawal amount and update cashier's balance.
+                    double cashierBalance = SpecialMethods.getCashierCurrentBalance(getCurrentUserPlaceholder());
+                    if (cashierBalance < withdrawalAmount) {
+                        ALERTS = new UserAlerts("INSUFFICIENT BALANCE", "You do not have enough balance to withdraw fund for customer.");
+                        ALERTS.errorAlert();
+                    } else {
+                        ALERTS = new UserAlerts("CASH WITHDRAWAL", "DO YOU WISH TO CONFIRM WITHDRAWAL TRANSACTION", "Please confirm transaction to perform withdrawal else CANCEL to abort");
+                        if(ALERTS.confirmationAlert()) {
 
-                        NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
-                        MessageLogsEntity MSG_ENTITY = new MessageLogsEntity();
-                        SmsAPI SMS = new SmsAPI();
+                            NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
+                            MessageLogsEntity MSG_ENTITY = new MessageLogsEntity();
+                            SmsAPI SMS = new SmsAPI();
 
-                        //set parameters to update customer_account_data table
-                        accountsDataRepository.setPrevious_balance(currentBalance);
-                        accountsDataRepository.setAccount_balance(balance);
-                        accountsDataRepository.setAccount_number(accountNumber.get());
-                        accountsDataRepository.setModified_by(userId);
-                        int responseStatus = saveWithdrawal(accountsDataRepository);
+                            //set parameters to update customer_account_data table
+                            accountsDataRepository.setPrevious_balance(currentBalance);
+                            accountsDataRepository.setAccount_balance(balance);
+                            accountsDataRepository.setAccount_number(accountNumber.get());
+                            accountsDataRepository.setModified_by(userId);
+                            int responseStatus = saveWithdrawal(accountsDataRepository);
 
-                        //set parameters to insert into the transaction_logs table
-                        transactions.setAccount_number(accountNumber.get());
-                        transactions.setEcash_amount(payMethod.equals("CASH") ? 0.00 : withdrawalAmount);
-                        transactions.setCash_amount(payMethod.equals("CASH") ? withdrawalAmount : 0.00);
-                        transactions.setTransactionTax(transactionCharge);
-                        transactions.setTransaction_type("CASH WITHDRAWAL");
-                        transactions.setNationalIdNumber(idNumberField.getText());
-                        transactions.setEcash_id(transactionIdField.getText());
-                        transactions.setPayment_method(payMethod);
-                        transactions.setPayment_gateway(payGateway.isEmpty() ? "null": payGateway);
-                        transactions.setTransaction_id(transId);
-                        transactions.setTransaction_made_by(collectorsNameField.getText());
-                        transactions.setUserId(userId);
-                        responseStatus += saveWithdrawalTransaction(transactions);
+                            //set parameters to insert into the transaction_logs table
+                            transactions.setAccount_number(accountNumber.get());
+                            transactions.setEcash_amount(payMethod.equals("CASH") ? 0.00 : withdrawalAmount);
+                            transactions.setCash_amount(payMethod.equals("CASH") ? withdrawalAmount : 0.00);
+                            transactions.setTransactionTax(transactionCharge);
+                            transactions.setTransaction_type("CASH WITHDRAWAL");
+                            transactions.setNationalIdNumber(idNumberField.getText());
+                            transactions.setEcash_id(transactionIdField.getText());
+                            transactions.setPayment_method(payMethod);
+                            transactions.setPayment_gateway(payGateway.isEmpty() ? "null": payGateway);
+                            transactions.setTransaction_id(transId);
+                            transactions.setTransaction_made_by(collectorsNameField.getText());
+                            transactions.setUserId(userId);
+                            responseStatus += saveWithdrawalTransaction(transactions);
 
-                        //set parameters to send sms to account holder.
-                        try{
-                            String message = new MessageBuilders().cashWithdrawalMessage(withdrawalAmount, collectorsNameField.getText(), balance);
-                            String msgStatus = MessageStatus.getMessageStatusResult(SMS.sendSms(mobileNumber, message)).toString();
-                            NOTIFY_ENTITY.setSender_method("SMS");
-                            NOTIFY_ENTITY.setTitle("Cash Withdrawal");
-                            NOTIFY_ENTITY.setMessage(message);
-                            NOTIFY_ENTITY.setLogged_by(userId);
-                            logNotification(NOTIFY_ENTITY);
+                            //set parameters to send sms to account holder.
+                            try{
+                                String message = new MessageBuilders().cashWithdrawalMessage(withdrawalAmount, collectorsNameField.getText(), balance);
+                                String msgStatus = MessageStatus.getMessageStatusResult(SMS.sendSms(mobileNumber, message)).toString();
+                                NOTIFY_ENTITY.setSender_method("SMS");
+                                NOTIFY_ENTITY.setTitle("Cash Withdrawal");
+                                NOTIFY_ENTITY.setMessage(message);
+                                NOTIFY_ENTITY.setLogged_by(userId);
+                                logNotification(NOTIFY_ENTITY);
 
-                            MSG_ENTITY.setMessage(message);
-                            MSG_ENTITY.setRecipient(mobileNumber);
-                            MSG_ENTITY.setStatus(msgStatus);
-                            MSG_ENTITY.setSent_by(userId);
-                            MSG_ENTITY.setTitle("Cash Withdrawal");
-                            new MessagesModel().logNotificationMessages(MSG_ENTITY);
+                                MSG_ENTITY.setMessage(message);
+                                MSG_ENTITY.setRecipient(mobileNumber);
+                                MSG_ENTITY.setStatus(msgStatus);
+                                MSG_ENTITY.setSent_by(userId);
+                                MSG_ENTITY.setTitle("Cash Withdrawal");
+                                new MessagesModel().logNotificationMessages(MSG_ENTITY);
 
-                        }catch (Exception ignore) {}
-                        // get current cashier balance, subtract withdrawal amount and update cashier's balance.
-                        double cashierBalance = SpecialMethods.getCashierCurrentBalance(getCurrentUserPlaceholder());
-                        new FinanceModel().updateCashierCurrentBalanceAfterTransaction(getCurrentUserPlaceholder(), (cashierBalance - withdrawalAmount));
+                            }catch (Exception ignore) {}
+                            // get current cashier balance, subtract withdrawal amount and update cashier's balance.
+                            new FinanceModel().modifyTemporalCashierAccountWhenLoaded(getCurrentUserPlaceholder(), (cashierBalance - withdrawalAmount));
 
-                        if (responseStatus == 2) {
-                            Platform.runLater(()-> {
-                                new UserAlerts("SUCCESSFUL WITHDRAWAL", "Nice cash withdrawal was successful")
-                                        .informationAlert();
-                                cashField.clear();
-                                accountNumberField.clear();
-                            });
-                        }
-                    };
+                            if (responseStatus == 2) {
+                                Platform.runLater(()-> {
+                                    new UserAlerts("SUCCESSFUL WITHDRAWAL", "Nice cash withdrawal was successful")
+                                            .informationAlert();
+                                    cashField.clear();
+                                    accountNumberField.clear();
+                                });
+                            }
+                        };
+                    }
+
+
                 }
             }catch (NumberFormatException ignore){}
         }

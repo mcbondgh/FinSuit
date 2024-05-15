@@ -78,46 +78,30 @@ public class FinanceModel extends MainModel {
 
         return flag;
     }
-
     //this method when invoked shall take to parameters to insert or update the temporal_cashier_account based on the cashier's name
     public void modifyTemporalCashierAccountWhenLoaded(String name, double amount) {
         try {
-            String query = "INSERT INTO temporal_cashier_account(teller, amount, e_cash)\n" +
-                    "\tVALUES('"+name+"', '"+amount+"', DEFAULT)\n" +
+            String query = "INSERT INTO temporal_cashier_account(teller, amount)\n" +
+                    "\tVALUES('"+name+"', '"+amount+"')\n" +
                     "ON DUPLICATE KEY UPDATE\n" +
                     "\tamount = '"+amount+"' ;";
             getConnection().createStatement().execute(query);
-        }catch (SQLException e){e.printStackTrace();}
+        }catch (SQLException ignore){}
     }
-
-    public void updateCashierCurrentBalanceAfterTransaction(String cashier, double amount) {
-        try {
-            String query = "INSERT INTO temporal_cashier_account(teller, amount, e_cash)\n" +
-                    "\tVALUES('"+cashier+"', '"+amount+"', DEFAULT)\n" +
-                    "ON DUPLICATE KEY UPDATE\n" +
-                    "\te_cash = '"+amount+"' ;";
-            getConnection().createStatement().execute(query);
-        }catch (SQLException e){e.printStackTrace();}
-    }
-
     public int closeCashierTransactions(ClosedTellerTransactionEntity entity) {
         try {
             String query = "INSERT INTO closed_teller_transaction_logs(\n" +
-                    "\tstart_amount, closed_amount, physical_cash,\n" +
-                    "\t e_cash, overage_amount, shortage_amount, `comment`,\n" +
+                    "\tstart_amount, closed_amount, overage_amount, shortage_amount, `comment`,\n" +
                     "\t entered_by\n" +
                     " )\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
-
+                    "VALUES(?, ?, ?, ?, ?, ?);";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setDouble(1, entity.getStartAmount());
             preparedStatement.setDouble(2, entity.getClosedAmount());
-            preparedStatement.setDouble(3, entity.getPhysicalCash());
-            preparedStatement.setDouble(4, entity.geteCash());
-            preparedStatement.setDouble(5, entity.getOverageAmount());
-            preparedStatement.setDouble(6, entity.getShortageAmount());
-            preparedStatement.setString(7, entity.getNotes());
-            preparedStatement.setInt(8, entity.getEnteredBy());
+            preparedStatement.setDouble(3, entity.getOverageAmount());
+            preparedStatement.setDouble(4, entity.getShortageAmount());
+            preparedStatement.setString(5, entity.getNotes());
+            preparedStatement.setInt(6, entity.getEnteredBy());
             return preparedStatement.executeUpdate();
         }catch (SQLException e){e.printStackTrace();}
         return 0;
@@ -153,7 +137,7 @@ public class FinanceModel extends MainModel {
                     "FROM closed_teller_transaction_logs tlogs\n" +
                     "INNER JOIN users AS u\n" +
                     "ON u.user_id = entered_by\n" +
-                    "WHERE is_closed = 0;";
+                    "WHERE is_suspended = 1;";
             resultSet = getConnection().createStatement().executeQuery(query);
             while (resultSet.next()) {
                 int id = resultSet.getInt("tlogs.id");
@@ -179,7 +163,7 @@ public class FinanceModel extends MainModel {
         try{
             String query = "UPDATE closed_teller_transaction_logs \n" +
                     "SET overage_amount = ?, shortage_amount = ?, closed_amount = ?,\n" +
-                    "closed_by = ?, is_closed = ? \n" +
+                    "closed_by = ?, is_closed = ?, is_suspended = ?, closure_date = CURRENT_TIMESTAMP() \n" +
                     "WHERE id = ?";
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setDouble(1, entity.getOverageAmount());
@@ -187,10 +171,25 @@ public class FinanceModel extends MainModel {
             preparedStatement.setDouble(3, entity.getClosedAmount());
             preparedStatement.setInt(4, entity.getClosedBy());
             preparedStatement.setByte(5, entity.getIsClosed());
-            preparedStatement.setLong(6, entity.getId());
+            preparedStatement.setByte(6, entity.getIsSuspended());
+            preparedStatement.setLong(7, entity.getId());
             return preparedStatement.executeUpdate();
-        }catch (SQLException e){e.printStackTrace();}
+        }catch (SQLException ignored){}
+        return 0;
+    }
 
+    protected int updateSuspenseAccount(ClosedTellerTransactionEntity entity) {
+        try {
+            String query = "UPDATE closed_teller_transaction_logs \n" +
+                    "SET overage_amount = ?, shortage_amount = ?, is_suspended = ?\n" +
+                    "WHERE id = ?;";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setDouble(1, entity.getOverageAmount());
+            preparedStatement.setDouble(2, entity.getShortageAmount());
+            preparedStatement.setByte(3, entity.getIsSuspended());
+            preparedStatement.setLong(4, entity.getId());
+            return preparedStatement.executeUpdate();
+        }catch (SQLException e) {e.printStackTrace();}
         return 0;
     }
 

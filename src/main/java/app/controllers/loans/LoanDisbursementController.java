@@ -214,7 +214,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                     if (status > 0) {
                         //update cashier's account after successful disbursement
                         double cashierBalance = cashierCurrentBalance - accumulatedDisbursementAmount.get();
-                        new FinanceModel().updateCashierCurrentBalanceAfterTransaction(getLoggedInUsername(), cashierBalance);
+                        new FinanceModel().modifyTemporalCashierAccountWhenLoaded(getLoggedInUsername(), cashierBalance);
                         Platform.runLater(this::setCashierBalanceLabel);
                         NOTIFY.successNotification("OPERATION SAVED", "You have successfully saved selected loan facilities as disbursed funds");
                         populateTable();

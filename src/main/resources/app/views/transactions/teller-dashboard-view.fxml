@@ -70,7 +70,7 @@
                         </VBox>
                         <VBox fx:id="tellerBalanceContainer" alignment="CENTER" prefHeight="85.0" prefWidth="167.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                            <children>
-                              <Label fx:id="balanceLabel" alignment="CENTER" prefHeight="31.0" prefWidth="135.0" text="Balance" textAlignment="CENTER" textFill="#929394">
+                              <Label fx:id="balanceLabel" alignment="CENTER" prefHeight="31.0" prefWidth="135.0" text="Cash Balance" textAlignment="CENTER" textFill="#929394">
                                  <font>
                                     <Font name="Poppins Medium" size="14.0" />
                                  </font>

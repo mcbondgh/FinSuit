@@ -5,8 +5,8 @@ public enum PaymentMethods {
     eCASH,
     BOTH_METHODS,
     MOMO,
-    AIRTELTIGO,
-    VODA_CASH,
+    AT_CASH,
+    T_CASH,
     BANK_TRANSFER;
 
     public static String convertPayMethod(PaymentMethods methods) {
@@ -17,9 +17,9 @@ public enum PaymentMethods {
                 case eCASH -> value = "E-CASH";
                 case BANK_TRANSFER -> value = "BANK TRANSFER";
                 case MOMO ->  value = "MOMO";
-                case AIRTELTIGO -> value = "AIRTELTIGO CASH";
+                case AT_CASH -> value = "AT CASH";
                 case BOTH_METHODS -> value = "CASH & eCASH";
-                case VODA_CASH -> value = "VODAFONE CASH";
+                case T_CASH -> value = "TELECEL CASH";
             }
         }catch (NullPointerException e) {
             value = "Unspecified";

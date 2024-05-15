@@ -17,6 +17,7 @@ public class LoanApplicationEntity {
     private double basic_salary, gross_salary, total_deduction, net_salary;
     private  String gender;
     private String profile_picture;
+    private byte[] image;
     private String guranter_name, guranter_number, guranter_digital_address, guranter_residential_address;
     private String guranter_idType, guranter_idNumber, guranter_relationship, guranter_occupation;
     private String gurater_place_of_work, guranter_institution_address;
@@ -359,5 +360,13 @@ public class LoanApplicationEntity {
 
     public void setGuranter_income(double guranter_income) {
         this.guranter_income = guranter_income;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }//end of class...

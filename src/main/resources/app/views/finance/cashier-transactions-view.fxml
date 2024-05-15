@@ -19,7 +19,7 @@
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1179.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.CloseCashierTransactionController">
    <children>
-      <HBox layoutX="41.0" layoutY="73.0" prefHeight="573.0" prefWidth="1146.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox layoutX="41.0" layoutY="73.0" prefHeight="600.0" prefWidth="1179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="563.0" prefWidth="256.0" spacing="5.0" style="-fx-background-color: #fff; -fx-border-radius: 5px; -fx-background-radius: 5px;">
                <HBox.margin>
@@ -38,7 +38,7 @@
                         <Font name="Arial Bold" size="14.0" />
                      </font>
                   </Label>
-                  <MFXLegacyListView fx:id="cashierListView" depthLevel="LEVEL0" hideAfter="1700.0ms" prefHeight="551.0" prefWidth="223.0" style="-fx-background-color: #fff; -fx-background-radius: 5px; -fx-font-family: roboto; -fx-font-size: 13px; -fx-font-weight: bold; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-color: dodgerblue;">
+                  <MFXLegacyListView fx:id="cashierListView" depthLevel="LEVEL0" hideAfter="1700.0ms" prefHeight="388.0" prefWidth="223.0" style="-fx-background-color: #fff; -fx-background-radius: 5px; -fx-font-family: roboto; -fx-font-size: 13px; -fx-font-weight: bold; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-font-color: dodgerblue;">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                      </VBox.margin>
@@ -96,7 +96,7 @@
                         <Font name="Arial Bold" size="14.0" />
                      </font>
                   </Label>
-                  <VBox prefHeight="401.0" prefWidth="275.0" style="-fx-border-color: #eee; -fx-border-radius: 10px;">
+                  <VBox prefHeight="417.0" prefWidth="275.0" style="-fx-border-color: #eee; -fx-border-radius: 10px;">
                      <children>
                         <VBox prefHeight="62.0" prefWidth="617.0">
                            <children>
@@ -138,14 +138,14 @@
                               <Insets left="10.0" right="10.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <VBox prefHeight="106.0" prefWidth="245.0">
+                        <VBox prefHeight="113.0" prefWidth="253.0">
                            <children>
                               <Label text="Note ">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
-                              <TextArea fx:id="commentsField" editable="false" mouseTransparent="true" prefHeight="83.0" prefWidth="597.0" wrapText="true">
+                              <TextArea fx:id="commentsField" editable="false" mouseTransparent="true" prefHeight="101.0" prefWidth="253.0" wrapText="true">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
                                  </font>
@@ -170,11 +170,11 @@
                                           <Insets bottom="2.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <Label fx:id="closingBalanceLabel" alignment="CENTER" prefHeight="39.0" prefWidth="176.0" style="-fx-background-color: red; -fx-background-radius: 5;" text="0.00" textAlignment="CENTER" textFill="WHITE">
+                                    <TextField fx:id="closingBalanceField" onKeyTyped="#validateShortageField" prefHeight="39.0" prefWidth="161.0" style="-fx-background-color: #ff0000; -fx-text-fill: #fff;" text="0.00">
                                        <font>
-                                          <Font name="Poppins Bold" size="14.0" />
+                                          <Font name="Poppins Medium" size="15.0" />
                                        </font>
-                                    </Label>
+                                    </TextField>
                                  </children>
                               </VBox>
                               <CheckBox fx:id="suspendCheckBox" contentDisplay="TOP" mnemonicParsing="false" prefHeight="17.0" prefWidth="81.0" style="-fx-border-color: #eee; -fx-border-radius: 5;" text="Suspend">
@@ -185,7 +185,7 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                                  <HBox.margin>
-                                    <Insets top="7.0" />
+                                    <Insets top="10.0" />
                                  </HBox.margin>
                               </CheckBox>
                            </children>
@@ -210,12 +210,12 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </VBox>
-                  <MFXButton fx:id="suspenseAccountButton" buttonType="RAISED" depthLevel="LEVEL1" onAction="#viewSuspenseAccount" prefHeight="34.0" prefWidth="265.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="View Suspens Account" textFill="#4191a6">
+                  <MFXButton fx:id="suspenseAccountButton" buttonType="RAISED" onAction="#viewSuspenseAccount" prefHeight="34.0" prefWidth="265.0" style="-fx-border-radius: 5px; -fx-background-radius: 5px;" text="View Suspens Account" textFill="#4191a6">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                      <font>
-                        <Font name="Roboto" size="13.0" />
+                        <Font name="Roboto Bold" size="14.0" />
                      </font>
                      <cursor>
                         <Cursor fx:constant="HAND" />

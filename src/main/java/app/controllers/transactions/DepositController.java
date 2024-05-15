@@ -209,9 +209,9 @@ public class DepositController extends TransactionModel implements Initializable
     @FXML void setGatewaySelectorOnAction() {
         try {
             boolean value = gatewaySelector.getValue().equals(PaymentMethods.BANK_TRANSFER)
-                            || gatewaySelector.getValue().equals(PaymentMethods.AIRTELTIGO)
+                            || gatewaySelector.getValue().equals(PaymentMethods.AT_CASH)
                             || gatewaySelector.getValue().equals(PaymentMethods.MOMO)
-                            || gatewaySelector.getValue().equals(PaymentMethods.VODA_CASH);
+                            || gatewaySelector.getValue().equals(PaymentMethods.T_CASH);
             eCashField.setDisable(!value);
             transactionIdField.setDisable(!value);
         }catch (NullPointerException ignore){}
@@ -252,10 +252,6 @@ public class DepositController extends TransactionModel implements Initializable
             String depositorIdNumber = depositorIdField.getText();
             double totalAmount = Double.parseDouble(totalCashLabel.getText());
 
-
-            //CHECK IF CASHIER HAS ENOUGH BALANCE TO PERFORM TRANSACTION ELSE REJECT TRANSACTION
-            double cashierCurrentBalance = SpecialMethods.getCashierCurrentBalance(getLoggedInUsername());
-            if(cashierCurrentBalance > totalAmount) {
                 //RECEIPT VARIABLES...
                 DocumentGenerator documentGenerator = new DocumentGenerator();
                 ReceiptsEntity receiptsEntity = new ReceiptsEntity();
@@ -272,7 +268,6 @@ public class DepositController extends TransactionModel implements Initializable
                         currentBalance = data.getAccount_balance();
                     }
                 }
-
                 //SET VALUES FOR accountRepository to update current customer's account balance details..
                 double newAccountBalance = totalAmount + currentBalance;
                 accountsDataRepository.setAccount_balance(newAccountBalance);
@@ -310,8 +305,9 @@ public class DepositController extends TransactionModel implements Initializable
                         "please confirm your action to save transaction else CANCEL to abort.");
                 if(ALERTS.confirmationAlert()) {
                     // subtract the deposited amount from cashier's account and update cashier's balance
+                    double cashierCurrentBalance = SpecialMethods.getCashierCurrentBalance(getLoggedInUsername());
                     double cashierBalance = cashierCurrentBalance + totalAmount;
-                     new FinanceModel().updateCashierCurrentBalanceAfterTransaction(getLoggedInUsername(), cashierBalance);
+                     new FinanceModel().modifyTemporalCashierAccountWhenLoaded(getLoggedInUsername(), cashierBalance);
 
                     if(saveDepositTransaction(accountsDataRepository, transactions) > 1) {
                         documentGenerator.generateTransactionReceipt(pdfName, receiptsEntity);
@@ -336,10 +332,6 @@ public class DepositController extends TransactionModel implements Initializable
                         Platform.runLater(this::clearFields);
                     }
                 }
-            } else {
-                ALERTS = new UserAlerts("LOW BALANCE", "Sorry, you do not have enough balance to perform deposit", "please load your account to perform this transaction");
-                ALERTS.errorAlert();
-            }
         }catch (NumberFormatException ignore) {
             eCashField.setText("0.00");
             transactionIdField.setText("Unspecified");

@@ -137,3 +137,72 @@ INSERT INTO closed_teller_transaction_logs(
  )
 VALUES(?, ?, ?, ?, ?, ?, ?, ?);
 
+SELECT account_password, account_balance, previous_balance, account_date_modified
+FROM business_info;
+
+-- ----------------------------------------------------------------------
+-- today 13/05/2024
+-- ----------------------------------------------------------------------
+ALTER TABLE business_info ADD COLUMN 
+account_balance DECIMAL(10,2) DEFAULT 0.00 AFTER account_password;
+
+ALTER TABLE business_info ADD COLUMN
+previous_balance DECIMAL(10,2) DEFAULT 0.00 AFTER account_balance;
+
+ALTER TABLE business_info ADD COLUMN
+account_date_modified DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+CREATE TABLE IF NOT EXISTS business_transaction_logs(
+	Id INT PRIMARY KEY AUTO_INCREMENT,
+    transaction_type VARCHAR(50) NOT NULL,
+    bank_name VARCHAR(50) NOT NULL,
+    amount DECIMAL(10,2) DEFAULT 0.00,
+    transaction_id VARCHAR(100) NOT NULL,
+    account_number VARCHAR(100),
+    transaction_date DATE,
+    notes VARCHAR(255),
+    created_by INT,
+    date_created DATETIME DEFAULT CURRENT_TIMESTAMP()
+);
+
+-- //    id, transfer_type, transferred_to, amount, entered_by, entry_date, time
+CREATE TABLE IF NOT EXISTS domestic_transfer_logs(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    transfer_type VARCHAR(50) NOT NULL,
+    transferred_to VARCHAR(50) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    entered_by INT,
+    entry_date DATETIME DEFAULT CURRENT_TIMESTAMP()
+);
+
+CREATE TABLE IF NOT EXISTS temporal_cashier_account(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    teller VARCHAR(100) UNIQUE,
+    amount DECIMAL(10,2), 
+    entry_date DATETIME DEFAULT CURRENT_TIMESTAMP()
+);
+
+CREATE TABLE closed_teller_transaction_logs(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	start_amount DECIMAL(10, 2) NOT NULL,
+    closed_amount DECIMAL(10,2) NOT NULL,
+    overage_amount DECIMAL(10,2) DEFAULT 0.00,
+    shortage_amount DECIMAL(10,2) DEFAULT 0.00,
+    is_suspended BOOLEAN DEFAULT TRUE,
+    is_closed BOOLEAN DEFAULT FALSE,
+    `comment` VARCHAR(255),
+    entered_by INT,
+    closed_by INT,
+    entry_date DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    closure_date DATETIME DEFAULT CURRENT_TIMESTAMP()    
+);
+
+CREATE TABLE IF NOT EXISTS group_supervisors(
+	super_id INT PRIMARY KEY AUTO_INCREMENT,
+    emp_id VARCHAR(50) NOT NULL, 
+    loan_id VARCHAR(50) NOT NULL, 
+    added_by INT,
+    entry_date DATETIME DEFAULT CURRENT_TIMESTAMP()
+);
+
+

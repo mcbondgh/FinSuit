@@ -1,6 +1,10 @@
 package app.controllers.finance;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
 import app.models.finance.FinanceModel;
+import app.repositories.business.BusinessInfoEntity;
+import app.repositories.business.ClosedTellerTransactionEntity;
 import app.repositories.business.SuspenseAccountEntity;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
@@ -13,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -54,6 +59,51 @@ public class SuspenseAccountController extends FinanceModel implements Initializ
         ACTION EVENT METHODS IMPLEMENTATION...
      **********************************************************************************/
     @FXML void clearAccountButtonClicked() {
+        UserAlerts alerts;
+
+        boolean emptySelection = accountTable.getSelectionModel().getSelectedItem() == null;
+
+        if (emptySelection) {
+            alerts = new UserAlerts("EMPTY SELECTION", "Please select a suspended account from in table to close",
+                    "no selection was identified before clicking this button");
+            alerts.errorAlert();
+            return;
+        }
+
+        alerts = new UserAlerts("CLEAR SUSPENSE ACCOUNT", "Are you sure you want to clear suspended funds in this account?",
+                "Please confirm to clear this suspense account, else CANCEL to abort..");
+
+        if (alerts.confirmationAlert()) {
+            long tableId = accountTable.getSelectionModel().getSelectedItem().getId();
+
+            double overage = Double.parseDouble(overageField.getText().isBlank() ? "0.00" : overageField.getText());
+            double shortage = Double.parseDouble(shortageField.getText().isEmpty() ? "0.00" : shortageField.getText());
+            double currentBalance = Double.parseDouble(getBusinessAccountInformation().get("accountBalance").toString());
+            double newBalance = (overage + shortage) + currentBalance;
+
+            BusinessInfoEntity infoEntity = new BusinessInfoEntity();
+            ClosedTellerTransactionEntity closedEntity = new ClosedTellerTransactionEntity();
+
+            infoEntity.setPreviousBalance(currentBalance);
+            infoEntity.setAccountBalance(newBalance);
+            closedEntity.setIsSuspended((byte)0);
+            closedEntity.setOverageAmount(overage);
+            closedEntity.setShortageAmount(shortage);
+            closedEntity.setId(tableId);
+
+            int responseStatus = updateBusinessAccount(infoEntity);
+            responseStatus+= updateSuspenseAccount(closedEntity);
+            if (responseStatus == 2) {
+                new UserNotification().successNotification("SUSPENSE ACCOUNT CLOSED", "Nice, you have successfully clear suspense account");
+//                closeAccountButton.getScene().getWindow().hide();
+                populateTable();
+            }else {
+                new UserNotification().errorNotification("FAILED EXECUTION", "Process to clear suspense account failed");
+            }
+
+        }
+
+
 
     }
 

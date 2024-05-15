@@ -17,6 +17,7 @@ public class ClosedTellerTransactionEntity {
     private int closedBy;
     private String notes;
     private byte isClosed;
+    private byte isSuspended;
 
     public ClosedTellerTransactionEntity() {
     }
@@ -128,5 +129,11 @@ public class ClosedTellerTransactionEntity {
 
     public void setIsClosed(byte isClosed) {
         this.isClosed = isClosed;
+    }
+    public byte getIsSuspended() {
+        return isSuspended;
+    }
+    public void setIsSuspended(byte isSuspended) {
+        this.isSuspended = isSuspended;
     }
 }//end of class...

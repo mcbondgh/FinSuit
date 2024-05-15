@@ -15,13 +15,12 @@ public class DomesticTransactionLogsEntity {
 
     public DomesticTransactionLogsEntity() {
     }
-    public DomesticTransactionLogsEntity(int id, String transferTypes, String transferTO, double amount, double cashAmount, double eCashAmount, int enteredBy, Timestamp entryDate, LocalTime time) {
+    public DomesticTransactionLogsEntity(int id, String transferTypes, String transferTO, double amount, int enteredBy, Timestamp entryDate, LocalTime time)
+    {
         this.id = id;
         this.transferTypes = transferTypes;
         this.transferTO = transferTO;
         this.amount = amount;
-        this.cashAmount = cashAmount;
-        this.eCashAmount = eCashAmount;
         this.enteredBy = enteredBy;
         this.entryDate = entryDate;
         this.time = time;

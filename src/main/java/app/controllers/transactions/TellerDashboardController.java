@@ -63,10 +63,7 @@ public class TellerDashboardController extends FinanceModel implements Initializ
         if (cashField.isFocused() && !event.getCharacter().matches("[0-9.]")) {
             cashField.deletePreviousChar();
         }
-        try {
-//            double currentBal = Double.parseDouble(eCashBalanceLabel.getText().replace(",", ""));
-//            double difference = Double.parseDouble(depositCountLabel.getText().replaceAll(",", "")) - Double.parseDouble(withdrawalCountLabel.getText().replaceAll(",", ""));
-//            double result = Double.parseDouble(cashField.getText()) - difference;
+        try {;
             closingBalanceLabel.setText(currency.format(Double.parseDouble(cashField.getText())));
         }catch (NumberFormatException ignore) {
             closingBalanceLabel.setText(eCashBalanceLabel.getText());
@@ -193,14 +190,14 @@ public class TellerDashboardController extends FinanceModel implements Initializ
     //And set an indication that the transaction for the day pertaining to this teller has been officially closed.
     @FXML void closeCashierTransactions() {
         double loadedBalance = Double.parseDouble(loadedBalanceLabel.getText().replaceAll(",", ""));
-        double cashAmount = Double.parseDouble(cashField.getText());
-        double eCashAmount = Double.parseDouble(eCashBalanceLabel.getText().replace(",", ""));
+//        double cashAmount = Double.parseDouble(cashField.getText());
+//        double eCashAmount = Double.parseDouble(eCashBalanceLabel.getText().replace(",", ""));
         double closingBalance = Double.parseDouble(closingBalanceLabel.getText().replace(",", ""));
         double overageAmount = Double.parseDouble(overageField.getText());
         double shortageAmount = Double.parseDouble(shortageField.getText());
         String note = commentsField.getText();
 
-        UserAlerts ALERT = new UserAlerts("CLOSE DAILY TRANSACTION ACCOUNT", "Are you sure you want to close your transaction account" +
+        UserAlerts ALERT = new UserAlerts("CLOSE DAILY TRANSACTION", "Are you sure you want to close your transaction account" +
                 "for the day?", "please confirm your action to close your , else CANCEL to abort.account");
 
         //check if the cashier's account has been loaded for the day. If TRUE proceed else diny the closure of the account.
@@ -213,18 +210,14 @@ public class TellerDashboardController extends FinanceModel implements Initializ
         //CHECK IF CASHIER TRANSACTIONS HAS BEEN CLOSED OR NOT.
         boolean statusResult = isCashierTransactionClosed(Date.valueOf(LocalDate.now()), USER_ID);
         if (statusResult) {
-            new UserNotification().errorNotification("ACCOUNT CLOSED", "Your daily transaction account is closed for today");
+            new UserNotification().errorNotification("ACCOUNT CLOSED", "Your daily transaction account is closed for the day");
             return;
         }
 
-
         if (ALERT.confirmationAlert()) {
-
             //set values for the entity class associated to this class to allow method get values to save.
             ClosedTellerTransactionEntity entity = new ClosedTellerTransactionEntity();
-            entity.seteCash(eCashAmount);
             entity.setNotes(note);
-            entity.setPhysicalCash(cashAmount);
             entity.setEnteredBy(USER_ID);
             entity.setOverageAmount(overageAmount);
             entity.setShortageAmount(shortageAmount);

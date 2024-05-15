@@ -1200,8 +1200,7 @@ public class MainModel extends DbConnection {
                 List<Object> tableData = new ArrayList<>();
                 tableData.add(resultSet.getInt("id"));//0
                 tableData.add(resultSet.getDouble("amount"));//1
-                tableData.add(resultSet.getDouble("e_cash"));//2
-                tableData.add(resultSet.getTimestamp("entry_date"));//3
+                tableData.add(resultSet.getTimestamp("entry_date"));//2
                 data.put(tellerNames, tableData);
             }
             resultSet.close();
@@ -1216,7 +1215,7 @@ public class MainModel extends DbConnection {
             String query = "Select username FROM closed_teller_transaction_logs AS cttl\n" +
                     "INNER JOIN users AS u\n" +
                     "ON u.user_id = cttl.entered_by\n" +
-                    "WHERE Date(entry_date) = current_date() AND is_closed = 0;";
+                    "WHERE Date(entry_date) = current_date() AND is_closed = 0 AND is_suspended = 0;";
             resultSet = getConnection().createStatement().executeQuery(query);
             while (resultSet.next()){
                 data.add(resultSet.getString("username"));
@@ -1244,9 +1243,9 @@ public class MainModel extends DbConnection {
     public Map<String, List<Double>> getCashierCurrentAndLoadedBalance() {
         Map<String, List<Double>> data = new HashMap<>();
         try{
-            String query = "SELECT transferred_to AS `name`, SUM(dtl.amount) AS loaded_amount , tca.e_cash AS e_cash\n" +
+            String query = "SELECT transferred_to AS `name`, SUM(dtl.amount) AS 'loaded_amount', tca.amount AS 'current_amount'\n" +
                     "FROM domestic_transfer_logs AS dtl\n" +
-                    "     INNER JOIN temporal_cashier_account as tca\n" +
+                    "INNER JOIN temporal_cashier_account as tca\n" +
                     "ON transferred_to = teller\n" +
                     "WHERE DATE(dtl.entry_date) = CURRENT_DATE() GROUP BY `name`;";
             resultSet = getConnection().createStatement().executeQuery(query);
@@ -1254,7 +1253,7 @@ public class MainModel extends DbConnection {
                 String tellerNames = resultSet.getString("name");
                 List<Double> tableData = new ArrayList<>();
                 tableData.add(resultSet.getDouble("loaded_amount"));//0
-                tableData.add(resultSet.getDouble("e_cash"));//1
+                tableData.add(resultSet.getDouble("current_amount"));//1
                 data.put(tellerNames, tableData);
             }
             resultSet.close();
@@ -1276,13 +1275,13 @@ public class MainModel extends DbConnection {
                 int enteredBy = resultSet.getInt("entered_by");
                 Timestamp entry_date = resultSet.getTimestamp("entry_date");
                 LocalTime time = resultSet.getTime("time").toLocalTime();
-                double cash = resultSet.getDouble("cash");
-                double ecash = resultSet.getDouble("e_cash");
-                data.add(new DomesticTransactionLogsEntity(id, type, to, amount, cash, ecash, enteredBy, entry_date, time));
+//                double cash = resultSet.getDouble("cash");
+//                double ecash = resultSet.getDouble("e_cash");
+                data.add(new DomesticTransactionLogsEntity(id, type, to, amount,  enteredBy, entry_date, time));
             }
             resultSet.close();
             getConnection().close();
-        }catch(SQLException ignore){}
+        }catch(SQLException ignore){ignore.printStackTrace();}
         return data;
     }
 
