@@ -4,7 +4,6 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.controllers.homepage.AppController;
-import app.documents.ImageReadWriter;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
 import app.repositories.business.BusinessInfoEntity;
@@ -22,9 +21,14 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import net.synedra.validatorfx.Validator;
 
-import java.io.File;
-import java.io.IOException;
+
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
@@ -133,9 +137,15 @@ public class SettingsController extends SettingModel implements Initializable{
         }
     }
 
-    void saveImageToDestination(){
-        String fileName = imageName.getText();
-        ImageReadWriter.saveImageToDestination(fileName, logoViewer);
+    byte[] getLogoData() throws IOException {
+        byte[] data = null;
+        try{
+            data = new FileInputStream(logoViewer.getImage().getUrl()).readAllBytes();
+        }catch (Exception ignore){
+            data = MODEL_OBJECT.getBusinessInfo().get(0).getLogo();
+        }
+
+        return data;
     }
     void fillFields() throws IOException {
         for (BusinessInfoEntity item : MODEL_OBJECT.getBusinessInfo()) {
@@ -145,14 +155,14 @@ public class SettingsController extends SettingModel implements Initializable{
               emailField.setText(item.getEmail());
               locationField.setText(item.getLocation());
               digitalAddField.setText(item.getDigital());
-              imageName.setText(item.getLogo());
-              accountPasswordField.setText(item.getAccountPassword());
+              imageName.setText("business-logo");
+//              accountPasswordField.setText(item.getAccountPassword());
               double percentageValue = item.getLoanPercentage();
               double taxValue = item.getTaxPercentage();
               loanPercentageField.setText(String.valueOf(percentageValue));
               percentageIndicator.setText(percentageValue + "% of basic Salary" );
 //              String getImageSource = ImageReadWriter.displayImage(item.getLogo());
-//              logoViewer.setImage(new Image(getImageSource));
+              logoViewer.setImage(new Image(new ByteArrayInputStream(item.getLogo())));
               withdrawalRateField.setText(String.valueOf(taxValue));
               taxIndicator.setText(taxValue + "% of withdrawal amount");
         }
@@ -193,7 +203,7 @@ public class SettingsController extends SettingModel implements Initializable{
             });
 
             systemInfoPane.setOnMouseMoved(mouseEvent -> {
-                updateButton.setDisable(isNameFieldEmpty() || isNumberFieldEmpty() || isEmailFieldEmpty() || isDigitalFieldEmpty() || isAccountFieldEmpty());
+                updateButton.setDisable(isNameFieldEmpty() || isNumberFieldEmpty() || isEmailFieldEmpty() || isDigitalFieldEmpty());
             });
             apiPane.setOnMouseMoved(mouseEvent -> {
                 updateSenderIdButton.setDisable(isSenderIdEmpty() || isSenderMailFieldEmpty()  || isPasswordFieldEmpty());
@@ -255,16 +265,19 @@ public class SettingsController extends SettingModel implements Initializable{
             String email = emailField.getText();
             String digital = digitalAddField.getText();
             String location = locationField.getText();
-            String imageUrl = imageName.getText();
-            String hashedValue = EncryptDecrypt.hashPlainText(accountPasswordField.getText());
+            byte[] logoImage = null;
+            try {
+                logoImage = getLogoData();
+            } catch (IOException e) {throw new RuntimeException(e);}
+            String hashedValue = EncryptDecrypt.hashPlainText(accountPasswordField.getText().isBlank() ? EncryptDecrypt.DEFAULT_PASSWORD : accountPasswordField.getText());
             double percentageValue = Double.parseDouble(loanPercentageField.getText());
             double taxPercentage = Double.parseDouble(withdrawalRateField.getText());
 
             ALERT_OBJECT = new UserAlerts("UPDATE SYSTEM CONFIG", "ARE YOU SURE YOU WANT TO UPDATE SYSTEM PARAMETERS?",
                     "please confirm your action to proceed else CANCEL to abort");
             if (ALERT_OBJECT.confirmationAlert()) {
-                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, imageUrl, percentageValue, taxPercentage));
-                saveImageToDestination();
+                flag.set(updateBusinessInfo(name, number, otherNumber, email, hashedValue, digital, location, logoImage, percentageValue, taxPercentage));
+
                 if (flag.get() > 0) {
                     NOTIFICATION_OBJECT.successNotification("UPDATE SUCCESSFUL", "System parameters successfully update");
                 }

@@ -39,12 +39,12 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>
-                        <MFXLegacyTableView fx:id="notificationTable" layoutX="211.0" layoutY="30.0" prefHeight="498.0" prefWidth="702.0">
+                        <MFXLegacyTableView fx:id="notificationTable" fixedCellSize="30.0" layoutX="211.0" layoutY="30.0" onMouseClicked="#notificationSelected" prefHeight="498.0" prefWidth="702.0" style="-fx-font-size: 14px; -fx-font-family: poppins medium;">
                            <columns>
-                              <TableColumn fx:id="notiNoColumn" prefWidth="72.66665840148926" text="NO." />
-                              <TableColumn fx:id="notiTypeColumn" prefWidth="163.33331298828125" text="TYPE" />
-                              <TableColumn fx:id="notiContentColumn" prefWidth="290.0000305175781" text="CONTENT" />
-                              <TableColumn fx:id="notiDateColumn" maxWidth="368.666748046875" minWidth="123.333251953125" prefWidth="174.0" text="DATE" />
+                              <TableColumn fx:id="notiNoColumn" prefWidth="72.66665840148926" sortType="DESCENDING" text="NO." />
+                              <TableColumn fx:id="notiTitleColumn" prefWidth="221.3333740234375" text="TITLE" />
+                              <TableColumn fx:id="notiTypeColumn" prefWidth="185.33331298828125" text="TYPE" />
+                              <TableColumn fx:id="notiDateColumn" maxWidth="368.666748046875" minWidth="123.333251953125" prefWidth="222.66668701171875" text="DATE" />
                            </columns>
                         </MFXLegacyTableView>
                         <VBox layoutX="15.0" layoutY="31.0" prefHeight="143.0" prefWidth="187.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 5px; -fx-border-radius: 5px;">
@@ -56,7 +56,7 @@
                                           <Font name="Poppins Medium" size="12.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="limitSelector" prefHeight="33.0" prefWidth="208.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins;">
+                                    <ComboBox fx:id="limitSelector" onAction="#limitSelectorOnAction" prefHeight="33.0" prefWidth="208.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins;">
                                        <VBox.margin>
                                           <Insets top="5.0" />
                                        </VBox.margin>
@@ -88,39 +88,19 @@
                               </VBox>
                            </children>
                         </VBox>
-                        <VBox layoutX="923.0" layoutY="84.0" prefHeight="443.0" prefWidth="293.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+                        <VBox layoutX="923.0" layoutY="84.0" prefHeight="348.0" prefWidth="293.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 5px; -fx-border-radius: 5px;">
                            <children>
-                              <VBox prefHeight="57.0" prefWidth="100.0" style="-fx-background-color: #eee;">
-                                 <children>
-                                    <Label text="Title" textFill="#7d7b7b">
-                                       <font>
-                                          <Font name="Baskerville Old Face" size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="notificationTitle" alignment="CENTER" textFill="#86526f">
-                                       <font>
-                                          <Font name="Poppins Bold" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </padding>
-                              </VBox>
-                              <VBox prefHeight="285.0" prefWidth="255.0">
+                              <VBox prefHeight="197.0" prefWidth="281.0">
                                  <VBox.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </VBox.margin>
                                  <children>
                                     <Label text="Content" textFill="#726b6b">
                                        <font>
-                                          <Font name="AGaramondPro-Regular" size="18.0" />
+                                          <Font name="Poppins Medium" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextArea editable="false" prefHeight="247.0" prefWidth="281.0" wrapText="true">
+                                    <TextArea fx:id="messageContentField" prefHeight="177.0" prefWidth="271.0" wrapText="true">
                                        <VBox.margin>
                                           <Insets top="5.0" />
                                        </VBox.margin>
@@ -129,12 +109,15 @@
                                        </font>
                                     </TextArea>
                                  </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
                               </VBox>
-                              <VBox prefHeight="57.0" prefWidth="100.0">
+                              <VBox prefHeight="43.0" prefWidth="281.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
                                  <children>
                                     <Label text="Sent By" textFill="#7d7b7b">
                                        <font>
-                                          <Font name="Baskerville Old Face" size="16.0" />
+                                          <Font name="Poppins Medium" size="14.0" />
                                        </font>
                                     </Label>
                                     <Label fx:id="notificationSentBy" alignment="CENTER" textFill="#86526f">
@@ -329,7 +312,7 @@
                               <TableColumn prefWidth="246.6666259765625" text="MESSAGE BODY" />
                               <TableColumn prefWidth="115.3333740234375" text="STATUS" />
                               <TableColumn prefWidth="164.66668701171875" text="DATE &amp; TIME" />
-                              <TableColumn prefWidth="134.666748046875" text="SENT BY" />
+                              <TableColumn prefWidth="134.666748046875" text="ACTION" />
                            </columns>
                         </MFXLegacyTableView>
                         <TextField fx:id="numberField1" layoutX="619.0" layoutY="16.0" prefHeight="34.0" prefWidth="275.0" promptText="Search message status by number" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">

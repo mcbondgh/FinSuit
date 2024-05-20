@@ -8,11 +8,14 @@ import app.models.finance.FinanceModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.business.BusinessTransactionLogs;
 import app.repositories.business.DomesticTransactionLogsEntity;
+import app.repositories.business.RevenueAccountEntity;
 import app.repositories.notifications.NotificationEntity;
 import app.specialmethods.SpecialMethods;
+import io.github.palexdev.materialfx.collections.ObservableStack;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -39,7 +42,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
 
     @FXML private DatePicker transDatePicker;
     @FXML private ComboBox<String> transTypeSelector, bankSelector;
-    @FXML private TextField transferAmountField, transactionIdField;
+    @FXML private TextField transferAmountField, transactionIdField, revenueAmountField;
     @FXML private TextField accountNumberField;
     @FXML private TextArea notesField;
     @FXML private TabPane tabPane;
@@ -66,6 +69,14 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     @FXML private TableColumn<DomesticTransactionLogsEntity, Double> cashColumn;
     @FXML private TableColumn<DomesticTransactionLogsEntity, Double> eCashColumn;
     @FXML private TableColumn<DomesticTransactionLogsEntity, Integer> cashierIdColumn;
+
+    @FXML private TableView<RevenueAccountEntity> revenueLogsTable;
+    @FXML private TableColumn<Object, Object> idColumn;
+    @FXML private TableColumn<Object, Object> revenueAmountColumn;
+    @FXML private TableColumn<Object, Object> typeColumn;
+    @FXML private TableColumn<Object, Object> usernameColumn;
+    @FXML private TableColumn<Object, Object> revenueDateColumn;
+    @FXML private TableColumn<Object, Object> referenceColumn;
 
     NumberFormat formatCurrency = NumberFormat.getNumberInstance(Locale.ENGLISH);
     UserNotification showPopup = new UserNotification();
@@ -99,7 +110,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         populateAccountsTransactionsTable();
         populateCashierTransactionTable();
         setTableColor();
-
+        setRevenueTabValues();
     }
 
     void populateAccountsTransactionsTable() {
@@ -175,10 +186,37 @@ public class BusinessAccountController extends FinanceModel implements Initializ
 //        return amountValue.get();
 //    }
 
+    void setRevenueTabValues() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference_number"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("entry_type"));
+        revenueAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        revenueDateColumn.setCellValueFactory(new PropertyValueFactory<>("entry_date"));
+        revenueAmountField.setText(getRevenueAccountData().get(0).getBalance());
+        revenueLogsTable.setItems(getRevenueAccountData());
+    }
+
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS.
      ********************************************************************************************************************/
+
+    //This method shall be invoked when the PUSH FUND button is clicked. This will add and update main account balance
+    //by adding to the current balance the amount in the revenue account and set it to zero.
+
+    public void pushRevenueToMainAccount() {
+        double revenueAmount = Double.parseDouble(revenueAmountField.getText());
+        double mainAccountBal = Double.parseDouble(getBusinessAccountInformation().get("accountBalance").toString());
+        double totalBalance = revenueAmount + mainAccountBal;
+
+        BusinessInfoEntity infoEntity = new BusinessInfoEntity();
+        DomesticTransactionLogsEntity logsEntity = new DomesticTransactionLogsEntity();
+        NotificationEntity notification = new NotificationEntity();
+
+
+    }
+
     @FXML void validateTransactionAmountField(KeyEvent event) {
         if (!event.getCharacter().matches("[0-9.]")) {
            domesticAmountField.deletePreviousChar();
@@ -192,6 +230,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             } else {
                 tab.setStyle("-fx-background-color:#fff; -fx-font-weight:normal");
             }
+
         }
     }
     @FXML void checkPasswordField() {

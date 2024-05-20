@@ -79,14 +79,17 @@
                                  </font>
                               </MFXButton>
                               <Separator layoutY="423.0" prefHeight="3.0" prefWidth="471.0" />
-                              <Pane layoutX="45.0" layoutY="330.0" prefHeight="75.0" prefWidth="75.0" style="-fx-border-color: #ddd; -fx-border-radius: 10px;">
+                              <Pane layoutX="28.0" layoutY="330.0" prefHeight="75.0" prefWidth="92.0" style="-fx-border-color: #ddd; -fx-border-radius: 10px;">
                                  <children>
-                                    <ImageView fx:id="logoViewer" fitHeight="60.0" fitWidth="60.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="logoViewer" fitHeight="60.0" fitWidth="77.0" layoutX="8.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/finsit-logo-main.png" />
+                                       </image></ImageView>
                                  </children>
                               </Pane>
-                              <MFXButton fx:id="uploadButton" buttonType="RAISED" depthLevel="LEVEL0" layoutX="130.0" layoutY="356.0" prefHeight="20.0" prefWidth="62.0" style="-fx-border-color: #ddd; -fx-border-radius: 20px; -fx-background-color: #fff; -fx-background-radius: 20px;" text="upload">
+                              <MFXButton fx:id="uploadButton" buttonType="RAISED" depthLevel="LEVEL1" layoutX="127.0" layoutY="355.0" prefHeight="23.0" prefWidth="83.0" style="-fx-border-radius: 20px; -fx-background-color: #387eac; -fx-background-radius: 10px;" text="upload" textFill="WHITE">
                                  <font>
-                                    <Font name="Roboto" size="10.0" />
+                                    <Font name="Roboto" size="11.0" />
                                  </font></MFXButton>
                               <Label fx:id="imageName" alignment="TOP_LEFT" layoutX="127.0" layoutY="384.0" prefHeight="19.0" prefWidth="313.0" style="-fx-background-color: #fff3f3;">
                                  <font>
@@ -290,16 +293,16 @@
                         </Pane>
                         <Pane layoutX="352.0" layoutY="41.0" prefHeight="471.0" prefWidth="385.0" style="-fx-background-color: #fff; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: #Ddd;">
                            <children>
-                              <Pane layoutX="20.0" layoutY="11.0" prefHeight="106.0" prefWidth="336.0" style="-fx-border-color: #ddd; -fx-border-radius: 8px;">
+                              <Pane layoutX="20.0" layoutY="11.0" prefHeight="106.0" prefWidth="349.0" style="-fx-border-color: #ddd; -fx-border-radius: 8px;">
                                  <children>
                                     <Label alignment="CENTER" layoutX="9.0" layoutY="-4.0" prefHeight="34.0" prefWidth="113.0" text="Place Holders">
                                        <font>
                                           <Font name="Poppins Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="11.0" layoutY="29.0" lineSpacing="5.0" prefHeight="47.0" prefWidth="315.0" text="[NAME], [AMOUNT], [PAYMENT METHOD], [BALANCE], [DATE], [ACCOUNT TYPE], [ACCOUNT NO], [LOAN NO], [LOAN TYPE]" textAlignment="JUSTIFY" textFill="#707070" wrapText="true">
+                                    <Label alignment="BASELINE_CENTER" layoutX="11.0" layoutY="21.0" lineSpacing="5.0" prefHeight="55.0" prefWidth="335.0" text="[NAME], [AMOUNT], [PAYMENT METHOD], [BALANCE], [DATE], [ACCOUNT TYPE], [ACCOUNT NO], [LOAN NO], [LOAN TYPE], [TRANS ID]" textFill="#707070" wrapText="true">
                                        <font>
-                                          <Font name="Roboto Bold" size="11.0" />
+                                          <Font name="Roboto Bold" size="10.0" />
                                        </font>
                                     </Label>
                                  </children>

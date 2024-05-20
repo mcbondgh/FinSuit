@@ -205,4 +205,28 @@ CREATE TABLE IF NOT EXISTS group_supervisors(
     entry_date DATETIME DEFAULT CURRENT_TIMESTAMP()
 );
 
+CREATE TABLE IF NOT EXISTS revenue_account(
+	id INT PRIMARY KEY DEFAULT 1,
+    account_balance DECIMAL(10,2) DEFAULT 0.0,
+    userId INT DEFAULT 1,
+    date_updated DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO revenue_account
+VALUES(1, 0.00, 1, DEFAULT);
+
+CREATE TABLE IF NOT EXISTS revenue_account_logs(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    reference_number VARCHAR(50) NOT NULL, 
+    entry_type VARCHAR(20) NOT NULL, 
+    amount DECIMAL(10,2) NOT NULL, 
+    entered_by INT,
+    entry_date DATETIME DEFAULT CURRENT_TIMESTAMP()
+);
+
+
+-- 18/05/2024
+SELECT * FROM loans;
+UPDATE loans SET loan_status = "closed", date_modified = DEFAULT
+WHERE loan_no = ?;
 

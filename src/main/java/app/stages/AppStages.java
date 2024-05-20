@@ -21,8 +21,8 @@ public class AppStages {
 //        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         Stage stage = new Stage();
         stage.setTitle("Homepage");
-//        Image icon = SpecialMethods.setLogoImage();
-//        stage.getIcons().add(icon);
+        Image icon = SpecialMethods.setLogoImage();
+        stage.getIcons().add(icon);
         stage.setScene(scene);
         stage.show();
         stage.getScene().getWindow().setOnCloseRequest(windowEvent -> {
@@ -45,6 +45,8 @@ public class AppStages {
         Stage stage = new Stage();
         stage.setTitle("Login");
         stage.setScene(scene);
+        Image icon = SpecialMethods.setLogoImage();
+        stage.getIcons().add(icon);
         stage.setResizable(false);
         stage.show();
     }

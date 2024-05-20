@@ -203,12 +203,12 @@
       <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="515.0" layoutY="52.0" onMouseMoved="#checkScheduleTableIfEmpty" prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
          <columns>
             <TableColumn fx:id="noColumn" editable="false" prefWidth="66.6666259765625" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
-            <TableColumn fx:id="installmentColumn" editable="false" prefWidth="160.0" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="MONTHLY INSTALLMENT" />
-            <TableColumn fx:id="principalColumn" prefWidth="91.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PRINCIPAL" />
-            <TableColumn fx:id="interestColumn" prefWidth="82.0" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="INTEREST" />
-            <TableColumn fx:id="paymentDateColumn" prefWidth="111.3333740234375" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PAYMENT DATE" />
-            <TableColumn fx:id="balanceColumn" minWidth="57.333251953125" prefWidth="94.6666259765625" style="-fx-alignment: center; -fx-font-size: 12px;" text="BALANCE" />
-            <TableColumn fx:id="scheduleId" minWidth="59.3333740234375" prefWidth="74.6666259765625" style="-fx-alignment: center; -fx-font-size: 12px;" text="S/N" visible="false" />
+            <TableColumn fx:id="installmentColumn" editable="false" prefWidth="104.00006103515625" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="MON INST" />
+            <TableColumn fx:id="principalColumn" prefWidth="103.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PRINCIPAL" />
+            <TableColumn fx:id="interestColumn" prefWidth="95.3333740234375" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="INTEREST" />
+            <TableColumn fx:id="paymentDateColumn" prefWidth="123.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PAYMENT DATE" />
+            <TableColumn fx:id="balanceColumn" minWidth="30.0" prefWidth="99.33331298828125" style="-fx-alignment: center; -fx-font-size: 12px;" text="BALANCE" />
+            <TableColumn fx:id="scheduleId" minWidth="59.3333740234375" prefWidth="78.666748046875" style="-fx-alignment: center; -fx-font-size: 12px;" text="S/N" visible="false" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

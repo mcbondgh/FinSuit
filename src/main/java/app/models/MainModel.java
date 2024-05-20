@@ -1,6 +1,7 @@
 package app.models;
 
 import app.config.db.DbConnection;
+import app.repositories.loans.AssignedSupervisors;
 import app.errorLogger.ErrorLogger;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.SmsAPIEntity;
@@ -18,6 +19,7 @@ import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
 import app.repositories.transactions.TransactionsEntity;
 import app.repositories.users.UsersData;
+import com.google.api.services.sqladmin.model.User;
 import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
@@ -52,7 +54,7 @@ public class MainModel extends DbConnection {
                 String accountPassword = resultSet.getString("account_password");//4
                 String digital = resultSet.getString("digital_address"); //5
                 String location = resultSet.getString("location"); //6
-                String logo = resultSet.getString("logoPath");//7
+                byte[] logo = resultSet.getBytes("logo");//7
                 double loanPercentage = resultSet.getDouble("loan_percentage"); //8
                 double  taxPercentage = resultSet.getDouble("withdrawal_tax");
                 data.add(new BusinessInfoEntity(name, number, otherNumber, email, accountPassword, digital, location, logo, loanPercentage, taxPercentage));
@@ -185,7 +187,7 @@ public class MainModel extends DbConnection {
         return data;
     }
 
-    public Map<String, Object> getLastTrancactionDate(String accountNumber) {
+    public Map<String, Object> getLastTransactionDate(String accountNumber) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
         Map<String, Object> data = new HashMap<>();
         try {
@@ -393,6 +395,7 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {e.printStackTrace();}
         return data;
     }
+
     public ObservableList<UserRolesData> getUserRoles() {
         ObservableList<UserRolesData> roles  = new ObservableStack<>();
             try {
@@ -1171,10 +1174,10 @@ public class MainModel extends DbConnection {
         return data;
     }
 
-    public Map<String, Object> getOperationsAccountDetails() {
+    public Map<String, Object> getRevenueAccountDetails() {
         Map<String, Object> data = new HashMap<>();
         try{
-            String query = "SELECT * FROM operations_account";
+            String query = "SELECT * FROM revenue_account";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
@@ -1316,7 +1319,7 @@ public class MainModel extends DbConnection {
         try {
             String query = "SELECT Date(entry_date) as `Entry Date`" +
                     "FROM closed_teller_transaction_logs " +
-                    "WHERE (DATE('"+currentDate+"') = current_date() AND entered_by = '"+cashierId+"')";
+                    "WHERE (DATE(entry_date) = '"+currentDate+"' AND entered_by = '"+cashierId+"')";
              resultSet = getConnection().createStatement().executeQuery(query);
              if (resultSet.next()) {
                  return resultSet.getDate("Entry Date").toLocalDate().equals(LocalDate.now());
@@ -1332,8 +1335,6 @@ public class MainModel extends DbConnection {
         try {
             String query = "";
             resultSet = getConnection().createStatement().executeQuery(query);
-
-
         }catch (SQLException ignore){}
 
         return data;
@@ -1363,4 +1364,59 @@ public class MainModel extends DbConnection {
 //        }catch (Exception e){e.printStackTrace();}
 //        return data;
 //    }
+
+   public ObservableList<AssignedSupervisors> getAllAssignedSupervisors(){
+        ObservableList<AssignedSupervisors> data = new ObservableStack<>();
+        try{
+            String query = """
+                    SELECT gs.emp_id , concat(firstname, ' ',lastname) AS `supervisor`,\s
+                    gs.loan_id AS `loan_number`, application_status FROM employees AS emp
+                    INNER JOIN group_supervisors AS gs
+                    ON emp.work_id = gs.emp_id
+                    INNER JOIN loans AS ln
+                    ON gs.loan_id = ln.loan_no;
+                    """;
+            resultSet = getConnection().createStatement().executeQuery(query);
+            AtomicInteger counter = new AtomicInteger(0);
+            while (resultSet.next()) {
+                String name = resultSet.getString("supervisor");
+                String number = resultSet.getString("loan_number");
+                String status = resultSet.getString("application_status");
+                data.add(new AssignedSupervisors(counter.incrementAndGet(), name, number, status));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException e){e.getMessage();}
+        return data;
+    }
+
+    public ObservableList<NotificationEntity> getAllNotifications(int limit) {
+       ObservableList<NotificationEntity> data = new ObservableStack<>();
+       try {
+           String query = """
+                   SELECT id, title, sender_method, message, logged_date, `read`, username FROM notifications AS n
+                   INNER JOIN users AS u
+                   ON u.user_id = n.logged_by  ORDER BY id DESC LIMIT ?;
+                  
+                   """;
+           preparedStatement = getConnection().prepareStatement(query);
+           preparedStatement.setInt(1, limit);
+
+           resultSet = preparedStatement.executeQuery();
+           while(resultSet.next()) {
+               long id = resultSet.getLong("id");
+               String title = resultSet.getNString("title");
+               String sender_method = resultSet.getString("sender_method");
+               String message = resultSet.getNString("message");
+               Timestamp logged_date = resultSet.getTimestamp("logged_date");
+               boolean read = resultSet.getBoolean("read");
+               UsersData username = new UsersData();
+               username.setUsername(resultSet.getString("username"));
+               data.add(new NotificationEntity(id, title, sender_method, message, logged_date, read, username));
+           }
+
+       }catch (SQLException e){e.printStackTrace();}
+       return data;
+    }
+
 }//END OF CLASS...

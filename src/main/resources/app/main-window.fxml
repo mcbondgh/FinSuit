@@ -289,28 +289,34 @@
    </BorderPane>
    <Pane fx:id="searchCustomersField" layoutX="-6.0" prefHeight="42.0" prefWidth="1280.0" style="-fx-background-color: #9423a1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <Circle fx:id="notificationPane" fill="WHITE" layoutX="754.0" layoutY="21.0" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE" />
          <Circle fill="WHITE" layoutX="1180.0" layoutY="20.0" onMouseClicked="#showUserProfile" radius="15.0" stroke="TRANSPARENT" strokeType="INSIDE">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor>
          </Circle>
-         <ImageView fx:id="siteLogo" fitHeight="32.0" fitWidth="32.0" layoutX="33.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@images/finsit-logo.png" />
-            </image>
-         </ImageView>
-         <Label fx:id="appNameLabel" layoutX="85.0" layoutY="11.0" prefHeight="20.0" prefWidth="310.0" text="BUSINESS NAME" textFill="WHITE">
-            <font>
-               <Font name="Poppins Black" size="14.0" />
-            </font>
-         </Label>
-         <Label layoutX="410.0" layoutY="7.0" text="🔎" textFill="WHITE">
+         <HBox alignment="CENTER" layoutX="8.0" layoutY="5.0" prefHeight="20.0" prefWidth="456.0" spacing="10.0">
+            <children>
+               <ImageView fx:id="siteLogo" fitHeight="34.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@images/finsit-logo.png" />
+                  </image>
+                  <HBox.margin>
+                     <Insets />
+                  </HBox.margin>
+               </ImageView>
+               <Label fx:id="appNameLabel" prefHeight="20.0" prefWidth="364.0" text="BUSINESS NAME" textFill="WHITE">
+                  <font>
+                     <Font name="Poppins Black" size="14.0" />
+                  </font>
+               </Label>
+            </children>
+         </HBox>
+         <Label layoutX="486.0" layoutY="7.0" text="🔎" textFill="WHITE">
             <font>
                <Font size="18.0" />
             </font>
          </Label>
-         <TextField fx:id="searchField" layoutX="433.0" layoutY="5.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="Search ...." style="-fx-background-color: #fff; -fx-background-radius: 5;">
+         <TextField fx:id="searchField" layoutX="509.0" layoutY="5.0" onKeyPressed="#searchCustomerMethod" prefHeight="30.0" prefWidth="286.0" promptText="Search ...." style="-fx-background-color: #fff; -fx-background-radius: 5;">
             <font>
                <Font name="Poppins Regular" size="14.0" />
             </font>
@@ -326,7 +332,8 @@
                <ColorAdjust brightness="-0.94" contrast="-1.0" hue="1.0" saturation="1.0" />
             </effect>
          </ImageView>
-         <Label layoutX="744.0" layoutY="7.0" prefHeight="28.0" prefWidth="21.0" text="🔔" textFill="#797878">
+         <Circle fx:id="notificationPane" fill="WHITE" layoutX="830.0" layoutY="21.0" radius="16.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+         <Label layoutX="820.0" layoutY="7.0" prefHeight="28.0" prefWidth="21.0" text="🔔" textFill="#797878">
             <font>
                <Font size="19.0" />
             </font>

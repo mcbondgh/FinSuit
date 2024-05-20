@@ -5,12 +5,14 @@ import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
 import app.controllers.homepage.AppController;
 import app.controllers.messages.MessageBuilders;
+import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
 import app.enums.PaymentMethods;
 import app.models.finance.FinanceModel;
 import app.models.message.MessagesModel;
 import app.models.transactions.TransactionModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
+import app.repositories.documents.ReceiptsEntity;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.repositories.transactions.TransactionsEntity;
@@ -30,7 +32,13 @@ import javafx.scene.input.KeyEvent;
 import org.controlsfx.control.action.ActionCheck;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -246,9 +254,39 @@ public class WithdrawalController extends TransactionModel implements Initializa
                             transactions.setUserId(userId);
                             responseStatus += saveWithdrawalTransaction(transactions);
 
+                            //SET VALUES FOR receiptEntity to create receipt file..
+                            ReceiptsEntity receiptsEntity = new ReceiptsEntity();
+                            var TRANSACTION_ID = SpecialMethods.getTransactionId(getTotalTransactionCount() + 1);
+                            var transactionDate = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+                            String work_id = getEmployeeIdByUsername(currentUserPlaceholder);
+                            String cashierName = getEmployeeFullNameByWorkId(work_id);
+                            String pdfName = TRANSACTION_ID + " " + LocalDate.now() + ".pdf";
+
+                            receiptsEntity.setCustomerName(accountHolderName.getText());
+                            receiptsEntity.setAccountNumber(accountNumberField.getValue());
+                            receiptsEntity.setTransactionType("Cash Withdrawal");
+                            receiptsEntity.setPaymentMethod(payMethod);
+                            receiptsEntity.setAmount(String.valueOf(cashField.getText()));
+                            receiptsEntity.setDepositorName(collectorsNameField.getText());
+                            receiptsEntity.setDepositorIdNumber(idNumberField.getText());
+                            receiptsEntity.setTransactionDate(transactionDate);
+                            receiptsEntity.setTransactionStatus("SUCCESSFUL");
+                            receiptsEntity.setCashierName(cashierName);
+                            receiptsEntity.setTransactionNumber(TRANSACTION_ID);
+
+
+                            new DocumentGenerator().generateTransactionReceipt(pdfName, receiptsEntity);
+
                             //set parameters to send sms to account holder.
                             try{
-                                String message = new MessageBuilders().cashWithdrawalMessage(withdrawalAmount, collectorsNameField.getText(), balance);
+                                Map<String, String> withdrawalDetails = new HashMap<>();
+                                withdrawalDetails.put("amount", String.valueOf(withdrawalAmount));
+                                withdrawalDetails.put("collectorName", collectorsNameField.getText());
+                                withdrawalDetails.put("balance",String.valueOf(balance));
+                                withdrawalDetails.put("accountNo", String.valueOf(accountNumber));
+                                withdrawalDetails.put("transId", TRANSACTION_ID);
+
+                                String message = new MessageBuilders().cashWithdrawalMessage(withdrawalDetails);
                                 String msgStatus = MessageStatus.getMessageStatusResult(SMS.sendSms(mobileNumber, message)).toString();
                                 NOTIFY_ENTITY.setSender_method("SMS");
                                 NOTIFY_ENTITY.setTitle("Cash Withdrawal");
@@ -277,8 +315,6 @@ public class WithdrawalController extends TransactionModel implements Initializa
                             }
                         };
                     }
-
-
                 }
             }catch (NumberFormatException ignore){}
         }

@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,11 +33,11 @@ public class SpecialMethods {
 
     //THIS METHOD WHEN INVOKED SHALL TAKE THE NAME OF THE IMAGE AND THEN DISPLAY IT TO THE IMAGE-VIEW...
     public static Image setLogoImage() {
-        String filePath = "";
+       Image image = null;
         for(BusinessInfoEntity item : MODEL.getBusinessInfo()) {
-            filePath = "C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\uploads\\" + item.getLogo();
+            image = new Image(new ByteArrayInputStream(item.getLogo()));
         }
-        return new Image(filePath);
+        return image;
     }
     public static void FlipView(String fxmlFileName, BorderPane borderPane) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFileName));

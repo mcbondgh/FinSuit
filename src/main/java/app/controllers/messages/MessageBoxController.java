@@ -6,6 +6,7 @@ import app.models.message.MessagesModel;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.settings.TemplatesRepository;
+import app.repositories.users.UsersData;
 import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -15,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
 
@@ -45,6 +47,7 @@ public class MessageBoxController extends MessagesModel implements Initializable
     @FXML private ComboBox<String> templateSelector;
     @FXML private JFXTextArea messageBodyField;
     @FXML private TextField messageTitleField, senderIdField;
+    @FXML private TextArea messageContentField;
 
     private static String currentUserPlaceHolder;
     public static String pageTitlePlaceHolder;
@@ -69,10 +72,10 @@ public class MessageBoxController extends MessagesModel implements Initializable
     @FXML
     MFXLegacyTableView<NotificationEntity> notificationTable;
     @FXML TableColumn<NotificationEntity, Integer> notiNoColumn;
+    @FXML TableColumn<NotificationEntity, Integer> notiTitleColumn;
     @FXML TableColumn<NotificationEntity, Integer> notiTypeColumn;
-    @FXML TableColumn<NotificationEntity, Integer> notiContentColumn;
     @FXML TableColumn<NotificationEntity, Integer> notiDateColumn;
-    @FXML Label notificationTitle, notificationSentBy;
+    @FXML Label notificationSentBy;
     @FXML ComboBox<Integer> limitSelector;
     @FXML TextField searchNotificationField;
 
@@ -82,8 +85,9 @@ public class MessageBoxController extends MessagesModel implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
-
+        setTableData();
         populateFields();
+        limitSelector.setValue(10);
     }
 
     void populateFields() {
@@ -98,6 +102,24 @@ public class MessageBoxController extends MessagesModel implements Initializable
         for (CustomersDataRepository items : fetchCustomersData()) {
             String fullName = items.getFirstname().concat(" " + items.getOthername() + " " + items.getLastname());
             customerNameSelector.getItems().add(fullName);
+        }
+
+        int[] values = {1, 5, 10, 20, 30, 40, 50, 100, 200, 500};
+        for (int value : values) {
+            limitSelector.getItems().add(value);
+        }
+    }
+
+    void setTableData() {
+        notiNoColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        notiTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        notiTypeColumn.setCellValueFactory(new PropertyValueFactory<>("sender_method"));
+        notiDateColumn.setCellValueFactory(new PropertyValueFactory<>("localDate"));
+        notificationTable.setItems(getAllNotifications(50));
+        for (NotificationEntity items : notificationTable.getItems()) {
+            if (items.getIsRead()) {
+
+            }
         }
     }
 
@@ -177,6 +199,21 @@ public class MessageBoxController extends MessagesModel implements Initializable
      @FXML void NumberSelectorOnAction() {
 
 
+     }
+
+     @FXML void limitSelectorOnAction() {
+        notificationTable.getItems().clear();
+        notificationTable.setItems(getAllNotifications(limitSelector.getValue()));
+     }
+
+     @FXML void notificationSelected() {
+        boolean itemSelected = notificationTable.getSelectionModel().isEmpty();
+        if (!itemSelected) {
+            UsersData username = notificationTable.getSelectionModel().getSelectedItem().getUsername();
+            String message = notificationTable.getSelectionModel().getSelectedItem().getMessage();
+            notificationSentBy.setText(username.getUsername());
+            messageContentField.setText(message);
+        }
      }
 
 

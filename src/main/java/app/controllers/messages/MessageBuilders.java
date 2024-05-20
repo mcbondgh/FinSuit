@@ -5,7 +5,9 @@ import app.models.MainModel;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MessageBuilders {
     MainModel DAO = new MainModel();
@@ -15,14 +17,15 @@ public class MessageBuilders {
     private String message = null;
     private final String[] placeHolder = {"[NAME]", "[AMOUNT]", "[PAYMENT METHOD]", "[BALANCE]", "[DATE]", "[ACCOUNT TYPE]", "[ACCOUNT NO]", "[LOAN NO]", "[LOAN TYPE]"};
 
-
     public String cashDepositMessageBuilder(String clientName, String amount, String accountNo, String depositor, String transactionNo, double balance) {
                 DAO.getMessageWithOperations().forEach(item -> {
             if (item.getOperation_type().equalsIgnoreCase("Cash Deposit")) {
                 message = item.getMessage().replace("[NAME]", clientName)
-                        .replace("[AMOUNT]", "Ghc".concat(amount)).replace("[ACCOUNT NUMBER]", accountNo)
-                        .replace("[DATE]", dateTime).replace("[TRANSACTION NO]", transactionNo)
-                        .replace("[DEPOSITOR NAME]", depositor).replace("[BALANCE]", String.valueOf("Ghc".concat(String.valueOf(balance))));
+                        .replace("[AMOUNT]", "Ghc".concat(amount)).replace("[ACCOUNT NO]", accountNo)
+                        .replace("[DATE]", dateTime).replace("[TRANS ID]", transactionNo)
+                        .replace("[DEPOSITOR NAME]", depositor).replace("[BALANCE]", String.valueOf("Ghc".concat(String.valueOf(balance))))
+
+                ;
                 stringBuilder.append(message);
             }
         });
@@ -88,13 +91,15 @@ public class MessageBuilders {
         return stringBuilder.toString();
     }
 
-    public String cashWithdrawalMessage(double amount, String name, double balance) {
+    public String cashWithdrawalMessage(Map<String, String> items) {
         DAO.getMessageWithOperations().forEach(data -> {
             if (data.getOperation_type().equalsIgnoreCase("Cash Withdrawal")) {
-                message = data.getMessage().replace("[AMOUNT]", String.valueOf(amount))//amount withdrawn
-                        .replace("[NAME]", name)//name of collector
+                message = data.getMessage().replace("[AMOUNT]", String.valueOf(items.get("amount")))//amount withdrawn
+                        .replace("[NAME]", items.get("collectorName"))//name of collector
                         .replace("[DATE]", dateTime)// date of withdrawal
-                                .replace("[BALANCE]", String.valueOf(balance));//account balance
+                        .replace("[ACCOUNT NO]", items.get("accountNo"))
+                        .replace("[BALANCE]", items.get("balance"))//account balance
+                        .replace("[TRANS ID]", items.get("transId"));
                 stringBuilder.append(message);
             }
         });
@@ -102,7 +107,7 @@ public class MessageBuilders {
     }
     public String loanTerminationMessage(String name, String loanNo) {
         DAO.getMessageWithOperations().forEach(data -> {
-            if (data.getOperation_type().equalsIgnoreCase("Cash Withdrawal")) {
+            if (data.getOperation_type().equalsIgnoreCase("Loan Termination")) {
                 message = data.getMessage().replace("[NAME]", name)//name of collector
                         .replace("[DATE]", dateTime)// date of withdrawal
                         .replace("[LOAN NO]", loanNo);//loan Number

@@ -72,7 +72,7 @@ public class CheckAccountBalance extends TransactionModel implements Initializab
 
       public void getBalanceButtonClicked(ActionEvent actionEvent) {
         ArrayList<Object> customerData = getCustomerDetailsByAccountNumber(accountNumberField.getValue());
-        Map<String, Object> transactionData = getLastTrancactionDate(accountNumberField.getValue());
+        Map<String, Object> transactionData = getLastTransactionDate(accountNumberField.getValue());
         String databasePin = customerData.get(7).toString();
         String userInputPin = pinNumberField.getText();
 

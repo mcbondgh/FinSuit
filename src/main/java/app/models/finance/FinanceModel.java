@@ -5,10 +5,15 @@ import app.repositories.business.*;
 import app.repositories.notifications.NotificationEntity;
 import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FinanceModel extends MainModel {
@@ -114,7 +119,7 @@ public class FinanceModel extends MainModel {
                     "FROM closed_teller_transaction_logs\n" +
                     "INNER JOIN users AS u\n" +
                     "ON u.user_id = entered_by\n" +
-                    "WHERE username = '"+cashierName+"';";
+                    "WHERE username = '"+cashierName+"' AND is_closed = 0;";
             resultSet = getConnection().createStatement().executeQuery(query);
             if (resultSet.next()) {
                 data.put("shortageAmount", resultSet.getDouble("shortage_amount"));
@@ -191,6 +196,41 @@ public class FinanceModel extends MainModel {
             return preparedStatement.executeUpdate();
         }catch (SQLException e) {e.printStackTrace();}
         return 0;
+    }
+
+    public ObservableList<RevenueAccountEntity> getRevenueAccountData() {
+        ObservableList<RevenueAccountEntity> data = new ObservableStack<>();
+        try {
+            var query = """
+                    SELECT ral.id, reference_number, entry_type, amount,\s
+                    username, entry_date
+                    FROM revenue_account_logs AS ral
+                    INNER JOIN users AS u
+                    ON u.user_id = ral.entered_by\s
+                    """;
+            var query2 = "SELECT * FROM finsuit.revenue_account;";
+
+            resultSet = getConnection().createStatement().executeQuery(query2);
+            String balance = null;
+            if (resultSet.next()){
+              balance =  String.valueOf(resultSet.getDouble("account_balance"));
+            }
+
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()) {
+                int counter = resultSet.getInt("id");
+                String reference = resultSet.getString("reference_number");
+                String username = resultSet.getString("username");
+                String amount = resultSet.getString("amount");
+                String type = resultSet.getString("entry_type");
+                String date = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(resultSet.getTimestamp(6).toLocalDateTime());
+                data.add(new RevenueAccountEntity(counter, balance, reference, type, amount, username, date));
+            }
+
+            resultSet.close();
+            getConnection().close();
+        }catch (Exception e){e.printStackTrace();}
+        return data;
     }
 
 }//end of class...

@@ -61,14 +61,14 @@ public class TransactionModel extends MainModel {
             preparedStatement.setInt(5, var1.getUserId());
             preparedStatement.execute();
 
-            String query2 = "UPDATE operations_account \n" +
+            String query2 = "UPDATE revenue_account \n" +
                     "SET account_balance = ?, updated_by = ?, date_updated = DEFAULT; ";
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setDouble(1, Double.parseDouble(var2.get("balance").toString()));
             preparedStatement.setInt(2, Integer.parseInt(var2.get("userId").toString()));
             preparedStatement.execute();
 
-            String query3 = "INSERT INTO operations_transaction_logs(reference_number, entry_type, amount, entered_by)\n" +
+            String query3 = "INSERT INTO revenue_account_logs(reference_number, entry_type, amount, entered_by)\n" +
                     "VALUES(?,?,?,?);";
             preparedStatement = getConnection().prepareStatement(query3);
             preparedStatement.setString(1, var2.get("referenceNumber").toString());

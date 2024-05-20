@@ -116,8 +116,8 @@ public class DepositController extends TransactionModel implements Initializable
         SpecialMethods.setPaymentGateways(gatewaySelector);
     }
     void clearFields() {
-        accountNumberField.setValue(null);
-        accountHolderName.setText("FIN-SUIT GHANA");
+//        accountNumberField.setValue(null);
+        accountHolderName.setText("FINSUIT GHANA");
         paymentSelector.setValue(null);
         gatewaySelector.setValue(null);
         cashField.clear();
@@ -203,7 +203,7 @@ public class DepositController extends TransactionModel implements Initializable
             cashField.setText(value.equals(PaymentMethods.eCASH) ? "0.00": cashField.getText());
             gatewaySelector.setValue(null);
             eCashField.setText("0.00");
-            transactionIdField.setText("Unspecified");
+            transactionIdField.setText("000000000000");
         }catch (Exception ignored){}
     }
     @FXML void setGatewaySelectorOnAction() {
@@ -221,7 +221,7 @@ public class DepositController extends TransactionModel implements Initializable
         eCashField.setDisable(isGatewayEmpty());
         transactionIdField.setDisable(isGatewayEmpty());
         eCashField.setText("0.00");
-        transactionIdField.setText("Unspecified");
+        transactionIdField.setText("0000000000");
         totalCashLabel.setText(decimalFormat.format(cashField.getText()));
     }
 
@@ -268,6 +268,7 @@ public class DepositController extends TransactionModel implements Initializable
                         currentBalance = data.getAccount_balance();
                     }
                 }
+
                 //SET VALUES FOR accountRepository to update current customer's account balance details..
                 double newAccountBalance = totalAmount + currentBalance;
                 accountsDataRepository.setAccount_balance(newAccountBalance);

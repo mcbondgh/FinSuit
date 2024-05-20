@@ -1,9 +1,14 @@
 package app.controllers.loans;
 
+import app.alerts.UserAlerts;
+import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
 import app.controllers.loans.application.UpdateApplicantLoanController;
 import app.models.loans.LoansModel;
+import app.models.message.MessagesModel;
 import app.repositories.loans.LoansTableEntity;
+import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -13,12 +18,13 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -92,7 +98,7 @@ public class LoansController extends LoansModel implements Initializable {
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("requestedAmount"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("statusLabel"));
         loanTypeColumn.setCellValueFactory(new PropertyValueFactory<>("loanType"));
-        viewColumn.setCellValueFactory(new PropertyValueFactory<>("viewButton"));
+        viewColumn.setCellValueFactory(new PropertyValueFactory<>("cancelButton"));
         editColumn.setCellValueFactory(new PropertyValueFactory<>("editButton"));
         loanApplicantsTable.setItems(getLoansUnderApplicationStage(loggedInUserId));
     }
@@ -101,7 +107,7 @@ public class LoansController extends LoansModel implements Initializable {
         int counter = countRequestedLoans();
         int counter1 = countAssignedLoans();
         int counter2 = countUnpaidLoans();
-        loanRequestsButton.setText("Loan Requests (" + counter +")");
+        loanRequestsButton.setText(loanRequestsButton.getText() + " (" + counter +")");
         generateScheduleButton.setText(generateScheduleButton.getText() + " (" + counter1 +")");
         disburseFundBtn.setText(disburseFundBtn.getText () + " (" + counter2  + ")");
     }
@@ -109,19 +115,18 @@ public class LoansController extends LoansModel implements Initializable {
         try {
             loanApplicantsTable.getItems().clear();
             FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderApplicationStage(loggedInUserId), p -> true);
-            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredList.setPredicate(customersTableData -> {
-                    if (newValue.isEmpty() || newValue.isBlank()) {
-                        return true;
-                    }
-                    String searchKeyWord = newValue.toLowerCase();
-                    if (customersTableData.getFullName().toLowerCase().contains(searchKeyWord)) {
-                        return true;
-                    } else if (customersTableData.getLoanNo().toLowerCase().contains(searchKeyWord)) {
-                        return true;
-                    } else return customersTableData.getLoanType().toLowerCase().contains(searchKeyWord);
-                });
-            });
+            searchField.textProperty().addListener((observable, oldValue, newValue) ->
+                    filteredList.setPredicate(customersTableData -> {
+                if (newValue.isEmpty() || newValue.isBlank()) {
+                    return true;
+                }
+                String searchKeyWord = newValue.toLowerCase();
+                if (customersTableData.getFullName().toLowerCase().contains(searchKeyWord)) {
+                    return true;
+                } else if (customersTableData.getLoanNo().toLowerCase().contains(searchKeyWord)) {
+                    return true;
+                } else return customersTableData.getLoanType().toLowerCase().contains(searchKeyWord);
+            }));
             SortedList<LoansTableEntity> sortedResult = new SortedList<>(filteredList);
             sortedResult.comparatorProperty().bind(loanApplicantsTable.comparatorProperty());
             loanApplicantsTable.setItems(sortedResult);
@@ -136,18 +141,37 @@ public class LoansController extends LoansModel implements Initializable {
 
             for (LoansTableEntity item : loanApplicantsTable.getItems()) {
                 String loanNumber = item.getLoanNo();
-                //Check if the view-button is enabled or disabled and show the schedule stage...
-                boolean statusValue = item.getStatusLabel().getText().equals("Processing") || item.getStatusLabel().getText().equals("Pending Approval")
-                        || item.getStatusLabel().getText().equals("Pending Payment");
-                item.getViewButton().setDisable(statusValue);
+                //Check if the cancel-button is enabled or disabled and show the schedule stage...
+                boolean statusValue =
+                        item.getStatusLabel().getText().equals("Cancelled");
+                        item.getCancelButton().setDisable(statusValue);
 
-                boolean editValue = item.getStatusLabel().getText().equals("Paid") || item.getStatusLabel().getText().equals("Cancelled");
+                boolean editValue = item.getStatusLabel().getText().equals("Paid")
+                        || item.getStatusLabel().getText().equals("Cancelled")
+                        || item.getStatusLabel().getText().equals("Pending Approval")
+                        ||item.getStatusLabel().getText().equals("Pending Payment");;
                 item.getEditButton().setDisable(editValue);
 
                 //Handle Click event for the view-button
-                item.getViewButton().setOnAction(action -> {
-                    if (!item.getViewButton().isDisabled()) {
+                item.getCancelButton().setOnAction(action -> {
+                    if (!item.getCancelButton().isDisabled()) {
+                        NotificationEntity notification = new NotificationEntity();
+                        UserAlerts ALERTS = new UserAlerts("CANCEL LOAN", "You have requested to officially cancel this loan process. Are you sure you want to proceed?", "by confirming, you will terminate the loan process.");
+                        UserNotification userNotification = new UserNotification();
 
+                        if(ALERTS.confirmationAlert()) {
+                            int responseStatus = cancelLoanApplication(loanNumber, "terminated", "closed");
+                            if(responseStatus > 0) {
+                                notification.setTitle("LOAN TERMINATED");
+                                notification.setMessage("Loan application number " + loanNumber + " has successfully been cancelled");
+                                notification.setLogged_by(loggedInUserId);
+                                logNotification(notification);
+                                userNotification.successNotification("LOAN PROCESS TERMINATED", "Nice, you have successfully terminated the loan process.");
+                                populateTable();
+                            } else {
+                                userNotification.errorNotification("TERMINATION FAILED", "Sorry the process to terminate this loan failed, retry");
+                            }
+                        }
                     }
                 });
                 //Handles click event for the edit-button

@@ -7,6 +7,8 @@ import app.repositories.loans.CollectionSheetEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.repositories.transactions.TransactionsEntity;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
@@ -24,16 +26,18 @@ import com.itextpdf.layout.property.BorderCollapsePropertyValue;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
+import com.itextpdf.text.BadElementException;
+import com.sun.mail.iap.ByteArray;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BackgroundFill;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,30 +59,44 @@ public class DocumentGenerator {
     FUNCTIONALITY. ie receipts, reports, excel files AND OTHER RELATED DOCUMENTS.
      */
 
-    Div documentHeader() {
+    Div documentHeader() throws BadElementException, IOException {
         Div container = new Div();
+        Div parentContainer = new Div();
         //GET BUSINESS CREDENTIALS FOR THE LETTER HEAD.
         String businessName = "";
         String mobileNumbers = "";
         String email = "";
         String digitalAddress = "";
+        Image image = null;
+
+        Table table = new Table(2, true);
 
         for (BusinessInfoEntity data : DAO.getBusinessInfo()) {
             businessName = data.getName();
             mobileNumbers = data.getMobileNumber() + " | ".concat(data.getOtherNumber());
             email = data.getEmail();
             digitalAddress = data.getDigital();
+            image = new Image(ImageDataFactory.create(data.getLogo()));
+            image.setHeight(60);
+
         }
         //CREATE A PARAGRAPH TO HOLD THE VARIOUS TEXTS IN THE LETTER HEAD...
         Paragraph businessNameText = new Paragraph(businessName)
-                .setFontSize(20).setBold().setTextAlignment(TextAlignment.CENTER).setMarginBottom(-5);
+                .setFontSize(16).setBold().setTextAlignment(TextAlignment.CENTER).setMarginBottom(-5);
         Paragraph mobileNumbersText = new Paragraph(mobileNumbers)
                 .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER).setMarginTop(-5);
         Paragraph addressText = new Paragraph(email.concat(" | ".concat(digitalAddress)))
                 .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER);
         container.add(businessNameText).add(addressText).add(mobileNumbersText)
                 .setTextAlignment(TextAlignment.CENTER).setMargins(0, 0, 2, 0);
-        return container;
+
+
+        table.useAllAvailableWidth();
+        table.setBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
+        table.addCell(image).setTextAlignment(TextAlignment.CENTER).addCell(container);
+
+        parentContainer.add(table);
+        return parentContainer;
     }
 
     StringBuilder excelDocumentHeader() {
@@ -107,7 +125,7 @@ public class DocumentGenerator {
         int status = 200;
         try {
             Table table = new Table(6);
-            table.setFontSize(10).useAllAvailableWidth().setVerticalAlignment(VerticalAlignment.MIDDLE);
+            table.setFontSize(8).useAllAvailableWidth().setVerticalAlignment(VerticalAlignment.MIDDLE);
             table.setMarginTop(5.0F);
 
             String todayDate = LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
@@ -199,10 +217,10 @@ public class DocumentGenerator {
             labelNames = new Paragraph("  DATE: ").setBold().setFontSize(10);
             dataNames = new Paragraph(receiptsEntity.getTransactionDate()).setFontSize(10);
             combinedParagraph.add(labelNames.setMarginLeft(22f)).add(dataNames.setMarginRight(40f));
-            combinedParagraph.setTextAlignment(TextAlignment.CENTER);
+            combinedParagraph.setTextAlignment(TextAlignment.CENTER).setMarginTop(5);
 
-            combinedParagraph.add(new Paragraph("-----------------------------------------------------------------------------------------------------------"));
-            Div receiptContentContainer = new Div();
+//            combinedParagraph.add(new Paragraph("-----------------------------------------------------------------------------------------------------------"));
+            Div receiptContentContainer = new Div().setFontSize(12);
             receiptContentContainer.add(new Paragraph("CUSTOMER NAME: ".concat(receiptsEntity.getCustomerName())));
             receiptContentContainer.add(new Paragraph("ACCOUNT NUMBER: ".concat(receiptsEntity.getAccountNumber())));
             receiptContentContainer.add(new Paragraph("TRANSACTION TYPE: ".concat(receiptsEntity.getTransactionType())));
@@ -218,7 +236,8 @@ public class DocumentGenerator {
             receiptBodyContainer.add(combinedParagraph).add(receiptContentContainer);
             document.add(documentHeader())
                     .add(receiptBodyContainer)
-                    .add(new Paragraph("---"))
+                    .add(new Div().add(new Paragraph("------------>")))
+                    .add(documentHeader())
                     .add(receiptBodyContainer);
             document.close();
         } catch (Exception ignore) {
@@ -280,6 +299,10 @@ public class DocumentGenerator {
             document.close();
         }catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (BadElementException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     public void exportScheduleSheet(String documentName, TableView<ScheduleTableValues> tableView) {

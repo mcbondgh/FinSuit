@@ -5,6 +5,7 @@ import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
 import app.models.loans.LoansModel;
 import app.repositories.loans.LoansTableEntity;
+import app.specialmethods.SpecialMethods;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +41,8 @@ public class AssignSupervisorController extends LoansModel implements Initializa
     @FXML private TableColumn<LoansTableEntity, String> statusColumn;
     @FXML private TableColumn<LoansTableEntity, ComboBox<String>> supervisorColumn;
 
-    @FXML private MFXButton saveButton, clearButton;
+    @FXML private MFXButton saveButton, clearButton, assignmentButton;
+    @FXML private BorderPane borderPane;
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
@@ -122,6 +125,12 @@ public class AssignSupervisorController extends LoansModel implements Initializa
                 supervisorsTable.getSelectionModel().getSelectedItems().get(i).getSupervisorSelector().setValue(null);
             }
         }
+    }
+
+    @FXML void showAssignedSupervisorsView() throws IOException {
+        String filePath = "views/loans/view-assigned-supervisors.fxml";
+        borderPane.getCenter().setStyle("-fx-alignment:center");
+        SpecialMethods.FlipView(borderPane, filePath);
     }
 
 

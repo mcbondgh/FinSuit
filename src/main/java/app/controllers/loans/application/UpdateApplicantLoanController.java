@@ -6,9 +6,14 @@ import app.specialmethods.SpecialMethods;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.text.html.HTMLDocument;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -32,6 +37,7 @@ public class UpdateApplicantLoanController extends LoansModel implements Initial
     @FXML private ComboBox<String> guranterGenderSelector, guranterIdTypeSelector, guranterRelationshipTypeSelector;
     @FXML private TextField guranterIdNumberField, guranterOccupationField, guranterPlaceOfWorkField, guranterWorkAddressField, guranterNetSalaryField;
     @FXML private TextArea loanPurposeField;
+    @FXML private ImageView imageView;
 
     public static String setLoanNumber;
     @Override
@@ -64,6 +70,10 @@ public class UpdateApplicantLoanController extends LoansModel implements Initial
         loanTypeSelector.setValue(data.get("loanType").toString());
         loanRequestField.setText(data.get("amount").toString());
         loanPurposeField.setText(data.get("loanPurpose").toString());
+        firstNameField.setText(data.get("firstname").toString());
+        lastNameField.setText(data.get("lastname").toString());
+        byte[] imageByte = (byte[]) data.get("image");
+        imageView.setImage(new Image(new ByteArrayInputStream(imageByte)));
     }
 
 

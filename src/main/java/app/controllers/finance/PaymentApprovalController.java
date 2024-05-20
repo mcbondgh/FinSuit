@@ -46,7 +46,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     LoansModel LOAN_MODEL = new LoansModel();
     LoansEntity LOANS_OBJ = new LoansEntity();
     LoanScheduleEntity SCHEDULE_OBJ = new LoanScheduleEntity();
-    NotificationEntity NOTIFY_OBJ = new NotificationEntity();
+    NotificationEntity NOTIFICATION;
     PendingLoanApprovalEntity QUALIFICATION_OBJ = new PendingLoanApprovalEntity();
     UserAlerts ALERT_OBJ;
     UserNotification NOTIFY = new UserNotification();
@@ -103,7 +103,6 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     private void loadListView() {
         listView.getItems().clear();
         for (PendingLoanApprovalEntity item : LOAN_MODEL.getLoansUnderPendingApproval()) {
-            System.out.println("loan no: ".concat(item.getLoan_no()));
             listView.getItems().add(item.getLoan_no());
         }
     }
@@ -119,6 +118,11 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
 
         String loanNo =listView.getSelectionModel().getSelectedItem();
         scheduleTable.setItems(getLoanScheduleByLoanNo(loanNo));
+    }
+
+    void refreshTable() {
+        scheduleTable.getItems().clear();
+        loadListView();
     }
 
     void calculateLoanValues() {
@@ -142,8 +146,9 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         displayEndDate.setText(String.valueOf(datePicker.getValue().plusMonths(loanPeriod)));
     }
 
+    //Invoke this method whenever the generateScheduleSheet button is clicked
     private void generateScheduleSheet() {
-        populateScheduleTable();
+//        populateScheduleTable();
         ScheduleTableValues entity;
 
         double loanAmount = Double.parseDouble(loanAmountField.getText());
@@ -166,11 +171,12 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                 double formattedLoanDifference = Double.parseDouble(decimalFormat.format(totalAmount));
 
                 //Gets the schedule_id for each item at the index of (X)
-                long finalX = getLoanScheduleByLoanNo(listView.getSelectionModel().getSelectedItem()).get(x).getScheduleId();
+                long scheduleId = getLoanScheduleByLoanNo(listView.getSelectionModel().getSelectedItem()).get(x).getScheduleId();
 
                 //check for a negative value else just allow the value
                 double maxValue = Math.max(formattedLoanDifference, 0.0);
-                entity = new ScheduleTableValues( x++, finalX, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x+1));
+                entity = new ScheduleTableValues(x, scheduleId, formattedPrincipal, interestAmount, Double.parseDouble(decimalFormat.format(installment)), maxValue, scheduleDate.plusMonths(x+1));
+
                 scheduleTable.getItems().add(entity);
             }
         }catch (IndexOutOfBoundsException ignore ) {}
@@ -270,6 +276,7 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
     @FXML void generateScheduleButtonClicked() {
         generateScheduleSheet();
     }
+
     public void saveButtonClicked() {
         saveButton.setDisable(true);
         String selectedLoanNo = listView.getSelectionModel().getSelectedItem();
@@ -308,14 +315,16 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
                 QUALIFICATION_OBJ.setStart_date(startDate);
                 QUALIFICATION_OBJ.setEnd_date(endDate.toLocalDate());
                 QUALIFICATION_OBJ.setLoan_no(selectedLoanNo);
+
                 //SET NOTIFICATIONS ENTITY VALUES;
-                NOTIFY_OBJ.setTitle("Disbursement Approval");
-                NOTIFY_OBJ.setSender_method("UPDATE ONLY");
-                NOTIFY_OBJ.setMessage("Disbursement of Ghc" + disbursedAmount + " has successfully been approved for loan number " + selectedLoanNo + " while awaiting payment");
-                NOTIFY_OBJ.setLogged_by(loggedInUserId);
+                NOTIFICATION = new NotificationEntity();
+                NOTIFICATION.setTitle("Disbursement Approval");
+                NOTIFICATION.setSender_method("UPDATE ONLY");
+                NOTIFICATION.setMessage("Disbursement of Ghc" + disbursedAmount + " has successfully been approved for loan number " + selectedLoanNo + " while awaiting payment");
+                NOTIFICATION.setLogged_by(loggedInUserId);
 
                 String message = GENERATE_MESSAGE_OBJECT.loanDisbursementMessage(fullnameLabel.getText(), selectedLoanNo, disbursedAmount);
-                logNotification(NOTIFY_OBJ);
+                logNotification(NOTIFICATION);
                scheduleTable.getItems().forEach(item ->{
                     LOAN_MODEL.updateLoanSchedule(item.getMonthlyInstallment(), item.getPrincipal(), item.getInterestAmount(), item .getScheduleDate(),item.getBalance(), loggedInUserId, item.getScheduleId());
                 });
@@ -342,7 +351,26 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         }
     }
     public void rejectButtonClicked() {
+        UserAlerts ALERTS = new UserAlerts("REJECT LOAN", "Do you wish to reject this loan application, please confirm or reject action?",
+                "by rejecting loan, you agree to disapprove the requested loan");
+        UserNotification popUp = new UserNotification();
+        NOTIFICATION = new NotificationEntity();
 
+        var loanNumber = listView.getSelectionModel().getSelectedItem();
+        NOTIFICATION.setMessage("Loan application with number " + loanNumber + " was rejected at the approval stage.");
+        NOTIFICATION.setTitle("LOAN APPROVAL REJECTED");
+        NOTIFICATION.setLogged_by(loggedInUserId);
+        NOTIFICATION.setSender_method("INTERNAL OPERATION");
+
+        if (ALERTS.confirmationAlert()) {
+            int responseStatus = new LoansModel().cancelLoanApplication(loanNumber, "rejected", "active");
+            if (responseStatus > 0) {
+                Platform.runLater(this::refreshTable);
+                logNotification(NOTIFICATION);
+            } else {
+                new UserNotification().errorNotification("REJECTION FAILED", "Application failed to reject loan process");
+            }
+        }
     }
 
 

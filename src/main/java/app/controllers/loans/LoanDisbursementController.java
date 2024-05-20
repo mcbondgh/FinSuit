@@ -135,17 +135,16 @@ public class LoanDisbursementController extends LoansModel implements Initializa
 
         try{
             //CHECK IF CASHIER HAS ENOUGH BALANCE TO PERFORM TRANSACTION, ELSE REJECT TRANSACTION
-            AtomicReference<Double> accumulatedDisbursementAmount = new AtomicReference<>(0.00);
-            double cashierCurrentBalance = Double.parseDouble(cashierBalanceLabel.getText().replace(",", ""));
-            paymentTable.getItems().forEach(item -> {
-                if (item.getPayBtn().isSelected()) {
-                    accumulatedDisbursementAmount.updateAndGet(value -> value + item.getDisbursementAmount());
-                }
-            });
-            boolean hasEnoughBalance = cashierCurrentBalance > accumulatedDisbursementAmount.get();
+//            AtomicReference<Double> accumulatedDisbursementAmount = new AtomicReference<>(0.00);
+//            double cashierCurrentBalance = Double.parseDouble(cashierBalanceLabel.getText().replace(",", ""));
+//            paymentTable.getItems().forEach(item -> {
+//                if (item.getPayBtn().isSelected()) {
+//                    accumulatedDisbursementAmount.updateAndGet(value -> value + item.getDisbursementAmount());
+//                }
+//            });
+//            boolean hasEnoughBalance = cashierCurrentBalance > accumulatedDisbursementAmount.get();
             //*********************************/
-            if (hasEnoughBalance) {
-                ALERTS = new UserAlerts("SAVE PAYMENT", "Do you wish to disburse loan to customer account?", "please confirm your action to save operation else CANCEL to abort.");
+                ALERTS = new UserAlerts("SAVE PAYMENT", "Do you wish to disburse loan to customer's account?", "please confirm your action to save operation else CANCEL to abort.");
                 if (ALERTS.confirmationAlert()) {
                     int status = 0;
                     double disbursedAmount = 0.0;
@@ -153,10 +152,10 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                     String loanNo = "";
 
                     //CREATE A MAP TO STORE RETURNED RESULT FROM THE DATABASE THAT HOLDS THE operations_account data.
-                    Map<String, Object> operationsAccountData = getOperationsAccountDetails();
+                    Map<String, Object> revenueData = getRevenueAccountDetails();
 
                     /*CREATE A MAP THAT WOULD BE POPULATED WITH THE REQUIRED DATA TO UPDATE AND INSERT INTO THE
-                    operations_account AND operations_transaction_logs
+                    revenue_account AND revenue_account_logs
                     */
                     Map<String, Object> operationsMap = new HashMap<>();
 
@@ -168,7 +167,7 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                             loanNo = item.getLoanNumber();
                             disbursedAmount = item.getDisbursementAmount();
                             processingFee = item.getProcessingFee();
-                            double operationsAccountBalance = Double.parseDouble(operationsAccountData.get("balance").toString());
+                            double operationsAccountBalance = Double.parseDouble(revenueData.get("balance").toString());
 
                             double currentBalance = item.getAccountBalance();
                             double customerUpdatedAccountBalance = currentBalance + disbursedAmount;
@@ -213,17 +212,13 @@ public class LoanDisbursementController extends LoansModel implements Initializa
                     }
                     if (status > 0) {
                         //update cashier's account after successful disbursement
-                        double cashierBalance = cashierCurrentBalance - accumulatedDisbursementAmount.get();
-                        new FinanceModel().modifyTemporalCashierAccountWhenLoaded(getLoggedInUsername(), cashierBalance);
+//                        double cashierBalance = cashierCurrentBalance - accumulatedDisbursementAmount.get();
+//                        new FinanceModel().modifyTemporalCashierAccountWhenLoaded(getLoggedInUsername(), cashierBalance);
                         Platform.runLater(this::setCashierBalanceLabel);
                         NOTIFY.successNotification("OPERATION SAVED", "You have successfully saved selected loan facilities as disbursed funds");
                         populateTable();
                     }
                 }
-            } else {
-                ALERTS = new UserAlerts("LOW BALANCE", "Sorry, you do not have enough balance to perform deposit", "please load your account to perform this transaction");
-                ALERTS.informationAlert();
-            }
         }catch (Exception e) {
             e.printStackTrace();
             ALERTS = new UserAlerts("INVALID PROCESS", "You do not have permission to perform loan disbursement.", "access to this operation has been denied.");

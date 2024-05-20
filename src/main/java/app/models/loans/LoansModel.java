@@ -325,7 +325,7 @@ public class LoansModel extends MainModel {
     }
 
     //THIS METHOD WHEN INVOKED SHALL UPDATE THE loans table BASED ON THE ARGUMENTS PARSED TO IT.
-    //THIS SHALL CHANGE THE LOAN STATUS OF THE loans TABLE from application to processing...
+    //THIS SHALL CHANGE THE LOAN STATUS IN THE loans TABLE from application to processing...
     public int updateLoanApplicationStatus(String applicationStatus, String loanNo, int userId) {
         int flag = 0;
         try {
@@ -450,7 +450,7 @@ public class LoansModel extends MainModel {
         try{
             String query1 = """
                     UPDATE loans
-                    SET approved_amount = ?, disbursed_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?
+                    SET approved_amount = ?, repayment_amount = ?, application_status = 'pending_payment', date_modified = DEFAULT, approved_by = ?
                     WHERE(loan_no = ?);""";
 
             String query2 = """
@@ -479,7 +479,6 @@ public class LoansModel extends MainModel {
             rollBack();
             e.printStackTrace();
         }
-        System.out.println(status);
         return status;
     }
     public void updateLoanSchedule(double installment, double principal, double interest, LocalDate date, double balance, int generatedBy, long scheduleId) {
@@ -537,10 +536,10 @@ public class LoansModel extends MainModel {
             String query = """
                     SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,\s
                     	mobile_number,\s
-                    	disbursed_amount,
+                    	repayment_amount,
                         loan_status,
                         total_payment,
-                        (disbursed_amount - total_payment) AS balance FROM customer_data AS cd
+                        (repayment_amount - total_payment) AS balance FROM customer_data AS cd
                         INNER JOIN loans AS ln USING(customer_id)
                         WHERE(loan_no = ?);
                     """;
@@ -550,7 +549,7 @@ public class LoansModel extends MainModel {
             if (resultSet.next()) {
                 data.put("fullname", resultSet.getString("fullname"));
                 data.put("mobile_number", resultSet.getString("mobile_number"));
-                data.put("approved_amount", resultSet.getDouble("disbursed_amount"));
+                data.put("approved_amount", resultSet.getDouble("repayment_amount"));
                 data.put("loan_status", resultSet.getString("loan_status"));
                 data.put("total_payment", resultSet.getDouble("total_payment"));
                 data.put("balance", resultSet.getDouble("balance"));
@@ -669,11 +668,34 @@ public class LoansModel extends MainModel {
                 applicantData.put("amount", resultSet.getDouble("requested_amount"));
                 applicantData.put("loanPurpose", resultSet.getString("loan_purpose"));
                 applicantData.put("firstname", resultSet.getString("firstname"));
+                applicantData.put("lastname", resultSet.getString("lastname"));
+                applicantData.put("image", resultSet.getBytes("image"));
             }
             getConnection().close();
         }catch (SQLException ignore) {}
         return applicantData;
     }
+
+    public int cancelLoanApplication(String loanNumber, String applicationStatus, String loanStatus) {
+        AtomicInteger flag = new AtomicInteger(0);
+        try {
+            String query = """
+                    UPDATE loans SET application_status = ?, loan_status = ?, date_modified = DEFAULT\s
+                    WHERE loan_no = ?;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, applicationStatus);
+            preparedStatement.setString(2, loanStatus);
+            preparedStatement.setString(3, loanNumber);
+            flag.set(preparedStatement.executeUpdate());
+            preparedStatement.close();
+            getConnection().close();
+        }catch (Exception e) {e.printStackTrace();}
+        return flag.get();
+
+    }
+
+
 
 
 }//end of class...

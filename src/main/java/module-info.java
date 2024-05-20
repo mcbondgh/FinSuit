@@ -21,6 +21,10 @@ module app.finsuit {
     requires layout;
     requires javafx.fxml;
 
+    requires itextpdf;
+    requires transitive io;
+    requires com.google.api.services.sqladmin;
+
 
     opens app to javafx.fxml;
     exports app;
@@ -46,6 +50,7 @@ module app.finsuit {
     exports app.controllers.reports.ui;
     exports app.repositories.business;
 
+
     opens app.controllers;
     opens app.controllers.homepage to javafx.fxml;
     opens app.controllers.dashboard to javafx.fxml;
@@ -67,5 +72,6 @@ module app.finsuit {
     opens app.enums;
     opens app.repositories.transactions;
     opens app.repositories.business;
+    opens app.repositories.notifications;
 
 }

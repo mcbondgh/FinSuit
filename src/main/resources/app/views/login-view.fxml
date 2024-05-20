@@ -11,88 +11,102 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="578.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="578.0" prefWidth="473.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.login.LoginController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#511560" height="586.0" layoutX="-6.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" width="504.0" />
-      <Pane layoutX="78.0" layoutY="117.0" prefHeight="403.0" prefWidth="339.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+      <VBox alignment="CENTER" layoutX="-6.0" layoutY="-1.0" prefHeight="578.0" prefWidth="486.0" spacing="20.0" style="-fx-background-color: #7b2e64;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Pane fx:id="loginIndicator" layoutX="34.0" layoutY="360.0" prefHeight="29.0" prefWidth="272.0" style="-fx-background-color: lightgreen;" visible="false">
+            <HBox alignment="CENTER" prefHeight="77.0" prefWidth="497.0" style="-fx-background-color: #fff;">
                <children>
-                  <MFXProgressSpinner layoutX="19.0" layoutY="6.0" prefHeight="17.0" prefWidth="43.0" />
-                  <Label layoutX="71.0" layoutY="7.0" prefHeight="17.0" prefWidth="126.0" text="Authenticating User" textFill="#007918">
+                  <ImageView fx:id="logoViewer" fitHeight="79.0" fitWidth="149.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/finsit-logo-main.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" prefHeight="29.0" prefWidth="497.0" text="Business Name" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font name="Poppins SemiBold" size="20.0" />
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Pane prefHeight="374.0" prefWidth="383.0" style="-fx-background-color: #eee; -fx-background-radius: 5px;">
+               <children>
+                  <Pane fx:id="loginIndicator" layoutX="34.0" layoutY="360.0" prefHeight="29.0" prefWidth="272.0" style="-fx-background-color: lightgreen;" visible="false">
+                     <children>
+                        <MFXProgressSpinner layoutX="19.0" layoutY="6.0" prefHeight="17.0" prefWidth="43.0" />
+                        <Label layoutX="71.0" layoutY="7.0" prefHeight="17.0" prefWidth="126.0" text="Authenticating User" textFill="#007918">
+                           <font>
+                              <Font name="Roboto Medium" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <TextField fx:id="usernameField" layoutX="37.0" layoutY="93.0" prefHeight="35.0" prefWidth="300.0" style="-fx-background-radius: 5px;">
+                     <font>
+                        <Font name="Poppins Medium" size="14.0" />
+                     </font>
+                  </TextField>
+                  <PasswordField fx:id="passwordField" layoutX="37.0" layoutY="168.0" prefHeight="35.0" prefWidth="300.0" style="-fx-background-radius: 5px;">
+                     <font>
+                        <Font name="Poppins Regular" size="12.0" />
+                     </font>
+                  </PasswordField>
+                  <MFXButton fx:id="loginButton" defaultButton="true" layoutX="35.0" layoutY="240.0" prefHeight="33.0" prefWidth="300.0" style="-fx-background-color: #278c8f;" text="Login" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Regular" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MFXButton>
+                  <MFXButton fx:id="closeButton" layoutX="34.0" layoutY="285.0" prefHeight="33.0" prefWidth="300.0" style="-fx-background-color: #fd421c;" text="Close" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Regular" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MFXButton>
+                  <Label layoutX="159.0" layoutY="21.0" text="Login" textFill="#04074a">
+                     <font>
+                        <Font name="Roboto Black" size="23.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="39.0" layoutY="73.0" text="Username" textFill="#5c5e60">
                      <font>
                         <Font name="Roboto Medium" size="12.0" />
                      </font>
                   </Label>
+                  <Label layoutX="38.0" layoutY="150.0" text="Password" textFill="#5c5e60">
+                     <font>
+                        <Font name="Roboto Medium" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="338.0" text="Reset Password" />
+                  <Separator layoutY="332.0" prefHeight="4.0" prefWidth="339.0" />
+                  <Separator layoutX="18.0" layoutY="221.0" prefHeight="4.0" prefWidth="339.0" />
                </children>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" />
+               </VBox.margin>
             </Pane>
-            <TextField fx:id="usernameField" layoutX="34.0" layoutY="93.0" prefHeight="35.0" prefWidth="272.0" style="-fx-background-radius: 5px;">
+            <Label text="Powered By Mc's Republic" textFill="WHITE">
                <font>
-                  <Font name="Poppins Medium" size="14.0" />
+                  <Font name="Arial" size="10.0" />
                </font>
-            </TextField>
-            <PasswordField fx:id="passwordField" layoutX="34.0" layoutY="168.0" prefHeight="35.0" prefWidth="272.0" style="-fx-background-radius: 5px;">
-               <font>
-                  <Font name="Poppins Regular" size="12.0" />
-               </font>
-            </PasswordField>
-            <MFXButton fx:id="loginButton" defaultButton="true" layoutX="32.0" layoutY="240.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #278c8f;" text="Login" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Regular" size="14.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <MFXButton fx:id="closeButton" layoutX="31.0" layoutY="285.0" prefHeight="33.0" prefWidth="272.0" style="-fx-background-color: #fd421c;" text="Close" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Regular" size="14.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <Label layoutX="139.0" layoutY="17.0" text="Login" textFill="#04074a">
-               <font>
-                  <Font name="Roboto Black" size="23.0" />
-               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
             </Label>
-            <Label layoutX="36.0" layoutY="73.0" text="Username" textFill="#5c5e60">
-               <font>
-                  <Font name="Roboto Medium" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="35.0" layoutY="150.0" text="Password" textFill="#5c5e60">
-               <font>
-                  <Font name="Roboto Medium" size="12.0" />
-               </font>
-            </Label>
-            <Label fx:id="resetPasswordLink" layoutX="33.0" layoutY="338.0" text="Reset Password" />
-            <Separator layoutY="332.0" prefHeight="4.0" prefWidth="339.0" />
-            <Separator layoutY="221.0" prefHeight="4.0" prefWidth="339.0" />
          </children>
-      </Pane>
-      <Label fx:id="appNameHeader" alignment="CENTER" contentDisplay="CENTER" layoutY="66.0" prefHeight="43.0" prefWidth="497.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-         <font>
-            <Font name="Poppins Black" size="20.0" />
-         </font>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-      </Label>
-      <ImageView fx:id="logoViewer" fitHeight="43.0" fitWidth="53.0" layoutX="222.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/finsit-logo.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="179.0" layoutY="552.0" text="Powered By Mc's Republic" textFill="WHITE">
-         <font>
-            <Font name="Arial" size="10.0" />
-         </font>
-      </Label>
+      </VBox>
    </children>
 </AnchorPane>

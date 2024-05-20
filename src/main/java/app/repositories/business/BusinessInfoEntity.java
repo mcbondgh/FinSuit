@@ -14,11 +14,11 @@ public class BusinessInfoEntity {
 
     double loanPercentage, taxPercentage;
     String location;
-    String logo;
+    private byte[] logo;
 
     public BusinessInfoEntity() {}
 
-    public BusinessInfoEntity(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, String logo, double loanPercentage, double texPercentage) {
+    public BusinessInfoEntity(String name, String mobileNumber, String otherNumber, String email, String accountPassword, String digital, String location, byte[] logo, double loanPercentage, double texPercentage) {
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.otherNumber = otherNumber;
@@ -126,11 +126,11 @@ public class BusinessInfoEntity {
         this.location = location;
     }
 
-    public String getLogo() {
+    public byte[] getLogo() {
         return logo;
     }
 
     public void setLogo(String logo) {
-        this.logo = logo;
+        this.logo = logo.getBytes();
     }
-}//of of class...
+}//end of class...

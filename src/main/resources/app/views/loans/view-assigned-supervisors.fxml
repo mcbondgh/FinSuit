@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ViewAssignedSupervisorsController">
+   <children>
+      <HBox alignment="CENTER" layoutX="182.0" layoutY="44.0" prefHeight="65.0" prefWidth="682.0" spacing="100.0" style="-fx-background-color: #eee;" AnchorPane.bottomAnchor="481.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="ASSIGNED LOAN SUPERVISORS AND CLIENTS" textFill="#5c5c5c">
+               <font>
+                  <Font name="Arial Bold" size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <TableView fx:id="tableView" fixedCellSize="35.0" layoutX="23.0" layoutY="77.33333333333333" prefHeight="414.0" prefWidth="682.0" style="-fx-font-family: arial; -fx-font-size: 14px; -fx-font-weight: bold;" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="77.0">
+        <columns>
+            <TableColumn fx:id="counterCol" prefWidth="75.0" text="Count" />
+          <TableColumn fx:id="nameColumn" prefWidth="198.6666202545166" text="Supervisor Name" />
+            <TableColumn fx:id="loanNumberCol" prefWidth="194.66668701171875" text="Loan Number" />
+            <TableColumn fx:id="statusCol" prefWidth="210.66659545898438" text="Application Status" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

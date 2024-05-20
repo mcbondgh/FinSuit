@@ -21,9 +21,9 @@ public class LoansTableEntity {
     private String formattedDate;
     private Double requestedAmount;
     private String status;
-    private Label statusLabel;
+    private Label statusLabel = new Label("Unspecified");
     private String loanType;
-    private MFXButton viewButton = new MFXButton("Cancel");
+    private MFXButton cancelButton = new MFXButton("Cancel");
     private MFXButton editButton = new MFXButton("Edit");
     private ComboBox<String> supervisorSelector = new ComboBox<>();
 
@@ -40,7 +40,7 @@ public class LoansTableEntity {
         this.loanPurpose = loanPurpose;
         this.username = username;
         this.formattedDate = formatter.format(LocalDate.parse(applicationDate.toString()));
-        statusLabel = new Label("Unspecified");
+//        statusLabel = new Label("Unspecified");
         buttonStyling();
         badgeStyling();
     }
@@ -53,7 +53,7 @@ public class LoansTableEntity {
         this.status = status;
         this.loanType = loanType;
         this.formattedDate = formatter.format(LocalDate.parse(applicationDate.toString()));
-        statusLabel = new Label("Unspecified");
+//        statusLabel = new Label("Unspecified");
         comboBoxStyling();
 
     }
@@ -61,11 +61,11 @@ public class LoansTableEntity {
 
 
     private void buttonStyling() {
-        viewButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
-                "-fx-border-color:#eee; -fx-text-fill: #2b2929; -fx-background-color: #fff; -fx-font-family poppins; " +
+        cancelButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
+                "-fx-border-color:#eee; -fx-text-fill: #fff; -fx-background-color:#e25757; -fx-font-family poppins; " +
                 "-fx-font-size: 11px; -fx-font-weight:bold");
         editButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
-                "-fx-border-color:#eee; -fx-text-fill: #2b2929; -fx-background-color:#fff; -fx-font-family poppins; " +
+                "-fx-border-color:#eee; -fx-text-fill: #fff; -fx-background-color:#3f968f; -fx-font-family poppins; " +
                 "-fx-font-size: 11px; -fx-font-weight:bold");
     }
 
@@ -101,12 +101,12 @@ public class LoansTableEntity {
             statusLabel.setText("Disbursed");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:#1b828d; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
-        if (status.equals("closed")) {
-            statusLabel.setText("closed");
+        if (status.equals("closed") || status.equals("terminated")) {
+            statusLabel.setText("Cancelled");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color:brown; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
         if (status.equals("rejected")) {
-            statusLabel.setText("Cancelled");
+            statusLabel.setText("Rejected");
             statusLabel.setStyle("-fx-padding: 5px; -fx-background-color: #ff0000; -fx-text-fill:#fff; -fx-background-radius:7px; -fx-font-size:9px; -fx-pref-width:100px; -fx-alignment: center; -fx-font-family:poppins; -fx-font-weight:bold;");
         }
     }
@@ -191,12 +191,12 @@ public class LoansTableEntity {
         this.loanType = loanType;
     }
 
-    public MFXButton getViewButton() {
-        return viewButton;
+    public MFXButton getCancelButton() {
+        return cancelButton;
     }
 
-    public void setViewButton(MFXButton viewButton) {
-        this.viewButton = viewButton;
+    public void setCancelButton(MFXButton cancelButton) {
+        this.cancelButton = cancelButton;
     }
 
     public MFXButton getEditButton() {
