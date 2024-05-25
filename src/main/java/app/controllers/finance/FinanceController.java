@@ -33,6 +33,7 @@ public class FinanceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
+        businessAccountButtonClicked();
 
     }
 

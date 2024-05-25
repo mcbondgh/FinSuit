@@ -57,12 +57,12 @@ public class LoansEntity {
     private void setLoanStatusLabel() {
        if (Objects.equals(loan_status, "cleared")) {
            statusLabel.setText("Cleared");
-           statusLabel.setStyle("-fx-text-fill:#1880c5; -fx-background-color: #d4edff; -fx-padding:5px; " +
-                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center; -fx-background-radius: 3px");
+           statusLabel.setStyle("-fx-text-fill:#1880c5; -fx-font-weight:bold; " +
+                   "-fx-font-size:13px; -fx-font-family:roboto; -fx-alignment:center;");
        } else {
            statusLabel.setText("Terminated");
-           statusLabel.setStyle("-fx-text-fill:#e60000; -fx-background-color: #ffe0e0; -fx-padding:5px; " +
-                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center; -fx-background-radius: 3px");
+           statusLabel.setStyle("-fx-text-fill: #ff0000; -fx-font-weight:bold;" +
+                   "-fx-font-size:12px; -fx-font-family:roboto; -fx-alignment:center;");
        }
 
     }//end of method.

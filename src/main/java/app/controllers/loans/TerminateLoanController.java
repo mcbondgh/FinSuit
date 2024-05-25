@@ -175,7 +175,7 @@ public class TerminateLoanController extends TransactionModel implements Initial
 
                  //invoke Termination Method to perform save operation to database.
                  int queryStatus = new LoansModel().saveLoanTermination(loansEntity, repaymentEntity);
-                 if(queryStatus == 2) {
+                 if(queryStatus == 3) {
                      logNotification(notification);
                      new MessagesModel().logNotificationMessages(messageLogsEntity);
                      new UserAlerts("LOAN TERMINATION", "Nice, loan termination process successfully executed", "You have successfully terminated the loan facility for this account.")

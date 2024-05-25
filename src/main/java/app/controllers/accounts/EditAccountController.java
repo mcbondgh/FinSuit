@@ -10,7 +10,6 @@ import app.enums.MessageStatus;
 import app.errorLogger.ErrorLogger;
 import app.models.accounts.CustomerAccountModel;
 import app.models.message.MessagesModel;
-import app.repositories.SmsAPIEntity;
 import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.accounts.CustomersDocumentRepository;
@@ -55,6 +54,8 @@ public class EditAccountController extends CustomerAccountModel implements Initi
     MessageLogsEntity MESSAGE_LOGS = new MessageLogsEntity();
     MessagesModel MESSAGE_MODEL = new MessagesModel();
     NotificationEntity NOTIFY_ENTITY = new NotificationEntity();
+
+    ErrorLogger errorLogger = new ErrorLogger();
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -501,7 +502,10 @@ public class EditAccountController extends CustomerAccountModel implements Initi
                         MESSAGE_LOGS.setTitle("CUSTOMER BIO DATA UPDATE");
                         MESSAGE_LOGS.setSent_by(currentUserId);
                         MESSAGE_MODEL.logNotificationMessages(MESSAGE_LOGS);
-                        new ErrorLogger().log(e.getMessage().concat(" -> EditAccountController"));
+
+                        String className = this.getClass().getName();
+                        String error = Arrays.toString(e.getStackTrace());
+                        errorLogger.logMessage(className, error);
                     }
                 } else {
                     NOTIFICATION.errorNotification("UPDATE FAILED", "Failed to update customer bio data");

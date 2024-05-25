@@ -13,6 +13,7 @@ import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfObject;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.draw.DottedLine;
 import com.itextpdf.kernel.pdf.colorspace.PdfColorSpace;
@@ -69,7 +70,10 @@ public class DocumentGenerator {
         String digitalAddress = "";
         Image image = null;
 
-        Table table = new Table(2, true);
+        Table table = new Table(2);
+        table.useAllAvailableWidth();
+        table.setAutoLayout();
+        table.setBorder(Border.NO_BORDER);
 
         for (BusinessInfoEntity data : DAO.getBusinessInfo()) {
             businessName = data.getName();
@@ -77,7 +81,7 @@ public class DocumentGenerator {
             email = data.getEmail();
             digitalAddress = data.getDigital();
             image = new Image(ImageDataFactory.create(data.getLogo()));
-            image.setHeight(60);
+            image.setHeight(50);
 
         }
         //CREATE A PARAGRAPH TO HOLD THE VARIOUS TEXTS IN THE LETTER HEAD...
@@ -90,10 +94,8 @@ public class DocumentGenerator {
         container.add(businessNameText).add(addressText).add(mobileNumbersText)
                 .setTextAlignment(TextAlignment.CENTER).setMargins(0, 0, 2, 0);
 
-
-        table.useAllAvailableWidth();
-        table.setBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
-        table.addCell(image).setTextAlignment(TextAlignment.CENTER).addCell(container);
+        table.addCell(image).setTextAlignment(TextAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER).setPadding(10)
+                .addCell(container);
 
         parentContainer.add(table);
         return parentContainer;
@@ -432,9 +434,12 @@ public class DocumentGenerator {
             NumberFormat formatValue = NumberFormat.getInstance();
 
             Table table = new Table(6).useAllAvailableWidth();
-            table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN REPAYMENT SCHEDULE").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER)));
-            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc" + formatValue.parse(totalLoanAmount)).setTextAlignment(TextAlignment.CENTER)));
+            table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN REPAYMENT SCHEDULE").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));//row 0
+            table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 1
+            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc " + formatValue.format(totalLoanAmount)).setTextAlignment(TextAlignment.CENTER))); //row 1
+            table.addCell(new Cell(0, 4).add(new Paragraph("CUSTOMER FULL NAME").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 2
+            table.addCell(new Cell(0, 2).add(new Paragraph(documentName).setTextAlignment(TextAlignment.CENTER))); //row 2
+
             table.addCell(new Cell().add(new Paragraph("NO").setFontSize(10).setBold()));
             table.addCell(new Cell().add(new Paragraph("MONTHLY INSTALLMENT").setBold().setFontSize(10)));
             table.addCell(new Cell().add(new Paragraph("PRINCIPAL").setFontSize(10).setBold()));
@@ -470,19 +475,14 @@ public class DocumentGenerator {
             //CREATE A DOCUMENT FOR THE PDF FILE.
             Document document = new Document(pdfDocument, PageSize.A4);
 
-            Div paragraphContainer = new Div();
+            Paragraph transactionIdLabel = new Paragraph("TRANSACTION ID: ".concat(receiptsEntity.getTransactionNumber()));
+            Paragraph receiptDate = new Paragraph("DATE: ".concat(formattedDate));
+            Paragraph transactionInfo = transactionIdLabel.add("                                ").add(receiptDate);
+            transactionInfo.setTextAlignment(TextAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER).setBold().setFontSize(10);
 
-            Paragraph transactionIdLabel;
-            Paragraph receiptDate;
-
-            paragraphContainer.setTextAlignment(TextAlignment.RIGHT).setFontSize(10).setMarginRight(19);
-            transactionIdLabel = new Paragraph("TRANSACTION ID: ".concat(receiptsEntity.getTransactionNumber()));
-            receiptDate = new Paragraph("DATE: ".concat(formattedDate));
-            paragraphContainer.add(transactionIdLabel).add(receiptDate).setBold().setTextAlignment(TextAlignment.RIGHT);
-
-            Paragraph receiptTitle = new Paragraph("OFFICIAL RECEIPT").setUnderline().setFontSize(20).setBold();
-            Div secondContainer = new Div();
-            secondContainer.add(receiptTitle).add(paragraphContainer).setTextAlignment(TextAlignment.CENTER);
+            Paragraph receiptTitle = new Paragraph("OFFICIAL RECEIPT").setUnderline().setFontSize(16).setBold();
+            Div headerContainer = new Div();
+            headerContainer.add(receiptTitle).add(transactionInfo).setTextAlignment(TextAlignment.CENTER);
 
             Div contentContainer = new Div();
             contentContainer.setFontSize(12);
@@ -490,14 +490,16 @@ public class DocumentGenerator {
             Paragraph loanNumber = new Paragraph("Loan Number:              ".concat(receiptsEntity.getAccountNumber()));
             Paragraph transType = new Paragraph("Transaction Type:         ".concat(receiptsEntity.getTransactionType().toUpperCase()));
             Paragraph transStatus = new Paragraph("Transaction Status:      ".concat(receiptsEntity.getTransactionStatus().toUpperCase()));
-            Paragraph amount = new Paragraph("Paid Amount:                Ghc".concat(receiptsEntity.getAmount()));
+            Paragraph amount = new Paragraph("Paid Amount:                Ghc ".concat(receiptsEntity.getAmount()));
             Paragraph payMethod = new Paragraph("Payment Method:         ".concat(receiptsEntity.getPaymentMethod().toUpperCase()));
             Paragraph cashierName = new Paragraph("Cashier:                        ".concat(receiptsEntity.getCashierName().toUpperCase()));
-            Paragraph dash = new Paragraph("-------------------------------").setMarginTop(20).setTextAlignment(TextAlignment.RIGHT).setMarginRight(40);
+
+            Paragraph newLine = new Paragraph("\n").add("\n");
             Paragraph dash2 = new Paragraph("---------------------------------------------------------------------------------------------------------------------");
-            contentContainer.add(dash2).add(customerName).add(loanNumber).add(transType).add(amount).add(transStatus).add(payMethod).add(cashierName).add(dash);
+            contentContainer.add(dash2).add(customerName).add(loanNumber).add(transType).add(amount).add(transStatus).add(payMethod).add(cashierName).add(newLine);
             contentContainer.setTextAlignment(TextAlignment.JUSTIFIED).setMarginLeft(40);
-            document.add(documentHeader()).add(secondContainer).add(contentContainer);
+            document.add(documentHeader()).add(headerContainer).add(contentContainer);
+            document.add(documentHeader()).add(headerContainer).add(contentContainer);
             document.close();
         }catch (Exception e){
             e.printStackTrace();

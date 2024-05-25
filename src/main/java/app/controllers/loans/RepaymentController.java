@@ -5,6 +5,7 @@ import app.alerts.UserNotification;
 import app.config.sms.SmsAPI;
 import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
+import app.errorLogger.ErrorLogger;
 import app.models.loans.LoansModel;
 import app.repositories.documents.ReceiptsEntity;
 import app.repositories.loans.LoanScheduleEntity;
@@ -45,6 +46,7 @@ public class RepaymentController extends LoansModel implements Initializable {
     MessageStatus MESSAGE_STATUS;
     SmsAPI SEND_SMS;
     DocumentGenerator DOC_GENERATOR = new DocumentGenerator();
+    ErrorLogger errorLogger = new ErrorLogger() ;
 
 
 
@@ -126,15 +128,16 @@ public class RepaymentController extends LoansModel implements Initializable {
                 String input = keyEvent.getText();
                 ObservableList<String> data = FXCollections.observableArrayList();
                 for (String item : getDisbursedLoanNumbers()) {
-                    if (item.contains(input)) {
+                    if (item.matches(input)) {
                         data.add(item);
                     }
                 }
+                listView.getItems().clear();
                 listView.setItems(data);
             }catch (NullPointerException e) {populateListView();}
         }//..........END OF METHOD
 
-    private void refreshTableValues() {
+    public void refreshTableValues() {
              Timer timer = new Timer();
              TimerTask task = new TimerTask() {
                  int counter= 0;
@@ -144,9 +147,10 @@ public class RepaymentController extends LoansModel implements Initializable {
                          setScheduleTableProperties();
                          System.out.println(counter++);
                      });
+                     this.cancel();
                  }
              };
-             timer.scheduleAtFixedRate(task, 1000, 5000);
+             timer.scheduleAtFixedRate(task, 1000, 1000);
     }
 
     /*******************************************************************************************************************
@@ -242,7 +246,9 @@ public class RepaymentController extends LoansModel implements Initializable {
             TerminateLoanController.setAccumulatedTableValue(tableDataValues);
         try{
             AppStages.terminateLoanStage();
-        }catch (Exception ignore){ ignore.printStackTrace();}
+        }catch (Exception e){
+            errorLogger.logMessage(e.getMessage(), this.getClass().getName());
+            e.printStackTrace();}
     }
 
 

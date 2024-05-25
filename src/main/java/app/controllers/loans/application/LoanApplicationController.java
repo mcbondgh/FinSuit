@@ -36,15 +36,13 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class LoanApplicationController extends LoansModel implements Initializable {
 
     UserNotification NOTIFY = new UserNotification();
     UserAlerts ALERT;
+    ErrorLogger errorLogger = new ErrorLogger();
 
     CustomersDataRepository customerRepository = new CustomersDataRepository();
     LoanApplicationEntity applicationEntity = new LoanApplicationEntity();
@@ -552,7 +550,9 @@ public class LoanApplicationController extends LoansModel implements Initializab
                 new MessagesModel().logNotificationMessages(logsEntity);
             }catch (Exception e) {
                 new MessagesModel().logNotificationMessages(logsEntity);
-                new ErrorLogger().log(e.getCause().toString());
+                String className = this.getClass().getName();
+                String error = Arrays.toString(e.getStackTrace());
+                errorLogger.logMessage(className, error);
             }
             if (flag >= 2) {
                 NOTIFY.successNotification("LOAN REQUEST SUCCESSFUL", "Perfect, loan request successfully placed, your loan request has been queued for review.");

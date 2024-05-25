@@ -19,7 +19,6 @@ import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
 import app.repositories.transactions.TransactionsEntity;
 import app.repositories.users.UsersData;
-import com.google.api.services.sqladmin.model.User;
 import io.github.palexdev.materialfx.collections.ObservableStack;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
@@ -40,6 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainModel extends DbConnection {
 
     ErrorLogger logger = new ErrorLogger();
+    String className = this.getClass().getSimpleName();
     public ArrayList<BusinessInfoEntity> getBusinessInfo() {
         ArrayList<BusinessInfoEntity> data = new ArrayList<>();
         try {
@@ -81,7 +81,9 @@ public class MainModel extends DbConnection {
                 String email_password = resultSet.getString("email_password");
                 data.add(new SmsAPIEntity(key, sender_id, email_address, email_password));
             }
-        }catch (SQLException e) {e.printStackTrace();}
+        }catch (SQLException e) {
+            logger.logMessage(e.getStackTrace().toString(), className);
+            e.printStackTrace();}
         return data;
     }
     public int getUserIdByName(String username) {
@@ -108,7 +110,9 @@ public class MainModel extends DbConnection {
                 emp_id = resultSet.getString(1);
             }
         }catch (Exception e) {
-            logger.log(e.getCause().toString());}
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logger.logMessage(className, error);}
         return emp_id;
     }
 
@@ -123,7 +127,9 @@ public class MainModel extends DbConnection {
                 emp_id = resultSet.getString(1);
             }
         }catch (Exception e) {
-            logger.log(e.getCause().toString());
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logger.logMessage(className, error);
         }
         return emp_id;
     }
@@ -136,7 +142,12 @@ public class MainModel extends DbConnection {
             if (resultSet.next()) {
                 count = resultSet.getInt(1);
             }
-        }catch (SQLException e) {e.printStackTrace();}
+        }catch (SQLException e) {
+
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logger.logMessage(className, error);
+        }
         return count;
     }
     public String getEmployeeFullNameByWorkId(String userId) {
@@ -150,7 +161,12 @@ public class MainModel extends DbConnection {
             if (resultSet.next()) {
                 return resultSet.getString("fullname");
             }
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logger.logMessage(className, error);
+        }
         return "not found";
     }
     protected ArrayList<Object> getCustomerDetailsByAccountNumber(String searchParameter) {
@@ -223,6 +239,7 @@ public class MainModel extends DbConnection {
         return count;
 
     }
+
     public long getTotalTransactionCount() {
         long value = 0;
         try {
@@ -1008,7 +1025,7 @@ public class MainModel extends DbConnection {
         try {
             String query = """
                     SELECT CONCAT(firstname, ' ', othername, ' ', lastname) AS fullname,
-                    loan_id, loan_no, loan_type, requested_amount, approved_amount, disbursed_amount,
+                    loan_id, loan_no, loan_type, requested_amount, approved_amount, repayment_amount,
                     total_payment, application_status, loan_purpose, loan_status,
                     is_drafted, ln.date_created,
                     ln.date_modified, ln.created_by, ln.updated_by, ln.approved_by FROM loans AS ln
@@ -1076,14 +1093,14 @@ public class MainModel extends DbConnection {
     protected ObservableList<LoansEntity> getClearedAndTerminatedLoans() {
         ObservableList<LoansEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT loan_no, disbursed_amount, total_payment, loan_status, Date(date_modified) AS modified_date\n" +
+            String query = "SELECT loan_no, repayment_amount, total_payment, loan_status, Date(date_modified) AS modified_date\n" +
                     "FROM loans WHERE(loan_status = 'cleared' || loan_status = 'terminated');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             AtomicInteger index = new AtomicInteger();
             while(resultSet.next()) {
                 String loanNo = resultSet.getString("loan_no");
-                double disbursedAmount = resultSet.getDouble("disbursed_amount");
+                double disbursedAmount = resultSet.getDouble("repayment_amount");
                 double totalPayment = resultSet.getDouble("total_payment");
                 String loanStatus = resultSet.getString("loan_status");
                 Date modifiedDate = resultSet.getDate("modified_date");
@@ -1097,31 +1114,30 @@ public class MainModel extends DbConnection {
     }
 
     public ObservableList<LoanPaymentLogsEntity> getLoanPaymentLogs(String loanNo) {
-        ObservableList<LoanPaymentLogsEntity> data = new ObservableStack();
+        ObservableList<LoanPaymentLogsEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT  termination_purpose, \n" +
-                    "\t\tinstallment_month, \n" +
-                    "        paid_amount, write_offs, \n" +
-                    "        date_collected, collected_by\n" +
-                    "FROM loan_payment_logs AS pl\n" +
-                    "INNER JOIN loans AS l\n" +
-                    "ON pl.loan_no = l.loan_no\n" +
-                    "WHERE (pl.loan_no = '"+loanNo+"');";
+            String query = "SELECT purpose, installment_month, paid_amount, write_off, date_collected, collected_by\n" +
+                    "\t\tFROM loan_payment_logs AS pl\n" +
+                    "        INNER JOIN terminated_loans AS tl\n" +
+                    "        USING(loan_no)\n" +
+                    "        WHERE tl.loan_no = '"+loanNo+"';";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             AtomicInteger index = new AtomicInteger();
             while(resultSet.next()) {
-                String purpose = resultSet.getString("termination_purpose");
+                String purpose = resultSet.getString("purpose");
                 Date installmentDate = resultSet.getDate("installment_month");
                 double amount = resultSet.getDouble("paid_amount");
-                double writeOff = resultSet.getDouble("write_offs");
+                double writeOff = resultSet.getDouble("write_off");
                 Timestamp dateCollected = resultSet.getTimestamp("date_collected");
                 data.add(new LoanPaymentLogsEntity(index.incrementAndGet(), purpose, installmentDate, amount, writeOff, dateCollected));
             }
             resultSet.close();
             preparedStatement.close();
             getConnection().close();
-        }catch (SQLException ignore){}
+        }catch (SQLException ex){
+            logger.logMessage(ex.getMessage(), className);
+        }
         return data;
     }
 

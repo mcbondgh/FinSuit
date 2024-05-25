@@ -4,6 +4,7 @@ import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
 import app.config.encryptDecryp.EncryptDecrypt;
 import app.controllers.homepage.AppController;
+import app.errorLogger.ErrorLogger;
 import app.models.finance.FinanceModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.business.BusinessTransactionLogs;
@@ -44,12 +45,12 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     @FXML private ComboBox<String> transTypeSelector, bankSelector;
     @FXML private TextField transferAmountField, transactionIdField, revenueAmountField;
     @FXML private TextField accountNumberField;
-    @FXML private TextArea notesField;
+    @FXML private TextArea notesField, purposeField;
     @FXML private TabPane tabPane;
-    @FXML private ComboBox<String>domesticTransTypeSelector, cashierSelector;
+    @FXML private ComboBox<String>domesticTransTypeSelector, cashierSelector, expenditureTypeSelector;
     @FXML private VBox domesticOptionBox;
-    @FXML private TextField domesticAmountField;
-    @FXML private MFXButton saveDomesticTransactionBtn;
+    @FXML private TextField domesticAmountField, expenditureAmountField;
+    @FXML private MFXButton saveDomesticTransactionBtn, expenditureButton;
 
     //BUSINESS TRANSACTION TABLE NODES...
     @FXML private TableView<BusinessTransactionLogs> businessTransactionTable;
@@ -78,10 +79,18 @@ public class BusinessAccountController extends FinanceModel implements Initializ
     @FXML private TableColumn<Object, Object> revenueDateColumn;
     @FXML private TableColumn<Object, Object> referenceColumn;
 
+    @FXML private TableView<RevenueAccountEntity> expenditureTable;
+    @FXML private TableColumn<Object, Object> expIdColumn;
+    @FXML private TableColumn<Object, Object> expAmountColumn;
+    @FXML private TableColumn<Object, Object> expTypeColumn;
+    @FXML private TableColumn<Object, Object> expPurposeColumn;
+    @FXML private TableColumn<Object, Object> expDateColumn;
+
     NumberFormat formatCurrency = NumberFormat.getNumberInstance(Locale.ENGLISH);
     UserNotification showPopup = new UserNotification();
     UserAlerts ALERTS;
     private final int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+    ErrorLogger errorLogger = new ErrorLogger();
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -107,10 +116,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         SpecialMethods.setBanks(bankSelector);
         SpecialMethods.setTransferTypes(transTypeSelector);
         SpecialMethods.setDomesticTransactionType(domesticTransTypeSelector);
+        SpecialMethods.setExpenditureTypes(expenditureTypeSelector);
         populateAccountsTransactionsTable();
         populateCashierTransactionTable();
         setTableColor();
         setRevenueTabValues();
+        setExpenditureTabValues();
+        validateExpenditureField();
     }
 
     void populateAccountsTransactionsTable() {
@@ -122,6 +134,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         transactionDateColumn.setCellValueFactory(new PropertyValueFactory<>("transaction_date"));
         businessTransactionTable.setItems(getBusinessTransactionLogs());
     }
+
     void populateCashierTransactionTable() {
         cashierIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         cashierTransTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transferTypes"));
@@ -132,6 +145,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         cashierTransferTable.setItems(getAllInternalTransfersToCashier());
     }
+
 
     //PROGRESS BAR IMPLEMENTATION
     void runProgressTaskIndicator(String accountBalance,String previousBalance) {
@@ -197,6 +211,15 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         revenueLogsTable.setItems(getRevenueAccountData());
     }
 
+    void setExpenditureTabValues() {
+        expIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        expTypeColumn.setCellValueFactory(new PropertyValueFactory<>("expenditure_type"));
+        expAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        expPurposeColumn.setCellValueFactory(new PropertyValueFactory<>("expenditure_purpose"));
+        expDateColumn.setCellValueFactory(new PropertyValueFactory<>("entry_date"));
+        expenditureTable.setItems(getExpenditureTransactionLogs());
+    }
+
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS.
@@ -213,8 +236,6 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         BusinessInfoEntity infoEntity = new BusinessInfoEntity();
         DomesticTransactionLogsEntity logsEntity = new DomesticTransactionLogsEntity();
         NotificationEntity notification = new NotificationEntity();
-
-
     }
 
     @FXML void validateTransactionAmountField(KeyEvent event) {
@@ -222,7 +243,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
            domesticAmountField.deletePreviousChar();
         }
     }
-
+    void validateExpenditureField() {
+        expenditureAmountField.setOnKeyTyped(type -> {
+            if (!type.getCharacter().matches("[0-9.]")) {
+                expenditureAmountField.deletePreviousChar();
+            }
+        });
+    }
     @FXML void tabItemSelected() {
         for (Tab tab : tabPane.getTabs()) {
             if (tab.isSelected()) {
@@ -230,7 +257,6 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             } else {
                 tab.setStyle("-fx-background-color:#fff; -fx-font-weight:normal");
             }
-
         }
     }
     @FXML void checkPasswordField() {
@@ -243,6 +269,10 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                 isAccountNumberEmpty() || isBankSelectorEmpty() || isTransIdEmpty() || isTransAmountFieldEmpty() ||
                 isTransferTypeEmpty() || isTransDateEmpty()
         );
+    }
+    @FXML void checkExpenditureAmountField() {
+        expenditureButton.setDisable(expenditureAmountField.getText().isBlank()
+        || expenditureTypeSelector.getValue() == null);
     }
 
     @FXML void checkForEmptyFieldsInDomesticTransaction() {
@@ -415,6 +445,59 @@ public class BusinessAccountController extends FinanceModel implements Initializ
                     showPopup.errorNotification("TRANSFER FAILED", "Oops, transaction was unsuccessful, please contact system admin for assistance.");
                 }
             }
+        }
+    }
+
+    @FXML void expenditureButtonOnAction() {
+        try {
+            double expenditureAmount = Double.parseDouble(expenditureAmountField.getText());
+            String expenditureType = expenditureTypeSelector.getValue();
+            String purpose = purposeField.getText();
+            String entryType = "Expenditure";
+            double accountBalance = Double.parseDouble(revenueAmountField.getText());
+            double balance = (accountBalance - expenditureAmount);
+
+            if (balance < 0) {
+                ALERTS = new UserAlerts("INVALID AMOUNT", "Your expenditure amount cannot exceed your current account balance.",
+                        "please adjust your expenditure amount");
+                ALERTS.errorAlert();
+            }else {
+                ALERTS = new UserAlerts("SAVE EXPENDITURE", "Do you want to proceed to spend " + expenditureAmount + " on the selected expenditure type?",
+                        "please confirm to save transaction, else CANCEL to abort");
+                if (ALERTS.confirmationAlert()) {
+                    RevenueAccountEntity revenueAccountEntity = new RevenueAccountEntity();
+                    NotificationEntity notificationEntity = new NotificationEntity();
+
+                    String message = "Expenditure transaction was made for Gh " + expenditureAmount + " as expenditure for " + expenditureType;
+
+                    revenueAccountEntity.setExpenditure_type(expenditureType);
+                    revenueAccountEntity.setExpenditure_purpose(purpose);
+                    revenueAccountEntity.setAmount(String.valueOf(expenditureAmount));
+                    revenueAccountEntity.setBalance(String.valueOf(balance));
+                    revenueAccountEntity.setEntered_by(currentUserId);
+                    revenueAccountEntity.setEntry_type(entryType);
+
+                    notificationEntity.setSender_method("SYSTEM OPERATION");
+                    notificationEntity.setTitle("EXPENDITURE TRANSACTION");
+                    notificationEntity.setMessage(message);
+                    notificationEntity.setLogged_by(currentUserId);
+
+                    logNotification(notificationEntity);
+                    int responseStatus = saveExpenditure(revenueAccountEntity);
+
+                    if (responseStatus > 0) {
+                        Platform.runLater(()->{
+                            expenditureAmountField.clear();
+                            showPopup.successNotification("EXPENDITURE SAVED", "Nice, you have successfully saved your expenditure transaction.");
+                            setExpenditureTabValues();
+                        });
+                    } else {
+                        showPopup.errorNotification("FAILED TO SAVE", "You request to perform this transaction failed, retry again");
+                    }
+                }
+            }
+        }catch (Exception e) {
+
         }
     }
 

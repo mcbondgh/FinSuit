@@ -36,6 +36,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -523,7 +524,11 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                       logsEntity.setMessage(messageBody);
                       logsEntity.setSent_by(currentUserId);
                       MESSAGE_MODEL_OBJECT.logNotificationMessages(logsEntity);
-                  }catch (Exception e) {errorLogger.log(e.getLocalizedMessage());}
+                  }catch (Exception e) {
+                      String className = this.getClass().getName();
+                      String error = Arrays.toString(e.getStackTrace());
+                      errorLogger.logMessage(className, error);
+                  }
                 }
                 if (flag == 2) {
                     NOTIFICATION.successNotification("ACCOUNT CREATE", "Customer Account has successfully been created.");

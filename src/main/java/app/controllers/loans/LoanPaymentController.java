@@ -23,10 +23,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -99,6 +102,7 @@ public class LoanPaymentController extends LoansModel implements Initializable {
         payableCheckBoxChecked();
         methodSelector.getItems().add("CASH");
         methodSelector.getItems().add("eCASH");
+        validateAmountField();
 
     }
     @FXML void checkForEmptyField() {
@@ -150,6 +154,14 @@ public class LoanPaymentController extends LoansModel implements Initializable {
         });
     }//....end of method
 
+    void validateAmountField() {
+        paymentAmountField.setOnKeyTyped(event-> {
+            if (!event.getCharacter().matches("[0-9.]")) {
+                paymentAmountField.deletePreviousChar();
+            }
+        });
+    }
+
     @FXML private void writeOffButtonChecked() {
         penaltyField.setDisable(!clearPenaltyBtn.isSelected());
     }
@@ -188,7 +200,7 @@ public class LoanPaymentController extends LoansModel implements Initializable {
 
         //SET VALES FOR NOTIFICATION
         NOTIFY_ENTITY.setTitle("REPAYMENT");
-        NOTIFY_ENTITY.setMessage("Loan Repayment has successfully been completed for ".concat(loanNumber).concat(" by ").concat(getWorkIdByUserId(loggedInUserId)));
+        NOTIFY_ENTITY.setMessage("Loan Repayment successfully made for application number ".concat(loanNumber) + " at " + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         NOTIFY_ENTITY.setSender_method("SMS");
         NOTIFY_ENTITY.setLogged_by(loggedInUserId);
 
@@ -217,7 +229,7 @@ public class LoanPaymentController extends LoansModel implements Initializable {
                     smsStatus = "NO INTERNET";
                     MESSAGE_ENTITY.setStatus(smsStatus);
                     MESSAGE_MODEL.logNotificationMessages(MESSAGE_ENTITY);}
-                if (counter == 3){
+                if (counter >= 3){
                     paymentReceipt();
                     paymentAmountField.clear();
                     successIndicator.setVisible(true);
@@ -232,6 +244,7 @@ public class LoanPaymentController extends LoansModel implements Initializable {
                                 Platform.runLater(() -> {
                                     methodSelector.setValue(null);
                                     collectButton.getScene().getWindow().hide();
+
                                 });
                                 this.cancel();
                             }

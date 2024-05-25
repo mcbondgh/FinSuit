@@ -81,6 +81,13 @@ public class SpecialMethods {
             comboBox.getItems().add(x);
         }
     }
+    public static  void setExpenditureTypes(ComboBox<String> comboBox) {
+        String[] items = new String[]{"Utility Bills", "Salary Payment", "Repair & Maintenance", "SMS Bundle", "Internet Bundle", "Marketing & Promotion", "Others"};
+        Arrays.sort(items);
+        for (String x : items) {
+            comboBox.getItems().add(x);
+        }
+    }
     public static void setGenderParameters(ComboBox<String> comboBox) {
         String[] items = {"Male", "Female", "Other"};
         Arrays.sort(items);

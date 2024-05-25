@@ -9,7 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoansModel extends MainModel {
     ErrorLogger logError = new ErrorLogger();
+    String className = this.getClass().getName();
 
     protected List<Object> countTotalLoans(String searchParameter) {
         List<Object> data = new ArrayList<>();
@@ -556,8 +556,10 @@ public class LoansModel extends MainModel {
             }
             resultSet.close();
             getConnection().close();
-        }catch (SQLException e){e.printStackTrace();
-            logError.log(e.getCause().getMessage());
+        }catch (SQLException e){
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logError.logMessage(className, error);
         }
         return data;
     }
@@ -566,30 +568,41 @@ public class LoansModel extends MainModel {
         int flag = 0;
         try {
             String query1 = "UPDATE loans \n" +
-                    "\tSET total_payment = ?, loan_status = 'terminated',\n" +
-                    "\ttermination_purpose = ?, date_modified = DEFAULT, updated_by = ?\n" +
+                    "\tSET total_payment = ?, loan_status = 'terminated', date_modified = DEFAULT, updated_by = ?\n" +
                     "WHERE(loan_no = ?);";
 
-            String query2 = "INSERT INTO loan_payment_logs(loan_no, paid_amount, write_offs, date_collected, collected_by)\n" +
-                    "VALUES(?, ?, ?, DEFAULT, ?);";
+            String query2 = "INSERT INTO loan_payment_logs(loan_no, paid_amount, date_collected, collected_by)\n" +
+                    "VALUES(?, ?, DEFAULT, ?);";
+
+            String query3 = "INSERT INTO `finsuit`.`terminated_loans` (`loan_no`, `purpose`, `write_off`, `terminated_by`) \n" +
+                    "VALUES (?, ?, ?, ?);";
 
             preparedStatement = getConnection().prepareStatement(query1);
             preparedStatement.setDouble(1, loans.getTotal_payment());
-            preparedStatement.setString(2, loans.getTermination_purpose());
-            preparedStatement.setInt(3, loans.getUpdated_by());
-            preparedStatement.setString(4, loans.getLoan_no());
+            preparedStatement.setInt(2, loans.getUpdated_by());
+            preparedStatement.setString(3, loans.getLoan_no());
             flag = preparedStatement.executeUpdate();
 
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setString(1, repay.getLoan_no());
             preparedStatement.setDouble(2, repay.getPaid_amount());
+            preparedStatement.setInt(3, repay.getCollected_by());
+            flag += preparedStatement.executeUpdate();
+
+            preparedStatement = getConnection().prepareStatement(query3);
+            preparedStatement.setString(1, loans.getLoan_no());
+            preparedStatement.setString(2, loans.getTermination_purpose());
             preparedStatement.setDouble(3, repay.getWrite_offs());
             preparedStatement.setInt(4, repay.getCollected_by());
             flag += preparedStatement.executeUpdate();
 
             preparedStatement.close();
             getConnection().close();
-        }catch (SQLException e) {e.getMessage();}
+        }catch (SQLException e) {
+            e.printStackTrace();
+            String error = Arrays.toString(e.getStackTrace());
+            logError.logMessage(error, className);
+        }
         return flag;
     }
 
@@ -643,8 +656,9 @@ public class LoansModel extends MainModel {
             status += preparedStatement.executeUpdate();
             getConnection().close();
         }catch (SQLException e) {
-            logError.log(e.getCause().getMessage());
-            e.printStackTrace();
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logError.logMessage(className, error);
             rollBack();
         }
         return status;
@@ -672,7 +686,11 @@ public class LoansModel extends MainModel {
                 applicantData.put("image", resultSet.getBytes("image"));
             }
             getConnection().close();
-        }catch (SQLException ignore) {}
+        }catch (SQLException e) {
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logError.logMessage(className, error);
+        }
         return applicantData;
     }
 
@@ -690,7 +708,11 @@ public class LoansModel extends MainModel {
             flag.set(preparedStatement.executeUpdate());
             preparedStatement.close();
             getConnection().close();
-        }catch (Exception e) {e.printStackTrace();}
+        }catch (Exception e) {
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logError.logMessage(className, error);
+        }
         return flag.get();
 
     }

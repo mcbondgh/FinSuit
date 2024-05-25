@@ -1,5 +1,6 @@
 package app.models.finance;
 
+import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.business.*;
 import app.repositories.notifications.NotificationEntity;
@@ -15,9 +16,12 @@ import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FinanceModel extends MainModel {
 
+    ErrorLogger errorLogger = new ErrorLogger();
+    String className = this.getClass().getSimpleName();
     /*
     * This method when invoked shall update business account balance
     * Create a log of the specified transaction and
@@ -202,8 +206,8 @@ public class FinanceModel extends MainModel {
         ObservableList<RevenueAccountEntity> data = new ObservableStack<>();
         try {
             var query = """
-                    SELECT ral.id, reference_number, entry_type, amount,\s
-                    username, entry_date
+                    SELECT ral.id, reference_number, amount, entry_type,
+                    expenditure_purpose, expenditure_type, username, entry_date
                     FROM revenue_account_logs AS ral
                     INNER JOIN users AS u
                     ON u.user_id = ral.entered_by\s
@@ -223,14 +227,69 @@ public class FinanceModel extends MainModel {
                 String username = resultSet.getString("username");
                 String amount = resultSet.getString("amount");
                 String type = resultSet.getString("entry_type");
-                String date = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(resultSet.getTimestamp(6).toLocalDateTime());
+                String date = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(resultSet.getTimestamp("entry_date").toLocalDateTime());
                 data.add(new RevenueAccountEntity(counter, balance, reference, type, amount, username, date));
             }
-
             resultSet.close();
             getConnection().close();
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+            errorLogger.logMessage(e.getLocalizedMessage(), className);
+        }
         return data;
     }
+
+    public ObservableList<RevenueAccountEntity> getExpenditureTransactionLogs() {
+        ObservableList<RevenueAccountEntity> data = new ObservableStack<>();
+        try {
+            var query = """
+                    SELECT ral.id, amount, expenditure_purpose, expenditure_type, entry_date
+                    FROM revenue_account_logs AS ral
+                    INNER JOIN users AS u
+                    ON u.user_id = ral.entered_by\s
+                    WHERE(entry_type = 'Expenditure')
+                    """;
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while (resultSet.next()) {
+                int counter = resultSet.getInt("id");
+                String purpose = resultSet.getString("expenditure_purpose");
+                String amount = resultSet.getString("amount");
+                String type = resultSet.getString("expenditure_type");
+                String date = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(resultSet.getTimestamp("entry_date").toLocalDateTime());
+                data.add(new RevenueAccountEntity(counter, amount, date, purpose, type));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (Exception e){
+            errorLogger.logMessage(e.getLocalizedMessage(), className);
+            e.printStackTrace();}
+        return data;
+    }
+
+    public int saveExpenditure(RevenueAccountEntity revenueAccount) {
+        AtomicInteger var = new AtomicInteger(0);
+        try {
+            String query1  = "UPDATE revenue_account SET account_balance = ?, date_updated = DEFAULT;";
+            preparedStatement = getConnection().prepareStatement(query1);
+            preparedStatement.setDouble(1, Double.parseDouble(revenueAccount.getBalance()));
+            var.getAndAdd(preparedStatement.executeUpdate());
+
+            String query2 = "INSERT INTO revenue_account_logs(entry_type, amount, expenditure_purpose, entered_by, expenditure_type)\n" +
+                    "VALUES(?, ?, ?, ?, ?);";
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setString(1, revenueAccount.getEntry_type());
+            preparedStatement.setDouble(2, Double.parseDouble(revenueAccount.getAmount()));
+            preparedStatement.setString(3, revenueAccount.getExpenditure_purpose());
+            preparedStatement.setInt(4, revenueAccount.getEntered_by());
+            preparedStatement.setString(5, revenueAccount.getExpenditure_type());
+            var.getAndAdd(preparedStatement.executeUpdate());
+
+        }catch (SQLException ex) {
+            errorLogger.logMessage(ex.getMessage(), className);
+            ex.printStackTrace();
+        }
+
+        return var.get();
+    }
+
 
 }//end of class...

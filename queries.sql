@@ -230,3 +230,20 @@ SELECT * FROM loans;
 UPDATE loans SET loan_status = "closed", date_modified = DEFAULT
 WHERE loan_no = ?;
 
+ALTER TABLE loans CHANGE COLUMN disbursed_amount 
+repayment_amount DECIMAL(10,2);
+
+
+-- 24/05/2024
+CREATE TABLE IF NOT EXISTS terminated_loans(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    loan_no VARCHAR(50) NOT NULL,
+    purpose VARCHAR(255) NOT NULL,
+    write_off DECIMAL(10,2) DEFAULT 0.00,
+    terminated_by INT NOT NULL,
+    date_terminated DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ALTER TABLE terminated_loans
+-- ADD COLUMN write_off DECIMAL(10,2) DEFAULT 0.00 AFTER purpose;
+

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.util.Arrays;
 
 public class ImageReadWriter {
     static ErrorLogger log = new ErrorLogger();
@@ -23,7 +24,9 @@ public class ImageReadWriter {
                 File filePath = new File(destinationFolder , imageName);
                 ImageIO.write(SwingFXUtils.fromFXImage(selectedImage, null), ".png", filePath);
             }catch (Exception e){
-                    log.log(e.getLocalizedMessage());
+                String className = ImageReadWriter.class.getName();
+                String error = Arrays.toString(e.getStackTrace());
+                log.logMessage(className, error);
             }
         }
     }

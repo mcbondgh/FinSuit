@@ -3,11 +3,10 @@ package app.models.transactions;
 import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.accounts.CustomerAccountsDataRepository;
-import app.repositories.accounts.CustomersDataRepository;
-import app.repositories.loans.DisbursementEntity;
 import app.repositories.transactions.TransactionsEntity;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,7 +42,9 @@ public class TransactionModel extends MainModel {
             flag += preparedStatement.executeUpdate();
 
         }catch (Exception e) {
-            logger.log(e.getCause().toString());
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logger.logMessage(className, error);
             rollBack();
         }
         return flag;
@@ -78,7 +79,9 @@ public class TransactionModel extends MainModel {
             preparedStatement.execute();
         }catch (SQLException e){
             e.printStackTrace();
-            logger.log(e.getMessage());
+            String className = this.getClass().getName();
+            String error = Arrays.toString(e.getStackTrace());
+            logger.logMessage(className, error);
             rollBack();}
     }
 

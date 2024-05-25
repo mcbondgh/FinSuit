@@ -1,7 +1,8 @@
 package app.errorLogger;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -16,9 +17,8 @@ public class ErrorLogger {
            }catch (Exception ignored) {}
             }
 
-            public void log(String message) {
-                Date date = new Date();
-                logger.severe(date + " - " + message);
+            public void logMessage(String message,String sourceClass) {
+                logger.logp(Level.SEVERE,sourceClass, "", message);
             }
 
 
