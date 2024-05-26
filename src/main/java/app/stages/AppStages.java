@@ -121,7 +121,7 @@ public class AppStages {
         return  stage;
     }
 
-    public static void terminateLoanStage() throws IOException {
+    public static Stage terminateLoanStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-termination-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
@@ -131,7 +131,7 @@ public class AppStages {
         stage.setResizable(false);
 //        stage.initStyle(StageStyle.UNIFIED);
 //        stage.initModality(Modality.WINDOW_MODAL);
-        stage.show();
+        return stage;
     }
     public static Stage loanPaymentStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-payment-page.fxml"));

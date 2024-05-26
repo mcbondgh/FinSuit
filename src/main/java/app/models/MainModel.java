@@ -956,20 +956,29 @@ public class MainModel extends DbConnection {
         LoanScheduleEntity entity = new LoanScheduleEntity();
         ObservableList<LoanScheduleEntity> data = FXCollections.observableArrayList();
         try {
+//            String query = """
+//                    SELECT schedule_id,
+//                    monthly_installment,
+//                    principal_amount,
+//                    interest_amount,
+//                    payment_date,
+//                    penalty_amount,
+//                    	(SELECT SUM(paid_amount) FROM loan_payment_logs
+//                    	WHERE( installment_month = payment_date)) AS monthly_payment
+//                    FROM loan_schedule AS ls
+//                    WHERE loan_no = ?;
+//                    """;
+
             String query = """
-                    SELECT schedule_id,
-                    monthly_installment,
-                    principal_amount,
-                    interest_amount,
-                    payment_date,
-                    penalty_amount,
-                    	(SELECT SUM(paid_amount) FROM loan_payment_logs
-                    	WHERE( installment_month = payment_date)) AS monthly_payment
-                    FROM loan_schedule AS ls
-                    WHERE loan_no = ?;
+                    SELECT schedule_id, monthly_installment, principal_amount,
+                                                 interest_amount,payment_date,penalty_amount,
+                                          (SELECT SUM(paid_amount) FROM loan_payment_logs
+                                          WHERE( installment_month = payment_date AND loan_no = ?)) AS monthly_payment
+                                          FROM loan_schedule AS ls WHERE loan_no = ?;
                     """;
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, loanNo);
+            preparedStatement.setString(2, loanNo);
             resultSet = preparedStatement.executeQuery();
             long index = 1;
             while(resultSet.next()) {
@@ -986,7 +995,9 @@ public class MainModel extends DbConnection {
                                 entity.getInterest_amount(), entity.getPayment_date(), entity.getPenalty_amount(), entity.getMonthly_payment())
                 );
             }
-        }catch (SQLException ignore){}
+        }catch (SQLException ex){
+            logger.logMessage(ex.fillInStackTrace().toString(), className);
+        }
 
         return data;
     }
@@ -999,20 +1010,27 @@ public class MainModel extends DbConnection {
 
         double value = 0;
         try{
-            String query = "SELECT total_payment FROM loans WHERE loan_no ='"+loanNo+"'";
+            String query = "SELECT SUM(paid_amount) AS total_payments FROM loan_payment_logs WHERE loan_no ='"+loanNo+"'";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 value = resultSet.getInt(1);
             }
-        }catch (SQLException ignore){}
+        }catch (SQLException ex){
+            logger.logMessage(ex.getMessage(), className);
+        }
         return value;
     }
     
-    public void updateAllLoanStatus() {
+    public void updateAllLoanStatus(String loanNo) {
         try {
-            preparedStatement = getConnection().prepareStatement("UPDATE loans " +
-                    "SET loan_status = 'cleared' WHERE(total_payment >= disbursed_amount AND loan_status != 'terminated');");
+            String query = """
+                    UPDATE loans SET loan_status = 'cleared' WHERE(
+                    	(SELECT SUM(paid_amount) AS total_payments FROM loan_payment_logs WHERE loan_no = ?)
+                    >= repayment_amount AND loan_status != 'terminated')
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, loanNo);
             preparedStatement.execute();
             preparedStatement.close();
             getConnection().close();
@@ -1093,8 +1111,11 @@ public class MainModel extends DbConnection {
     protected ObservableList<LoansEntity> getClearedAndTerminatedLoans() {
         ObservableList<LoansEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT loan_no, repayment_amount, total_payment, loan_status, Date(date_modified) AS modified_date\n" +
-                    "FROM loans WHERE(loan_status = 'cleared' || loan_status = 'terminated');";
+            String query = "SELECT loan_no, loan_status, repayment_amount, SUM(paid_amount) AS total_payment , DATE(date_modified) AS modified_date\n" +
+                    "FROM loan_payment_logs \n" +
+                    "INNER JOIN loans AS ln USING(loan_no)\n" +
+                    "WHERE loan_status = 'cleared' OR loan_status = 'terminated'\n" +
+                    "GROUP BY loan_no, loan_status, repayment_amount, modified_date;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             AtomicInteger index = new AtomicInteger();
@@ -1116,11 +1137,19 @@ public class MainModel extends DbConnection {
     public ObservableList<LoanPaymentLogsEntity> getLoanPaymentLogs(String loanNo) {
         ObservableList<LoanPaymentLogsEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT purpose, installment_month, paid_amount, write_off, date_collected, collected_by\n" +
-                    "\t\tFROM loan_payment_logs AS pl\n" +
-                    "        INNER JOIN terminated_loans AS tl\n" +
-                    "        USING(loan_no)\n" +
-                    "        WHERE tl.loan_no = '"+loanNo+"';";
+//            String query = "SELECT purpose, installment_month, paid_amount, write_off, date_collected, collected_by\n" +
+//                    "\t\tFROM loan_payment_logs AS pl\n" +
+//                    "        INNER JOIN terminated_loans AS tl\n" +
+//                    "        USING(loan_no)\n" +
+//                    "        WHERE tl.loan_no = '"+loanNo+"';";
+
+            String query = "SELECT installment_month, paid_amount, \n" +
+                    "\t(SELECT purpose FROM terminated_loans WHERE loan_no = '"+loanNo+"') AS purpose,\n" +
+                    "    (SELECT write_off FROM terminated_loans WHERE loan_no = '"+loanNo+"') AS write_off,\n" +
+                    "\tdate_collected, collected_by\n" +
+                    "\tFROM loan_payment_logs AS pl\n" +
+                    "WHERE loan_no = '"+loanNo+"';";
+
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             AtomicInteger index = new AtomicInteger();
@@ -1136,7 +1165,7 @@ public class MainModel extends DbConnection {
             preparedStatement.close();
             getConnection().close();
         }catch (SQLException ex){
-            logger.logMessage(ex.getMessage(), className);
+            logger.logMessage(Arrays.toString(ex.getStackTrace()), className);
         }
         return data;
     }

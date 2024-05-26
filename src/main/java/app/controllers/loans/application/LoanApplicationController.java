@@ -510,7 +510,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
 
 
             applicationEntity.setLoan_no(loanNumber);
-            applicationEntity.setProfile_picture(imageFile.getName());
+            applicationEntity.setProfile_picture("profile.png");
             applicationEntity.setImage(getImageStream().readAllBytes());
             applicationEntity.setCompany_name(companyName);
             applicationEntity.setCompany_mobile_number(companyContact);

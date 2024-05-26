@@ -160,6 +160,7 @@ public class LoansModel extends MainModel {
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e) {
+            logError.logMessage(e.getLocalizedMessage(), className);
             rollBack();
             e.printStackTrace();
         }
@@ -189,10 +190,11 @@ public class LoansModel extends MainModel {
     protected ObservableList<LoansTableEntity> getLoansByApplicationStatus() {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
-            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname, ' ', othername) AS fullname, loan_no, loan_type, loan_purpose," +
+            String query = "SELECT loan_id, username, CONCAT(lastname, ' ', firstname, ' ', othername) AS fullname, gross_salary, loan_no, loan_type, loan_purpose,\n" +
                     "DATE(ln.date_created) AS application_date, \n" +
                     "requested_amount, application_status FROM loans AS ln\n" +
-                    "JOIN customer_data AS cd ON ln.customer_id = cd.customer_id " +
+                    "JOIN customer_data AS cd USING(customer_id)\n" +
+                    "INNER JOIN loan_applicant_details using(loan_no)\n" +
                     "JOIN users AS u ON ln.created_by = u.user_id WHERE(application_status = 'processing' AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
 //            preparedStatement.setString(1, user_id);
@@ -207,7 +209,8 @@ public class LoansModel extends MainModel {
                 String status = resultSet.getString("application_status");
                 String username = resultSet.getString("username");
                 String loanPurpose = resultSet.getString("loan_purpose");
-                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType, loanPurpose));
+                double grossSalary = resultSet.getDouble("gross_salary");
+                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType, loanPurpose, grossSalary));
             }
             resultSet.close();
             getConnection().close();
@@ -234,7 +237,7 @@ public class LoansModel extends MainModel {
                 String status = resultSet.getString("application_status");
                 String username = resultSet.getString("username");
                 String loanPurpose = resultSet.getString("loan_purpose");
-                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType, loanPurpose));
+                data.add(new LoansTableEntity(no, fullname, loanNo, date, amount, username, status, loanType, loanPurpose, 0.00));
             }
             resultSet.close();
             getConnection().close();

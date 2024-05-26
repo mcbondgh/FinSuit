@@ -7,14 +7,10 @@ import app.documents.DocumentGenerator;
 import app.enums.MessageStatus;
 import app.errorLogger.ErrorLogger;
 import app.models.loans.LoansModel;
-import app.repositories.documents.ReceiptsEntity;
 import app.repositories.loans.LoanScheduleEntity;
-import app.repositories.loans.RepaymentEntity;
-import app.repositories.loans.ScheduleTableValues;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageLogsEntity;
 import app.stages.AppStages;
-import io.github.palexdev.materialfx.collections.ObservableStack;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,15 +23,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicStampedReference;
-import java.util.function.UnaryOperator;
 
 public class RepaymentController extends LoansModel implements Initializable {
 
@@ -97,6 +90,10 @@ public class RepaymentController extends LoansModel implements Initializable {
     private void populateListView() {
        listView.setItems(getDisbursedLoanNumbers());
        loansCounter.setText(String.valueOf(getTotalDisbursedLoanCount()));
+
+       for(String item : listView.getItems()) {
+           updateAllLoanStatus(item);
+       }
     }
 
     void setScheduleTableProperties() {
@@ -114,10 +111,11 @@ public class RepaymentController extends LoansModel implements Initializable {
         scheduleTable.setItems(getRepaymentSchedule(selection));
     }
 
-    private double formatBalance() {
-        double var1 = Double.parseDouble(disbursedAmount.getText());
-        double var2 = Double.parseDouble(paidAmount.getText());
-        return var2 > var1 ? 0.00 : var2;
+    private void dynamicButtons() {
+        exportButton.setDisable(isListSelectionEmpty());
+        terminateLoanBtn.setDisable(isListSelectionEmpty());
+        smsButton.setDisable(isListSelectionEmpty());
+        scheduleTable.setDisable(isListEmpty() || isListSelectionEmpty());
     }
 
     /*******************************************************************************************************************
@@ -132,7 +130,6 @@ public class RepaymentController extends LoansModel implements Initializable {
                         data.add(item);
                     }
                 }
-                listView.getItems().clear();
                 listView.setItems(data);
             }catch (NullPointerException e) {populateListView();}
         }//..........END OF METHOD
@@ -140,29 +137,32 @@ public class RepaymentController extends LoansModel implements Initializable {
     public void refreshTableValues() {
              Timer timer = new Timer();
              TimerTask task = new TimerTask() {
-                 int counter= 0;
                  @Override
                  public void run() {
                      Platform.runLater(()-> {
-                         setScheduleTableProperties();
-                         System.out.println(counter++);
+                         getSelectedLoanNumber();
+                         populateListView();
+//                         Timeline timeline = new Timeline();
+//                         timeline.setDelay(Duration.seconds(counter.get()));
+//                         timeline.setOnFinished(event -> {
+//                             populateListView();
+//                             setScheduleTableProperties();
+//                         });
                      });
                      this.cancel();
                  }
              };
-             timer.scheduleAtFixedRate(task, 1000, 1000);
+             timer.scheduleAtFixedRate(task, 500, 1000);
     }
 
     /*******************************************************************************************************************
      ACTION EVENT METHODS IMPLEMENTATION
      *******************************************************************************************************************/
     @FXML void getSelectedLoanNumber() {
-        updateAllLoanStatus();
-        scheduleTable.setDisable(isListEmpty() || isListSelectionEmpty());
-        if (isListSelectionEmpty()) {
-            NOTIFY.informationNotification("INVALID SELECTION", "You have not made any selection, please make a selection to get value.");
-        }else {
+        dynamicButtons();
+        if (!isListSelectionEmpty()) {
             String selection = listView.getSelectionModel().getSelectedItem();
+            updateAllLoanStatus(selection);
             Map<String, Object> data = getLoanDetailsByLoanNumber(selection);
             applicantName.setText(data.get("fullname").toString());
             applicantNumber.setText(data.get("mobile_number").toString());
@@ -170,9 +170,7 @@ public class RepaymentController extends LoansModel implements Initializable {
             paidAmount.setText(data.get("total_payment").toString());
             balanceAmount.setText(data.get("balance").toString());
             disbursedAmount.setText(data.get("approved_amount").toString());
-            exportButton.setDisable(isListSelectionEmpty());
-            terminateLoanBtn.setDisable(isListSelectionEmpty());
-            smsButton.setDisable(isListSelectionEmpty());
+
             setScheduleTableProperties();
         }
     }//........END OF METHOD
@@ -188,10 +186,11 @@ public class RepaymentController extends LoansModel implements Initializable {
                 LoanPaymentController.setName(applicantName.getText());
                 LoanPaymentController.setMobileNumber(applicantNumber.getText());
                 try {
-                    AppStages.loanPaymentStage().show();
-                    if (!AppStages.loanPaymentStage().isShowing()) {
-                        setScheduleTableProperties();
-                    }
+                    Stage loanStage = AppStages.loanPaymentStage();
+                    loanStage.show();
+                        loanStage.setOnHidden(action -> {
+                            refreshTableValues();
+                    });
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -245,7 +244,7 @@ public class RepaymentController extends LoansModel implements Initializable {
 
             TerminateLoanController.setAccumulatedTableValue(tableDataValues);
         try{
-            AppStages.terminateLoanStage();
+            AppStages.terminateLoanStage().show();
         }catch (Exception e){
             errorLogger.logMessage(e.getMessage(), this.getClass().getName());
             e.printStackTrace();}

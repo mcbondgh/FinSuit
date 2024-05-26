@@ -244,7 +244,6 @@ public class LoanPaymentController extends LoansModel implements Initializable {
                                 Platform.runLater(() -> {
                                     methodSelector.setValue(null);
                                     collectButton.getScene().getWindow().hide();
-
                                 });
                                 this.cancel();
                             }

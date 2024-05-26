@@ -26,10 +26,11 @@ public class LoansTableEntity {
     private MFXButton cancelButton = new MFXButton("Cancel");
     private MFXButton editButton = new MFXButton("Edit");
     private ComboBox<String> supervisorSelector = new ComboBox<>();
+    double grossSalary;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
-    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String username, String status, String loanType, String loanPurpose) {
+    public LoansTableEntity(int no, String fullName, String loanNo, Date applicationDate, Double requestedAmount, String username, String status, String loanType, String loanPurpose, double grossSalary) {
         this.no = no;
         this.fullName = fullName;
         this.loanNo = loanNo;
@@ -39,6 +40,7 @@ public class LoansTableEntity {
         this.loanType = loanType;
         this.loanPurpose = loanPurpose;
         this.username = username;
+        this.grossSalary = grossSalary;
         this.formattedDate = formatter.format(LocalDate.parse(applicationDate.toString()));
 //        statusLabel = new Label("Unspecified");
         buttonStyling();
@@ -213,5 +215,13 @@ public class LoansTableEntity {
 
     public void setSupervisorSelector(ComboBox<String> supervisorSelector) {
         this.supervisorSelector = supervisorSelector;
+    }
+
+    public double getGrossSalary() {
+        return grossSalary;
+    }
+
+    public void setGrossSalary(double grossSalary) {
+        this.grossSalary = grossSalary;
     }
 }//end of class...

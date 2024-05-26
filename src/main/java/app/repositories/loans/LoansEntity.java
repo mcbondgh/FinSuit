@@ -57,7 +57,7 @@ public class LoansEntity {
     private void setLoanStatusLabel() {
        if (Objects.equals(loan_status, "cleared")) {
            statusLabel.setText("Cleared");
-           statusLabel.setStyle("-fx-text-fill:#1880c5; -fx-font-weight:bold; " +
+           statusLabel.setStyle("-fx-text-fill:#278c8f; -fx-font-weight:bold; " +
                    "-fx-font-size:13px; -fx-font-family:roboto; -fx-alignment:center;");
        } else {
            statusLabel.setText("Terminated");

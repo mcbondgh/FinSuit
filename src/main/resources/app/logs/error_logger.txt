@@ -10,3 +10,9 @@ May 25, 2024 4:11:19 AM BusinessAccountController
 SEVERE: 2024-05-25T04:11:19.352780700 - Cannot invoke "java.sql.Timestamp.toLocalDateTime()" because the return value of "java.sql.ResultSet.getTimestamp(int)" is null
 May 25, 2024 4:11:20 AM BusinessAccountController 
 SEVERE: 2024-05-25T04:11:20.992446700 - Cannot invoke "java.sql.Timestamp.toLocalDateTime()" because the return value of "java.sql.ResultSet.getTimestamp(int)" is null
+May 25, 2024 3:28:42 PM app.documents.DocumentGenerator 
+SEVERE: Cannot format given Object as a Number
+May 25, 2024 3:32:00 PM DocumentGenerator 
+SEVERE: Cannot format given Object as a Number
+May 25, 2024 5:03:04 PM RepaymentController 
+SEVERE: java.sql.SQLIntegrityConstraintViolationException: Column 'loan_no' in where clause is ambiguous

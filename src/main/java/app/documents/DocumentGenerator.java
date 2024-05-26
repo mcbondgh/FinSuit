@@ -1,5 +1,6 @@
 package app.documents;
 
+import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.documents.ReceiptsEntity;
@@ -50,6 +51,8 @@ import java.util.Locale;
 public class DocumentGenerator {
 
     MainModel DAO = new MainModel();
+    ErrorLogger errorLogger = new ErrorLogger();
+    String className = this.getClass().getSimpleName();
 
     public DocumentGenerator() {
     }
@@ -72,8 +75,8 @@ public class DocumentGenerator {
 
         Table table = new Table(2);
         table.useAllAvailableWidth();
-        table.setAutoLayout();
         table.setBorder(Border.NO_BORDER);
+
 
         for (BusinessInfoEntity data : DAO.getBusinessInfo()) {
             businessName = data.getName();
@@ -93,11 +96,14 @@ public class DocumentGenerator {
                 .setFontSize(11).setBold().setTextAlignment(TextAlignment.CENTER);
         container.add(businessNameText).add(addressText).add(mobileNumbersText)
                 .setTextAlignment(TextAlignment.CENTER).setMargins(0, 0, 2, 0);
+        Paragraph headerSection = new Paragraph();
+        headerSection.add(image).add("                                ").add(container).add("\n");
 
         table.addCell(image).setTextAlignment(TextAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER).setPadding(10)
                 .addCell(container);
 
-        parentContainer.add(table);
+        headerSection.setTextAlignment(TextAlignment.CENTER);
+        parentContainer.add(headerSection);
         return parentContainer;
     }
 
@@ -435,10 +441,10 @@ public class DocumentGenerator {
 
             Table table = new Table(6).useAllAvailableWidth();
             table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN REPAYMENT SCHEDULE").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));//row 0
-            table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 1
-            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc " + formatValue.format(totalLoanAmount)).setTextAlignment(TextAlignment.CENTER))); //row 1
-            table.addCell(new Cell(0, 4).add(new Paragraph("CUSTOMER FULL NAME").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 2
-            table.addCell(new Cell(0, 2).add(new Paragraph(documentName).setTextAlignment(TextAlignment.CENTER))); //row 2
+            table.addCell(new Cell(0, 4).add(new Paragraph("CUSTOMER FULL NAME").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 1
+            table.addCell(new Cell(0, 2).add(new Paragraph(documentName).setTextAlignment(TextAlignment.CENTER))); //row 1
+            table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 2
+            table.addCell(new Cell(0, 2).add(new Paragraph("Ghc " +totalLoanAmount).setTextAlignment(TextAlignment.CENTER))); //row 2
 
             table.addCell(new Cell().add(new Paragraph("NO").setFontSize(10).setBold()));
             table.addCell(new Cell().add(new Paragraph("MONTHLY INSTALLMENT").setBold().setFontSize(10)));
@@ -457,7 +463,9 @@ public class DocumentGenerator {
             }
             document.add(documentHeader()).add(table);
             document.close();
-        }catch (Exception ignore) {}
+        }catch (Exception ex) {
+            errorLogger.logMessage(ex.getCause().toString(), className);
+        }
     }
 
     public void generateLoanRepaymentReceipt(String documentName, ReceiptsEntity receiptsEntity) {

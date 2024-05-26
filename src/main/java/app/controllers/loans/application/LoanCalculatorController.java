@@ -333,6 +333,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
             if (Objects.equals(loanNo, data.getLoanNo())) {
                 applicantFullnameLabel.setText(data.getFullName());
                 loanTypeLabel.setText(data.getLoanType());
+                basicSalaryField.setText(String.valueOf(data.getGrossSalary()));
                 applicationDateLabel.setText(data.getFormattedDate());
                 loanAmountField.setText(data.getRequestedAmount().toString());
                 displayLoanAmount.setText(data.getRequestedAmount().toString());
@@ -390,7 +391,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
                 } else {
                     exportLink.setDisable(true);
                     new DocumentGenerator().exportScheduleAsPdf(applicantFullnameLabel.getText(), scheduleTable, displayTotalLoanAmount.getText());
-                    Thread.sleep(600);
+                    Thread.sleep(1000);
                     exportLink.setDisable(false);
                     NOTIFY.informationNotification("EXPORT SUCCESSFUL", "Applicant schedule successfully exported.");
                 }

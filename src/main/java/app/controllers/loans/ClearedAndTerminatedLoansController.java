@@ -77,7 +77,9 @@ public class ClearedAndTerminatedLoansController extends LoansModel {
             populateLogsTable(loanNo);
             String reason = logsTable.getItems().get(0).getTerminationPurpose();
             reasonField.setText(reason);
-        }catch (NullPointerException ignore) {}
+        }catch (NullPointerException ignore) {
+            reasonField.setText("Fully paid loan");
+        }
     }
 
 
