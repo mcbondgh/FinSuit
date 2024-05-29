@@ -41,7 +41,7 @@ public class SpecialMethods {
     }
     public static void FlipView(String fxmlFileName, BorderPane borderPane) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource(fxmlFileName));
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000),borderPane);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(500),borderPane);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1.0);
         borderPane.setCenter(fxmlLoader.load());
@@ -157,8 +157,6 @@ public class SpecialMethods {
             comboBox.getItems().add(x);
         }
     }
-
-
 
     public static void setLoanType(ComboBox<String> comboBox) {
         String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Agro Loan"};
@@ -293,6 +291,7 @@ public class SpecialMethods {
         });
         return amount.get();
     }
+
 
 
 

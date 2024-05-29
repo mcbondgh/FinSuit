@@ -144,7 +144,6 @@ public class SettingsController extends SettingModel implements Initializable{
         }catch (Exception ignore){
             data = MODEL_OBJECT.getBusinessInfo().get(0).getLogo();
         }
-
         return data;
     }
     void fillFields() throws IOException {
@@ -268,7 +267,9 @@ public class SettingsController extends SettingModel implements Initializable{
             byte[] logoImage = null;
             try {
                 logoImage = getLogoData();
-            } catch (IOException e) {throw new RuntimeException(e);}
+            } catch (IOException e) {throw new RuntimeException(e);
+
+            }
             String hashedValue = EncryptDecrypt.hashPlainText(accountPasswordField.getText().isBlank() ? EncryptDecrypt.DEFAULT_PASSWORD : accountPasswordField.getText());
             double percentageValue = Double.parseDouble(loanPercentageField.getText());
             double taxPercentage = Double.parseDouble(withdrawalRateField.getText());

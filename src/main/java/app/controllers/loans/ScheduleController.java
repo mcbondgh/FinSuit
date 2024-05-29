@@ -11,7 +11,7 @@ public class ScheduleController {
 
     public static String loanNumberStaticVariable;
 
-    @FXML private ImageView applicantProfile;
+    @FXML private ImageView applicantProfileImage;
     @FXML private Label paidAmount, arrearsAmount;
     @FXML private Label applicantName, disbursedAmount;
     @FXML private Label applicantNumber, loanStatus;

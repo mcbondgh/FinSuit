@@ -1,5 +1,6 @@
 package app.controllers.homepage;
 
+import app.AppStarter;
 import app.controllers.finance.FinanceController;
 import app.controllers.accounts.AccountsController;
 import app.controllers.customers.CustomersController;
@@ -18,6 +19,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -45,7 +47,7 @@ public class AppController extends AppModel implements Initializable {
     /*******************************************************************************************************************
     *********************************************** FXML NODE EJECTIONS
      *******************************************************************************************************************/
-    @FXML private VBox sidebarPane;
+    @FXML public VBox sidebarPane;
     @FXML private TextField searchField;
     @FXML private Label appNameLabel, roleName, activeUsername;
     @FXML private Circle notificationPane;
@@ -102,80 +104,80 @@ public class AppController extends AppModel implements Initializable {
 
     private void navigationHandler() {
         dashboardButton.setOnAction(action -> {
-                try {
-                    DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
-                    SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
+            try {
+                SpecialMethods.FlipView("views/dashboard/dashboard-page.fxml", borderPane);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         financeButton.setOnAction(event -> {
+            FinanceController.pageTitlePlaceHolder = financeButton.getText();
             try {
-                FinanceController.pageTitlePlaceHolder = financeButton.getText();
                 SpecialMethods.FlipView("views/finance/finance-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         messageBoxButton.setOnAction(action -> {
+            MessageBoxController.pageTitlePlaceHolder = messageBoxButton.getText();
             try {
-                MessageBoxController.pageTitlePlaceHolder = messageBoxButton.getText();
                 SpecialMethods.FlipView("views/messageBox/messagebox-view.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         customersButton.setOnAction(action -> {
+            CustomersController.pageTitlePlaceHolder = customersButton.getText();
             try {
-                CustomersController.pageTitlePlaceHolder = customersButton.getText();
                 SpecialMethods.FlipView("views/customers/customers-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         accountsButton.setOnAction(action -> {
+            AccountsController.pageTitlePlaceHolder = accountsButton.getText();
             try {
-                AccountsController.pageTitlePlaceHolder = accountsButton.getText();
                 SpecialMethods.FlipView("views/accounts/accounts-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         transactionButton.setOnAction(action -> {
+            TransactionController.pageTitlePlaceHolder = transactionButton.getText();
             try {
-                TransactionController.pageTitlePlaceHolder = transactionButton.getText();
                 SpecialMethods.FlipView("views/transactions/transaction-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         loansButton.setOnAction(action -> {
+            LoansController.pageTitlePlaceHolder = loansButton.getText();
             try {
-                LoansController.pageTitlePlaceHolder = loansButton.getText();
                 SpecialMethods.FlipView("views/loans/loans-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         humanResourceButton.setOnAction(action -> {
+            FrontController.pageTitlePlaceHolder = humanResourceButton.getText();
             try {
-                FrontController.pageTitlePlaceHolder = humanResourceButton.getText();
                 SpecialMethods.FlipView("views/resource/humanresource-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         reportsButton.setOnAction(action -> {
+            ReportsController.pageTitlePlaceHolder = reportsButton.getText();
             try {
-                ReportsController.pageTitlePlaceHolder = reportsButton.getText();
                 SpecialMethods.FlipView("views/reports/reports-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         settingsButton.setOnAction(action -> {
+            SettingsController.pageTitlePlaceHolder = settingsButton.getText();
             try {
-                SettingsController.pageTitlePlaceHolder = settingsButton.getText();
                 SpecialMethods.FlipView("views/settings/settings-page.fxml", borderPane);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -197,23 +199,22 @@ public class AppController extends AppModel implements Initializable {
      *********************************************** ACTION EVENT METHODS
      ********************************************************************************************************************/
     @FXML private void expandSidebar(MouseEvent mouseEvent) {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
-        sidebarPane.setPrefWidth(170);
-        transition.setDelay(Duration.seconds(5000));
-        transition.play();
-        for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
-            sidebarPane.getChildren().get(x).setVisible(true);
-
-        }
+//        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
+//        borderPane.setPrefWidth(1127);
+//        transition.setDelay(Duration.seconds(5000));
+//        transition.play();
+//        for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
+//            sidebarPane.getChildren().get(x).setVisible(true);
+//        }
     }
 
     @FXML private void closeSidebar(MouseEvent mouseEvent) {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
-        sidebarPane.setPrefWidth(5);
-        transition.play();
-        for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
-            sidebarPane.getChildren().get(x).setVisible(false);
-        }
+//        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), sidebarPane);
+//        borderPane.setPrefWidth(1269);
+//        transition.play();
+//        for (int x = 0; x < sidebarPane.getChildren().size(); x++) {
+//            sidebarPane.getChildren().get(x).setVisible(false);
+//        }
     }
     @FXML void showUserProfile() {
         userProfilePane.setVisible(true);

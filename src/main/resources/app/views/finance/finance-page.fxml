@@ -13,7 +13,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="630.0" prefWidth="1240.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.FinanceController">
+<AnchorPane minWidth="-Infinity" prefHeight="630.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.FinanceController">
    <children>
       <Pane layoutX="4.666666666666667" layoutY="4.666666666666667" prefHeight="53.0" prefWidth="1234.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 10 10 0 0;" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
          <children>
@@ -22,7 +22,7 @@
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
-            <HBox fx:id="hBox" alignment="CENTER" layoutX="818.0" layoutY="9.0" prefHeight="36.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+            <HBox fx:id="hBox" alignment="CENTER" layoutX="693.0" layoutY="9.0" prefHeight="36.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
                <children>
                   <MFXButton fx:id="loadTableButton" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #e60000;" text="Load Table🔄" textFill="WHITE">
                      <font>
@@ -70,9 +70,9 @@
             </HBox>
          </children>
       </Pane>
-      <BorderPane fx:id="borderPane" layoutX="4.666666666666667" layoutY="64.66666666666667" prefHeight="581.0" prefWidth="1234.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="63.0">
+      <BorderPane fx:id="borderPane" layoutX="4.666666666666667" layoutY="68.66666666666666" prefHeight="546.0" prefWidth="1105.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="67.0">
          <center>
-            <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="1223.0" style="-fx-background-color: #f6fbff;" BorderPane.alignment="CENTER">
+            <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="1104.0" style="-fx-background-color: #f6fbff;" BorderPane.alignment="CENTER">
                <children>
                   <Pane layoutX="16.0" layoutY="4.0" prefHeight="41.0" prefWidth="305.0" style="-fx-background-color: #eee; -fx-background-radius: 10;">
                      <children>

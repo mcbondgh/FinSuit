@@ -30,6 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
+import javax.imageio.stream.FileImageInputStream;
 import java.io.*;
 import java.net.URL;
 import java.sql.Date;
@@ -37,6 +38,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoanApplicationController extends LoansModel implements Initializable {
 
@@ -61,7 +63,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     @FXML
     Pane customerSelectorPane;
     @FXML private MFXButton resetButton;
-    @FXML private ComboBox<String> customerTypeSelector, loanTypeSelector;
+    @FXML private ComboBox<String> customerTypeSelector, loanTypeSelector, agentSelector;
     @FXML private ImageView imageView;
     @FXML private MFXFilterComboBox<Object> filterIdOrAccountNo;
     @FXML private GridPane gridPane;
@@ -75,7 +77,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     @FXML private TextField contactPersonNameField, contactPersonNumberField, contactPersonDigitalAddField;
     @FXML private TextField contactPersonResidentialField, contactPersonIdNoField, placeOfWorkField, institutionAddressField;
     @FXML private TextField guranterNameField, guranterNumberField, guranterDigitalAddressField, guranterLandmarkField;
-    @FXML private  TextField guranterIdNumberField, guranterOccupationField, guranterPlaceOfWorkField, guranterWorkAddressField, guranterNetSalaryField;
+    @FXML private TextField guranterIdNumberField, guranterOccupationField, guranterPlaceOfWorkField, guranterWorkAddressField, guranterNetSalaryField;
     @FXML private TextField applicantBasicSalaryField, applicantTotalDeductionField, applicantNetSalaryField, applicantGrossSalaryField;
     @FXML private TextField staffIdField;
     @FXML private ComboBox<String> maritalStatusSelector, qualificationSelector, idTypeSelector, genderSelector;
@@ -91,6 +93,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     //Default constructor
     public LoanApplicationController() throws IOException {}
 
+    public static String LOAN_NUMBER;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -159,12 +162,17 @@ public class LoanApplicationController extends LoansModel implements Initializab
      *******************************************************************************************************************/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         String[] customerTypes = {"New Client", "Existing Client"};
         customerTypeSelector.setValue(customerTypes[0]);
         customerSelectorPane.setVisible(false);
         for (String customerType : customerTypes) {
             customerTypeSelector.getItems().add(customerType);
         }
+        getAllAgents().forEach(item -> {
+            agentSelector.getItems().add(item.getAgentName());
+        });
+
         loanNumberLabel.setText(SpecialMethods.generateLoanNumber(getTotalLoanCount() + 1));
         SpecialMethods.setLoanType(loanTypeSelector);
         SpecialMethods.setMaritalStatus(maritalStatusSelector);
@@ -235,23 +243,24 @@ public class LoanApplicationController extends LoansModel implements Initializab
          loanPurposeField.clear();
     }
 
-    private InputStream getImageStream() {
-        InputStream imageStream = null;
+    private byte[] getImageStream() throws IOException {
+        byte[] data = null;
         try {
-            imageStream = new FileInputStream(imageFile);
-        }catch (FileNotFoundException ignore){}
-       return imageStream;
-    }
-
-    private void saveUploadedImage() {
-        try {
-            String imageName = imageFile.getName();
-            ImageReadWriter.saveImageToDestination(imageName, imageView);
-        }catch (Exception e) {
-            imageFile = ImageReadWriter.defaultImageName;
+            data = imageView.getImage().getUrl().getBytes();
+        }catch (Exception ex) {
+            errorLogger.logMessage(ex.getLocalizedMessage(), getClass().getSimpleName());
         }
-
+        return data;
     }
+
+//    private void saveUploadedImage() {
+//        try {
+//            String imageName = imageFile.getName();
+//            ImageReadWriter.saveImageToDestination(imageName, imageView);
+//        }catch (Exception e) {
+//            imageFile = ImageReadWriter.defaultImageName;
+//        }
+//    }
 
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
@@ -270,19 +279,16 @@ public class LoanApplicationController extends LoansModel implements Initializab
         loanRequestField.setOnKeyTyped(keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9.]")) {
                 loanRequestField.deletePreviousChar();
-                loanRequestField.deleteNextChar();
             }
         });
         mobileNumberField.setOnKeyTyped(keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9]")) {
                 mobileNumberField.deletePreviousChar();
-                mobileNumberField.deleteNextChar();
             }
         });
         otherNumberField.setOnKeyTyped(keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9]")) {
                 otherNumberField.deletePreviousChar();
-                otherNumberField.deleteNextChar();
             }
         });
         applicantBasicSalaryField.setOnKeyTyped(keyEvent -> {
@@ -347,6 +353,13 @@ public class LoanApplicationController extends LoansModel implements Initializab
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
 
+    final AtomicInteger AGENT_ID = new AtomicInteger(0);
+    @FXML void agentSelected() {
+        var var1 = agentSelector.getValue();
+        getAllAgents().forEach(x -> {if(Objects.equals(var1, x.getAgentName())) {AGENT_ID.set(x.getAgentId());}});
+    }
+
+
     @FXML
     void customerTypeSelected(ActionEvent event) {
         String value = customerTypeSelector.getValue();
@@ -359,25 +372,12 @@ public class LoanApplicationController extends LoansModel implements Initializab
             }
         }
     }
-    @FXML void uploadImageButtonClicked() {
-        try {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Select Preferred Image");
-            FileChooser.ExtensionFilter filter = fileChooser.getSelectedExtensionFilter();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg",  "*.jpeg"));
-            imageFile = fileChooser.showOpenDialog(uploadImageButton.getScene().getWindow());
-            Image image = new Image(imageFile.getPath());
-            long imageSize = imageFile.length();
-            //CHECK IF THE IMAGE SIZE IS GREATER THAN THE ACTUAL PERMITTED SIZE ie 300kb.
-            if (checkImageSize(imageSize)) {
-                NOTIFY.informationNotification("FILE TOO LARGE", "Selected file size should be less or equal to 300kb");
-            } else  {
-                imageView.setImage(image);
-            }
-        }catch (Exception ignore) {
 
-        }
+    //THIS METHOD WHEN INVOKED SHALL OPEN A DIALOG TO ALLOW THE USER TO CHOOSE A VALID IMAGE TO UPLOAD.
+    @FXML void uploadImageButtonClicked() {
+       ImageReadWriter.uploadImageFile(uploadImageButton, imageView);
     }
+
     @FXML void checkCustomerIdField(KeyEvent keyEvent) {
         String value = idNumberField.getText().replaceAll(" ", "");
         boolean found = false;
@@ -390,7 +390,6 @@ public class LoanApplicationController extends LoansModel implements Initializab
                 break;
             }
         }
-
     }
     @FXML void filterCustomerOnAction() {
         try {
@@ -422,6 +421,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             personalInformationPane.setDisable(true);
         }catch (Exception ignore){}
     }
+
     @FXML private void saveButtonClicked() throws IOException {
         int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
         String loanNumber = loanNumberLabel.getText();
@@ -507,11 +507,12 @@ public class LoanApplicationController extends LoansModel implements Initializab
             customerRepository.setInstitution_address(institutionAddress);
             customerRepository.setRelationship_to_applicant(contactRelationshipType);
             customerRepository.setCreated_by(currentUserId);
+            customerRepository.setAgentId(AGENT_ID.get());
 
 
             applicationEntity.setLoan_no(loanNumber);
             applicationEntity.setProfile_picture("profile.png");
-            applicationEntity.setImage(getImageStream().readAllBytes());
+            applicationEntity.setImage(getImageStream());
             applicationEntity.setCompany_name(companyName);
             applicationEntity.setCompany_mobile_number(companyContact);
             applicationEntity.setCompany_address(companyAddress);
@@ -560,6 +561,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             }
         }
     }//end of save button...
+
     @FXML void resetButtonClicked() {
         ALERT = new UserAlerts("RESET FIELDS", "Do you wish to clear the form and reset all fields? ");
         if (ALERT.confirmationAlert()) {

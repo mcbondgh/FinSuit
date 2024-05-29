@@ -1,6 +1,7 @@
 package app.controllers.finance;
 
 import app.specialmethods.SpecialMethods;
+import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,7 +48,7 @@ public class FinanceController implements Initializable {
      ********************************************************************************************************************/
     @FXML void viewLoansButtonClicked() {
         try {
-            SpecialMethods.FlipView(borderPane, "views/finance/payment-approval-view.fxml");
+            AppStages.paymentApprovalStage().showAndWait();
         }catch (Exception ignored){}
     }
     @FXML void businessAccountButtonClicked() {

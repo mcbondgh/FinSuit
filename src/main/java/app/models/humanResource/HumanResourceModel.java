@@ -2,9 +2,11 @@ package app.models.humanResource;
 
 import app.repositories.human_resources.EmployeesData;
 import app.models.MainModel;
+import app.repositories.human_resources.LoanAgentsEntity;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HumanResourceModel extends MainModel {
     protected int addNewEmployee(EmployeesData emp) {
@@ -136,5 +138,51 @@ public class HumanResourceModel extends MainModel {
             }catch (SQLException e) {rollBack();}
         return flag;
     }
+
+    protected int saveAgent(LoanAgentsEntity agents) {
+        AtomicInteger status = new AtomicInteger();
+        try{
+//            agent_id, agent_name, mobile_number, other_number, information, date_joined, date_modified, added_by, is_deleted
+            String query = "INSERT INTO agents\n" +
+                    "VALUES(DEFAULT, ?, ?, ?, ?, DEFAULT, DEFAULT, ?, DEFAULT)";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, agents.getAgentName());
+            preparedStatement.setString(2, agents.getMobileNumber());
+            preparedStatement.setString(3, agents.getOtherNumber());
+            preparedStatement.setString(4, agents.getInformation());
+            preparedStatement.setInt(5, agents.getAddedBy());
+            status.getAndAdd(preparedStatement.executeUpdate());
+        }catch (Exception ignored) {}
+        return status.get();
+    }
+
+    //THIS METHOD WHEN INVOKED SHALL UPDATE AN AGENT BASED ON THE SUPPLIED agent_id
+    protected int updateAgentData(LoanAgentsEntity agents) {
+        try {
+            String query = """
+                    UPDATE agents SET agent_name = ?, mobile_number = ?, other_number = ?,
+                    information = ?, date_modified = DEFAULT, added_by = ? WHERE(agent_id = ?);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, agents.getAgentName());
+            preparedStatement.setString(2, agents.getMobileNumber());
+            preparedStatement.setString(3, agents.getOtherNumber());
+            preparedStatement.setString(4, agents.getInformation());
+            preparedStatement.setInt(5, agents.getAddedBy());
+            preparedStatement.setInt(6, agents.getAgentId());
+             return preparedStatement.executeUpdate();
+        }catch (Exception ignored) {}
+        return -1;
+    }
+
+    protected void deleteAgent(int agentId) {
+        try {
+            String query = "UPDATE agents SET is_deleted = TRUE WHERE agent_id = '"+agentId+"';";
+            getConnection().createStatement().execute(query);
+        }catch (Exception ex){}
+    }
+
+
+
 
 }//end of class....

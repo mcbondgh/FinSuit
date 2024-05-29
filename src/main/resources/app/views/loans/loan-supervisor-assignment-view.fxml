@@ -10,28 +10,28 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1196.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.AssignSupervisorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.AssignSupervisorController">
    <children>
       <BorderPane fx:id="borderPane" layoutX="191.0" layoutY="14.0" style="-fx-alignment: center;">
          <center>
-            <Pane fx:id="pane" onMouseEntered="#checkTableStatus" prefHeight="517.0" prefWidth="955.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
+            <Pane fx:id="pane" onMouseEntered="#checkTableStatus" prefHeight="517.0" prefWidth="920.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
                <children>
-                  <MFXButton fx:id="saveButton" alignment="CENTER" disable="true" layoutX="681.0" layoutY="474.0" onAction="#assignmentButtonOnAction" prefHeight="35.0" prefWidth="134.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="💾 Save Assignment" textFill="WHITE">
+                  <MFXButton fx:id="saveButton" alignment="CENTER" disable="true" layoutX="688.0" layoutY="474.0" onAction="#assignmentButtonOnAction" prefHeight="30.0" prefWidth="100.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
                      <font>
                         <Font name="Roboto Bold" size="12.0" />
                      </font>
                   </MFXButton>
-                  <TableView fx:id="supervisorsTable" fixedCellSize="40.0" layoutX="18.0" layoutY="14.0" prefHeight="445.0" prefWidth="922.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 14px; -fx-font-weight: bold;">
+                  <TableView fx:id="supervisorsTable" fixedCellSize="40.0" layoutX="18.0" layoutY="14.0" prefHeight="445.0" prefWidth="887.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;" tableMenuButtonVisible="true">
                      <columns>
-                        <TableColumn fx:id="idColumn" prefWidth="46.0" style="-fx-font-size: 14; -fx-alignment: center;" text="NO." />
-                        <TableColumn fx:id="loanNumberColumn" prefWidth="174.00000762939453" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN NUMBER" />
-                        <TableColumn fx:id="nameColumn" prefWidth="208.6666259765625" style="-fx-font-size: 14; -fx-alignment: center;" text="APPLICANT NAME" />
-                        <TableColumn fx:id="statusColumn" prefWidth="154.0" style="-fx-font-size: 14; -fx-alignment: center;" text="LOAN TYPE" />
-                        <TableColumn fx:id="dateColumn" prefWidth="147.3333740234375" style="-fx-font-size: 14; -fx-alignment: center;" text="APPLICATION DATE" />
-                        <TableColumn fx:id="supervisorColumn" maxWidth="233.0" minWidth="176.66668701171875" prefWidth="176.66668701171875" style="-fx-font-size: 14; -fx-alignment: center; -fx-text-fill: #0000; -fx-font-color: #0000;" text="ASSIGN SUPERVISOR" />
+                        <TableColumn fx:id="idColumn" prefWidth="46.0" style="-fx-font-size: 12px;" text="NO." />
+                        <TableColumn fx:id="loanNumberColumn" prefWidth="174.00000762939453" style="-fx-font-size: 12px;" text="LOAN NUMBER" />
+                        <TableColumn fx:id="nameColumn" prefWidth="189.33334350585938" style="-fx-font-size: 12px;" text="APPLICANT NAME" />
+                        <TableColumn fx:id="statusColumn" prefWidth="173.33331298828125" style="-fx-font-size: 12px;" text="LOAN TYPE" />
+                        <TableColumn fx:id="dateColumn" prefWidth="147.3333740234375" style="-fx-font-size: 12px;" text="APPLICATION DATE" />
+                        <TableColumn fx:id="supervisorColumn" maxWidth="233.0" minWidth="145.3333740234375" prefWidth="152.6666259765625" style="-fx-font-size: 12px;" text="ASSIGN SUPERVISOR" />
                      </columns>
                   </TableView>
-                  <MFXButton fx:id="clearButton" alignment="CENTER" layoutX="819.0" layoutY="474.0" onAction="#setClearButtonOnAction" prefHeight="35.0" prefWidth="121.0" rippleColor="#ffa99c" style="-fx-background-color: #e60000;" text="❌ Clear " textFill="WHITE">
+                  <MFXButton fx:id="clearButton" alignment="CENTER" layoutX="798.0" layoutY="474.0" onAction="#setClearButtonOnAction" prefHeight="30.0" prefWidth="100.0" rippleColor="#ffa99c" style="-fx-background-color: #e60000;" text="❌ Clear " textFill="WHITE">
                      <font>
                         <Font name="Roboto Bold" size="12.0" />
                      </font>
@@ -52,7 +52,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <MFXButton fx:id="assignmentButton" alignment="CENTER" layoutX="17.0" layoutY="105.0" onAction="#showAssignedSupervisorsView" prefHeight="35.0" prefWidth="149.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Show Assignments" textFill="WHITE">
+      <MFXButton fx:id="assignmentButton" alignment="CENTER" layoutX="17.0" layoutY="105.0" onAction="#showAssignedSupervisorsView" prefHeight="30.0" prefWidth="149.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="Show Assignments" textFill="WHITE">
          <font>
             <Font name="Roboto Bold" size="12.0" />
          </font>

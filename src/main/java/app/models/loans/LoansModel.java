@@ -91,7 +91,7 @@ public class LoansModel extends MainModel {
                     "residential_address, key_landmark, marital_status, id_type, id_number, educational_background, " +
                     "contact_person_fullname, contact_person_number, contact_person_gender, contact_person_landmark, contact_person_digital_address,  contact_person_id_type, " +
                     "contact_person_id_number, contact_person_place_of_work, institution_address, relationship_to_applicant," +
-                    "created_by) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "created_by, agent_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             String query2 = "INSERT INTO loan_applicant_details(loan_no, profile_picture, image, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, " +
                     "basic_salary, gross_salary, total_deduction, net_salary, guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address," +
@@ -128,6 +128,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(25, customer.getInstitution_address());
             preparedStatement.setString(26, customer.getRelationship_to_applicant());
             preparedStatement.setInt(27, customer.getCreated_by());
+            preparedStatement.setInt(28, customer.getAgentId());
             flag = preparedStatement.executeUpdate();
 
             preparedStatement = getConnection().prepareStatement(query2);
@@ -541,10 +542,12 @@ public class LoansModel extends MainModel {
                     	mobile_number,\s
                     	repayment_amount,
                         loan_status,
-                        total_payment,
+                        total_payment, image,
                         (repayment_amount - total_payment) AS balance FROM customer_data AS cd
                         INNER JOIN loans AS ln USING(customer_id)
-                        WHERE(loan_no = ?);
+                        INNER JOIN loan_applicant_details AS ap
+                        ON ln.loan_no = ap.loan_no
+                        WHERE(ln.loan_no = ?);
                     """;
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, loanNo);
@@ -556,6 +559,7 @@ public class LoansModel extends MainModel {
                 data.put("loan_status", resultSet.getString("loan_status"));
                 data.put("total_payment", resultSet.getDouble("total_payment"));
                 data.put("balance", resultSet.getDouble("balance"));
+                data.put("picture", resultSet.getBytes("image"));
             }
             resultSet.close();
             getConnection().close();
@@ -670,29 +674,79 @@ public class LoansModel extends MainModel {
     protected Map<String, Object> getLoanApplicantDataByLoanNumber(String loanNo) {
         Map<String, Object> applicantData = new HashMap<>();
         try {
-            String query = "SELECT * FROM loans\n" +
-                    "CROSS JOIN customer_data AS cd\n" +
-                    "USING(customer_id)\n" +
-                    "CROSS JOIN loan_applicant_details\n" +
-                    "USING(loan_no)\n" +
-                    "WHERE loan_no = ?;\n";
+            String query = """
+                    SELECT * FROM customer_data
+                    LEFT JOIN loans AS cd
+                    USING(customer_id)
+                    CROSS JOIN loan_applicant_details
+                    USING(loan_no)
+                    CROSS JOIN agents AS a\s
+                    USING(agent_id)
+                    WHERE loan_no = ?;
+                    """;
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, loanNo);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                // firstname, lastname, othername, gender, dob, age, place_of_birth, mobile_number, other_number, email, digital_address, residential_address, key_landmark, marital_status, name_of_spouse, id_type, id_number, educational_background, additional_comment, contact_person_fullname, contact_person_dob, contact_person_number, contact_person_gender, contact_person_landmark, contact_person_education_level, contact_person_digital_address, contact_person_id_type, contact_person_id_number, contact_person_place_of_work, institution_address, institution_number, relationship_to_applicant, date_created, created_by, date_modified, modified_by, id, profile_picture, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, basic_salary, gross_salary, total_deduction, net_salary, guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address, guarantor_residential_address, guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation, guarantor_place_of_work, guarantor_institution_address, guarantor_income
+//                agent_id, loan_no, customer_id, firstname, lastname, othername, gender, dob, age, place_of_birth, mobile_number, other_number,
+//                email, digital_address, residential_address, key_landmark, marital_status,name_of_spouse, id_type, id_number,
+//                educational_background, additional_comment, contact_person_fullname,
+//                contact_person_dob, contact_person_number,
+//                contact_person_gender, contact_person_landmark, contact_person_education_level, contact_person_digital_address,
+//                contact_person_id_type, contact_person_id_number, contact_person_place_of_work, institution_address, institution_number,
+//                relationship_to_applicant,
+//               image, company_name, company_mobile_number,
+//                company_address, staff_id, occupation, employment_date, basic_salary, gross_salary, total_deduction, net_salary,
+//                guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address, guarantor_residential_address,
+//                guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation,
+//                guarantor_place_of_work, guarantor_institution_address, guarantor_income,information
+
                 applicantData.put("loanType", resultSet.getString("loan_type"));
                 applicantData.put("amount", resultSet.getDouble("requested_amount"));
                 applicantData.put("loanPurpose", resultSet.getString("loan_purpose"));
                 applicantData.put("firstname", resultSet.getString("firstname"));
                 applicantData.put("lastname", resultSet.getString("lastname"));
+                applicantData.put("otherName", resultSet.getString("othername"));
+                applicantData.put("gender", resultSet.getString("gender"));
+                applicantData.put("dob", resultSet.getString("dob"));
+                applicantData.put("place_of_birth", resultSet.getString("place_of_birth"));
+                applicantData.put("mobile_number", resultSet.getString("mobile_number"));
+                applicantData.put("other_number", resultSet.getString("other_number"));
+                applicantData.put("email", resultSet.getString("email"));
+                applicantData.put("digital_address", resultSet.getString("digital_address"));
+                applicantData.put("residential_address", resultSet.getString("residential_address"));
+                applicantData.put("key_landmark", resultSet.getString("key_landmark"));
+                applicantData.put("marital_status", resultSet.getString("marital_status"));
+                applicantData.put("name_of_spouse", resultSet.getString("name_of_spouse"));
+                applicantData.put("id_type", resultSet.getString("id_type"));
+                applicantData.put("id_number", resultSet.getString("id_number"));
+                applicantData.put("educational_background", resultSet.getString("educational_background"));
+                applicantData.put("additional_comment", resultSet.getString("additional_comment"));
+                applicantData.put("contactPersonName", resultSet.getString("contact_person_fullname"));
                 applicantData.put("image", resultSet.getBytes("image"));
+                applicantData.put("agentName", resultSet.getString("agent_name"));
+                applicantData.put("company_name",resultSet.getString("company_name"));
+                applicantData.put("company_number", resultSet.getString("company_mobile_number"));
+                applicantData.put("company_address", resultSet.getString("company_address"));
+                applicantData.put("staff_id", resultSet.getString("staff_id"));
+                applicantData.put("occupation", resultSet.getString("occupation"));
+                applicantData.put("employment_date", resultSet.getDate("employment_date"));
+                applicantData.put("basic_salary", resultSet.getDouble("basic_salary"));
+                applicantData.put("gross_salary", resultSet.getDouble("gross_salary"));
+                applicantData.put("net_salary", resultSet.getDouble("net_salary"));
+                applicantData.put("total_deduction", resultSet.getDouble("total_deduction"));
+
+                applicantData.put("guarantor_name", resultSet.getString("guarantor_name"));
+                applicantData.put("guarantor_number", resultSet.getString("guarantor_number"));
+
+
+
+
             }
             getConnection().close();
         }catch (SQLException e) {
             String className = this.getClass().getName();
-            String error = Arrays.toString(e.getStackTrace());
-            logError.logMessage(className, error);
+            logError.logMessage(e.getMessage(), className);
         }
         return applicantData;
     }

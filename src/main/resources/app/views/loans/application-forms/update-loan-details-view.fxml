@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -17,20 +18,6 @@
 
 <AnchorPane prefHeight="640.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.application.UpdateApplicantLoanController">
    <children>
-      <Pane layoutX="10.0" layoutY="5.0" prefHeight="640.0" prefWidth="186.0" style="-fx-alignment: center; -fx-background-color: #fff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
-         <children>
-            <Pane layoutX="6.0" layoutY="6.0" prefHeight="196.0" prefWidth="176.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-border-radius: 8px;">
-               <children>
-                  <ImageView fx:id="imageView" fitHeight="164.0" fitWidth="160.0" layoutX="7.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/users.jpg" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
-            <Separator layoutX="-1.0" layoutY="207.0" prefHeight="3.0" prefWidth="186.0" />
-         </children>
-      </Pane>
       <VBox fx:id="vBox" alignment="CENTER" layoutX="201.0" layoutY="4.0" prefHeight="640.0" prefWidth="1075.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-background-radius: 8px; -fx-border-radius: 8px;">
          <children>
             <MFXScrollPane fx:id="scrollPane" cache="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="1083.0" style="-fx-background-radius: 8px;" thumbColor="#c32828" thumbHoverColor="#300b82" trackColor="#d70505">
@@ -71,16 +58,34 @@
                               </TextField>
                               <DatePicker fx:id="dobPicker" editable="false" layoutX="636.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" showWeekNumbers="true" style="-fx-background-color: #eee; -fx-font-family: poppins; -fx-font-size: 13; -fx-border-radius: 5; -fx-background-radius: 5;" />
                               <ComboBox fx:id="genderSelector" layoutX="842.0" layoutY="67.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 13; -fx-font-family: poppins;" />
-                              <TextField fx:id="mobileNumberField" layoutX="13.0" layoutY="132.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <TextField fx:id="otherNumberField" layoutX="220.0" layoutY="132.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
-                                 <font>
-                                    <Font name="Poppins Medium" size="12.0" />
-                                 </font>
-                              </TextField>
+                              <VBox layoutX="13.0" layoutY="113.0">
+                                 <children>
+                                    <Label prefHeight="19.0" prefWidth="117.0" text="Mobile Number *">
+                                       <font>
+                                          <Font name="Poppins Regular" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="mobileNumberField" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                       <font>
+                                          <Font name="Poppins Medium" size="12.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox layoutX="220.0" layoutY="113.0">
+                                 <children>
+                                    <Label prefHeight="19.0" prefWidth="95.0" text="Other Number">
+                                       <font>
+                                          <Font name="Poppins Regular" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="otherNumberField" prefHeight="40.0" prefWidth="200.0" promptText="eg 020000001" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                                       <font>
+                                          <Font name="Poppins Medium" size="12.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </VBox>
                               <TextField fx:id="emailField" layoutX="427.0" layoutY="132.0" prefHeight="40.0" prefWidth="200.0" promptText="email@example.com" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                                  <font>
                                     <Font name="Poppins Medium" size="12.0" />
@@ -97,11 +102,6 @@
                                  </font>
                               </Label>
                               <Label layoutX="636.0" layoutY="48.0" prefHeight="19.0" prefWidth="99.0" text="Date Of Birth *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="14.0" layoutY="113.0" prefHeight="19.0" prefWidth="117.0" text="Mobile Number *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
                                  </font>
@@ -172,11 +172,6 @@
                               <Label layoutX="14.0" layoutY="19.0" text="PERSONAL INFORMATION">
                                  <font>
                                     <Font name="Poppins Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="221.0" layoutY="113.0" prefHeight="19.0" prefWidth="95.0" text="Other Number">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
                                  </font>
                               </Label>
                            </children>
@@ -515,7 +510,7 @@
                               </Label>
                            </children>
                         </Pane>
-                        <MFXButton fx:id="saveButton" disable="true" layoutX="803.0" layoutY="1350.0" prefHeight="32.0" prefWidth="117.0" style="-fx-background-color: #278c8f;" text="Apply For Loan" textFill="WHITE">
+                        <MFXButton fx:id="saveButton" disable="true" layoutX="803.0" layoutY="1350.0" onAction="#saveButtonOnAction" prefHeight="32.0" prefWidth="117.0" style="-fx-background-color: #278c8f;" text="Apply For Loan" textFill="WHITE">
                            <font>
                               <Font name="Poppins Bold" size="12.0" />
                            </font>
@@ -526,7 +521,7 @@
                            </font>
                         </MFXButton>
                         <ComboBox fx:id="loanTypeSelector" layoutX="19.0" layoutY="81.0" prefHeight="40.0" prefWidth="201.0" style="-fx-background-color: #ffdbdb; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
-                        <TextField fx:id="loanRequestField" layoutX="234.0" layoutY="81.0" onKeyTyped="#validateRequestAmountInput" prefHeight="40.0" prefWidth="200.0" promptText="eg 1500.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
+                        <TextField fx:id="loanRequestField" layoutX="234.0" layoutY="81.0" prefHeight="40.0" prefWidth="200.0" promptText="eg 1500.00" style="-fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-color: #fff; -fx-background-radius: 5px;">
                            <font>
                               <Font name="Poppins Medium" size="12.0" />
                            </font>
@@ -551,11 +546,43 @@
                               <Font name="Roboto" size="14.0" />
                            </font>
                         </TextArea>
+                        <VBox layoutX="454.0" layoutY="62.0" spacing="2.0">
+                           <children>
+                              <Label prefWidth="200.0" text="Select An Agent *">
+                                 <font>
+                                    <Font name="Poppins Regular" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="agentSelector" onAction="#agentSelected" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 12; -fx-font-family: poppins medium;" />
+                           </children>
+                        </VBox>
                      </children>
                   </Pane>
                </content>
             </MFXScrollPane>
          </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" layoutX="6.0" layoutY="4.0" prefHeight="633.0" prefWidth="189.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 10;" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0">
+         <children>
+            <Pane prefHeight="196.0" prefWidth="176.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-border-radius: 8px;">
+               <children>
+                  <ImageView fx:id="imageView" fitHeight="164.0" fitWidth="160.0" layoutX="7.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/profile.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Separator prefHeight="3.0" prefWidth="186.0" />
+            <MFXButton fx:id="uploadImageButton" onAction="#uploadImageButtonClicked" prefHeight="20.0" prefWidth="95.0" style="-fx-background-color: #eee; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Upload Image">
+               <font>
+                  <Font name="Poppins Regular" size="10.0" />
+               </font>
+            </MFXButton>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </VBox>
    </children>
 </AnchorPane>

@@ -15,16 +15,16 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="640.0" prefWidth="1242.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.AccountsController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.accounts.AccountsController">
    <children>
-      <Pane layoutY="-1.0" prefHeight="41.0" prefWidth="1240.0" style="-fx-background-radius: 10 10 0 0; -fx-border-color: #eee;">
+      <Pane layoutY="-1.0" prefHeight="41.0" prefWidth="1114.0" style="-fx-background-radius: 10 10 0 0; -fx-border-color: #eee;">
          <children>
             <Label fx:id="pageTitle" layoutX="42.0" layoutY="11.0" text="TITLE" textFill="#4d0455">
                <font>
                   <Font name="Roboto Black" size="16.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" layoutX="982.0" layoutY="1.0" prefHeight="41.0" prefWidth="250.0" spacing="8.0">
+            <HBox alignment="CENTER" layoutX="859.0" layoutY="1.0" prefHeight="41.0" prefWidth="250.0" spacing="8.0">
                <children>
                   <MFXButton fx:id="createAccountButton" alignment="CENTER" depthLevel="LEVEL1" prefHeight="28.0" prefWidth="108.0" style="-fx-background-color: #278c8f;" text="Create New Account" textFill="WHITE" textOverrun="CLIP">
                      <font>

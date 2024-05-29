@@ -39,7 +39,6 @@ public class ReportsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
-        actionEventMethods();
 
     }
 
@@ -53,26 +52,6 @@ public class ReportsController implements Initializable {
      ********************************************************************************************************************/
 
 
-    void actionEventMethods() {
-        userEmployeesBtn.setOnAction(actionEvent -> {
-            try {
-//            borderPane.getChildren().remove(0);
-                String fxmlFile = "views/reports/ui/user-logs.fxml";
-                SpecialMethods.FlipView(borderPane, fxmlFile );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        transactionViewBtn.setOnAction(actionEvent -> {
-            try {
-//            borderPane.getChildren().remove(0);
-                String fxmlFile = "views/reports/ui/transactional-statement.fxml";
-                SpecialMethods.FlipView(borderPane, fxmlFile );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
 
 
 
@@ -82,14 +61,5 @@ public class ReportsController implements Initializable {
 
 
 
-
-
-//        menuIcon.setOnMouseClicked(e -> {
-//            menuContainer.setVisible(!isMenuContainerVisible());
-//        });
-//        menuContainer.setOnMouseExited(e -> {
-//            menuContainer.setVisible(false);
-//        });
-    }
 
 }//end of class..

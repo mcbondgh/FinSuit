@@ -20,9 +20,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1200.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.BusinessAccountController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.BusinessAccountController">
    <children>
-      <SplitPane dividerPositions="0.1856904231625835" layoutX="14.0" layoutY="14.0" prefHeight="550.0" prefWidth="1200.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.17756448710257947" layoutX="14.0" layoutY="14.0" minHeight="-Infinity" prefHeight="600.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="225.0">
                <children>
@@ -120,7 +120,7 @@
                                  <children>
                                     <HBox layoutX="14.0" layoutY="67.0" prefHeight="516.0" prefWidth="972.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <VBox alignment="TOP_CENTER" onMouseMoved="#checkForEmptyFields" prefHeight="505.0" prefWidth="325.0" spacing="4.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                          <VBox alignment="TOP_CENTER" onMouseMoved="#checkForEmptyFields" prefHeight="505.0" prefWidth="293.0" spacing="4.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="33.0" prefWidth="373.0" style="-fx-background-color: #eee;" text="BANK - BUSINESS ACCOUNT TRANSFERS" textFill="#7d7d7d">
                                                    <font>
@@ -129,14 +129,14 @@
                                                 </Label>
                                                 <HBox prefHeight="75.0" prefWidth="307.0" spacing="5.0">
                                                    <children>
-                                                      <VBox prefHeight="100.0" prefWidth="138.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                                      <VBox prefHeight="65.0" prefWidth="175.0" spacing="3.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
                                                          <children>
                                                             <Label cache="true" style="-fx-font-family: poppins medium;" text="Transfer Date *">
                                                                <font>
                                                                   <Font name="Poppins Medium" size="10.0" />
                                                                </font>
                                                             </Label>
-                                                            <DatePicker fx:id="transDatePicker" prefHeight="31.0" prefWidth="114.0" promptText="date" style="-fx-font-family: poppins medium; -fx-font-size: 13px;" />
+                                                            <DatePicker fx:id="transDatePicker" prefHeight="31.0" prefWidth="114.0" promptText="date" style="-fx-font-family: poppins medium; -fx-font-size: 12PX;" />
                                                          </children>
                                                          <padding>
                                                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -270,21 +270,21 @@
                                                 <Insets bottom="5.0" />
                                              </padding>
                                           </VBox>
-                                          <VBox layoutX="10.0" layoutY="10.0" prefHeight="516.0" prefWidth="661.0" spacing="5.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                          <VBox layoutX="10.0" layoutY="10.0" prefHeight="505.0" prefWidth="641.0" spacing="5.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="33.0" prefWidth="954.0" style="-fx-background-color: #eee;" text="TRANSFER LOGS" textFill="#7d7d7d">
                                                    <font>
                                                       <Font name="Poppins Medium" size="13.0" />
                                                    </font>
                                                 </Label>
-                                                <TableView fx:id="businessTransactionTable" fixedCellSize="35.0" onMouseClicked="#getSelectedTableItem" prefHeight="460.0" prefWidth="643.0" style="-fx-font-family: poppins medium; -fx-font-size: 13px;" tableMenuButtonVisible="true">
+                                                <TableView fx:id="businessTransactionTable" fixedCellSize="35.0" onMouseClicked="#getSelectedTableItem" prefHeight="460.0" prefWidth="637.0" style="-fx-font-family: poppins medium; -fx-font-size: 13px;" tableMenuButtonVisible="true">
                                                   <columns>
                                                     <TableColumn fx:id="bIdColumn" prefWidth="56.66668713092804" text="No." />
-                                                    <TableColumn fx:id="transferTypeColumn" prefWidth="113.33331298828125" text="Transferred To" />
-                                                      <TableColumn fx:id="bankNameColumn" prefWidth="120.66659545898438" text="Bank Name" />
+                                                    <TableColumn fx:id="transferTypeColumn" prefWidth="107.33331680297852" text="TO" />
+                                                      <TableColumn fx:id="bankNameColumn" prefWidth="126.66664123535156" text="Bank Name" />
                                                       <TableColumn fx:id="transferAmountColumn" prefWidth="82.00006103515625" text="Amount" />
-                                                      <TableColumn fx:id="transIdColumn" prefWidth="146.6666259765625" text="Transaction Id" />
-                                                      <TableColumn fx:id="transactionDateColumn" prefWidth="106.666748046875" text="Date" />
+                                                      <TableColumn fx:id="transIdColumn" prefWidth="136.66668701171875" text="Trans Id" />
+                                                      <TableColumn fx:id="transactionDateColumn" prefWidth="135.33334350585938" text="Date" />
                                                   </columns>
                                                 </TableView>
                                              </children>
@@ -303,7 +303,7 @@
                                  <children>
                                     <HBox layoutX="308.0" layoutY="89.0" prefHeight="516.0" prefWidth="972.0" spacing="6.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <VBox alignment="TOP_CENTER" onMouseMoved="#checkForEmptyFieldsInDomesticTransaction" prefHeight="505.0" prefWidth="403.0" spacing="4.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                          <VBox alignment="TOP_CENTER" onMouseMoved="#checkForEmptyFieldsInDomesticTransaction" prefHeight="518.0" prefWidth="203.0" spacing="4.0" style="-fx-background-color: #f6fbff; -fx-border-color: #ddd; -fx-border-radius: 5px;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="33.0" prefWidth="373.0" style="-fx-background-color: #eee;" text="ACCONT - CASHIER TRANSFERS" textFill="#7d7d7d">
                                                    <font>
@@ -373,22 +373,22 @@
                                                 <Insets bottom="5.0" />
                                              </padding>
                                           </VBox>
-                                          <VBox prefHeight="505.0" prefWidth="775.0" spacing="5.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px;">
+                                          <VBox prefHeight="518.0" prefWidth="688.0" spacing="5.0" style="-fx-border-color: #ddd; -fx-border-radius: 5px;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="38.0" prefWidth="697.0" style="-fx-background-color: #eee;" text="CASHIER TRANSFER LOGS" textFill="#7d7d7d">
                                                    <font>
                                                       <Font name="Poppins Medium" size="13.0" />
                                                    </font>
                                                 </Label>
-                                                <TableView fx:id="cashierTransferTable" fixedCellSize="35.0" prefHeight="463.0" prefWidth="653.0" style="-fx-font-family: poppins medium; -fx-font-size: 13px;">
+                                                <TableView fx:id="cashierTransferTable" fixedCellSize="35.0" prefHeight="457.0" prefWidth="688.0" style="-fx-font-family: poppins medium; -fx-font-size: 13px;" tableMenuButtonVisible="true">
                                                   <columns>
                                                     <TableColumn fx:id="cashierIdColumn" prefWidth="67.33331549167633" text="No." />
-                                                    <TableColumn fx:id="cashierTransTypeColumn" prefWidth="160.0" text="Transfer Type" />
-                                                      <TableColumn fx:id="cashierNameColumn" prefWidth="160.0" text="Transferred To" />
-                                                      <TableColumn fx:id="amountColumn" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Amount" />
+                                                    <TableColumn fx:id="cashierTransTypeColumn" prefWidth="174.66661071777344" text="Transfer Type" />
+                                                      <TableColumn fx:id="cashierNameColumn" prefWidth="162.00006103515625" text="Transferred To" />
+                                                      <TableColumn fx:id="amountColumn" maxWidth="1.7976931348623157E308" prefWidth="103.33334350585938" text="Amount" />
                                                       <TableColumn fx:id="cashColumn" prefWidth="89.99993896484375" text="Cash" visible="false" />
                                                       <TableColumn fx:id="eCashColumn" prefWidth="88.66656494140625" text="E-Cash" visible="false" />
-                                                      <TableColumn fx:id="timeColumn" maxWidth="1.7976931348623157E308" prefWidth="139.33334350585938" text="Time" />
+                                                      <TableColumn fx:id="timeColumn" maxWidth="1.7976931348623157E308" prefWidth="162.00003051757812" text="Time" />
                                                   </columns>
                                                    <VBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -408,9 +408,9 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox prefHeight="516.0" prefWidth="972.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox prefHeight="557.0" prefWidth="911.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <VBox prefHeight="505.0" prefWidth="192.0" spacing="10.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                          <VBox prefHeight="543.0" prefWidth="183.0" spacing="10.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="53.0" prefWidth="749.0" style="-fx-background-color: #eee;" text="Accumulated Revenue" textFill="#696969" wrapText="true">
                                                    <font>
@@ -436,21 +436,21 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </VBox>
-                                          <VBox prefHeight="505.0" prefWidth="767.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 10px; -fx-border-radius: 10px;">
+                                          <VBox prefHeight="505.0" prefWidth="711.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 10px; -fx-border-radius: 10px;">
                                              <children>
-                                                <Label alignment="CENTER" prefHeight="105.0" prefWidth="754.0" style="-fx-background-color: #eee;" text="Revenue Logs" textFill="#696969">
+                                                <Label alignment="CENTER" prefHeight="53.0" prefWidth="699.0" style="-fx-background-color: #eee;" text="Revenue Logs" textFill="#696969">
                                                    <font>
                                                       <Font name="Poppins Medium" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TableView fx:id="revenueLogsTable" fixedCellSize="35.0" prefHeight="485.0" prefWidth="671.0" style="-fx-font-size: 14px;" VBox.vgrow="SOMETIMES">
+                                                <TableView fx:id="revenueLogsTable" fixedCellSize="35.0" prefHeight="485.0" prefWidth="671.0" style="-fx-font-size: 14px;" tableMenuButtonVisible="true" VBox.vgrow="SOMETIMES">
                                                   <columns>
                                                     <TableColumn fx:id="idColumn" prefWidth="53.99998712539673" text="Id" />
                                                     <TableColumn fx:id="revenueAmountColumn" prefWidth="81.99996566772461" text="Amount" />
                                                       <TableColumn fx:id="typeColumn" prefWidth="122.00001525878906" text="Trans Type" />
                                                       <TableColumn fx:id="referenceColumn" prefWidth="146.66659545898438" text="Reference Number" />
                                                       <TableColumn fx:id="usernameColumn" prefWidth="139.33328247070312" text="Recorded By" />
-                                                      <TableColumn fx:id="revenueDateColumn" prefWidth="209.3333740234375" text="Date" />
+                                                      <TableColumn fx:id="revenueDateColumn" prefWidth="153.33333333333337" text="Date" />
                                                   </columns>
                                                 </TableView>
                                              </children>
@@ -470,7 +470,7 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox prefHeight="516.0" prefWidth="972.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox minWidth="-Infinity" prefHeight="600.0" prefWidth="1114.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <VBox onMouseMoved="#checkExpenditureAmountField" prefHeight="505.0" prefWidth="192.0" spacing="10.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
                                              <children>
@@ -533,20 +533,20 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </VBox>
-                                          <VBox prefHeight="505.0" prefWidth="767.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 10px; -fx-border-radius: 10px;">
+                                          <VBox prefHeight="505.0" prefWidth="714.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 10px; -fx-border-radius: 10px;">
                                              <children>
-                                                <Label alignment="CENTER" prefHeight="105.0" prefWidth="754.0" style="-fx-background-color: #eee;" text="Expenditure Logs" textFill="#696969">
+                                                <Label alignment="CENTER" prefHeight="54.0" prefWidth="692.0" style="-fx-background-color: #eee;" text="Expenditure Logs" textFill="#696969">
                                                    <font>
                                                       <Font name="Poppins Medium" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TableView fx:id="expenditureTable" fixedCellSize="35.0" prefHeight="485.0" prefWidth="671.0" style="-fx-font-size: 14px;" VBox.vgrow="SOMETIMES">
+                                                <TableView fx:id="expenditureTable" fixedCellSize="35.0" prefHeight="485.0" prefWidth="671.0" style="-fx-font-size: 14px;" tableMenuButtonVisible="true" VBox.vgrow="SOMETIMES">
                                                    <columns>
                                                       <TableColumn fx:id="expIdColumn" prefWidth="53.99998712539673" text="Id" />
                                                       <TableColumn fx:id="expAmountColumn" prefWidth="81.99996566772461" text="Amount" />
                                                       <TableColumn fx:id="expTypeColumn" prefWidth="130.0000762939453" text="Expen Type" />
-                                                      <TableColumn fx:id="expPurposeColumn" prefWidth="337.33319091796875" text="Purpose For Expenditure" />
-                                                      <TableColumn fx:id="expDateColumn" prefWidth="150.0" text="Date" />
+                                                      <TableColumn fx:id="expPurposeColumn" prefWidth="305.9998779296875" text="Purpose For Expenditure" />
+                                                      <TableColumn fx:id="expDateColumn" prefWidth="118.00006103515625" text="Date" />
                                                    </columns>
                                                 </TableView>
                                              </children>

@@ -23,7 +23,7 @@ public enum MessageStatus {
     SPAM_WORDS;
 
     public static Enum<MessageStatus> getMessageStatusResult(String status) {
-        Enum<MessageStatus> result = null;
+        Enum<MessageStatus> result;
         switch (status) {
             case "ok" -> result = OK;
             case "100" -> result = BAD_REQUEST;

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minWidth="-Infinity" prefHeight="630.0" prefWidth="1114.0" style="-fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10; -fx-background-color: #f6fcff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.resource.AgentsController">
+   <children>
+      <HBox alignment="CENTER_LEFT" layoutX="59.0" layoutY="14.0" prefHeight="50.0" prefWidth="1114.0" spacing="5.0" style="-fx-background-color: #eee; -fx-background-radius: 10 10 0 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="MANAGE LOAN AGENTS" textFill="#606060">
+               <font>
+                  <Font name="Poppins SemiBold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="-1.3333333333333333" layoutY="152.0" prefHeight="574.0" prefWidth="1114.0" spacing="10.0" style="-fx-background-color: #f6fcff;" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="51.33333333333326">
+         <children>
+            <VBox fx:id="verticalBox" prefHeight="523.0" prefWidth="259.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 10 10 0 0;" HBox.hgrow="SOMETIMES">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1114.0" spacing="5.0" style="-fx-background-color: #eee; -fx-background-radius: 10 10 0 0;">
+                     <children>
+                        <Label text="Add Or Update Agent Data" textFill="#606060">
+                           <font>
+                              <Font name="Poppins SemiBold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+                  <VBox prefHeight="437.0" prefWidth="245.0" spacing="5.0">
+                     <children>
+                        <Label text="Agent Fullname *">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="nameField" prefHeight="32.0" promptText="eg Kofi Mensah">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font></TextField>
+                        <Label text="Mobile Number *">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="numberField" prefHeight="32.0" promptText="eg 0300000000">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font></TextField>
+                        <Label text="Other Numbre">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="otherNumberField" prefHeight="32.0" promptText="eg 030000000" VBox.vgrow="SOMETIMES">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font></TextField>
+                        <Label text="Other Information ">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextArea fx:id="informationField" prefHeight="107.0" prefWidth="255.0" promptText="Add other information about agent here" wrapText="true">
+                           <font>
+                              <Font name="Poppins Medium" size="12.0" />
+                           </font>
+                        </TextArea>
+                        <MFXButton fx:id="saveButton" accessibleText="SAVE" alignment="CENTER" prefHeight="30.0" prefWidth="500.0" style="-fx-background-color: #278c8f;" text="SAVE" textFill="WHITE" textOverrun="CLIP">
+                           <font>
+                              <Font name="Roboto Bold" size="10.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </MFXButton>
+                        <MFXButton fx:id="deleteButton" alignment="CENTER" prefHeight="30.0" prefWidth="500.0" style="-fx-background-color: #ff0000;" text="DELETE" textFill="WHITE" textOverrun="CLIP">
+                           <font>
+                              <Font name="Roboto Bold" size="10.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </MFXButton>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <effect>
+                  <DropShadow>
+                     <color>
+                        <Color red="0.8333333134651184" green="0.8230452537536621" blue="0.8230452537536621" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </VBox>
+            <VBox prefHeight="525.0" prefWidth="823.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 10 10 0 0;" HBox.hgrow="SOMETIMES">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1114.0" spacing="5.0" style="-fx-background-color: #eee; -fx-background-radius: 10 10 0 0;">
+                     <children>
+                        <Label text="AGENT INFORMATION" textFill="#606060">
+                           <font>
+                              <Font name="Poppins SemiBold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+                  <MFXLegacyTableView fx:id="agentTable" fixedCellSize="30.0" prefHeight="434.0" prefWidth="817.0" style="-fx-background-color: #fff; -FX-FONT-SIZE: 13px; -fx-font-family: poppins medium;" tableMenuButtonVisible="true">
+                     <columns>
+                        <TableColumn fx:id="nameColumn" prefWidth="224.66671228408813" style="-fx-font-size: 13px;" text="FULLNAME" />
+                        <TableColumn fx:id="numberColumn" prefWidth="141.99989318847656" style="-fx-font-size: 13px;" text="MOBILE NUMBER" />
+                        <TableColumn fx:id="otherNumberColumn" prefWidth="130.0" style="-fx-font-size: 13px;" text="OTHER NUMBER" />
+                        <TableColumn fx:id="dateColumn" prefWidth="164.66659545898438" style="-fx-font-size: 13px;" text="DATE REGISTERED" />
+                        <TableColumn fx:id="countColumn" prefWidth="138.66680908203125" style="-fx-font-size: 13px;" text="REFERRALS" />
+                     </columns>
+                     <VBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </VBox.margin>
+                  </MFXLegacyTableView>
+               </children>
+               <effect>
+                  <DropShadow>
+                     <color>
+                        <Color red="0.780701756477356" green="0.780701756477356" blue="0.780701756477356" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -2,25 +2,40 @@ package app.controllers.messages;
 
 import app.alerts.UserAlerts;
 import app.alerts.UserNotification;
+import app.config.sms.SmsAPI;
+import app.controllers.homepage.AppController;
+import app.enums.MessageStatus;
 import app.models.message.MessagesModel;
+import app.repositories.SmsAPIEntity;
 import app.repositories.accounts.CustomersDataRepository;
+import app.repositories.accounts.ViewCustomersTableDataRepository;
 import app.repositories.notifications.NotificationEntity;
+import app.repositories.operations.MessageLogsEntity;
 import app.repositories.settings.TemplatesRepository;
 import app.repositories.users.UsersData;
 import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
-import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
+import javafx.util.Duration;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MessageBoxController extends MessagesModel implements Initializable {
@@ -49,6 +64,9 @@ public class MessageBoxController extends MessagesModel implements Initializable
     @FXML private TextField messageTitleField, senderIdField;
     @FXML private TextArea messageContentField;
 
+    @FXML private TextArea smsContentField;
+    @FXML private TextField smsSearchField;
+
     private static String currentUserPlaceHolder;
     public static String pageTitlePlaceHolder;
     public String getCurrentUserName() {return currentUserPlaceHolder;}
@@ -67,10 +85,10 @@ public class MessageBoxController extends MessagesModel implements Initializable
     }
     boolean isTitleFieldEmpty(){return messageTitleField.getText().isEmpty();}
     boolean isMessageBodyEmpty() {return messageBodyField.getText().isEmpty();}
-    boolean listViewEmpty() {return listView.getItems().isEmpty() || listView.getItems().size() == 0;}
+    boolean listViewEmpty() {return listView.getItems().isEmpty() || listView.getItems().isEmpty();}
 
     @FXML
-    MFXLegacyTableView<NotificationEntity> notificationTable;
+    TableView<NotificationEntity> notificationTable;
     @FXML TableColumn<NotificationEntity, Integer> notiNoColumn;
     @FXML TableColumn<NotificationEntity, Integer> notiTitleColumn;
     @FXML TableColumn<NotificationEntity, Integer> notiTypeColumn;
@@ -79,15 +97,28 @@ public class MessageBoxController extends MessagesModel implements Initializable
     @FXML ComboBox<Integer> limitSelector;
     @FXML TextField searchNotificationField;
 
+    @FXML
+    TableView<MessageLogsEntity> smsTable;
+    @FXML TableColumn<MessageLogsEntity, Integer> idColumn;
+    @FXML TableColumn<MessageLogsEntity, String> recipientColumn;
+    @FXML TableColumn<MessageLogsEntity, String> statusColumn;
+    @FXML TableColumn<MessageLogsEntity, String> sendDateColumn;
+    @FXML TableColumn<MessageLogsEntity, String> titleColumn;
+    @FXML TableColumn<MessageLogsEntity, MFXButton> actionColumn;
+
+
+
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
      ********************************************************************************************************************/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
+        setCurrentUserPlaceHolder(AppController.activeUserPlaceHolder);
         setTableData();
         populateFields();
-        limitSelector.setValue(10);
+        limitSelector.setValue(50);
+        populateSMSTable();
     }
 
     void populateFields() {
@@ -116,11 +147,74 @@ public class MessageBoxController extends MessagesModel implements Initializable
         notiTypeColumn.setCellValueFactory(new PropertyValueFactory<>("sender_method"));
         notiDateColumn.setCellValueFactory(new PropertyValueFactory<>("localDate"));
         notificationTable.setItems(getAllNotifications(50));
-        for (NotificationEntity items : notificationTable.getItems()) {
-            if (items.getIsRead()) {
+        setReadAndUnreadNotifications();
+    }
+
+    void populateSMSTable() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("log_id"));
+        recipientColumn.setCellValueFactory(new PropertyValueFactory<>("recipient"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("statusLabel"));
+        sendDateColumn.setCellValueFactory(new PropertyValueFactory<>("date_sent"));
+        actionColumn.setCellValueFactory( new PropertyValueFactory<>("resendButton"));
+        smsTable.setItems(getAllMessageLogs());
+    }
+
+    void setReadAndUnreadNotifications() {
+        notificationTable.setRowFactory(item -> new TableRow<>(){
+            @Override
+            protected void updateItem(NotificationEntity notification, boolean b) {
+                super.updateItem(notification, b);
+                if (!b && notification !=null) {
+                    if (Objects.equals(notification.getIsRead(), false)) {
+                        setStyle("-fx-font-color:red; -fx-font-weight:bold");
+                    }else setStyle("-fx-color:#ddd; -fx-font-weight:regular");
+                }
+            }
+        });
+    }
+
+    private void simulateMessageResend(@NotNull MessageLogsEntity item, String number, String content, int msgId) {
+        try {
+            item.getResendButton().setDisable(true);
+            item.getResendButton().setText("Sending...");
+            int userId = getUserIdByName(getCurrentUserName());
+            Timeline timeline = new Timeline(new KeyFrame(Duration.INDEFINITE));
+            timeline.play();
+            String responseStatus = new SmsAPI().sendSms(number, content);
+            if (!responseStatus.isEmpty()) {
+                NOTIFY = new UserNotification();
+                String smsStatus = MessageStatus.getMessageStatusResult(responseStatus).toString();
+                updateSMSstatus(responseStatus, content, msgId, userId);
+                NOTIFY.successNotification("SMS STATUS", "SMS status is " + smsStatus);
+                timeline.stop();
+                populateSMSTable();
 
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public void searchCustomerMethod(KeyEvent event) {
+        try {
+//            customersTable.getItems().clear();
+            FilteredList<MessageLogsEntity> filteredList =  new FilteredList<>(getAllMessageLogs(), p -> true);
+            smsSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(smsData -> {
+                    if (newValue.isEmpty() || newValue.isBlank()) {
+                        return true;
+                    }
+                    String searchKeyWord = newValue.toLowerCase();
+                    if (smsData.getRecipient().toLowerCase().contains(searchKeyWord)) {
+                        return true;
+                    } else return smsData.getStatus().toLowerCase().contains(searchKeyWord);
+                });
+            });
+            SortedList<MessageLogsEntity> sortedResult = new SortedList<>(filteredList);
+            sortedResult.comparatorProperty().bind(smsTable.comparatorProperty());
+            smsTable.setItems(sortedResult);
+        }catch (Exception ignored) {}
     }
 
     /*******************************************************************************************************************
@@ -150,6 +244,26 @@ public class MessageBoxController extends MessagesModel implements Initializable
         removeButton.setDisable(listViewEmpty());
     }
 
+
+    public void searchSMS(KeyEvent event) {
+        try {
+            FilteredList<MessageLogsEntity> filteredList =  new FilteredList<>(getAllMessageLogs(), p -> true);
+            smsSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(smsData -> {
+                    if (newValue.isEmpty() || newValue.isBlank()) {
+                        return true;
+                    }
+                    String searchKeyWord = newValue.toLowerCase();
+                    if (smsData.getRecipient().contains(searchKeyWord)) {
+                        return true;
+                    } else return smsData.getStatusLabel().getText().toLowerCase().contains(searchKeyWord);
+                });
+            });
+            SortedList<MessageLogsEntity> sortedResult = new SortedList<>(filteredList);
+            sortedResult.comparatorProperty().bind(smsTable.comparatorProperty());
+            smsTable.setItems(sortedResult);
+        }catch (Exception ignored) {}
+    }
 
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
@@ -211,10 +325,37 @@ public class MessageBoxController extends MessagesModel implements Initializable
         if (!itemSelected) {
             UsersData username = notificationTable.getSelectionModel().getSelectedItem().getUsername();
             String message = notificationTable.getSelectionModel().getSelectedItem().getMessage();
+            long messageId = notificationTable.getSelectionModel().getSelectedItem().getId();
             notificationSentBy.setText(username.getUsername());
             messageContentField.setText(message);
+            updateNotificationTable(messageId);
         }
      }
+
+     @FXML void smsItemSelected() {
+        boolean tableEmpty = smsTable.getItems().isEmpty();
+        if(!tableEmpty) {
+            String content = smsTable.getSelectionModel().getSelectedItem().getMessage();
+            smsContentField.setText(content);
+
+            smsTable.getItems().forEach(item-> {
+                item.getResendButton().setOnAction(clicked -> {
+                   ALERT = new UserAlerts("RESEND SMS", "Do you wish to resent SMS to this customer?",
+                           "please confirm action to resend else CANCEL to abort");
+                   if (ALERT.confirmationAlert()) {
+                       String number = item.getRecipient();
+                       int msgId = item.getLog_id();
+                       Platform.runLater(()-> {
+                           simulateMessageResend(item, number, smsContentField.getText(), msgId);
+                       });
+                   }
+                });
+            });
+        }
+
+     }
+
+
 
 
 }//END OF CLASS

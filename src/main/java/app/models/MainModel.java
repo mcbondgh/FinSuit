@@ -1,6 +1,7 @@
 package app.models;
 
 import app.config.db.DbConnection;
+import app.repositories.human_resources.LoanAgentsEntity;
 import app.repositories.loans.AssignedSupervisors;
 import app.errorLogger.ErrorLogger;
 import app.repositories.business.BusinessInfoEntity;
@@ -28,6 +29,7 @@ import java.io.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -1441,7 +1443,7 @@ public class MainModel extends DbConnection {
            String query = """
                    SELECT id, title, sender_method, message, logged_date, `read`, username FROM notifications AS n
                    INNER JOIN users AS u
-                   ON u.user_id = n.logged_by  ORDER BY id DESC LIMIT ?;
+                   ON u.user_id = n.logged_by ORDER BY Id DESC LIMIT ?;
                   
                    """;
            preparedStatement = getConnection().prepareStatement(query);
@@ -1460,8 +1462,40 @@ public class MainModel extends DbConnection {
                data.add(new NotificationEntity(id, title, sender_method, message, logged_date, read, username));
            }
 
-       }catch (SQLException e){e.printStackTrace();}
+       }catch (SQLException e){
+           logger.logMessage(e.getMessage(), className);
+       }
        return data;
     }
+
+    public ObservableList<LoanAgentsEntity> getAllAgents() {
+        ObservableList<LoanAgentsEntity> data = new ObservableStack<>();
+        try {
+            String query = """
+                    SELECT a.agent_id, agent_name, mobile_number, other_number, information,  \s
+                    (SELECT COUNT(agent_id) FROM customer_data AS cd WHERE(cd.agent_id = a.agent_id)) AS counts,\s
+                    date_modified, added_by, DATE(date_joined) as date_joined
+                    FROM agents AS a WHERE(is_deleted = FALSE);
+                    """;
+            resultSet = getConnection().prepareStatement(query).executeQuery();
+            while(resultSet.next()){
+//                agent_id, agent_name, mobile_number, other_number, information, date_joined, date_modified, added_by, is_deleted
+                int id = resultSet.getInt("a.agent_id");
+                String name = resultSet.getString("agent_name");
+                String number = resultSet.getString("mobile_number");
+                String other = resultSet.getNString("other_number");
+                String information = resultSet.getNString("information");
+                String date = DateFormat.getDateInstance().format(resultSet.getDate("date_joined"));
+                Timestamp modified = resultSet.getTimestamp("date_modified");
+                int userId = resultSet.getInt("added_by");
+                int counts = resultSet.getInt("counts");
+                data.add(new LoanAgentsEntity(id, userId, name, number, other, information, date, counts));
+            }
+        }catch (Exception e){
+            logger.logMessage(e.getMessage(), className);
+        }
+        return data;
+    }
+
 
 }//END OF CLASS...

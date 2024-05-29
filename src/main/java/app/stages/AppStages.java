@@ -58,11 +58,11 @@ public class AppStages {
         stage.setScene(scene);
         stage.show();
     }
-    public static void loanScheduleStage() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-schedule-page.fxml"));
+    public static void cancellationStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/cancellation-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
-        stage.setTitle("Customer Loan Schedule");
+        stage.setTitle("LOAN CANCELLATION");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
@@ -88,6 +88,32 @@ public class AppStages {
         stage.initStyle(StageStyle.DECORATED);
         return  stage;
     }
+
+    public static Stage paymentApprovalStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/finance/payment-approval-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Payment Approval");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.DECORATED);
+        return stage;
+    }
+
+
+    public static Stage loanScheduleAndRepaymentStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/loan-schedule-page.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Loan Schedules & Repayments");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(true);
+        stage.initStyle(StageStyle.DECORATED);
+        return stage;
+    }
+
     public static Stage depositStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/deposit-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
@@ -161,7 +187,7 @@ public class AppStages {
         stage.setTitle("Edit Loan Application");
         stage.setScene(scene);
         stage.centerOnScreen();
-        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
     public static Stage updateEmployeeDetailsStage() throws IOException {

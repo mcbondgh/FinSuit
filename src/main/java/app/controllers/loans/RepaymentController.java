@@ -22,9 +22,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -52,6 +56,7 @@ public class RepaymentController extends LoansModel implements Initializable {
     private Label loansCounter;
     @FXML private Label applicantName, disbursedAmount, applicantNumber,balanceAmount, paidAmount, loanStatus;
     @FXML private MFXButton exportButton, smsButton, terminateLoanBtn;
+    @FXML private ImageView applicantProfileImage;
 
     @FXML private TableView<LoanScheduleEntity> scheduleTable;
     @FXML private TableColumn<LoanScheduleEntity, Long> indexColumn;
@@ -170,7 +175,10 @@ public class RepaymentController extends LoansModel implements Initializable {
             paidAmount.setText(data.get("total_payment").toString());
             balanceAmount.setText(data.get("balance").toString());
             disbursedAmount.setText(data.get("approved_amount").toString());
-
+            byte[] imageByte = data.get("image").toString().getBytes();
+            Image image = new Image(new ByteArrayInputStream(imageByte));
+            applicantProfileImage.setImage(image);
+            //Equality, Opportunity,
             setScheduleTableProperties();
         }
     }//........END OF METHOD

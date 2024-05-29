@@ -23,270 +23,345 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1280.0" style="-fx-background-color: #eee;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.homepage.AppController">
-   <BorderPane fx:id="borderPane" layoutX="4.0" layoutY="42.0" prefHeight="625.0" prefWidth="1280.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0">
-      <left>
-         <VBox fx:id="sidebarPane" cache="true" cacheHint="QUALITY" fillWidth="false" onMouseEntered="#expandSidebar" onMouseExited="#closeSidebar" prefHeight="605.0" prefWidth="171.0" spacing="2.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1293.0" style="-fx-background-color: #eee;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.homepage.AppController">
+   <HBox layoutY="35.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0">
+      <children>
+         <VBox fx:id="sidebarPane" prefHeight="628.0" prefWidth="250.0" spacing="10.0" style="-fx-background-color: #eee;">
             <children>
-               <HBox fx:id="dashboardBox" alignment="CENTER" prefHeight="31.0" prefWidth="171.0">
+               <HBox fx:id="dashboardBox" alignment="CENTER" prefHeight="31.0" prefWidth="171.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="dashboardIcon" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-dashboard-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="18.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525">
+                     <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <padding>
+                           <Insets left="10.0" />
+                        </padding>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="financeBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="financeBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="dashboardIcon1" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-accountancy-85.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="financeButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Finance" textFill="#262525">
+                     <MFXButton fx:id="financeButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Finance" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <padding>
+                           <Insets left="10.0" />
+                        </padding>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="messageBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="messageBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="siteLogo131" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-create-64.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="messageBoxButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Message Box" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="messageBoxButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Message Box" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <padding>
+                           <Insets left="10.0" />
+                        </padding>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="customerBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="customerBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="siteLogo13" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-customers-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="customersButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customers" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="customersButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customers" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
                         <padding>
                            <Insets left="10.0" />
                         </padding>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="accountBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="accountBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="siteLogo15" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-wallet-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="accountsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Accounts" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="accountsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customer Accounts" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
                         <padding>
                            <Insets left="10.0" />
                         </padding>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="transactionBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="transactionBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
-                     <ImageView fx:id="siteLogo16" fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+                     <ImageView fx:id="siteLogo16" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-cash-payment-66.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="transactionButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Transactions" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="transactionButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Transactions" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
                         <padding>
                            <Insets left="10.0" />
                         </padding>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="loanBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="loanBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
-                     <ImageView fx:id="siteLogo17" fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+                     <ImageView fx:id="siteLogo17" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-personal-loan-66.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="loansButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Loans" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="loansButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Loans" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
                         <padding>
                            <Insets left="10.0" />
                         </padding>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="resourceBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="resourceBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="siteLogo18" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-human-resource-100.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="humanResourceButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Human Resource" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="humanResourceButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Human Resource" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
                         <padding>
                            <Insets left="10.0" />
                         </padding>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="reportBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="reportBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
                      <ImageView fx:id="siteLogo181" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-paid-100.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="reportsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Reports" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="reportsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Reports" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
                         <padding>
                            <Insets left="10.0" />
                         </padding>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0">
+               <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
                   <children>
-                     <ImageView fx:id="siteLogo1811" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
+                     <ImageView fx:id="siteLogo1811" fitHeight="35.0" fitWidth="25.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-automatic-100.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="135.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525">
+                     <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
-                           <Font name="Poppins Bold" size="13.0" />
+                           <Font name="Poppins Black" size="13.0" />
                         </font>
+                        <padding>
+                           <Insets left="10.0" />
+                        </padding>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets />
+                     <Insets left="5.0" />
                   </VBox.margin>
                </HBox>
             </children>
             <padding>
-               <Insets top="10.0" />
+               <Insets top="5.0" />
             </padding>
          </VBox>
-      </left>
-      <center>
-         <Pane prefHeight="605.0" prefWidth="1121.0" BorderPane.alignment="CENTER">
-            <children>
-               <ImageView fitHeight="451.0" fitWidth="1291.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@uploads/1140X400-articles-picture-final1632021%20copy.jpg" />
-                  </image>
-               </ImageView>
-               <StackPane layoutX="170.0" layoutY="144.0">
+         <BorderPane fx:id="borderPane" prefHeight="611.0" prefWidth="1181.0" style="-fx-background-color: #f6fbff;">
+            <center>
+               <VBox BorderPane.alignment="CENTER">
                   <children>
-                     <Label fx:id="appNameLabel" alignment="CENTER" prefHeight="237.0" prefWidth="829.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="FIN-SUIT GHANA">
-                        <font>
-                           <Font name="Poppins Bold" size="60.0" />
-                        </font>
-                        <effect>
-                           <DropShadow height="59.93" radius="28.9775" width="57.98">
-                              <color>
-                                 <Color opacity="0.1218273788690567" />
-                              </color>
-                           </DropShadow>
-                        </effect>
-                        <textFill>
-                           <LinearGradient endX="1.0" endY="1.0" startY="0.3312302831595629">
-                              <stops>
-                                 <Stop>
-                                    <color>
-                                       <Color red="0.41999998688697815" green="0.03359999880194664" blue="0.36300668120384216" />
-                                    </color>
-                                 </Stop>
-                                 <Stop offset="1.0">
-                                    <color>
-                                       <Color red="0.6822070479393005" green="0.03259692341089249" blue="0.7543859481811523" />
-                                    </color>
-                                 </Stop>
-                              </stops>
-                           </LinearGradient>
-                        </textFill>
-                     </Label>
-                     <Label text="All In One Financial Suit For Your Business." textFill="#660569">
-                        <font>
-                           <Font name="Arial" size="16.0" />
-                        </font>
-                        <StackPane.margin>
-                           <Insets top="100.0" />
-                        </StackPane.margin>
-                     </Label>
-                     <Label text="2023 | finsuit ghana" textFill="#1f1f1f">
-                        <font>
-                           <Font name="Arial Bold" size="10.0" />
-                        </font>
-                        <StackPane.margin>
-                           <Insets top="150.0" />
-                        </StackPane.margin>
-                     </Label>
+                     <Pane>
+                        <children>
+                           <ImageView fitHeight="445.0" fitWidth="1140.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@uploads/1140X400-articles-picture-final1632021%20copy.jpg" />
+                              </image>
+                           </ImageView>
+                           <StackPane layoutX="170.0" layoutY="144.0" prefHeight="251.0" prefWidth="829.0">
+                              <children>
+                                 <Label fx:id="appNameLabel1" alignment="CENTER" prefHeight="237.0" prefWidth="829.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="FIN-SUIT GHANA">
+                                    <font>
+                                       <Font name="Poppins Bold" size="60.0" />
+                                    </font>
+                                    <effect>
+                                       <DropShadow height="59.93" radius="28.9775" width="57.98">
+                                          <color>
+                                             <Color opacity="0.1218273788690567" />
+                                          </color>
+                                       </DropShadow>
+                                    </effect>
+                                    <textFill>
+                                       <LinearGradient endX="1.0" endY="1.0" startY="0.3312302831595629">
+                                          <stops>
+                                             <Stop>
+                                                <color>
+                                                   <Color red="0.41999998688697815" green="0.03359999880194664" blue="0.36300668120384216" />
+                                                </color>
+                                             </Stop>
+                                             <Stop offset="1.0">
+                                                <color>
+                                                   <Color red="0.6822070479393005" green="0.03259692341089249" blue="0.7543859481811523" />
+                                                </color>
+                                             </Stop>
+                                          </stops>
+                                       </LinearGradient>
+                                    </textFill>
+                                 </Label>
+                                 <Label text="All In One Financial Suit For Your Business." textFill="#660569">
+                                    <font>
+                                       <Font name="Arial" size="16.0" />
+                                    </font>
+                                    <StackPane.margin>
+                                       <Insets top="100.0" />
+                                    </StackPane.margin>
+                                 </Label>
+                                 <Label text="2023 | finsuit ghana" textFill="#1f1f1f">
+                                    <font>
+                                       <Font name="Arial Bold" size="10.0" />
+                                    </font>
+                                    <StackPane.margin>
+                                       <Insets top="150.0" />
+                                    </StackPane.margin>
+                                 </Label>
+                              </children>
+                           </StackPane>
+                           <ImageView fx:id="logoImage" fitHeight="48.0" fitWidth="147.0" layoutX="527.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@images/app-logo.jpg" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </Pane>
                   </children>
-               </StackPane>
-               <ImageView fx:id="logoImage" fitHeight="83.0" fitWidth="96.0" layoutX="527.0" layoutY="181.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@images/applicationIcon-256.png" />
-                  </image>
-               </ImageView>
-            </children>
-         </Pane>
-      </center>
-   </BorderPane>
+               </VBox>
+            </center>
+         </BorderPane>
+      </children>
+   </HBox>
    <Pane fx:id="searchCustomersField" layoutX="-6.0" prefHeight="42.0" prefWidth="1280.0" style="-fx-background-color: #9423a1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
          <Circle fill="WHITE" layoutX="1180.0" layoutY="20.0" onMouseClicked="#showUserProfile" radius="15.0" stroke="TRANSPARENT" strokeType="INSIDE">

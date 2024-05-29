@@ -244,6 +244,46 @@ CREATE TABLE IF NOT EXISTS terminated_loans(
     date_terminated DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 27/05/2024
+CREATE TABLE IF NOT EXISTS agents(
+	agent_id INT PRIMARY KEY AUTO_INCREMENT,
+    agent_name VARCHAR(100) NOT NULL,
+	mobile_number VARCHAR(20) NOT NULL,
+    other_number VARCHAR(20),
+    information VARCHAR(255),
+    date_joined DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    date_modified DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    added_by INT NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE
+);
+
+ALTER TABLE customer_data ADD COLUMN agent_id INT;
+ALTER TABLE customer_data ADD FOREIGN KEY fk_customer_agent 
+(agent_id) REFERENCES agents(agent_id);
+
+ALTER TABLE customer_data CHANGE COLUMN agent_id agent_id INT DEFAULT 1;
+
+SELECT agent_name, mobile_number, other_number, information,   
+(SELECT COUNT(agent_id) FROM customer_data AS cd WHERE(cd.agent_id = a.agent_id)) AS counts, 
+date_modified, added_by
+FROM agents AS a WHERE(is_deleted = FALSE);
+
+UPDATE agents SET is_deleted = TRUE WHERE agent_id = ?;
+
+
 -- ALTER TABLE terminated_loans
 -- ADD COLUMN write_off DECIMAL(10,2) DEFAULT 0.00 AFTER purpose;
 
+SELECT id, title, sender_method, message, logged_date, `read`, username FROM notifications AS n
+                   INNER JOIN users AS u
+                   ON u.user_id = n.logged_by ORDER BY id DESC  LIMIT 50;
+
+SELECT id, title, sender_method, message, logged_date, `read`, username FROM notifications AS n
+                   INNER JOIN users AS u
+                   ON u.user_id = n.logged_by ORDER BY Id DESC LIMIT 5;
+                   
+SELECT * FROM notifications ORDER BY id DESC LIMIT 4;
+UPDATE notifications SET `read` = true WHERE(id = 367);
+
+SELECT * FROM message_logs;
+UPDATE message_logs SET status = ?, sent_date = DEFAULT, sent_by = ?  WHERE(log_id = ?);

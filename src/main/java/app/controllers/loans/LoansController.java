@@ -5,10 +5,8 @@ import app.alerts.UserNotification;
 import app.controllers.homepage.AppController;
 import app.controllers.loans.application.UpdateApplicantLoanController;
 import app.models.loans.LoansModel;
-import app.models.message.MessagesModel;
 import app.repositories.loans.LoansTableEntity;
 import app.repositories.notifications.NotificationEntity;
-import app.repositories.operations.MessageLogsEntity;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -17,14 +15,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -37,7 +34,7 @@ import java.util.ResourceBundle;
 public class LoansController extends LoansModel implements Initializable {
 
     Stage loanApplicationStage = AppStages.loanApplicationStage();
-    int loggedInUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+    int USER_ID = getUserIdByName(AppController.activeUserPlaceHolder);
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTIONS
@@ -49,9 +46,11 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private BorderPane borderPane;
     @FXML private HBox hBox;
     @FXML private VBox anchorPane;
+
     @FXML
-    private MFXButton addNewLoanButton, disburseFundBtn, loadTableButton, loanRequestsButton, generateSheetButton, uploadSheetButton,viewLoansButton;
-   @FXML private MFXButton generateScheduleButton, viewLoansBtn;
+    private MFXButton addNewLoanButton, disburseFundBtn, loadTableButton,
+            loanRequestsButton, generateSheetButton, uploadSheetButton, viewLoansButton;
+    @FXML private MFXButton generateScheduleButton, viewLoansBtn;
     @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
     @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
     @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
@@ -100,7 +99,7 @@ public class LoansController extends LoansModel implements Initializable {
         loanTypeColumn.setCellValueFactory(new PropertyValueFactory<>("loanType"));
         viewColumn.setCellValueFactory(new PropertyValueFactory<>("cancelButton"));
         editColumn.setCellValueFactory(new PropertyValueFactory<>("editButton"));
-        loanApplicantsTable.setItems(getLoansUnderApplicationStage(loggedInUserId));
+        loanApplicantsTable.setItems(getLoansUnderApplicationStage(USER_ID));
     }
 
     private void showRequestedLoanCount() {
@@ -114,7 +113,7 @@ public class LoansController extends LoansModel implements Initializable {
     public void searchCustomerMethod(KeyEvent event) {
         try {
             loanApplicantsTable.getItems().clear();
-            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderApplicationStage(loggedInUserId), p -> true);
+            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderApplicationStage(USER_ID), p -> true);
             searchField.textProperty().addListener((observable, oldValue, newValue) ->
                     filteredList.setPredicate(customersTableData -> {
                 if (newValue.isEmpty() || newValue.isBlank()) {
@@ -155,22 +154,12 @@ public class LoansController extends LoansModel implements Initializable {
                 //Handle Click event for the view-button
                 item.getCancelButton().setOnAction(action -> {
                     if (!item.getCancelButton().isDisabled()) {
-                        NotificationEntity notification = new NotificationEntity();
-                        UserAlerts ALERTS = new UserAlerts("CANCEL LOAN", "You have requested to officially cancel this loan process. Are you sure you want to proceed?", "by confirming, you will terminate the loan process.");
-                        UserNotification userNotification = new UserNotification();
-
-                        if(ALERTS.confirmationAlert()) {
-                            int responseStatus = cancelLoanApplication(loanNumber, "terminated", "closed");
-                            if(responseStatus > 0) {
-                                notification.setTitle("LOAN TERMINATED");
-                                notification.setMessage("Loan application number " + loanNumber + " has successfully been cancelled");
-                                notification.setLogged_by(loggedInUserId);
-                                logNotification(notification);
-                                userNotification.successNotification("LOAN PROCESS TERMINATED", "Nice, you have successfully terminated the loan process.");
-                                populateTable();
-                            } else {
-                                userNotification.errorNotification("TERMINATION FAILED", "Sorry the process to terminate this loan failed, retry");
-                            }
+                        try {
+                            AppStages.cancellationStage();
+                            CancellationController.LOAN_NUMBER = loanNumber;
+                            CancellationController.USER_ID = USER_ID;
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 });
@@ -229,9 +218,11 @@ public class LoansController extends LoansModel implements Initializable {
 
     @FXML void viewLoansBtnClicked() {
         try {
-            borderPane.getChildren().remove(0);
-            String fxmlFile = "views/loans/loan-schedule-page.fxml";
-            SpecialMethods.FlipView(borderPane, fxmlFile );
+
+            AppStages.loanScheduleAndRepaymentStage().showAndWait();
+//            borderPane.getChildren().remove(0);
+//            String fxmlFile = "views/loans/loan-schedule-page.fxml";
+//            SpecialMethods.FlipView(borderPane, fxmlFile );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

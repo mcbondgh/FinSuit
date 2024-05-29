@@ -16,11 +16,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="565.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.PaymentApprovalController">
    <children>
-      <Pane layoutX="35.0" layoutY="13.0" prefHeight="525.0" prefWidth="465.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;">
+      <Pane layoutX="29.0" layoutY="13.333333333333334" prefHeight="542.0" prefWidth="465.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 8px;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="705.3333333333335" AnchorPane.topAnchor="13.333333333333334">
          <children>
             <Label alignment="CENTER" layoutX="15.0" layoutY="14.0" prefHeight="28.0" prefWidth="178.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="UNAPPROVED PAYMENTS" textFill="WHITE">
                <font>
@@ -200,57 +201,67 @@
             </Label>
          </children>
       </Pane>
-      <TableView fx:id="scheduleTable" fixedCellSize="35.0" layoutX="515.0" layoutY="52.0" onMouseMoved="#checkScheduleTableIfEmpty" prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
-         <columns>
-            <TableColumn fx:id="noColumn" editable="false" prefWidth="66.6666259765625" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
-            <TableColumn fx:id="installmentColumn" editable="false" prefWidth="104.00006103515625" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="MON INST" />
-            <TableColumn fx:id="principalColumn" prefWidth="103.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PRINCIPAL" />
-            <TableColumn fx:id="interestColumn" prefWidth="95.3333740234375" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="INTEREST" />
-            <TableColumn fx:id="paymentDateColumn" prefWidth="123.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PAYMENT DATE" />
-            <TableColumn fx:id="balanceColumn" minWidth="30.0" prefWidth="99.33331298828125" style="-fx-alignment: center; -fx-font-size: 12px;" text="BALANCE" />
-            <TableColumn fx:id="scheduleId" minWidth="59.3333740234375" prefWidth="78.666748046875" style="-fx-alignment: center; -fx-font-size: 12px;" text="S/N" visible="false" />
-         </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-      <Label alignment="CENTER" layoutX="515.0" layoutY="13.0" prefHeight="28.0" prefWidth="670.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="LOAN SCHEDULE TABLE" textFill="WHITE">
-         <font>
-            <Font name="Poppins Bold" size="10.0" />
-         </font>
-      </Label>
-      <HBox alignment="CENTER" layoutX="514.0" layoutY="490.0" prefHeight="45.0" prefWidth="670.0" spacing="10.0" style="-fx-alignment: baseline; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+      <VBox layoutX="505.66666666666674" layoutY="13.333333333333334" prefHeight="543.0" prefWidth="670.0" spacing="5.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="9.333333333333371" AnchorPane.rightAnchor="24.333333333333258" AnchorPane.topAnchor="13.333333333333334">
          <children>
-            <Hyperlink fx:id="exportLink" disable="true" onAction="#exportButtonClicked" prefHeight="24.0" prefWidth="94.0" text="Export Table">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="50.0" />
-               </HBox.margin>
-            </Hyperlink>
-            <MFXButton fx:id="generateScheduleButton" disable="true" onAction="#generateScheduleButtonClicked" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #2478b2;" text="📇 Load Table" textFill="WHITE">
+            <Label alignment="CENTER" prefHeight="36.0" prefWidth="659.0" style="-fx-background-color: #278c8f; -fx-background-radius: 5;" text="LOAN SCHEDULE TABLE" textFill="WHITE">
                <font>
                   <Font name="Poppins Bold" size="10.0" />
                </font>
-               <HBox.margin>
-                  <Insets left="150.0" />
-               </HBox.margin>
-            </MFXButton>
-            <MFXButton fx:id="saveButton" disable="true" onAction="#saveButtonClicked" prefHeight="30.0" prefWidth="97.0" style="-fx-background-color: #278c8f;" text="🔄 Approve Loan" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </MFXButton>
-            <MFXButton fx:id="rejectButton" disable="true" onAction="#rejectButtonClicked" prefHeight="30.0" prefWidth="71.0" style="-fx-background-color: #ff0011;" text="❌ Reject" textFill="WHITE">
-               <font>
-                  <Font name="Poppins Bold" size="10.0" />
-               </font>
-            </MFXButton>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Label>
+            <TableView fx:id="scheduleTable" fixedCellSize="35.0" onMouseMoved="#checkScheduleTableIfEmpty" prefHeight="453.0" prefWidth="670.0" style="-fx-background-color: #fff; -fx-font-size: 14px; -fx-font-family: poppins; -fx-font-weight: bold;" tableMenuButtonVisible="true">
+               <columns>
+                  <TableColumn fx:id="noColumn" editable="false" prefWidth="66.6666259765625" style="-fx-alignment: center; -fx-font-size: 12px;" text="NO" />
+                  <TableColumn fx:id="installmentColumn" editable="false" prefWidth="104.00006103515625" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="MON INST" />
+                  <TableColumn fx:id="principalColumn" prefWidth="103.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PRINCIPAL" />
+                  <TableColumn fx:id="interestColumn" prefWidth="95.3333740234375" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="INTEREST" />
+                  <TableColumn fx:id="paymentDateColumn" prefWidth="123.33331298828125" resizable="false" style="-fx-alignment: center; -fx-font-size: 12px;" text="PAYMENT DATE" />
+                  <TableColumn fx:id="balanceColumn" minWidth="30.0" prefWidth="99.33331298828125" style="-fx-alignment: center; -fx-font-size: 12px;" text="BALANCE" />
+                  <TableColumn fx:id="scheduleId" minWidth="59.3333740234375" prefWidth="78.666748046875" style="-fx-alignment: center; -fx-font-size: 12px;" text="S/N" visible="false" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="670.0" spacing="10.0" style="-fx-alignment: baseline; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+               <children>
+                  <Hyperlink fx:id="exportLink" disable="true" onAction="#exportButtonClicked" prefHeight="24.0" prefWidth="94.0" text="Export Table">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="50.0" />
+                     </HBox.margin>
+                  </Hyperlink>
+                  <MFXButton fx:id="generateScheduleButton" disable="true" onAction="#generateScheduleButtonClicked" prefHeight="30.0" prefWidth="95.0" style="-fx-background-color: #2478b2;" text="📇 Load Table" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="150.0" />
+                     </HBox.margin>
+                  </MFXButton>
+                  <MFXButton fx:id="saveButton" disable="true" onAction="#saveButtonClicked" prefHeight="30.0" prefWidth="97.0" style="-fx-background-color: #278c8f;" text="🔄 Approve Loan" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </MFXButton>
+                  <MFXButton fx:id="rejectButton" disable="true" onAction="#rejectButtonClicked" prefHeight="30.0" prefWidth="71.0" style="-fx-background-color: #ff0011;" text="❌ Reject" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Bold" size="10.0" />
+                     </font>
+                  </MFXButton>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </VBox>
    </children>
 </AnchorPane>

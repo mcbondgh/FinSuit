@@ -28,6 +28,7 @@ public class CustomersDataRepository {
     private Timestamp date_modified;
     private int modified_by;
     private String formatted_date_created;
+    private int agentId;
 
     public CustomersDataRepository() {}
 
@@ -367,5 +368,13 @@ public class CustomersDataRepository {
 
     public void setFormatted_date_created(String formatted_date_created) {
         this.formatted_date_created = formatted_date_created;
+    }
+
+    public int getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(int agentId) {
+        this.agentId = agentId;
     }
 }

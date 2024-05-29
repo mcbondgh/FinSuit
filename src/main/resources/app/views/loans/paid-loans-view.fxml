@@ -13,15 +13,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1192.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ClearedAndTerminatedLoansController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.ClearedAndTerminatedLoansController">
    <children>
-      <HBox layoutX="102.0" layoutY="84.0" prefHeight="550.0" prefWidth="1192.0" spacing="5.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox layoutX="102.0" layoutY="84.0" prefHeight="550.0" prefWidth="1114.0" spacing="5.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox fx:id="tableVBox" prefHeight="539.0" prefWidth="737.0" spacing="5.0" style="-fx-border-color: #ddd;">
                <children>
                   <HBox alignment="CENTER" prefHeight="50.0" prefWidth="723.0" style="-fx-background-color: #eee;">
                      <children>
-                        <VBox prefHeight="46.0" prefWidth="611.0" style="-fx-background-color: #eee;">
+                        <VBox prefHeight="50.0" prefWidth="544.0" style="-fx-background-color: #eee;">
                            <children>
                               <Label prefHeight="30.0" prefWidth="318.0" text="CLEARED AND TERMINATED LOANS" textFill="#2c034a">
                                  <font>
@@ -34,7 +34,7 @@
                               <Insets left="20.0" />
                            </padding>
                         </VBox>
-                        <MFXButton fx:id="loadTableButton" buttonType="RAISED" depthLevel="LEVEL1" onAction="#loadTableOnClick" prefHeight="29.0" prefWidth="87.0" rippleAnimateShadow="true" rippleColor="#32aaac" style="-fx-background-color: #278c8f;" text="Load Table" textFill="WHITE">
+                        <MFXButton fx:id="loadTableButton" buttonType="RAISED" depthLevel="LEVEL1" onAction="#loadTableOnClick" prefHeight="29.0" prefWidth="109.0" rippleAnimateShadow="true" rippleColor="#32aaac" style="-fx-background-color: #278c8f;" text="Load Table" textFill="WHITE">
                            <font>
                               <Font name="Roboto Bold" size="12.0" />
                            </font>
@@ -44,7 +44,7 @@
                         </MFXButton>
                      </children>
                   </HBox>
-                  <MFXLegacyTableView fx:id="summaryTable" fixedCellSize="28.0" onMouseClicked="#summaryTableItemSelected" prefHeight="465.0" prefWidth="705.0" style="-fx-font-size: 13px; -fx-font-family: roboto;">
+                  <MFXLegacyTableView fx:id="summaryTable" fixedCellSize="28.0" onMouseClicked="#summaryTableItemSelected" prefHeight="465.0" prefWidth="705.0" style="-fx-font-size: 13px; -fx-font-family: roboto;" tableMenuButtonVisible="true">
                      <columns>
                         <TableColumn fx:id="tableIndexColumn" prefWidth="55.33334457874298" style="-fx-font-family: roboto;" text="INDEX" />
                         <TableColumn fx:id="loanNumberColumn" prefWidth="160.6666717529297" style="-fx-font-family: roboto;" text="LOAN NUMBER" />
@@ -78,7 +78,7 @@
                         <Insets left="10.0" />
                      </padding>
                   </VBox>
-                  <MFXLegacyTableView fx:id="logsTable" prefHeight="353.0" prefWidth="438.0" style="-fx-font-size: 13px;">
+                  <MFXLegacyTableView fx:id="logsTable" prefHeight="353.0" prefWidth="438.0" style="-fx-font-size: 13px;" tableMenuButtonVisible="true">
                      <columns>
                         <TableColumn fx:id="dueDateColumn" prefWidth="108.66662216186523" style="-fx-font-family: roboto;" text="DUE DATE" />
                         <TableColumn fx:id="logsAmountColumn" prefWidth="72.66668701171875" style="-fx-font-family: roboto;" text="AMOUNT" />

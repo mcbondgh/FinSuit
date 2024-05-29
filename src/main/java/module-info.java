@@ -73,5 +73,6 @@ module app.finsuit {
     opens app.repositories.transactions;
     opens app.repositories.business;
     opens app.repositories.notifications;
+    opens app.repositories.operations;
 
 }

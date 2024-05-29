@@ -28,8 +28,8 @@ public class SmsAPI {
 //    111 - SMS contains spam word. Wait for approval
 
     private String api;
-    private String checkBalanceUrl = "https://sms.arkesel.com/sms/api?action=check-balance&api_key=";
-    private String sendSmsUrl = "https://sms.arkesel.com/sms/api?action=send-sms&api_key=";
+    private final String checkBalanceUrl = "https://sms.arkesel.com/sms/api?action=check-balance&api_key=";
+    private final String sendSmsUrl = "https://sms.arkesel.com/sms/api?action=send-sms&api_key=";
     private String senderId;
     Gson gson = new Gson();
     MainModel MODEL_OBJECT = new MainModel();

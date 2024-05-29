@@ -18,7 +18,7 @@ public class FrontController implements Initializable{
     @FXML
     private BorderPane borderPane;
     @FXML
-    MFXButton manageUsersButton, viewEmployeesButton, addEmployeeButton;
+    MFXButton manageUsersButton, viewEmployeesButton, addEmployeeButton, manageAgentsButton;
     @FXML
     Pane menuIcon;
     @FXML
@@ -53,6 +53,16 @@ public class FrontController implements Initializable{
             }
         });
     }
+    private void setAgentsPageView() {
+        manageAgentsButton.setOnAction(event -> {
+            try {
+                SpecialMethods.FlipView("views/resource/loan-agents-view.fxml", borderPane);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pageTitle.setText(pageTitlePlaceHolder);
@@ -64,7 +74,10 @@ public class FrontController implements Initializable{
         setAddEmployeeButtonClicked();
         setViewEmployeesButtonClicked();
         setManageUsersButtonClicked();
+        setAgentsPageView();
     }
+
+
 
     @FXML void menuIconClicked() {
         menuContainer.setVisible(!menuContainer.isVisible());
