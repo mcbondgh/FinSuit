@@ -22,6 +22,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +38,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class MessageBoxController extends MessagesModel implements Initializable {
 
@@ -117,7 +122,7 @@ public class MessageBoxController extends MessagesModel implements Initializable
         setCurrentUserPlaceHolder(AppController.activeUserPlaceHolder);
         setTableData();
         populateFields();
-        limitSelector.setValue(50);
+        limitSelector.setValue(10);
         populateSMSTable();
     }
 
@@ -146,7 +151,7 @@ public class MessageBoxController extends MessagesModel implements Initializable
         notiTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         notiTypeColumn.setCellValueFactory(new PropertyValueFactory<>("sender_method"));
         notiDateColumn.setCellValueFactory(new PropertyValueFactory<>("localDate"));
-        notificationTable.setItems(getAllNotifications(50));
+        notificationTable.setItems(getAllNotifications(10));
         setReadAndUnreadNotifications();
     }
 
@@ -167,8 +172,8 @@ public class MessageBoxController extends MessagesModel implements Initializable
                 super.updateItem(notification, b);
                 if (!b && notification !=null) {
                     if (Objects.equals(notification.getIsRead(), false)) {
-                        setStyle("-fx-font-color:red; -fx-font-weight:bold");
-                    }else setStyle("-fx-color:#ddd; -fx-font-weight:regular");
+                        setStyle("-fx-font-color:red; -fx-font-weight:bold; -fx-font-family:poppins medium;");
+                    }else setStyle("-fx-color:#ddd; -fx-font-weight:regular; -fx-font-family:poppins medium;");
                 }
             }
         });
@@ -182,6 +187,7 @@ public class MessageBoxController extends MessagesModel implements Initializable
             Timeline timeline = new Timeline(new KeyFrame(Duration.INDEFINITE));
             timeline.play();
             String responseStatus = new SmsAPI().sendSms(number, content);
+
             if (!responseStatus.isEmpty()) {
                 NOTIFY = new UserNotification();
                 String smsStatus = MessageStatus.getMessageStatusResult(responseStatus).toString();
@@ -189,8 +195,8 @@ public class MessageBoxController extends MessagesModel implements Initializable
                 NOTIFY.successNotification("SMS STATUS", "SMS status is " + smsStatus);
                 timeline.stop();
                 populateSMSTable();
-
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -340,7 +346,7 @@ public class MessageBoxController extends MessagesModel implements Initializable
 
             smsTable.getItems().forEach(item-> {
                 item.getResendButton().setOnAction(clicked -> {
-                   ALERT = new UserAlerts("RESEND SMS", "Do you wish to resent SMS to this customer?",
+                   ALERT = new UserAlerts("RESEND SMS", "Do you wish to resend SMS to this customer?",
                            "please confirm action to resend else CANCEL to abort");
                    if (ALERT.confirmationAlert()) {
                        String number = item.getRecipient();

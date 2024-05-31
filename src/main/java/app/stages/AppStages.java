@@ -58,14 +58,14 @@ public class AppStages {
         stage.setScene(scene);
         stage.show();
     }
-    public static void cancellationStage() throws IOException {
+    public static Stage cancellationStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/cancellation-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
         stage.setTitle("LOAN CANCELLATION");
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.show();
+        return stage;
     }
     public static Stage loanApplicationStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/application-page.fxml"));
@@ -85,7 +85,8 @@ public class AppStages {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setResizable(false);
-        stage.initStyle(StageStyle.DECORATED);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
 
@@ -180,7 +181,7 @@ public class AppStages {
         stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
-    public static void editLoanApplicantDetails() throws IOException {
+    public static Stage editLoanApplicantDetails() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/loans/application-forms/update-loan-details-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
@@ -188,7 +189,14 @@ public class AppStages {
         stage.setScene(scene);
         stage.centerOnScreen();
 //        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
+        stage.setOnCloseRequest(event -> {
+            UserAlerts ALERT = new UserAlerts("CANCEL UPDATE", "Do you wish to exit this window without saving all changes made?", "" +
+                    "all changes made will be discarded and will not be saved");
+           if (ALERT.confirmationAlert()) {
+               stage.getScene().getWindow().hide();
+           } else event.consume();
+        });
+        return stage;
     }
     public static Stage updateEmployeeDetailsStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/resource/updateEmployee-popup.fxml"));

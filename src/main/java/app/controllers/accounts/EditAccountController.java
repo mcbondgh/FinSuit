@@ -505,7 +505,7 @@ public class EditAccountController extends CustomerAccountModel implements Initi
 
                         String className = this.getClass().getName();
                         String error = Arrays.toString(e.getStackTrace());
-                        errorLogger.logMessage(className, error);
+                        errorLogger.logMessage(className, "actionEventMethodsImplementation", error);
                     }
                 } else {
                     NOTIFICATION.errorNotification("UPDATE FAILED", "Failed to update customer bio data");

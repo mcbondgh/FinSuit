@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ImageReadWriter {
     static ErrorLogger log = new ErrorLogger();
@@ -31,10 +30,8 @@ public class ImageReadWriter {
             try {
                 File filePath = new File(destinationFolder , imageName);
                 ImageIO.write(SwingFXUtils.fromFXImage(selectedImage, null), ".png", filePath);
-            }catch (Exception e){
-                String className = ImageReadWriter.class.getName();
-                String error = Arrays.toString(e.getStackTrace());
-                log.logMessage(className, error);
+            }catch (Exception ignored){
+
             }
         }
     }
@@ -66,11 +63,23 @@ public class ImageReadWriter {
 
     public static byte[] readImageStream(Image image) throws IOException {
         byte[] data = null;
+        String path = "src/main/resources/app/images/profile.png";
         try {
             data = new FileInputStream(image.getUrl()).readAllBytes();
-        }catch (FileNotFoundException ex){
-            new ErrorLogger().logMessage(ex.getLocalizedMessage(), ImageReadWriter.class.getName());
+        }catch (Exception ex){
+            data = new FileInputStream(path).readAllBytes();
+            new ErrorLogger().logMessage(ex.getLocalizedMessage(),"readImageStream", ImageReadWriter.class.getName());
         }
         return data;
     }
+
+    public static byte[] readImageStream(Image image, byte[] data) throws IOException {
+        try {
+            data = new FileInputStream(image.getUrl()).readAllBytes();
+        }catch (Exception ex){
+           return data;
+        }
+        return data;
+    }
+
 }

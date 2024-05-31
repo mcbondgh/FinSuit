@@ -1,6 +1,7 @@
 package app.errorLogger;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,9 +18,12 @@ public class ErrorLogger {
            }catch (Exception ignored) {}
             }
 
-            public void logMessage(String message,String sourceClass) {
-                logger.logp(Level.SEVERE,sourceClass, "", message);
+            public void logMessage(String message,String method, String sourceClass) {
+                logger.logp(Level.ALL,sourceClass, "", message);
             }
+    public void logMessage(String message, String sourceClass) {
+        logger.log(Level.ALL,sourceClass,  message);
+    }
 
 
 

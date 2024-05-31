@@ -64,10 +64,10 @@ public class LoansTableEntity {
 
     private void buttonStyling() {
         cancelButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
-                "-fx-border-color:#eee; -fx-text-fill: #fff; -fx-background-color:#e25757; -fx-font-family poppins; " +
+                "-fx-border-color:#eee; -fx-text-fill: #fff; -fx-background-color:#e25757; -fx-font-family: poppins; " +
                 "-fx-font-size: 11px; -fx-font-weight:bold");
         editButton.setStyle("-fx-border-radius: 8px;-fx-background-radius:8px; " +
-                "-fx-border-color:#eee; -fx-text-fill: #fff; -fx-background-color:#3f968f; -fx-font-family poppins; " +
+                "-fx-border-color:#eee; -fx-text-fill: #fff; -fx-background-color:#3f968f; -fx-font-family: poppins; " +
                 "-fx-font-size: 11px; -fx-font-weight:bold");
     }
 

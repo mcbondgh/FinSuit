@@ -46,7 +46,7 @@ public class MessageBuilders {
             if (item.getOperation_type().equalsIgnoreCase("Loan Application")) {
 
                 message = item.getMessage().replace("[NAME]", fullName).replace("[LOAN TYPE]", loanType)
-                        .replace("[LOAN NUMBER]", loanNo).replace("[DATE]", dateTime)
+                        .replace("[LOAN NO]", loanNo).replace("[DATE]", dateTime)
                         .replace("[AMOUNT]", String.valueOf(requestedAmount));
                 stringBuilder.append(message);
             }
@@ -86,6 +86,19 @@ public class MessageBuilders {
                     .replace("[ACCOUNT TYPE]", input.get(1).toString())//account type
                     .replace("[ACCOUNT NO]", input.get(2).toString());//account number
             stringBuilder.append(message);
+            }
+        });
+        return stringBuilder.toString();
+    }
+    public String loanApplicationUpdate(List<Object> input) {
+        DAO.getMessageWithOperations().forEach(data -> {
+            if (data.getOperation_type().equalsIgnoreCase("Application Update")) {
+                message = data.getMessage().replace("[NAME]", input.get(0).toString())//customer name
+                        .replace("[LOAN TYPE]", input.get(1).toString())//account type
+                        .replace("[LOAN NO]", input.get(4).toString())//loan number
+                        .replace("[LOAN NUMBER]", input.get(2).toString())//account number
+                         .replace("[AMOUNT]", input.get(3).toString());//amount
+                stringBuilder.append(message);
             }
         });
         return stringBuilder.toString();

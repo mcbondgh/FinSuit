@@ -113,7 +113,7 @@ public class LoansController extends LoansModel implements Initializable {
     public void searchCustomerMethod(KeyEvent event) {
         try {
             loanApplicantsTable.getItems().clear();
-            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderApplicationStage(USER_ID), p -> true);
+            FilteredList<LoansTableEntity> filteredList =  new FilteredList<>(getLoansUnderApplicationStage(), p -> true);
             searchField.textProperty().addListener((observable, oldValue, newValue) ->
                     filteredList.setPredicate(customersTableData -> {
                 if (newValue.isEmpty() || newValue.isBlank()) {
@@ -155,9 +155,14 @@ public class LoansController extends LoansModel implements Initializable {
                 item.getCancelButton().setOnAction(action -> {
                     if (!item.getCancelButton().isDisabled()) {
                         try {
-                            AppStages.cancellationStage();
+                            Stage stage = AppStages.cancellationStage();
                             CancellationController.LOAN_NUMBER = loanNumber;
                             CancellationController.USER_ID = USER_ID;
+                            stage.showAndWait();
+                            stage.setOnHidden(hidden -> {
+                                populateTable();
+                            });
+
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -167,7 +172,11 @@ public class LoansController extends LoansModel implements Initializable {
                 item.getEditButton().setOnAction(action -> {
                     try {
                         UpdateApplicantLoanController.setLoanNumber = loanNumber;
-                        AppStages.editLoanApplicantDetails();
+                        Stage stage = AppStages.editLoanApplicantDetails();
+                        stage.show();
+                        stage.setOnHidden(event -> {
+                            populateTable();
+                        });
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

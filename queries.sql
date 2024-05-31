@@ -271,6 +271,29 @@ FROM agents AS a WHERE(is_deleted = FALSE);
 UPDATE agents SET is_deleted = TRUE WHERE agent_id = ?;
 
 
+-- 29/05/2024
+UPDATE customre_data
+	SET firstname = ?, lastname = ?, othername = ?, gender = ?, dob = ?, mobile_number = ?, other_number = ?, 
+    email = ?, digital_address = ?, residential_address = ?, key_landmark =?, marital_status = ?, id_type =?, 
+    id_number = ?, educational_background = ?, contact_person_fullname = ?, contact_person_number = ?, 
+    contact_person_gender = ?, contact_person_landmark =?, contact_person_digital_address = ?,  contact_person_id_type = ?,
+	contact_person_id_number = ?, contact_person_place_of_work = ?, institution_address = ?, relationship_to_applicant = ?,
+    date_modified = DEFAULT, modified_by = ?, agent_id = ?
+    WHERE customer_id = ?;
+    
+UPDATE loan_applicant_details 
+SET image = ? , company_name = ?, company_mobile_number =?, company_address =?, staff_id =?, occupation =?, employment_date =?, 
+basic_salary =?, gross_salary=?, total_deduction=?, net_salary=?, guarantor_name=?, guarantor_gender=?, guarantor_number=?, 
+guarantor_digital_address=?, guarantor_landmark =?, guarantor_idType=?, guarantor_idNumber=?, guarantor_relationship=?,
+guarantor_occupation =?, guarantor_place_of_work =?, guarantor_institution_address =?, guarantor_income =?
+WHERE(loan_no = ?);
+
+UPDATE loans 
+	SET loan_type =?, requested_amount =?, 
+	loan_purpose =?, updated_by = ?
+WHERE(loan_no = ?);
+
+
 -- ALTER TABLE terminated_loans
 -- ADD COLUMN write_off DECIMAL(10,2) DEFAULT 0.00 AFTER purpose;
 

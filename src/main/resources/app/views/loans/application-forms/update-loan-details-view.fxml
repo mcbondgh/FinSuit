@@ -536,7 +536,7 @@
                               <Font name="Poppins Regular" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="33.0" layoutY="1181.0" text="Loan Purpose *">
+                        <Label layoutX="26.0" layoutY="1181.0" text="Loan Purpose *">
                            <font>
                               <Font name="Poppins Regular" size="12.0" />
                            </font>

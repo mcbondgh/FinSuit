@@ -24,6 +24,7 @@ module app.finsuit {
     requires itextpdf;
     requires transitive io;
     requires com.google.api.services.sqladmin;
+    requires spring.web;
 
 
     opens app to javafx.fxml;

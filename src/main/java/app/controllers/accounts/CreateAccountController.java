@@ -527,7 +527,7 @@ public class CreateAccountController extends CustomerAccountModel implements Ini
                   }catch (Exception e) {
                       String className = this.getClass().getName();
                       String error = Arrays.toString(e.getStackTrace());
-                      errorLogger.logMessage(className, error);
+                      errorLogger.logMessage(className, "actionEventMethodsImplementation", error);
                   }
                 }
                 if (flag == 2) {

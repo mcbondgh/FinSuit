@@ -151,7 +151,7 @@ public class SpecialMethods {
         timer.scheduleAtFixedRate(task, 1000, 1000);
     }
     public static void setAccountType(ComboBox<String> comboBox) {
-        String[] items = {"Savings Account", "Susu Account", "Current Account", "Other Account"};
+        String[] items = {"Savings Account", "Susu Account", "Current Account", "Other Account", "Personal Account"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);
@@ -159,12 +159,12 @@ public class SpecialMethods {
     }
 
     public static void setLoanType(ComboBox<String> comboBox) {
-        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Agro Loan"};
+        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Agro Loan", ""};
         Arrays.sort(items);
         Arrays.stream(items).toList().forEach(item -> comboBox.getItems().add(item));
     }
     public static void setRelationshipTypes(ComboBox<String> comboBox) {
-        String[] items = {"Father", "Mother", "Brother", "Sister", "Uncle", "Aunty", "Friend", "Cousin", "Other", "Guardian", "Relative"};
+        String[] items = {"Father", "Coworker", "Mother", "Brother", "Sister", "Uncle", "Aunty", "Friend", "Cousin", "Other", "Guardian", "Relative"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);
@@ -201,7 +201,9 @@ public class SpecialMethods {
         }
     }
     public static void setBanks(ComboBox<String> comboBox) {
-        String[] items = {"ADB", "Commercial Bank", "CBG", "Mobile Money", "UMB", "Fidelity Bank", "Zenith Bank", "Access Bank", "ABSA Bank", "Rural Bank"};
+        String[] items = {"ADB", "Commercial Bank", "CBG", "Mobile Money", "UMB",
+                "Fidelity Bank", "Zenith Bank", "Access Bank", "ABSA Bank",
+                "Rural Bank", "Prudential Bank", "ABSA", "Ecobank"};
         Arrays.sort(items);
         for (String x : items) {
             comboBox.getItems().add(x);

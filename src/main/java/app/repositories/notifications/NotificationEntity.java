@@ -18,6 +18,13 @@ public class NotificationEntity {
     public NotificationEntity() {
     }
 
+    public NotificationEntity(String title, String sender_method, String message, int logged_by) {
+        this.title = title;
+        this.sender_method = sender_method;
+        this.message = message;
+        this.logged_by = logged_by;
+    }
+
     public NotificationEntity(long id, String title, String sender_method, String message, Timestamp logged_date, boolean is_read, UsersData username) {
         this.id = id;
         this.title = title;

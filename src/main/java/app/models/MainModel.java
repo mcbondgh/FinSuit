@@ -84,8 +84,7 @@ public class MainModel extends DbConnection {
                 data.add(new SmsAPIEntity(key, sender_id, email_address, email_password));
             }
         }catch (SQLException e) {
-            logger.logMessage(e.getStackTrace().toString(), className);
-            e.printStackTrace();}
+            logger.logMessage(e.getCause().toString(), "getSmsApi", className);}
         return data;
     }
     public int getUserIdByName(String username) {
@@ -98,7 +97,7 @@ public class MainModel extends DbConnection {
             if (resultSet.next()) {
                 userId = resultSet.getInt(1);
             }
-        }catch (Exception e) {e.printStackTrace();}
+        }catch (Exception ignored) {;}
         return userId;
     }
     public String getEmployeeIdByUsername(String username) {
@@ -114,7 +113,7 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logger.logMessage(className, error);}
+            logger.logMessage(className, "getEmployeeIdByUsername", error);}
         return emp_id;
     }
 
@@ -131,7 +130,7 @@ public class MainModel extends DbConnection {
         }catch (Exception e) {
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logger.logMessage(className, error);
+            logger.logMessage(className, "getWorkIdByUserId", error);
         }
         return emp_id;
     }
@@ -148,7 +147,7 @@ public class MainModel extends DbConnection {
 
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logger.logMessage(className, error);
+            logger.logMessage(className, "getTotalEmployees", error);
         }
         return count;
     }
@@ -167,7 +166,7 @@ public class MainModel extends DbConnection {
 
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logger.logMessage(className, error);
+            logger.logMessage(className, "getEmployeeFullNameByWorkId",error);
         }
         return "not found";
     }
@@ -998,9 +997,8 @@ public class MainModel extends DbConnection {
                 );
             }
         }catch (SQLException ex){
-            logger.logMessage(ex.fillInStackTrace().toString(), className);
+            logger.logMessage(ex.fillInStackTrace().toString(), "getRepaymentSchedule", className);
         }
-
         return data;
     }
 
@@ -1019,7 +1017,7 @@ public class MainModel extends DbConnection {
                 value = resultSet.getInt(1);
             }
         }catch (SQLException ex){
-            logger.logMessage(ex.getMessage(), className);
+            logger.logMessage(ex.getMessage(), "getLoanTotalRepaymentAmount" , className);
         }
         return value;
     }
@@ -1167,7 +1165,7 @@ public class MainModel extends DbConnection {
             preparedStatement.close();
             getConnection().close();
         }catch (SQLException ex){
-            logger.logMessage(Arrays.toString(ex.getStackTrace()), className);
+            logger.logMessage(Arrays.toString(ex.getStackTrace()), "getLoanPaymentLogs", className);
         }
         return data;
     }
@@ -1463,7 +1461,7 @@ public class MainModel extends DbConnection {
            }
 
        }catch (SQLException e){
-           logger.logMessage(e.getMessage(), className);
+           logger.logMessage(e.getMessage(), "getAllNotifications", className);
        }
        return data;
     }
@@ -1492,7 +1490,7 @@ public class MainModel extends DbConnection {
                 data.add(new LoanAgentsEntity(id, userId, name, number, other, information, date, counts));
             }
         }catch (Exception e){
-            logger.logMessage(e.getMessage(), className);
+            logger.logMessage(e.getMessage(), "getAllAgents", className);
         }
         return data;
     }

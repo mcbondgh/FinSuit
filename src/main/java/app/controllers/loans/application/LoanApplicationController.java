@@ -105,9 +105,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     boolean isFirstNameEmpty() {return firstNameField.getText().isBlank();}
     boolean isLastNameEmpty() {return lastNameField.getText().isEmpty();}
 
-    boolean isLoanAmountFieldEmpty() {
-        return loanRequestField.getText().isEmpty();
-    }
+    boolean isLoanAmountFieldEmpty() {return loanRequestField.getText().isEmpty();}
     boolean isLoanTypeEmpty() {
         return loanTypeSelector.getValue() == null;
     }
@@ -509,10 +507,9 @@ public class LoanApplicationController extends LoansModel implements Initializab
             customerRepository.setCreated_by(currentUserId);
             customerRepository.setAgentId(AGENT_ID.get());
 
-
             applicationEntity.setLoan_no(loanNumber);
             applicationEntity.setProfile_picture("profile.png");
-            applicationEntity.setImage(getImageStream());
+            applicationEntity.setImage(ImageReadWriter.readImageStream(imageView.getImage()));
             applicationEntity.setCompany_name(companyName);
             applicationEntity.setCompany_mobile_number(companyContact);
             applicationEntity.setCompany_address(companyAddress);
@@ -534,12 +531,12 @@ public class LoanApplicationController extends LoansModel implements Initializab
             applicationEntity.setGuranter_occupation(guarantorOccupation);
             applicationEntity.setGurater_place_of_work(guarantorPlaceOfWork);
             applicationEntity.setGuranter_institution_address(guarantorInstitutionAdd);
-            applicationEntity.setNet_salary(guarantorNetSalary);
+            applicationEntity.setGuranter_income(guarantorNetSalary);
 
             int flag = applyForLoan(applicationEntity, customerRepository);
             flag += createLoan( totalCustomersCount(), loanNumber, loanType, loanAmount, loanPurpose, currentUserId);
 
-            String message = new MessageBuilders().loanApplicationMessageBuilder(firstName.concat(" ").concat(lastName), loanNumber,loanType, loanAmount);
+            String message = new MessageBuilders().loanApplicationMessageBuilder(firstName.concat(" ").concat(lastName), loanNumber, loanType, loanAmount);
             try {
                 String responseValue = new SmsAPI().sendSms(mobileNumber, message);
                 String statusValue = MessageStatus.getMessageStatusResult(responseValue).toString();

@@ -35,10 +35,7 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class PaymentApprovalController extends FinanceModel implements Initializable {
 
@@ -363,7 +360,11 @@ public class PaymentApprovalController extends FinanceModel implements Initializ
         NOTIFICATION.setSender_method("INTERNAL OPERATION");
 
         if (ALERTS.confirmationAlert()) {
-            int responseStatus = new LoansModel().cancelLoanApplication(loanNumber, "rejected", "active");
+            Map<String, Object> data = new HashMap<>();
+            data.put("loanNumber", loanNumber);
+            data.put("applicationStatus", "rejected");
+            data.put("loanStatus", "rejected");
+            int responseStatus = new LoansModel().cancelLoanApplication(data);
             if (responseStatus > 0) {
                 Platform.runLater(this::refreshTable);
                 logNotification(NOTIFICATION);

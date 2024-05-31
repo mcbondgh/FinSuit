@@ -233,7 +233,7 @@ public class FinanceModel extends MainModel {
             resultSet.close();
             getConnection().close();
         }catch (Exception e){
-            errorLogger.logMessage(e.getLocalizedMessage(), className);
+            errorLogger.logMessage(e.getLocalizedMessage(), "getRevenueAccountData", className);
         }
         return data;
     }
@@ -260,7 +260,7 @@ public class FinanceModel extends MainModel {
             resultSet.close();
             getConnection().close();
         }catch (Exception e){
-            errorLogger.logMessage(e.getLocalizedMessage(), className);
+            errorLogger.logMessage(e.getLocalizedMessage(), "getExpenditureTransactionLogs", className);
             e.printStackTrace();}
         return data;
     }
@@ -284,10 +284,9 @@ public class FinanceModel extends MainModel {
             var.getAndAdd(preparedStatement.executeUpdate());
 
         }catch (SQLException ex) {
-            errorLogger.logMessage(ex.getMessage(), className);
+            errorLogger.logMessage(ex.getMessage(), "saveExpenditure", className);
             ex.printStackTrace();
         }
-
         return var.get();
     }
 

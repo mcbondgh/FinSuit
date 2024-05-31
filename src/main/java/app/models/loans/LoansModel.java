@@ -8,6 +8,7 @@ import app.repositories.transactions.TransactionsEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.jsf.el.SpringBeanFacesELResolver;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -161,7 +162,7 @@ public class LoansModel extends MainModel {
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e) {
-            logError.logMessage(e.getLocalizedMessage(), className);
+            logError.logMessage(e.getLocalizedMessage(), "applyForLoan", className);
             rollBack();
             e.printStackTrace();
         }
@@ -188,6 +189,92 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
+
+    protected int updateLoanApplicantData(LoanApplicationEntity loanApplicant, CustomersDataRepository customerData , LoansEntity loans) {
+        AtomicInteger status = new AtomicInteger();
+        try {
+
+            String query1 = """
+                    UPDATE customer_data
+                    	SET firstname = ?, lastname = ?, othername = ?, gender = ?, dob = ?, mobile_number = ?, other_number = ?,\s
+                        email = ?, digital_address = ?, residential_address = ?, key_landmark = ?, marital_status = ?, id_type =?,\s
+                        id_number = ?, educational_background = ?, contact_person_fullname = ?, contact_person_number = ?,\s
+                        contact_person_gender = ?, contact_person_landmark =?, contact_person_digital_address = ?,  contact_person_id_type = ?,
+                    	contact_person_id_number = ?, contact_person_place_of_work = ?, institution_address = ?, relationship_to_applicant = ?,
+                        date_modified = DEFAULT, modified_by = ?, agent_id = ?
+                        WHERE(customer_id = ?);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query1);
+            preparedStatement.setString(1, customerData.getFirstname());preparedStatement.setString(2, customerData.getLastname());
+            preparedStatement.setString(3, customerData.getOthername());preparedStatement.setString(4, customerData.getGender());
+            preparedStatement.setDate(5, customerData.getDob());preparedStatement.setString(6, customerData.getMobile_number());
+            preparedStatement.setString(7, customerData.getOther_number());preparedStatement.setString(8, customerData.getEmail());
+            preparedStatement.setString(9, customerData.getDigital_address());preparedStatement.setString(10, customerData.getResidential_address());
+            preparedStatement.setString(11, customerData.getKey_landmark());preparedStatement.setString(12, customerData.getMarital_status());
+            preparedStatement.setString(13, customerData.getId_type()); preparedStatement.setString(14, customerData.getId_number());
+            preparedStatement.setString(15, customerData.getEducational_background());preparedStatement.setString(16, customerData.getContact_person_fullname());
+            preparedStatement.setString(17, customerData.getContact_person_number());preparedStatement.setString(18, customerData.getContact_person_gender());
+            preparedStatement.setString(19, customerData.getContact_person_landmark());preparedStatement.setString(20, customerData.getContact_person_digital_address());
+            preparedStatement.setString(21, customerData.getContact_person_id_type());preparedStatement.setString(22, customerData.getContact_person_id_number());
+            preparedStatement.setString(23,customerData.getContact_person_place_of_work());preparedStatement.setString(24, customerData.getInstitution_address());
+            preparedStatement.setString(25, customerData.getRelationship_to_applicant());preparedStatement.setInt(26, customerData.getModified_by());
+            preparedStatement.setInt(27, customerData.getAgentId());preparedStatement.setLong(28, customerData.getAccount_Id());
+            status.getAndAdd(preparedStatement.executeUpdate());
+
+            String query2 = """
+                    UPDATE loan_applicant_details\s
+                    SET image = ? , company_name = ?, company_mobile_number = ?, company_address =?, staff_id =?, occupation =?, employment_date =?,\s
+                    basic_salary =?, gross_salary=?, total_deduction=?, net_salary=?, guarantor_name=?, guarantor_gender=?, guarantor_number=?,\s
+                    guarantor_digital_address=?, guarantor_landmark =?, guarantor_idType=?, guarantor_idNumber=?, guarantor_relationship=?,
+                    guarantor_occupation =?, guarantor_place_of_work =?, guarantor_institution_address =?, guarantor_income =?
+                    WHERE(loan_no = ?);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setBytes(1, loanApplicant.getImage());preparedStatement.setString(2, loanApplicant.getCompany_name());
+            preparedStatement.setString(3, loanApplicant.getCompany_mobile_number());preparedStatement.setString(4, loanApplicant.getCompany_address());
+            preparedStatement.setString(5, loanApplicant.getStaff_id());
+            preparedStatement.setString(6, loanApplicant.getGuranter_occupation());
+            preparedStatement.setDate(7, Date.valueOf(loanApplicant.getEmployment_date()));
+            preparedStatement.setDouble(8, loanApplicant.getBasic_salary());preparedStatement.setDouble(9, loanApplicant.getGross_salary());
+            preparedStatement.setDouble(10, loanApplicant.getTotal_deduction());
+            preparedStatement.setDouble(11, loanApplicant.getNet_salary());
+            preparedStatement.setString(12, loanApplicant.getGuranter_name()); preparedStatement.setString(13, loanApplicant.getGender());
+            preparedStatement.setString(14, loanApplicant.getGuranter_number());
+            preparedStatement.setString(15, loanApplicant.getGuranter_digital_address());
+            preparedStatement.setString(16, loanApplicant.getGuarantor_landmark());
+            preparedStatement.setString(17, loanApplicant.getGuranter_idType());
+            preparedStatement.setString(18, loanApplicant.getGuranter_idNumber());
+            preparedStatement.setString(19, loanApplicant.getGuranter_relationship());
+            preparedStatement.setString(20, loanApplicant.getGuranter_occupation());
+            preparedStatement.setString(21, loanApplicant.getGurater_place_of_work());
+            preparedStatement.setString(22, loanApplicant.getGuranter_institution_address());
+            preparedStatement.setDouble(23, loanApplicant.getGuranter_income());
+            preparedStatement.setString(24, loanApplicant.getLoan_no());
+            status.getAndAdd(preparedStatement.executeUpdate());
+
+            String query3 = """
+                    UPDATE loans\s
+                    	SET loan_type =?, requested_amount =?,\s
+                    	loan_purpose =?, date_modified = DEFAULT, updated_by = ?
+                    WHERE(loan_no = ?);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query3);
+            preparedStatement.setString(1, loans.getLoan_type());
+            preparedStatement.setDouble(2, loans.getRequested_amount());
+            preparedStatement.setString(3, loans.getLoan_purpose());
+            preparedStatement.setInt(4, loans.getUpdated_by());
+            preparedStatement.setString(5, loans.getLoan_no());
+            status.getAndAdd(preparedStatement.executeUpdate());
+
+            preparedStatement.close();
+            getConnection().close();
+        }catch (Exception e) {
+            e.printStackTrace();
+            logError.logMessage(e.getLocalizedMessage(), "updateLoanApplicantData", className);
+        }
+        return status.get();
+    }
+
     protected ObservableList<LoansTableEntity> getLoansByApplicationStatus() {
         ObservableList<LoansTableEntity> data = FXCollections.observableArrayList();
         try {
@@ -242,7 +329,7 @@ public class LoansModel extends MainModel {
             }
             resultSet.close();
             getConnection().close();
-        }catch (SQLException ignore) {ignore.printStackTrace();}
+        }catch (SQLException ignore) {}
         return data;
     }
     protected ObservableList<LoansTableEntity> getLoansUnderApplicationStage() {
@@ -566,7 +653,7 @@ public class LoansModel extends MainModel {
         }catch (SQLException e){
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logError.logMessage(className, error);
+            logError.logMessage(className, "getLoanDetailsByLoanNumber", error);
         }
         return data;
     }
@@ -608,7 +695,7 @@ public class LoansModel extends MainModel {
         }catch (SQLException e) {
             e.printStackTrace();
             String error = Arrays.toString(e.getStackTrace());
-            logError.logMessage(error, className);
+            logError.logMessage(error, "saveLoanTermination", className);
         }
         return flag;
     }
@@ -665,7 +752,7 @@ public class LoansModel extends MainModel {
         }catch (SQLException e) {
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logError.logMessage(className, error);
+            logError.logMessage(className, "saveLoanPaymentTransaction", error);
             rollBack();
         }
         return status;
@@ -675,10 +762,10 @@ public class LoansModel extends MainModel {
         Map<String, Object> applicantData = new HashMap<>();
         try {
             String query = """
-                    SELECT * FROM customer_data
-                    LEFT JOIN loans AS cd
+                    SELECT * FROM customer_data AS cd
+                    LEFT JOIN loans AS ln
                     USING(customer_id)
-                    CROSS JOIN loan_applicant_details
+                    CROSS JOIN loan_applicant_details AS ap
                     USING(loan_no)
                     CROSS JOIN agents AS a\s
                     USING(agent_id)
@@ -701,6 +788,7 @@ public class LoansModel extends MainModel {
 //                guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation,
 //                guarantor_place_of_work, guarantor_institution_address, guarantor_income,information
 
+                applicantData.put("customer_id", resultSet.getInt("customer_id"));
                 applicantData.put("loanType", resultSet.getString("loan_type"));
                 applicantData.put("amount", resultSet.getDouble("requested_amount"));
                 applicantData.put("loanPurpose", resultSet.getString("loan_purpose"));
@@ -722,7 +810,18 @@ public class LoansModel extends MainModel {
                 applicantData.put("id_number", resultSet.getString("id_number"));
                 applicantData.put("educational_background", resultSet.getString("educational_background"));
                 applicantData.put("additional_comment", resultSet.getString("additional_comment"));
+
                 applicantData.put("contactPersonName", resultSet.getString("contact_person_fullname"));
+                applicantData.put("contactNumber", resultSet.getString("contact_person_number"));
+                applicantData.put("contactLandmark", resultSet.getString("contact_person_landmark"));
+                applicantData.put("contactGender", resultSet.getString("contact_person_gender"));
+                applicantData.put("contactIdType", resultSet.getString("contact_person_id_type"));
+                applicantData.put("contactIdNumber", resultSet.getString("contact_person_id_number"));
+                applicantData.put("contactWorkplace", resultSet.getString("contact_person_place_of_work"));
+                applicantData.put("contactInstitutionAddress", resultSet.getString("institution_address"));
+                applicantData.put("contact_digital_address", resultSet.getString("contact_person_digital_address"));
+                applicantData.put("relationship_to_applicant", resultSet.getString("relationship_to_applicant"));
+
                 applicantData.put("image", resultSet.getBytes("image"));
                 applicantData.put("agentName", resultSet.getString("agent_name"));
                 applicantData.put("company_name",resultSet.getString("company_name"));
@@ -738,20 +837,29 @@ public class LoansModel extends MainModel {
 
                 applicantData.put("guarantor_name", resultSet.getString("guarantor_name"));
                 applicantData.put("guarantor_number", resultSet.getString("guarantor_number"));
+                applicantData.put("guarantor_gender", resultSet.getString("guarantor_gender"));
+                applicantData.put("guarantor_address", resultSet.getString("guarantor_digital_address"));
+                applicantData.put("guarantor_landmark", resultSet.getString("guarantor_landmark"));
+                applicantData.put("guarantor_idType", resultSet.getString("guarantor_idType"));
+                applicantData.put("guarantor_idNumber", resultSet.getString("guarantor_idNumber"));
+                applicantData.put("relationship", resultSet.getString("guarantor_relationship"));
+                applicantData.put("guarantor_occupation", resultSet.getString("guarantor_occupation"));
+                applicantData.put("place_of_work", resultSet.getString("guarantor_place_of_work"));
+                applicantData.put("institution_address", resultSet.getString("guarantor_institution_address"));
+                applicantData.put("income", resultSet.getDouble("guarantor_income"));
 
-
-
+                applicantData.put("contact_name", resultSet.getString(""));
 
             }
             getConnection().close();
         }catch (SQLException e) {
             String className = this.getClass().getName();
-            logError.logMessage(e.getMessage(), className);
+            logError.logMessage(String.valueOf(e.getCause()), "getLoanApplicantDataByLoanNumber", className);
         }
         return applicantData;
     }
 
-    public int cancelLoanApplication(String loanNumber, String applicationStatus, String loanStatus) {
+    public int cancelLoanApplication(Map<String, Object> values) {
         AtomicInteger flag = new AtomicInteger(0);
         try {
             String query = """
@@ -759,16 +867,26 @@ public class LoansModel extends MainModel {
                     WHERE loan_no = ?;
                     """;
             preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setString(1, applicationStatus);
-            preparedStatement.setString(2, loanStatus);
-            preparedStatement.setString(3, loanNumber);
-            flag.set(preparedStatement.executeUpdate());
+            preparedStatement.setString(1, values.get("applicationStatus").toString());
+            preparedStatement.setString(2, values.get("loanStatus").toString());
+            preparedStatement.setString(3, values.get("loanNumber").toString());
+            flag.getAndAdd(preparedStatement.executeUpdate());
+
+            String query2 = """
+                    INSERT INTO terminated_loans(loan_no, purpose, terminated_by, date_terminated)
+                    VALUES(?, ?, ?, DEFAULT);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query2);
+            preparedStatement.setString(1, values.get("loanNumber").toString());
+            preparedStatement.setString(2, values.get("purpose").toString());
+            preparedStatement.setInt(3, Integer.parseInt(values.get("userId").toString()));
+            flag.getAndAdd(preparedStatement.executeUpdate());
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e) {
             String className = this.getClass().getName();
             String error = Arrays.toString(e.getStackTrace());
-            logError.logMessage(className, error);
+            logError.logMessage(className, "cancelLoanApplication", error);
         }
         return flag.get();
 
