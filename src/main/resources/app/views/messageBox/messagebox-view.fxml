@@ -39,7 +39,7 @@
       <Separator layoutX="1.0" layoutY="38.0" prefHeight="4.0" prefWidth="1120.0" />
       <TabPane fx:id="tabPane" layoutX="2.6666666666666665" layoutY="45.333333333333336" prefHeight="585.0" prefWidth="1241.0" rotateGraphic="true" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="44.0">
          <tabs>
-            <Tab fx:id="notificationTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Notifications Logs">
+            <Tab id="navigation_tab" fx:id="notificationTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Notifications Logs">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>
@@ -154,7 +154,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="logsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Messaage Logs">
+            <Tab id="messages_tab" fx:id="logsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Messaage Logs">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="556.0" prefWidth="1248.0" style="-fx-background-color: #f6fcff;">
                      <children>
@@ -232,7 +232,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="smsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Send Messages">
+            <Tab id="send_sms_tab" fx:id="smsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Send Messages">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>
@@ -443,7 +443,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="topUpTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="To Up SMS">
+            <Tab id="topup_tab" fx:id="topUpTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="To Up SMS">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>

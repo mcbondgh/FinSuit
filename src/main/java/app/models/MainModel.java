@@ -16,6 +16,7 @@ import app.repositories.human_resources.EmployeesData;
 import app.repositories.loans.*;
 import app.repositories.notifications.NotificationEntity;
 import app.repositories.operations.MessageOperationsEntity;
+import app.repositories.operations.PermissionsEntity;
 import app.repositories.roles.UserRolesData;
 import app.repositories.settings.TemplatesRepository;
 import app.repositories.transactions.TransactionsEntity;
@@ -100,6 +101,36 @@ public class MainModel extends DbConnection {
         }catch (Exception ignored) {;}
         return userId;
     }
+
+    //GET USERNAME, PASSWORD AND ROLE BASED ON THE SUPPLIED USERNAME...
+    public Map<String, Object> fetchUserDataByUserName(String username){
+        Map<String, Object> data = new HashMap<>();
+        try {
+            String query = "SELECT username, user_password, role_name FROM users AS u\n" +
+                    "INNER JOIN roles AS r \n" +
+                    "USING(role_id) WHERE(username = '"+username+"' AND is_deleted = 0 AND is_active = 1);";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            if (resultSet.next()) {
+                data.putIfAbsent("username", resultSet.getString("username"));
+                data.put("password", resultSet.getString("user_password"));
+                data.put("role", resultSet.getString("role_name"));
+            }
+            resultSet.close();
+            getConnection().close();
+        }catch (SQLException ignore) {}
+        return data;
+    }
+
+    public void recordUserLogin(int userId, byte roleId) {
+        try {
+            String query = "INSERT INTO logins(user_id, role_id) VALUES(?, ?)";
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setByte(2, roleId);
+            preparedStatement.execute();
+        }catch (Exception ignore){}
+    }
+
     public String getEmployeeIdByUsername(String username) {
         String emp_id = "";
         try {
@@ -227,7 +258,7 @@ public class MainModel extends DbConnection {
     public long totalCustomersCount() {
         long count = 0;
         try {
-            String query = "SELECT customer_id from customer_data order by customer_id desc limit 1;";
+            String query = "SELECT MAX(customer_id) from customer_data;";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -256,18 +287,20 @@ public class MainModel extends DbConnection {
         }catch (SQLException ignore) {}
         return value;
     }
-    public int getTotalTransactionsForToday() {
+    public int getTotalDisbursedLoans() {
         int result = 0;
         try {
-            String query = "SELECT COUNT(*) count FROM transaction_logs WHERE(DATE(transaction_date) = CURRENT_DATE());";
+            String query = "SELECT COUNT(loan_id) disbursed FROM loans \n" +
+                    "WHERE application_status = 'disbursed';";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                result =  resultSet.getInt("count");
+                result =  resultSet.getInt("disbursed");
             }
         }catch (Exception ignored){}
         return result;
     }
+
     public long getTotalLoanCount() {
         try {
             String query = "SELECT MAX(loan_id) AS 'max_id' FROM loans;";
@@ -284,7 +317,8 @@ public class MainModel extends DbConnection {
 
     public long getTotalDisbursedLoanCount()  {
         try {
-            String query = "SELECT COUNT(loan_no) AS result FROM loans WHERE((application_status = 'disbursed' OR 'pending_payment') AND loan_status = 'active');";
+            String query = "SELECT COUNT(loan_no) AS result FROM loans WHERE((application_status = 'disbursed' OR 'pending_payment')" +
+                    " AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -295,6 +329,37 @@ public class MainModel extends DbConnection {
         }
         return 0;
     }
+
+    protected int getMonthlyDueLoans() {
+        try {
+            String query = """
+                    SELECT COUNT(schedule_id) AS due FROM loan_schedule AS ls
+                    WHERE YEAR(payment_date) = YEAR(CURRENT_DATE) AND MONTH(payment_date) = MONTH(CURRENT_DATE);
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+               return resultSet.getInt(1);
+            }
+        }catch (Exception ignored){}
+        return 0;
+    }
+    protected int getPartiallyPaidLoans() {
+        try {
+            String query = """
+                    SELECT COUNT(loan_id) AS part_payments FROM loans
+                    WHERE total_payment != repayment_amount;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        }catch (Exception ignored){}
+        return 0;
+    }
+
+
     protected int getTotalApprovedLoansCount() {
         int result = 0;
         try {
@@ -307,6 +372,7 @@ public class MainModel extends DbConnection {
         }catch (Exception ignored){}
         return result;
     }
+
     protected int getPendingApprovalLoansCount() {
         int result = 0;
         try {
@@ -320,13 +386,32 @@ public class MainModel extends DbConnection {
         return result;
     }
 
+    protected int getTotalPaidLoans() {
+        int result = 0;
+        try {
+            String query = """
+                    SELECT COUNT(loan_id) cleared FROM loans AS total
+                    WHERE loan_status = 'cleared';
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        }catch (Exception ignored){}
+        return result;
+    }
+
     protected int getTotalLoanRequests() {
         int result = 0;
         try {
-            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status = 'application' AND loan_status = 'active');";
+            String query = "SELECT COUNT(loan_id) FROM loans WHERE(application_status != 'disbursed' AND loan_status = 'active');";
             preparedStatement = getConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {result = resultSet.getInt(1);}
+            getConnection().close();
+            resultSet.close();
+            preparedStatement.close();
         }catch (Exception ignored){}
         return result;
     }
@@ -490,7 +575,7 @@ public class MainModel extends DbConnection {
                 ));
             }
             getConnection().close();
-        }catch (Exception e) {}return data;
+        }catch (Exception ignored) {}return data;
     }
     public ObservableList<CustomerAccountsDataRepository> fetchCustomersAccountData() {
         ObservableList<CustomerAccountsDataRepository> data = FXCollections.observableArrayList();
@@ -587,6 +672,7 @@ public class MainModel extends DbConnection {
         }catch (Exception exception){exception.printStackTrace();}
         return data;
     }
+
     protected int getRoleIdByName(@NamedArg("role Name")String role_name) {
         int flag = 0;
             try {
@@ -997,6 +1083,7 @@ public class MainModel extends DbConnection {
                 );
             }
         }catch (SQLException ex){
+            ex.printStackTrace();
             logger.logMessage(ex.fillInStackTrace().toString(), "getRepaymentSchedule", className);
         }
         return data;
@@ -1410,28 +1497,41 @@ public class MainModel extends DbConnection {
 //        return data;
 //    }
 
-   public ObservableList<AssignedSupervisors> getAllAssignedSupervisors(){
+   public ObservableList<AssignedSupervisors> getAllAssignedSupervisors(String supervisorName){
         ObservableList<AssignedSupervisors> data = new ObservableStack<>();
         try{
             String query = """
-                    SELECT gs.emp_id , concat(firstname, ' ',lastname) AS `supervisor`,\s
-                    gs.loan_id AS `loan_number`, application_status FROM employees AS emp
-                    INNER JOIN group_supervisors AS gs
-                    ON emp.work_id = gs.emp_id
-                    INNER JOIN loans AS ln
-                    ON gs.loan_id = ln.loan_no;
+                    SELECT
+                    	CONCAT(cd.firstname, ' ', cd.lastname, ' ', cd.othername) AS 'customer' ,\s
+                    	cd.mobile_number, gs.loan_id AS `loan_number`, application_status,
+                    		repayment_amount, total_payment
+                    		FROM employees AS emp
+                    		INNER JOIN group_supervisors AS gs
+                    		ON emp.work_id = gs.emp_id
+                    		INNER JOIN loans AS ln
+                    		ON gs.loan_id = ln.loan_no
+                    		INNER JOIN users AS u
+                    		ON emp.work_id = u.emp_id
+                    		INNER JOIN customer_data AS cd
+                    		USING(customer_id)
+                        WHERE loan_status = 'active' AND username = ?;
                     """;
-            resultSet = getConnection().createStatement().executeQuery(query);
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, supervisorName);
+            resultSet = preparedStatement.executeQuery();
             AtomicInteger counter = new AtomicInteger(0);
             while (resultSet.next()) {
-                String name = resultSet.getString("supervisor");
-                String number = resultSet.getString("loan_number");
+                String name = resultSet.getString("customer");
+                String number = resultSet.getString("cd.mobile_number");
+                String loanNumber = resultSet.getString("loan_number");
                 String status = resultSet.getString("application_status");
-                data.add(new AssignedSupervisors(counter.incrementAndGet(), name, number, status));
+                double repayment = resultSet.getDouble("repayment_amount");
+                double total = resultSet.getDouble("total_payment");
+                data.add(new AssignedSupervisors(counter.incrementAndGet(), name, number, loanNumber, status,repayment, total));
             }
             resultSet.close();
             getConnection().close();
-        }catch (SQLException e){e.getMessage();}
+        }catch (SQLException ignored){}
         return data;
     }
 
@@ -1492,6 +1592,62 @@ public class MainModel extends DbConnection {
         }catch (Exception e){
             logger.logMessage(e.getMessage(), "getAllAgents", className);
         }
+        return data;
+    }
+
+    public ObservableList<PermissionsEntity> getAppModules() {
+        ObservableList<PermissionsEntity> data = new ObservableStack<>();
+        try {
+            String query = "SELECT * FROM finsuit.modules ORDER BY id ASC;";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("module_name");
+                String desc = resultSet.getString("descriptions");
+                String alias = resultSet.getString("alias");
+                boolean status = resultSet.getBoolean("is_active");
+                data.add(new PermissionsEntity(id, name, alias, desc, status));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
+
+    public ObservableList<PermissionsEntity> getAllPermissions() {
+        ObservableList<PermissionsEntity> data = new ObservableStack<>();
+        try {
+            String query = "SELECT * FROM finsuit.permissions ORDER BY operation_id ASC;";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while(resultSet.next()) {
+//                operation_id, module_id, operation_name, alias, description, is_active
+                int id = resultSet.getInt("operation_id");
+                int moduleId = resultSet.getInt("module_id");
+                String name = resultSet.getString("operation_name");
+                String alias = resultSet.getString("alias");
+                String desc = resultSet.getString("description");
+                boolean status = resultSet.getBoolean("is_active");
+                data.add(new PermissionsEntity(id, moduleId, name,alias, desc, status));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
+
+    public ObservableList<PermissionsEntity> getAccessControlList(int getRoleId) {
+        ObservableList<PermissionsEntity> data = new ObservableStack<>();
+        try {
+            String query = "SELECT * FROM finsuit.access_control WHERE role_id = '"+getRoleId+"';";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            while(resultSet.next()) {
+//               control_id, module_id, role_id, permission_id, is_allowed, date_modified, modified_by
+                int id = resultSet.getInt("control_id");
+                int moduleId = resultSet.getInt("module_id");
+                int roleId = resultSet.getInt("role_id");
+                int permissionId = resultSet.getInt("permission_id");
+                boolean allowed = resultSet.getBoolean("is_allowed");
+                int userId = resultSet.getInt("modified_by");
+                data.add(new PermissionsEntity(moduleId, roleId, permissionId, allowed, userId));
+
+            }
+        }catch (SQLException ignore){}
         return data;
     }
 

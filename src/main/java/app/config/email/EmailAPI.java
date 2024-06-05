@@ -79,9 +79,10 @@ public class EmailAPI extends MainModel {
         String hr = "<hr>";
         return header + body + hr + footer;
     }
-//    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 //        EmailAPI email = new EmailAPI("realmcbond@hotmail.com", "FINSUIT - GHANA", "App passwords aren't recommended and are unnecessary in most cases. To help keep your account secure, use ign in with Google to connect apps to your Google Account.", "this is the message footer...");
-//        email.sendEmail();
-//    }
+//        String response = email.sendEmail();
+//        System.out.println(response);
+    }
 
 }//end of class...

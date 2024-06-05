@@ -25,7 +25,12 @@ public class LoansEntity {
 
     public LoansEntity(){}
 
-    public LoansEntity(int loan_id, String customerName, String loan_no, String loan_type, double requested_amount, double approved_amount, double total_payment, String application_status, String loan_purpose, String loan_status, byte is_drafted, Timestamp date_created, Timestamp date_modified, int created_by, int updated_by, int approved_by) {
+    public LoansEntity(int loan_id, String customerName, String loan_no, String loan_type,
+                       double requested_amount, double approved_amount,
+                       double total_payment, String application_status, String loan_purpose,
+                       String loan_status, byte is_drafted, Timestamp date_created,
+                       Timestamp date_modified, int created_by, int updated_by,
+                       int approved_by) {
         this.loan_id = loan_id;
         this.customerName = customerName;
         this.loan_no = loan_no;

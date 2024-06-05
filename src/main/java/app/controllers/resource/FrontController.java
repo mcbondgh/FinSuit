@@ -6,6 +6,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -17,8 +19,9 @@ import java.util.ResourceBundle;
 public class FrontController implements Initializable{
     @FXML
     private BorderPane borderPane;
+    @FXML private MenuButton menuButton;
     @FXML
-    MFXButton manageUsersButton, viewEmployeesButton, addEmployeeButton, manageAgentsButton;
+    MenuItem manageUsersButton, viewEmployeesButton, addEmployeeButton, manageAgentsButton;
     @FXML
     Pane menuIcon;
     @FXML
@@ -76,8 +79,6 @@ public class FrontController implements Initializable{
         setManageUsersButtonClicked();
         setAgentsPageView();
     }
-
-
 
     @FXML void menuIconClicked() {
         menuContainer.setVisible(!menuContainer.isVisible());

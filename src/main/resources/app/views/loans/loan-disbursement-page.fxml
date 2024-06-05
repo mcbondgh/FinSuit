@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1196.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanDisbursementController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="1100.0" style="-fx-background-color: #f6fbff; -fx-border-color: #eee;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.loans.LoanDisbursementController">
    <children>
-      <Pane fx:id="pane" layoutX="308.0" layoutY="7.0" prefHeight="531.0" prefWidth="825.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
+      <Pane fx:id="pane" layoutX="137.0" layoutY="7.0" prefHeight="531.0" prefWidth="825.0" style="-fx-background-color: WHITE; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;">
          <children>
             <MFXButton fx:id="saveButton" alignment="CENTER" disable="true" layoutX="608.0" layoutY="494.0" onAction="#saveButtonClicked" prefHeight="18.0" prefWidth="82.0" rippleColor="#39b1b3" style="-fx-background-color: #278c8f;" text="💾 Save" textFill="WHITE">
                <font>
@@ -23,7 +23,7 @@
             </MFXButton>
             <TableView fx:id="paymentTable" fixedCellSize="40.0" layoutX="37.0" layoutY="50.0" onMouseMoved="#CheckTableSelection" prefHeight="431.0" prefWidth="743.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-font-family: roboto; -fx-font-size: 12px; -fx-font-weight: bold;">
                <columns>
-                  <TableColumn fx:id="idColumn" prefWidth="76.66668701171875" style="-fx-font-size: 12; -fx-alignment: center;" text="NO." />
+                  <TableColumn fx:id="idColumn" prefWidth="76.66668701171875" style="-fx-font-size: 12; -fx-alignment: center;" text="LOAN ID" />
                   <TableColumn fx:id="loanNumberColumn" prefWidth="179.99993896484375" style="-fx-font-size: 12; -fx-alignment: center;" text="LOAN NUMBER" />
                   <TableColumn fx:id="processingFeeColumn" prefWidth="89.3333740234375" style="-fx-font-size: 12; -fx-alignment: center;" text="PRO. FEE" />
                   <TableColumn fx:id="amountColumn" prefWidth="151.33328247070312" style="-fx-font-size: 12; -fx-alignment: center;" text="LOAN AMOUNT" />
@@ -51,7 +51,7 @@
             </Label>
          </children>
       </Pane>
-      <VBox alignment="TOP_CENTER" layoutX="75.0" layoutY="7.0" prefHeight="76.0" prefWidth="225.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+      <VBox alignment="TOP_CENTER" layoutX="5.0" layoutY="7.0" prefHeight="35.0" prefWidth="123.0" style="-fx-background-color: #FFF; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-background-radius: 5px;" visible="false">
          <children>
             <Label alignment="CENTER" prefHeight="42.0" prefWidth="223.0" style="-fx-background-color: #fff;" text="YOUR BALANCE" textAlignment="CENTER" textFill="#570667" wrapText="true">
                <font>

@@ -6,14 +6,21 @@ import app.config.encryptDecryp.EncryptDecrypt;
 import app.controllers.homepage.AppController;
 import app.models.MainModel;
 import app.models.settings.SettingModel;
-import app.repositories.business.BusinessInfoEntity;
 import app.repositories.SmsAPIEntity;
+import app.repositories.business.BusinessInfoEntity;
+import app.repositories.operations.PermissionsEntity;
 import app.repositories.settings.TemplatesRepository;
 import com.jfoenix.controls.JFXTextArea;
 import io.github.palexdev.materialfx.controls.MFXButton;
+
+import io.github.palexdev.materialfx.controls.MFXCheckbox;
+import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -21,16 +28,17 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import net.synedra.validatorfx.Validator;
 
-
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.security.Permission;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SettingsController extends SettingModel implements Initializable{
@@ -39,6 +47,7 @@ public class SettingsController extends SettingModel implements Initializable{
     MainModel MODEL_OBJECT = new MainModel();
     UserAlerts  ALERT_OBJECT;
     UserNotification NOTIFICATION_OBJECT = new UserNotification();
+    String ACTIVE_USER = AppController.activeUserPlaceHolder;
 
     private static String currentUserPlaceHolder;
 
@@ -110,6 +119,8 @@ public class SettingsController extends SettingModel implements Initializable{
         operationSelector.setItems(getMessageOperations());
         actionEventMethods();
         populateFields();
+        fillUserRolesSelector();
+        actionEventMethodsImplementationForRolesAndPermission();
     }
 
     void populateFields() {
@@ -133,7 +144,7 @@ public class SettingsController extends SettingModel implements Initializable{
             Image logo = new Image(filePath);
             logoViewer.setImage(logo);
         }catch (NullPointerException e) {
-            logger.info(e.getLocalizedMessage());
+            logger.logp(Level.SEVERE, this.getClass().getSimpleName(), "SettingsController::uploadLogo", e.getLocalizedMessage());
         }
     }
 
@@ -365,6 +376,101 @@ public class SettingsController extends SettingModel implements Initializable{
             NOTIFICATION_OBJECT.informationNotification("OPERATION SAVED", "You have successfully assigned a message to a system operation.");
         }
     }
+
+
+
+
+    /*******************************************************************************************************************
+     *********************************************** ACCESS CONTROL AND PERMISSION SECTION
+     ********************************************************************************************************************/
+
+    boolean roleSelectorEmpty() {return roleSelector.getValue().isEmpty();}
+    @FXML private ComboBox<String> roleSelector;
+    @FXML private MFXButton savePermissionButton;
+    @FXML private MFXLegacyTableView<PermissionsEntity> permissionsTable;
+    @FXML private TableView<PermissionsEntity> modulesTable;
+    @FXML private MFXScrollPane scrollPane;
+
+    @FXML private TableColumn<PermissionsEntity, Integer> viewIndex;
+    @FXML private TableColumn<PermissionsEntity, String> viewItemColumn;
+    @FXML private TableColumn<PermissionsEntity, String> viewDescriptionColumn;
+    @FXML private TableColumn<PermissionsEntity, MFXCheckbox> viewButtonColumn;
+
+    @FXML private TableColumn<PermissionsEntity, Integer> accessIndexColumn;
+    @FXML private TableColumn<PermissionsEntity, String> accessNameColumn;
+    @FXML private TableColumn<PermissionsEntity, String> accessDescriptionColumn;
+    @FXML private TableColumn<PermissionsEntity, MFXCheckbox> accessButtonColumn;
+
+    //fill the table views and comboBox with values;
+    void fillUserRolesSelector() {
+        getUserRoles().forEach(item -> {
+            roleSelector.getItems().add(item.getRole_name());
+        });
+        populateViewFields();
+    }
+
+    private void populateViewFields() {
+        viewIndex.setCellValueFactory(new PropertyValueFactory<>("id"));
+        viewItemColumn.setCellValueFactory(new PropertyValueFactory<>("module_name"));
+        viewDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        viewButtonColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
+        modulesTable.getItems().clear();
+        modulesTable.setItems(getAppModules());
+
+        accessIndexColumn.setCellValueFactory(new PropertyValueFactory<>("operation_id"));
+        accessNameColumn.setCellValueFactory(new PropertyValueFactory<>("operationName"));
+        accessDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("operationDescription"));
+        accessButtonColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
+        permissionsTable.setItems(getAllPermissions());
+    }
+
+
+    // implementation of all action event methods here...
+    void actionEventMethodsImplementationForRolesAndPermission() {
+        //enable or disable tables when item upon item selected.
+        roleSelector.setOnAction(actionEvent ->  {
+
+        });
+
+        savePermissionButton.setOnAction(actionEvent -> {
+            //Get variables by based on selected role
+            String roleName = roleSelector.getValue();
+            int ROLE_ID = getRoleIdByName(roleName);
+            int USER_ID = getUserIdByName(ACTIVE_USER);
+            AtomicInteger counter = new AtomicInteger(0);
+
+            UserNotification NOTIFICATION = new UserNotification();
+            PermissionsEntity entity;
+            UserAlerts ALERTS = new UserAlerts("SAVE DATA", "Do you want to save your selected access control permissions for the '" + roleName + "' role?",
+                    "Please confirm your action to SAVE else CANCEL to abort.");
+            if (ALERTS.confirmationAlert()) {
+                //iterate through all the tables and get their corresponding states
+                for (PermissionsEntity item : modulesTable.getItems()) {
+                    for (PermissionsEntity data : permissionsTable.getItems()) {
+                        int moduleId = item.getId();
+                        int permissionId = data.getOperation_id();
+                        boolean status = data.getCheckbox().isSelected();
+//                        System.out.println("module id " + item.getId() + " Role Id " + ROLE_ID + " Permission Id " +
+//                                data.getOperation_id() + " Allow Permission " + data.getCheckbox().isSelected() + " User Id " + USER_ID);
+                        entity = new PermissionsEntity(moduleId, ROLE_ID, permissionId, status, USER_ID);
+                        counter.set(saveAccessControlPermissions(entity));
+                    }
+                }
+                if (counter.get() > 0) {
+                    NOTIFICATION.successNotification("ACCESS CONTROL SAVED", "Nice you have successfully saved permission privilege");
+                } else {
+                    NOTIFICATION.errorNotification("FAILED OPERATION", "Sorry your action was unsuccessful during the process.");
+
+                }
+            }
+        });
+
+    }//end of action event method.
+
+
+
+
+
 
 
 }//end of class...

@@ -1,12 +1,16 @@
 package app.controllers.finance;
 
+import app.errorLogger.ErrorLogger;
 import app.specialmethods.SpecialMethods;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +26,9 @@ public class FinanceController implements Initializable {
     public static String pageTitlePlaceHolder;
     @FXML private BorderPane borderPane;
     @FXML private MFXButton loadTableButton, accountsButton, viewLoansButton, viewCashierSummaryBtn;
+    @FXML private MenuButton menuButton;
+    @FXML private MenuItem accountNav, summaryNav, queuedLoansNav;
+    @FXML private HBox hBox;
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
@@ -54,7 +61,10 @@ public class FinanceController implements Initializable {
     @FXML void businessAccountButtonClicked() {
         try {
             SpecialMethods.FlipView(borderPane, "views/finance/internal-transaction-view.fxml");
-        } catch (IOException ignore) {}
+        } catch (IOException ignore) {
+            ignore.printStackTrace();
+            new ErrorLogger().logMessage(ignore.getMessage(), "businessAccountButtonClicked", this.getClass().getSimpleName());
+        }
 
     }
     @FXML void viewCashierSummary() {

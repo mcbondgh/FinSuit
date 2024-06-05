@@ -156,7 +156,7 @@ public class BusinessAccountController extends FinanceModel implements Initializ
             public void run() {
                 number +=0.3;
                 Platform.runLater(()-> {
-                    progressBar.setAnimationSpeed(10.0);
+                    progressBar.setAnimationSpeed(6.0);
                     checkBalanceBtn.setDisable(true);
                     progressBar.setProgress(number);
                     if (number >= 1) {
@@ -207,8 +207,13 @@ public class BusinessAccountController extends FinanceModel implements Initializ
         revenueAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         revenueDateColumn.setCellValueFactory(new PropertyValueFactory<>("entry_date"));
-        revenueAmountField.setText(getRevenueAccountData().get(0).getBalance());
         revenueLogsTable.setItems(getRevenueAccountData());
+        try {
+            String revenueBal = getRevenueAccountData().get(0).getBalance();
+            revenueAmountField.setText(revenueBal);
+        }catch (IndexOutOfBoundsException ex) {
+            revenueAmountField.setText("0.00");
+        }
     }
 
     void setExpenditureTabValues() {

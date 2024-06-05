@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
@@ -21,7 +22,7 @@
             <Font name="Roboto Black" size="16.0" />
          </font>
       </Label>
-      <Separator layoutX="1.0" layoutY="50.0" prefWidth="1240.0" />
+      <Separator layoutX="1.0" layoutY="50.0" prefHeight="0.0" prefWidth="1114.0" />
       <StackPane layoutX="42.0" layoutY="106.0">
          <children>
             <Pane prefHeight="94.0" prefWidth="220.0" style="-fx-background-color: #71edb336; -fx-background-radius: 10; -fx-border-color: #2c844e; -fx-border-radius: 10;">
@@ -62,12 +63,12 @@
                   </ImageView>
                </children>
             </StackPane>
-            <Label layoutX="102.0" layoutY="20.0" text="Paid Loans" textFill="#329696">
+            <Label layoutX="102.0" layoutY="20.0" text="Fully Paid Loans" textFill="#329696">
                <font>
                   <Font name="Roboto" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="activeAccountsLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#329696">
+            <Label fx:id="paidLoansLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#329696">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -182,12 +183,12 @@
                   </ImageView>
                </children>
             </StackPane>
-            <Label layoutX="97.0" layoutY="20.0" prefHeight="20.0" prefWidth="165.0" text="Transactions Count" textFill="#3faa51">
+            <Label layoutX="97.0" layoutY="20.0" prefHeight="20.0" text="Disbursed Loans" textFill="#3faa51">
                <font>
                   <Font name="Roboto" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="transactionsLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#3faa51">
+            <Label fx:id="disbursedLoansLabel" layoutX="103.0" layoutY="46.0" text="0" textFill="#3faa51">
                <font>
                   <Font name="Roboto Black" size="20.0" />
                </font>
@@ -246,10 +247,13 @@
             </DropShadow>
          </effect>
       </Pane>
-      <Label fx:id="dateLabel" alignment="CENTER" layoutX="282.0" layoutY="5.0" prefHeight="41.0" prefWidth="476.0" style="-fx-border-color: #ddd; -fx-border-radius: 6px; -fx-background-color: #ebf6ff;" textFill="#212122">
+      <Label fx:id="dateLabel" alignment="CENTER" layoutX="282.0" layoutY="5.0" prefHeight="41.0" style="-fx-border-color: #ddd; -fx-border-radius: 6px; -fx-background-color: #ebf6ff;" textFill="#212122">
          <font>
             <Font name="Roboto Bold" size="18.0" />
          </font>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </Label>
    </children>
 </AnchorPane>

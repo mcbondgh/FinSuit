@@ -3,7 +3,6 @@ package app.stages;
 import app.AppStarter;
 import app.alerts.UserAlerts;
 import app.specialmethods.SpecialMethods;
-import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -136,6 +135,18 @@ public class AppStages {
         stage.initModality(Modality.APPLICATION_MODAL);
         return  stage;
     }
+    public static Stage passwordResetStage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/settings/password-resetView.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("ResetPassword");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        return  stage;
+    }
+
     public static Stage withdrawalStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/transactions/withdrawal-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
@@ -169,6 +180,16 @@ public class AppStages {
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UTILITY);
         stage.initModality(Modality.APPLICATION_MODAL);
+        return  stage;
+    }
+
+    public static Stage loanApplicationReport() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("views/reports/UI/loan-reports.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("LOAN APPLICATION REPORT");
+        stage.setScene(scene);
+        stage.centerOnScreen();
         return  stage;
     }
     public static Stage editCustomerDataStage() throws IOException {

@@ -20,9 +20,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.BusinessAccountController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="561.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.finance.BusinessAccountController">
    <children>
-      <SplitPane dividerPositions="0.17756448710257947" layoutX="14.0" layoutY="14.0" minHeight="-Infinity" prefHeight="600.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.17756448710257947" layoutX="14.0" layoutY="14.0" minHeight="-Infinity" prefHeight="557.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="225.0">
                <children>
@@ -110,9 +110,9 @@
                      </children>
                   </VBox>
                </children></AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="537.0" prefWidth="911.0">
                <children>
-                  <TabPane fx:id="tabPane" layoutY="26.0" onMouseClicked="#tabItemSelected" prefHeight="562.6666666666666" prefWidth="960.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TabPane fx:id="tabPane" layoutY="26.0" onMouseClicked="#tabItemSelected" prefHeight="533.0" prefWidth="911.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
                       <Tab style="-fx-backgorund-color: #fff; -fx-font-family: poppins Medium; -fx-padding: 2 5 2 5;" text="Business Transfers">
                         <content>
@@ -408,9 +408,9 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox prefHeight="557.0" prefWidth="911.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <HBox prefHeight="533.0" prefWidth="911.0" spacing="5.0">
                                        <children>
-                                          <VBox prefHeight="543.0" prefWidth="183.0" spacing="10.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
+                                          <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="484.0" prefWidth="183.0" spacing="10.0" style="-fx-border-color: #eee; -fx-border-radius: 5px; -fx-background-color: #fff;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="53.0" prefWidth="749.0" style="-fx-background-color: #eee;" text="Accumulated Revenue" textFill="#696969" wrapText="true">
                                                    <font>
@@ -436,14 +436,14 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </VBox>
-                                          <VBox prefHeight="505.0" prefWidth="711.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 10px; -fx-border-radius: 10px;">
+                                          <VBox prefHeight="479.0" prefWidth="711.0" spacing="10.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-background-radius: 10px; -fx-border-radius: 10px;">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="53.0" prefWidth="699.0" style="-fx-background-color: #eee;" text="Revenue Logs" textFill="#696969">
                                                    <font>
                                                       <Font name="Poppins Medium" size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TableView fx:id="revenueLogsTable" fixedCellSize="35.0" prefHeight="485.0" prefWidth="671.0" style="-fx-font-size: 14px;" tableMenuButtonVisible="true" VBox.vgrow="SOMETIMES">
+                                                <TableView fx:id="revenueLogsTable" fixedCellSize="35.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="411.0" prefWidth="699.0" style="-fx-font-size: 14px;" tableMenuButtonVisible="true" VBox.vgrow="SOMETIMES">
                                                   <columns>
                                                     <TableColumn fx:id="idColumn" prefWidth="53.99998712539673" text="Id" />
                                                     <TableColumn fx:id="revenueAmountColumn" prefWidth="81.99996566772461" text="Amount" />

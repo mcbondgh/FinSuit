@@ -40,6 +40,7 @@ public class AppController extends AppModel implements Initializable {
 
     AppStages APP_STAGES = new AppStages();
     public static String activeUserPlaceHolder;
+    public static String rolePlaceholder;
 
 
 
@@ -90,6 +91,7 @@ public class AppController extends AppModel implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         DashboardController.pageTitlePlaceHolder = dashboardButton.getText();
         activeUsername.setText(activeUserPlaceHolder);
+        roleName.setText(rolePlaceholder);
         setVariables(appNameLabel, siteLogo);
         sidebarPane.getChildren().remove(customerBox);
 

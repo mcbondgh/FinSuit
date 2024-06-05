@@ -377,6 +377,7 @@ public class LoanCalculatorController extends LoansModel implements Initializabl
                 if (flag > 1) {
                     NOTIFY.successNotification("DATA SAVED", "Congratulations, loan processing saved successfully");
                     resetFields();
+                    setComboBoxVariables();
                 }
             }
         }

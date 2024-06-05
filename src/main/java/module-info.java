@@ -15,17 +15,18 @@ module app.finsuit {
     requires jbcrypt;
     requires java.mail;
     requires annotations;
-    requires org.apache.poi.poi;
 //    requires debugger.app;
-    requires kernel;
-    requires layout;
     requires javafx.fxml;
-
-    requires itextpdf;
-    requires transitive io;
     requires com.google.api.services.sqladmin;
     requires spring.web;
-
+    requires org.checkerframework.checker.qual;
+    requires itextpdf;
+    requires org.apache.poi.poi;
+    requires layout;
+    requires io;
+    requires kernel;
+    requires slf4j.api;
+//    requires step.library.kw.excel;
 
     opens app to javafx.fxml;
     exports app;
@@ -50,6 +51,7 @@ module app.finsuit {
     exports app.enums;
     exports app.controllers.reports.ui;
     exports app.repositories.business;
+    exports app.repositories.reports;
 
 
     opens app.controllers;

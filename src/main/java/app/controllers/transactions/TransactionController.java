@@ -10,12 +10,10 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -33,11 +31,12 @@ public class TransactionController extends TransactionModel implements Initializ
     @FXML
     private Label pageTitle;
     public static String pageTitlePlaceHolder;
-    @FXML private MFXButton depositButton, checkBalanceButton, withdrawalButton, loanPaymentButton;
+    @FXML private MenuButton menuButton;
+    @FXML private MenuItem depositButton, checkBalanceButton, viewTransactionsButton,  withdrawalButton, loanPaymentButton;
     @FXML private BorderPane borderPane;
     @FXML private ComboBox<Integer> tableLimitSelector;
     @FXML private TextField searchField;
-    @FXML private MFXButton dashboardButton, viewTransactionsButton, exportButton;
+    @FXML private MFXButton exportButton, dashboardButton;
     @FXML private VBox tableVbox;
 
     @FXML private MFXLegacyTableView<TransactionsEntity> transactionsTable;
@@ -122,13 +121,13 @@ public class TransactionController extends TransactionModel implements Initializ
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
     @FXML void depositButtonClicked() throws IOException {
-        String file = "views/transactions/deposit-page.fxml";
+//        String file = "views/transactions/deposit-page.fxml";
 //        SpecialMethods.FlipView(borderPane, file);
         AppStages.depositStage().show();
     }
 
     void withdrawalButtonClicked() {
-        String file = "views/transactions/withdrawal-page.fxml";
+//        String file = "views/transactions/withdrawal-page.fxml";
         withdrawalButton.setOnAction(e -> {
             try {
 //                SpecialMethods.FlipView(borderPane, file);
@@ -139,7 +138,7 @@ public class TransactionController extends TransactionModel implements Initializ
         });
     }
     void checkBalanceButtonClicked() {
-        String file = "views/transactions/check-balance-page.fxml";
+//        String file = "views/transactions/check-balance-page.fxml";
         checkBalanceButton.setOnAction(e -> {
             try {
 //                SpecialMethods.FlipView(borderPane, file);

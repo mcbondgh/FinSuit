@@ -25,7 +25,7 @@ public class DashboardController extends MainModel implements Initializable {
     @FXML private Label pageTitle, dateLabel;
     public static String pageTitlePlaceHolder;
     @FXML private Label smsBalanceLabel, dueLoansLabel, approvedLoansLabel, partiallyPaidLabel;
-    @FXML private Label totalCustomersLabel, activeAccountsLabel, loanApplicationLabel, transactionsLabel;
+    @FXML private Label totalCustomersLabel, paidLoansLabel, loanApplicationLabel, disbursedLoansLabel;
     @FXML private MFXLegacyTableView<TransactionsEntity> transactionsTable;
     @FXML private TableColumn<TransactionsEntity, String> transactionIdColumn;
     @FXML private  TableColumn<TransactionsEntity, String> transactionTypeColumn;
@@ -52,9 +52,12 @@ public class DashboardController extends MainModel implements Initializable {
         int applicationCounter = 0;
 
         totalCustomersLabel.setText(String.valueOf(totalCustomersCount()));
-        transactionsLabel.setText(String.valueOf(getTotalTransactionsForToday()));
+        disbursedLoansLabel.setText(String.valueOf(getTotalDisbursedLoans()));
         approvedLoansLabel.setText(String.valueOf(getTotalApprovedLoansCount()));
+        dueLoansLabel.setText(String.valueOf(getMonthlyDueLoans()));
+        partiallyPaidLabel.setText(String.valueOf(getPartiallyPaidLoans()));
         loanApplicationLabel.setText(String.valueOf(getTotalLoanRequests()));
+        paidLoansLabel.setText(String.valueOf(getTotalPaidLoans()));
         try {
             smsBalanceLabel.setText(SMS_API.getSmsBalance());
         }catch (Exception ignored) {}

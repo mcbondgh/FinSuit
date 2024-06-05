@@ -15,7 +15,11 @@ public class EncryptDecrypt {
     }
 
     public static boolean verifyHashValue(String plainText, String hashValue) {
-        return BCrypt.checkpw(plainText, hashValue);
+        try {
+            return BCrypt.checkpw(plainText, hashValue);
+        }catch (Exception e) {
+            return false;
+        }
     }
 
 

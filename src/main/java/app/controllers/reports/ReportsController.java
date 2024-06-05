@@ -1,8 +1,7 @@
 package app.controllers.reports;
 
-import app.specialmethods.SpecialMethods;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.collections.ArrayChangeListener;
+import app.stages.AppStages;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,7 +9,6 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.ResourceBundle;
 
 public class ReportsController implements Initializable {
@@ -23,7 +21,8 @@ public class ReportsController implements Initializable {
     @FXML private Pane menuIcon;
     @FXML private VBox menuContainer;
     @FXML private BorderPane borderPane;
-    @FXML private MFXButton transactionViewBtn, userEmployeesBtn, customersBtn, smsBtn, loanReportBtn;
+    @FXML private MenuButton loanReportUIButton;
+    @FXML private MenuItem loansButton, customersButton, assignmentButton, paymentLogsButton, scheduleButton;
 
     public static String pageTitlePlaceHolder;
 
@@ -42,6 +41,7 @@ public class ReportsController implements Initializable {
 
     }
 
+
     /*******************************************************************************************************************
      *********************************************** INPUT FIELDS VALIDATIONS
      ********************************************************************************************************************/
@@ -51,7 +51,9 @@ public class ReportsController implements Initializable {
      *********************************************** ACTION EVENT METHODS IMPLEMENTATION.
      ********************************************************************************************************************/
 
-
+    @FXML private void showLoanReportsView(ActionEvent actionEvent) throws IOException {
+        AppStages.loanApplicationReport().showAndWait();
+    }
 
 
 

@@ -1,14 +1,21 @@
 package app.repositories.loans;
 
+import app.repositories.accounts.CustomersDataRepository;
+
 public class AssignedSupervisors {
     private int counter;
-    private String superName, loanNumber, loanStatus;
+    private String customerName, mobileNumber, loanNumber, loanStatus;
 
-     public AssignedSupervisors(int counter, String superName, String loanNumber, String loanStatus) {
+    private double repayment, totalPayment;
+
+     public AssignedSupervisors(int counter, String customerName, String mobileNumber, String loanNumber, String loanStatus, double repayment, double totalPayment) {
          this.counter = counter;
-         this.superName = superName;
+         this.customerName = customerName;
+         this.mobileNumber = mobileNumber;
          this.loanNumber = loanNumber;
          this.loanStatus = loanStatus;
+         this.repayment = repayment;
+         this.totalPayment = totalPayment;
      }
 
      public String getLoanStatus() {
@@ -27,13 +34,6 @@ public class AssignedSupervisors {
          this.loanNumber = loanNumber;
      }
 
-     public String getSuperName() {
-         return superName;
-     }
-
-     public void setSuperName(String superName) {
-         this.superName = superName;
-     }
 
     public int getCounter() {
         return counter;
@@ -41,5 +41,37 @@ public class AssignedSupervisors {
 
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    public double getTotalPayment() {
+        return totalPayment;
+    }
+
+    public void setTotalPayment(double totalPayment) {
+        this.totalPayment = totalPayment;
+    }
+
+    public double getRepayment() {
+        return repayment;
+    }
+
+    public void setRepayment(double repayment) {
+        this.repayment = repayment;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 }

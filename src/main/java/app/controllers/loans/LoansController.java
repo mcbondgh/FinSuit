@@ -17,9 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -46,11 +44,11 @@ public class LoansController extends LoansModel implements Initializable {
     @FXML private BorderPane borderPane;
     @FXML private HBox hBox;
     @FXML private VBox anchorPane;
-
+    @FXML private MenuButton menuButton;
     @FXML
-    private MFXButton addNewLoanButton, disburseFundBtn, loadTableButton,
-            loanRequestsButton, generateSheetButton, uploadSheetButton, viewLoansButton;
-    @FXML private MFXButton generateScheduleButton, viewLoansBtn;
+    private MenuItem addNewLoanButton, disburseFundBtn, generateSheetButton, viewLoansButton;
+    @FXML private MenuItem loanAssignmentButton, repaymentButton, unprocessedLoansButton;
+    @FXML private MFXButton uploadSheetButton, loadTableButton;
     @FXML private MFXLegacyTableView<LoansTableEntity> loanApplicantsTable;
     @FXML private TableColumn<LoansTableEntity, Integer> noColumn;
     @FXML private TableColumn<LoansTableEntity, String>fullNameColumn;
@@ -106,8 +104,8 @@ public class LoansController extends LoansModel implements Initializable {
         int counter = countRequestedLoans();
         int counter1 = countAssignedLoans();
         int counter2 = countUnpaidLoans();
-        loanRequestsButton.setText(loanRequestsButton.getText() + " (" + counter +")");
-        generateScheduleButton.setText(generateScheduleButton.getText() + " (" + counter1 +")");
+        unprocessedLoansButton.setText(unprocessedLoansButton.getText() + " (" + counter1 +")");
+        loanAssignmentButton.setText(loanAssignmentButton.getText() + " (" + counter +")");
         disburseFundBtn.setText(disburseFundBtn.getText () + " (" + counter2  + ")");
     }
     public void searchCustomerMethod(KeyEvent event) {
@@ -194,7 +192,7 @@ public class LoansController extends LoansModel implements Initializable {
         }
     }
     @FXML
-    public void setLoanRequestsButtonClicked() {
+    public void loanAssignmentButtonClicked() {
         try {
             borderPane.getChildren().remove(0);
             String fxmlFile = "views/loans/loan-supervisor-assignment-view.fxml";
@@ -221,13 +219,12 @@ public class LoansController extends LoansModel implements Initializable {
         borderPane.setCenter(anchorPane);
         populateTable();
     }
-    @FXML void ScheduleButtonClicked() throws IOException {
+    @FXML void unprocessedLoansButtonClicked() throws IOException {
         AppStages.loanCalculatorStage().show();
     }
 
-    @FXML void viewLoansBtnClicked() {
+    @FXML void loanRepaymentButtonClicked() {
         try {
-
             AppStages.loanScheduleAndRepaymentStage().showAndWait();
 //            borderPane.getChildren().remove(0);
 //            String fxmlFile = "views/loans/loan-schedule-page.fxml";

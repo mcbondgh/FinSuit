@@ -257,6 +257,46 @@ CREATE TABLE IF NOT EXISTS agents(
     is_deleted BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS logins(
+	id INT PRIMARY KEY,
+    user_id INT,
+    role_id TINYINT,
+    entry_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- 02/06/2024 
+CREATE TABLE IF NOT EXISTS modules(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    module_name VARCHAR(50),
+    alias VARCHAR(50),
+    description VARCHAR(255),
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS permissions(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    module_id INT NOT NULL COMMENT 'Holds the ID to a perticular MODULE or VIEW',
+    operation_id INT NOT NULL COMMENT 'Holds the id to a specific operation in the system',
+    role_id INT NOT NULL comment'Holds the ID to the specific role that can perform this opetaion',
+    is_allowed BOOLEAN DEFAULT FALSE comment 'holds a YES OR NO BOOLEAN VALUE that determins in a perticular role is permitted to have access to a view or operation',
+	FOREIGN KEY (modules) REFERENCES modules(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (operation_id) REFERENCES operation(operation_id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS operation(
+	operation_id INT PRIMARY KEY AUTO_INCREMENT,
+    module_id INT,
+    operation_name VARCHAR(50),
+    alias VARCHAR(50),
+    description VARCHAR(255),
+    FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+
+
 ALTER TABLE customer_data ADD COLUMN agent_id INT;
 ALTER TABLE customer_data ADD FOREIGN KEY fk_customer_agent 
 (agent_id) REFERENCES agents(agent_id);
@@ -310,3 +350,43 @@ UPDATE notifications SET `read` = true WHERE(id = 367);
 
 SELECT * FROM message_logs;
 UPDATE message_logs SET status = ?, sent_date = DEFAULT, sent_by = ?  WHERE(log_id = ?);
+
+-- SET FOREIGN_KEY_CHECKS = FALSE;
+
+
+-- 31/05/2024
+SELECT username, user_password, role_name, is_active FROM users AS u
+INNER JOIN roles AS r 
+USING(role_id) WHERE(username = 'admin' AND is_deleted = 0 AND is_active = 1);
+
+SELECT COUNT(loan_id) AS part_payments FROM loans
+WHERE total_payment != repayment_amount;
+
+SELECT COUNT(loan_id) cleared FROM loans AS total
+WHERE loan_status = 'cleared';
+
+SELECT COUNT(loan_no) as due FROM loan_schedule 
+WHERE payment_date = CURRENT_DATE();
+
+SELECT COUNT(loan_id) disbursed FROM loans 
+WHERE application_status = 'disbursed';
+
+ SELECT gs.emp_id , concat(firstname, ' ',lastname) AS `supervisor`,
+        gs.loan_id AS `loan_number`, application_status, entry_date FROM employees AS emp
+                    INNER JOIN group_supervisors AS gs
+                    ON emp.work_id = gs.emp_id
+                    INNER JOIN loans AS ln
+                    ON gs.loan_id = ln.loan_no;
+                    
+INSERT INTO cusotmer_account_data(customer_id, account_type, account_status, account_number, modified_by)
+VALUES(?, ?, ?, ?, ?);
+
+INSERT INTO access_control(module_id, role_id, permission_id, is_allowed, modified_by)
+VALUES(?, ?, ?, ?, ?)
+ON DUPLICATE KEY 
+UPDATE 
+permission_id = VALUES(?),
+is_allowed = VALUES(?),
+modified_by = VALUES(?);
+
+

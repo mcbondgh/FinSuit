@@ -103,7 +103,7 @@ public class SpecialMethods {
         }
     }
     public static void setDesignation(ComboBox<String> comboBox) {
-        String[] items = {"G. Manager", "C.F.O", "Finance Department", "Accounts Department", "Security & Sanitation", "Sales Department"};
+        String[] items = {"G.Manager", "C.F.O", "Finance Department", "Accounts Department", "Security & Sanitation", "Sales Department"};
         for (String x : items) {
             comboBox.getItems().add(x);
         }
@@ -159,7 +159,7 @@ public class SpecialMethods {
     }
 
     public static void setLoanType(ComboBox<String> comboBox) {
-        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Agro Loan", ""};
+        String[] items = {"Business Loan", "Church Loan", "Group Loan", "Personal Loan", "Agro Loan", "Salary Loan"};
         Arrays.sort(items);
         Arrays.stream(items).toList().forEach(item -> comboBox.getItems().add(item));
     }

@@ -47,8 +47,8 @@ public class MessagesModel extends MainModel {
         try {
             String query = """
                     SELECT log_id, sent_to, title, message, status, username, sent_date FROM finsuit.message_logs AS ml
-                    	INNER JOIN users AS u ON\s
-                        u.user_id = ml.sent_by;
+                           INNER JOIN users AS u ON\s
+                           u.user_id = ml.sent_by ORDER BY log_id DESC LIMIT 100;
                     """;
             resultSet = getConnection().prepareStatement(query).executeQuery();
             while (resultSet.next()) {

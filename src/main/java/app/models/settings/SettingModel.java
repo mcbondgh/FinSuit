@@ -1,6 +1,7 @@
 package app.models.settings;
 
 import app.models.MainModel;
+import app.repositories.operations.PermissionsEntity;
 
 import java.sql.SQLException;
 
@@ -79,9 +80,37 @@ public class SettingModel extends MainModel {
             preparedStatement.setInt(1, tempId);
             preparedStatement.setString(2, operation);
             preparedStatement.execute();
+
             preparedStatement.close();
             getConnection().close();
         }catch (Exception ignore) {}
+    }
+
+    protected int saveAccessControlPermissions(PermissionsEntity entity) {
+        try {
+            //control_id, module_id, role_id, permission_id, is_allowed, date_modified, modified_by
+            String query = """
+                        INSERT INTO access_control(module_id, role_id, permission_id, is_allowed, modified_by)
+                        VALUES(?, ?, ?, ?, ?)
+                        ON DUPLICATE KEY\s
+                        UPDATE\s
+                        permission_id = ?,
+                        is_allowed = ?,
+                        modified_by = ?;
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, entity.getModule_id() );
+            preparedStatement.setInt(2, entity.getRoleId());
+            preparedStatement.setInt(3, entity.getOperation_id());
+            preparedStatement.setBoolean(4, entity.getAllowed());
+            preparedStatement.setInt(5, entity.getModified_by());
+            preparedStatement.setInt(6, entity.getOperation_id());
+            preparedStatement.setBoolean(7, entity.getAllowed());
+            preparedStatement.setInt(8, entity.getModified_by());
+            return preparedStatement.executeUpdate();
+        }catch (SQLException ex) {ex.printStackTrace();}
+
+        return 0;
     }
 
 

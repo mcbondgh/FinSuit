@@ -26,16 +26,16 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1293.0" style="-fx-background-color: #eee;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.homepage.AppController">
    <HBox layoutY="35.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0">
       <children>
-         <VBox fx:id="sidebarPane" prefHeight="628.0" prefWidth="250.0" spacing="10.0" style="-fx-background-color: #eee;">
+         <VBox fx:id="sidebarPane" prefHeight="611.0" prefWidth="233.0" spacing="10.0" style="-fx-background-color: #eee;">
             <children>
-               <HBox fx:id="dashboardBox" alignment="CENTER" prefHeight="31.0" prefWidth="171.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="dashboardBox" accessibleText="dashboard" alignment="CENTER" prefHeight="31.0" prefWidth="171.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="dashboardIcon" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-dashboard-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Dashboard" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="dashboardButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Dashboard" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -51,17 +51,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="financeBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="financeBox" accessibleText="finance" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="dashboardIcon1" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-accountancy-85.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="financeButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Finance" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="financeButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Finance" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -77,17 +77,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="messageBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="messageBox" accessibleText="message_box" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo131" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-create-64.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="messageBoxButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Message Box" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="messageBoxButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Message Box" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -103,17 +103,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="customerBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="customerBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo13" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-customers-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="customersButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customersxx\" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="customersButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Customersxx\" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -129,17 +129,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="accountBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="accountBox" accessibleText="customer_accounts" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo15" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-wallet-50.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="accountsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Customers" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="accountsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Customers" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -155,17 +155,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="transactionBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="transactionBox" accessibleText="transactions" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo16" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-cash-payment-66.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="transactionButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Transactions" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="transactionButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Transactions" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -181,17 +181,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="loanBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="loanBox" accessibleText="loan_management" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo17" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-personal-loan-66.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="loansButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Manage Loans" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="loansButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Manage Loans" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -207,17 +207,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="resourceBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="resourceBox" accessibleText="human_resource" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo18" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-human-resource-100.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="humanResourceButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Human Resource" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="humanResourceButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Human Resource" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -233,17 +233,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="reportBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="reportBox" accessibleText="reports" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo181" fitHeight="20.0" fitWidth="20.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-paid-100.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="reportsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Reports" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="reportsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Reports" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -259,17 +259,17 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
-               <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff;">
+               <HBox fx:id="settingsBox" accessibleText="settings" alignment="CENTER" prefHeight="31.0" prefWidth="173.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 0 5px 5px 0;">
                   <children>
                      <ImageView fx:id="siteLogo1811" fitHeight="35.0" fitWidth="25.0" mouseTransparent="true" opacity="0.44" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-automatic-100.png" />
                         </image>
                      </ImageView>
-                     <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #eee;" text="Settings" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
+                     <MFXButton fx:id="settingsButton" alignment="BASELINE_LEFT" depthLevel="LEVEL1" graphicTextGap="1.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="150.0" rippleAnimateShadow="true" style="-fx-background-color: #fff;" text="Settings" textAlignment="CENTER" textFill="#262525" HBox.hgrow="SOMETIMES">
                         <font>
                            <Font name="Poppins Black" size="13.0" />
                         </font>
@@ -282,7 +282,7 @@
                      </MFXButton>
                   </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </HBox>
             </children>
@@ -422,17 +422,17 @@
             <children>
                <Label fx:id="activeUsername" layoutX="7.0" layoutY="1.0" mouseTransparent="true" prefHeight="19.0" prefWidth="191.0" text="Active User">
                   <font>
-                     <Font name="Dubai Bold" size="15.0" />
+                     <Font name="Poppins Medium" size="15.0" />
                   </font>
                </Label>
                <Label fx:id="roleName" layoutX="7.0" layoutY="23.0" mouseTransparent="true" prefHeight="25.0" prefWidth="171.0" text="role" textFill="#d40a0a">
                   <font>
-                     <Font name="Dubai Medium" size="14.0" />
+                     <Font name="Poppins Medium" size="13.0" />
                   </font>
                </Label>
-               <Pane fx:id="signOutButton" layoutX="-4.0" layoutY="113.0" prefHeight="32.0" prefWidth="207.0">
+               <Pane fx:id="signOutButton" layoutY="113.0" prefHeight="32.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-background-radius: 0 0 5 5;">
                   <children>
-                     <ImageView fitHeight="28.0" fitWidth="24.0" layoutX="8.0" layoutY="7.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                     <ImageView fitHeight="28.0" fitWidth="24.0" layoutX="8.0" layoutY="5.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                         <image>
                            <Image url="@images/icons8-logout-rounded.gif" />
                         </image>
@@ -447,18 +447,18 @@
                      <Cursor fx:constant="HAND" />
                   </cursor>
                </Pane>
-               <Label fx:id="updatePasswordLabel" layoutX="7.0" layoutY="48.0" mouseTransparent="true" prefHeight="29.0" prefWidth="147.0" text="Update Password" textFill="#626262">
+               <Label fx:id="updatePasswordLabel" disable="true" layoutX="7.0" layoutY="48.0" mouseTransparent="true" prefHeight="29.0" prefWidth="147.0" text="Update Password" textFill="#626262">
                   <font>
-                     <Font name="Dubai Medium" size="14.0" />
+                     <Font name="Poppins Medium" size="13.0" />
                   </font>
                   <cursor>
                      <Cursor fx:constant="HAND" />
                   </cursor>
                </Label>
-               <Separator layoutX="-3.0" layoutY="109.0" prefWidth="200.0" />
-               <Label fx:id="updatePasswordLabel1" layoutX="7.0" layoutY="75.0" mouseTransparent="true" prefHeight="29.0" prefWidth="171.0" text="Help" textFill="#626262">
+               <Separator layoutY="109.0" prefHeight="4.0" prefWidth="200.0" />
+               <Label fx:id="updatePasswordLabel1" disable="true" layoutX="7.0" layoutY="75.0" mouseTransparent="true" prefHeight="29.0" prefWidth="171.0" text="Help" textFill="#626262">
                   <font>
-                     <Font name="Dubai Medium" size="14.0" />
+                     <Font name="Poppins Medium" size="13.0" />
                   </font>
                   <cursor>
                      <Cursor fx:constant="HAND" />

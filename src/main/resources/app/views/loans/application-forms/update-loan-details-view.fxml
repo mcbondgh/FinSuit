@@ -510,12 +510,12 @@
                               </Label>
                            </children>
                         </Pane>
-                        <MFXButton fx:id="saveButton" disable="true" layoutX="803.0" layoutY="1350.0" onAction="#saveButtonOnAction" prefHeight="32.0" prefWidth="117.0" style="-fx-background-color: #278c8f;" text="Apply For Loan" textFill="WHITE">
+                        <MFXButton fx:id="saveButton" disable="true" layoutX="803.0" layoutY="1350.0" onAction="#saveButtonOnAction" prefHeight="32.0" prefWidth="117.0" style="-fx-background-color: #278c8f;" text="UPDATE" textFill="WHITE">
                            <font>
                               <Font name="Poppins Bold" size="12.0" />
                            </font>
                         </MFXButton>
-                        <MFXButton fx:id="resetButton" depthLevel="LEVEL0" layoutX="932.0" layoutY="1350.0" prefHeight="32.0" prefWidth="110.0" style="-fx-border-radius: 5px; -fx-background-color: #ddd;" text="Reset Fields" textFill="#040404">
+                        <MFXButton fx:id="resetButton" depthLevel="LEVEL0" layoutX="932.0" layoutY="1350.0" prefHeight="32.0" prefWidth="110.0" style="-fx-border-radius: 5px; -fx-background-color: #ddd;" text="RESET FIELDS" textFill="#040404">
                            <font>
                               <Font name="Poppins Regular" size="12.0" />
                            </font>

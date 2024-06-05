@@ -150,7 +150,7 @@
             <TableColumn fx:id="balanceColumn" prefWidth="114.66668701171875" style="-fx-alignment: center;" text="BAL" />
             <TableColumn fx:id="statusColumn" prefWidth="134.6666259765625" style="-fx-alignment: center;" text=" STATUS " />
             <TableColumn fx:id="actionColumn" maxWidth="150.6666259765625" prefWidth="100.666748046875" style="-fx-alignment: center;" text="ACTION" />
-            <TableColumn fx:id="logsColumn" minWidth="0.0" prefWidth="3.3333740234375" style="-fx-alignment: center;" text="LOGS" />
+            <TableColumn fx:id="logsColumn" editable="false" minWidth="0.0" prefWidth="3.3333740234375" style="-fx-alignment: center;" text="LOGS" visible="false" />
          </columns>
       </TableView>
       <ListView fx:id="listView" fixedCellSize="30.0" layoutX="9.0" layoutY="206.0" onMouseClicked="#getSelectedLoanNumber" prefHeight="377.0" prefWidth="201.0" style="-fx-background-radius: 5px; -fx-font-size: 14px; -fx-font-family: roboto; -fx-font-weight: bold;" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="206.0" />

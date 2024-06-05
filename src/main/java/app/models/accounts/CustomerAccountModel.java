@@ -103,6 +103,7 @@ public class CustomerAccountModel extends MainModel {
             rollBack();
         }
     }
+
     protected void saveDocument(CustomersDocumentRepository documentRepository) {
         try {
             String query = "INSERT INTO customer_document(customer_id, document_name, file_content, reason_for_upload, uploaded_by) VALUES(?,?,?,?,?)";

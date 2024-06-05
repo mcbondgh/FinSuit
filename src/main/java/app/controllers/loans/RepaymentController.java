@@ -175,7 +175,7 @@ public class RepaymentController extends LoansModel implements Initializable {
             paidAmount.setText(data.get("total_payment").toString());
             balanceAmount.setText(data.get("balance").toString());
             disbursedAmount.setText(data.get("approved_amount").toString());
-            byte[] imageByte = data.get("image").toString().getBytes();
+            byte[] imageByte = (byte[]) data.get("picture");
             Image image = new Image(new ByteArrayInputStream(imageByte));
             applicantProfileImage.setImage(image);
             //Equality, Opportunity,

@@ -16,9 +16,18 @@ public class CustomerAccountsDataRepository {
     private String loanNo;
     private int modified_by;
 
+
     public CustomerAccountsDataRepository() {}
+
+    public CustomerAccountsDataRepository(long customer_id, String account_type, String account_number, int modified_by){
+        this.customer_id = customer_id;
+        this.account_type = account_type;
+        this.account_number = account_number;
+        this.modified_by = modified_by;
+    }
+
     public CustomerAccountsDataRepository(long account_id, int customer_id,  String account_number, String loanNo, String account_type, String account_status, double account_balance, double previous_balance, Timestamp date_modified, int modified_by) {
-        this.customer_id = account_id;
+        this.account_id = account_id;
         this.customer_id = customer_id;
         this.account_number = account_number;
         this.loanNo = loanNo;

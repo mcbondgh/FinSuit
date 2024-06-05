@@ -89,7 +89,9 @@ public class ViewAccountController extends CustomerAccountModel implements Initi
                         return true;
                     } else if (customersTableData.getFullname().toLowerCase().contains(searchKeyWord)) {
                         return true;
-                    } else return customersTableData.getAccount_status().toLowerCase().contains(searchKeyWord);
+                    } else if (customersTableData.getMobile_number().toLowerCase().contains(searchKeyWord)) {
+                            return true;
+                    } else return customersTableData.getAccount_type().toLowerCase().contains(searchKeyWord);
                 });
             });
             SortedList<ViewCustomersTableDataRepository> sortedResult = new SortedList<>(filteredList);

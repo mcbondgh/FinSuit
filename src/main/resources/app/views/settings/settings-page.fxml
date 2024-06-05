@@ -2,6 +2,8 @@
 
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.CheckBox?>
@@ -12,12 +14,16 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
@@ -32,7 +38,7 @@
       <Separator layoutX="1.0" layoutY="38.0" prefHeight="0.0" prefWidth="1240.0" />
       <TabPane layoutX="2.6666666666666665" layoutY="39.0" prefHeight="590.0" prefWidth="1087.0" rotateGraphic="true" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0">
         <tabs>
-            <Tab style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="System Variables">
+            <Tab id="system_information_tab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="System Variables">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="557.0" prefWidth="1092.0" style="-fx-background-color: #f6fcff;">
                      <children>
@@ -288,7 +294,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-          <Tab style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="SMS Templates">
+          <Tab id="message_tamplate_tab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="SMS Templates">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>
@@ -372,7 +378,16 @@
                                     <Font name="Poppins Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="templateSelector" layoutX="34.0" layoutY="216.0" prefHeight="41.0" prefWidth="268.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                              <VBox layoutX="34.0" layoutY="195.0">
+                                 <children>
+                                    <Label prefHeight="17.0" prefWidth="177.0" text="Seletec Message Template *">
+                                       <font>
+                                          <Font name="Poppins Regular" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="templateSelector" prefHeight="41.0" prefWidth="268.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                                 </children>
+                              </VBox>
                               <ComboBox fx:id="operationSelector" layoutX="34.0" layoutY="306.0" prefHeight="41.0" prefWidth="268.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
                               <Pane layoutX="21.0" layoutY="64.0" prefHeight="99.0" prefWidth="293.0" style="-fx-background-color: #e3f1ff; -fx-background-radius: 10px;">
                                  <children>
@@ -391,11 +406,6 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </MFXButton>
-                              <Label layoutX="37.0" layoutY="195.0" prefHeight="17.0" prefWidth="177.0" text="Seletec Message Template *">
-                                 <font>
-                                    <Font name="Poppins Regular" size="12.0" />
-                                 </font>
-                              </Label>
                               <Label layoutX="37.0" layoutY="282.0" prefHeight="17.0" prefWidth="177.0" text="Select Operation *">
                                  <font>
                                     <Font name="Poppins Regular" size="12.0" />
@@ -407,9 +417,92 @@
                   </AnchorPane>
                </content>
           </Tab>
-            <Tab style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Access Control">
+            <Tab id="access_control_tab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Access Control">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
+                     <children>
+                        <VBox layoutX="274.0" layoutY="162.0" prefHeight="1500.0" prefWidth="1111.3333333333333" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <VBox prefHeight="153.0" prefWidth="1091.0" style="-fx-background-color: #fff; -fx-background-radius: 10px;">
+                                 <children>
+                                    <StackPane prefHeight="45.0" prefWidth="1091.0" style="-fx-background-color: #f0f0f09a; -fx-opacity: 0.67;">
+                                       <children>
+                                          <Label prefHeight="57.0" prefWidth="440.0" text="USER ACCESS AND PERMISSION CONTROL">
+                                             <font>
+                                                <Font name="Arial Narrow Bold" size="25.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </StackPane>
+                                    <HBox alignment="CENTER" prefHeight="72.0" prefWidth="1071.0" spacing="10.0">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <VBox prefHeight="93.0" prefWidth="911.0" spacing="5.0">
+                                             <children>
+                                                <Label prefHeight="17.0" prefWidth="177.0" text="Select a Role *" textFill="#cc0b0b">
+                                                   <font>
+                                                      <Font name="Poppins Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="roleSelector" prefHeight="41.0" prefWidth="1099.0" style="-fx-background-color: #eee; -fx-background-radius: 5; -fx-font-size: 14px; -fx-font-family: poppins;" />
+                                             </children>
+                                          </VBox>
+                                          <MFXButton fx:id="savePermissionButton" disable="true" prefHeight="33.0" prefWidth="117.0" style="-fx-background-color: #278c8f;" text="SAVE" textFill="WHITE">
+                                             <font>
+                                                <Font name="Poppins Medium" size="12.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <HBox.margin>
+                                                <Insets top="18.0" />
+                                             </HBox.margin>
+                                          </MFXButton>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <MFXScrollPane fx:id="scrollPane" disable="true" prefHeight="405.0" prefWidth="1091.0" style="-fx-background-color: #fff; -fx-background-radius: 0 0 10 10; -fx-border-color: #eee; -fx-border-radius: 10px;">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets bottom="10.0" left="50.0" right="30.0" top="10.0" />
+                                 </padding>
+                                 <content>
+                                    <VBox prefHeight="932.0" prefWidth="989.0" spacing="10.0">
+                                       <children>
+                                          <TableView fx:id="modulesTable" fixedCellSize="30.0" prefHeight="374.0" prefWidth="979.0" style="-fx-font-family: poppins semibold; -fx-font-size: 13px;">
+                                             <columns>
+                                                <TableColumn fx:id="viewIndex" prefWidth="50.66662871837616" text="INDEX" visible="false" />
+                                                <TableColumn fx:id="viewItemColumn" prefWidth="202.0000103712082" text="VIEW NAME" />
+                                                <TableColumn fx:id="viewDescriptionColumn" prefWidth="702.0000305175781" text="DESCRIPTION" />
+                                                <TableColumn fx:id="viewButtonColumn" prefWidth="74.6666259765625" text="ALLOW" />
+                                             </columns>
+                                          </TableView>
+                                          <MFXLegacyTableView fx:id="permissionsTable" fixedCellSize="30.0" prefHeight="568.0" prefWidth="979.0" style="-fx-font-family: poppins semibold; -fx-font-size: 13px;">
+                                             <columns>
+                                                <TableColumn fx:id="accessIndexColumn" prefWidth="97.99999511241913" text="INDEX" visible="false" />
+                                                <TableColumn fx:id="accessNameColumn" prefWidth="225.99994933605194" text="VIEW NAME" />
+                                                <TableColumn fx:id="accessDescriptionColumn" prefWidth="673.3334655761719" text="DESCRIPTION" />
+                                                <TableColumn fx:id="accessButtonColumn" prefWidth="80.66656494140625" text="ALLOW" />
+                                             </columns>
+                                          </MFXLegacyTableView>
+                                       </children>
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </MFXScrollPane>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children></AnchorPane>
                </content>
             </Tab>
         </tabs>

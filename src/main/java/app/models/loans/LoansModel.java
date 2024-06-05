@@ -2,6 +2,7 @@ package app.models.loans;
 
 import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
+import app.repositories.accounts.CustomerAccountsDataRepository;
 import app.repositories.accounts.CustomersDataRepository;
 import app.repositories.loans.*;
 import app.repositories.transactions.TransactionsEntity;
@@ -93,14 +94,6 @@ public class LoansModel extends MainModel {
                     "contact_person_fullname, contact_person_number, contact_person_gender, contact_person_landmark, contact_person_digital_address,  contact_person_id_type, " +
                     "contact_person_id_number, contact_person_place_of_work, institution_address, relationship_to_applicant," +
                     "created_by, agent_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            String query2 = "INSERT INTO loan_applicant_details(loan_no, profile_picture, image, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, " +
-                    "basic_salary, gross_salary, total_deduction, net_salary, guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address," +
-                    "guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation," +
-                    "guarantor_place_of_work, guarantor_institution_address, guarantor_income) " +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-
             preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, customer.getFirstname());
             preparedStatement.setString(2, customer.getLastname());
@@ -132,6 +125,12 @@ public class LoansModel extends MainModel {
             preparedStatement.setInt(28, customer.getAgentId());
             flag = preparedStatement.executeUpdate();
 
+            String query2 = "INSERT INTO loan_applicant_details(loan_no, profile_picture, image, company_name, company_mobile_number, company_address, staff_id, occupation, employment_date, " +
+                    "basic_salary, gross_salary, total_deduction, net_salary, guarantor_name, guarantor_gender, guarantor_number, guarantor_digital_address," +
+                    "guarantor_landmark, guarantor_idType, guarantor_idNumber, guarantor_relationship, guarantor_occupation," +
+                    "guarantor_place_of_work, guarantor_institution_address, guarantor_income) " +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
             preparedStatement = getConnection().prepareStatement(query2);
             preparedStatement.setString(1, applicationEntity.getLoan_no());
             preparedStatement.setString(2, applicationEntity.getProfile_picture());
@@ -159,6 +158,7 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(24, applicationEntity.getGuranter_institution_address());
             preparedStatement.setDouble(25, applicationEntity.getNet_salary());
             flag += preparedStatement.executeUpdate();
+
             preparedStatement.close();
             getConnection().close();
         }catch (Exception e) {
@@ -168,7 +168,7 @@ public class LoansModel extends MainModel {
         }
         return flag;
     }
-    protected int createLoan(long customerId, String loanNo, String loanType, double requestedAmount, String loanPurpose, int userId) {
+    protected int createLoan(long customerId, String loanNo, String loanType, double requestedAmount, String loanPurpose, int userId, CustomerAccountsDataRepository account) {
         int flag = 0;
         try {
             String query = "INSERT INTO loans(customer_id, loan_no, loan_type, is_drafted, requested_amount, loan_purpose, created_by) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -181,6 +181,17 @@ public class LoansModel extends MainModel {
             preparedStatement.setString(6, loanPurpose);
             preparedStatement.setInt(7, userId);
             flag = preparedStatement.executeUpdate();
+
+            String query1 = """
+                        INSERT INTO customer_account_data(customer_id, account_type, account_number, modified_by)
+                        VALUES(?, ?, ?, ?);
+                    """;
+            preparedStatement =getConnection().prepareStatement(query1);
+            preparedStatement.setLong(1, account.getCustomer_id());
+            preparedStatement.setString(2, account.getAccount_type());
+            preparedStatement.setString(3, account.getAccount_number());
+            preparedStatement.setInt(4, account.getModified_by());
+            flag += preparedStatement.executeUpdate();
             preparedStatement.close();
             getConnection().close();
         } catch (SQLException e) {
@@ -450,9 +461,10 @@ public class LoansModel extends MainModel {
         ObservableList<String> data = FXCollections.observableArrayList();
         try {
             String query = "SELECT DISTINCT gs.loan_id, emp_id FROM group_supervisors as gs\n" +
-                    "INNER JOIN loans AS ln\n" +
-                    "ON gs.loan_id = ln.loan_no\n" +
-                    "WHERE(gs.emp_id = '"+employeeId+"' AND application_status = 'processing');";
+                    "   INNER JOIN loans AS ln\n" +
+                    "    ON gs.loan_id = ln.loan_no\n" +
+                    "    INNER JOIN roles AS rl\n" +
+                    "    WHERE((gs.emp_id = '"+employeeId+"' OR role_name ='admin' OR role_name = 'super_admin') AND application_status = 'processing');";
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
             while(resultSet.next()) {

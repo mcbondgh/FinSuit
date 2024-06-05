@@ -6,6 +6,8 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
@@ -48,7 +50,7 @@
                               <Insets left="5.0" />
                            </padding>
                         </TextField>
-                        <MFXButton fx:id="exportButton" layoutX="1075.0" layoutY="8.0" onAction="#exportTableToPdfOnClick" prefHeight="25.0" prefWidth="96.0" text="Export As PDF" textFill="RED" visible="false">
+                        <MFXButton fx:id="exportButton" layoutX="966.0" layoutY="8.0" onAction="#exportTableToPdfOnClick" prefHeight="25.0" prefWidth="96.0" text="Export As PDF" textFill="RED" visible="false">
                            <font>
                               <Font name="Poppins Medium" size="12.0" />
                            </font>
@@ -78,9 +80,9 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </BorderPane>
-      <HBox alignment="CENTER" layoutX="615.3333333333334" layoutY="14.666666666666668" prefHeight="38.0" prefWidth="487.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;" AnchorPane.bottomAnchor="579.0" AnchorPane.leftAnchor="614.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="13.0">
+      <HBox alignment="CENTER" layoutX="709.3333333333334" layoutY="15.333333333333334" prefHeight="35.0" prefWidth="391.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;" visible="false" AnchorPane.bottomAnchor="581.0" AnchorPane.leftAnchor="708.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="14.0">
          <children>
-            <MFXButton fx:id="viewTransactionsButton" buttonType="RAISED" depthLevel="LEVEL0" onAction="#showTransactionTable" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #ff0000;" text="View Table" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #ff0000;" text="View Table" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -88,7 +90,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="depositButton" buttonType="RAISED" depthLevel="LEVEL0" onAction="#depositButtonClicked" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Deposit" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Deposit" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -96,7 +98,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="withdrawalButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Withdrawal" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Withdrawal" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="12.0" />
                </font>
@@ -104,15 +106,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </MFXButton>
-            <MFXButton fx:id="checkBalanceButton" buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Check Balance" textFill="WHITE" textOverrun="CLIP">
-               <font>
-                  <Font name="Poppins Bold" size="11.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </MFXButton>
-            <MFXButton fx:id="dashboardButton" buttonType="RAISED" depthLevel="LEVEL0" onAction="#showTellerDashboard" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #1e90ff;" text="Dashboard" textFill="WHITE" textOverrun="CLIP">
+            <MFXButton buttonType="RAISED" depthLevel="LEVEL0" prefHeight="25.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #278c8f;" text="Check Balance" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="Poppins Bold" size="11.0" />
                </font>
@@ -128,6 +122,42 @@
                </color>
             </DropShadow>
          </effect>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="823.0" layoutY="10.0" prefHeight="41.0" prefWidth="273.0" spacing="5.0" style="-fx-background-color: #fff; -fx-background-radius: 5px;">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.7894737124443054" green="0.7894737124443054" blue="0.7894737124443054" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <MenuButton fx:id="menuButton" mnemonicParsing="false" prefHeight="16.0" prefWidth="163.0" style="-fx-background-color: #278c8f;" text="MENU LIST" textFill="WHITE">
+               <items>
+                  <MenuItem id="transaction_logs_button" fx:id="viewTransactionsButton" onAction="#showTransactionTable" style="-fx-font-size: 13px; -fx-font-family: poppins semibold; -fx-pref-width: 150; -fx-padding: 5 0 5 0;" text="LOAN TABLE 🔄" />
+                  <MenuItem id="deposit_button" fx:id="depositButton" onAction="#depositButtonClicked" style="-fx-font-size: 13px; -fx-font-family: poppins semibold; -fx-pref-width: 150; -fx-padding: 5 0 5 0;" text="MAKE DEPOSIT 📥" />
+                  <MenuItem id="withdrawal_button" fx:id="withdrawalButton" style="-fx-font-size: 13px; -fx-font-family: poppins semibold; -fx-pref-width: 150; -fx-padding: 5 0 5 0;" text="MAKE WITHDRAWAL 📤" />
+                  <MenuItem id="check_balance_button" fx:id="checkBalanceButton" style="-fx-font-size: 13px; -fx-font-family: poppins semibold; -fx-pref-width: 150; -fx-padding: 5 0 5 0;" text="CHECK BALANCE 💳" />
+               </items>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font name="Poppins SemiBold" size="12.0" />
+               </font>
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+            </MenuButton>
+            <MFXButton fx:id="dashboardButton" accessibleText="dashboard_button" buttonType="RAISED" depthLevel="LEVEL0" onAction="#showTellerDashboard" prefHeight="33.0" prefWidth="90.0" rippleAnimateShadow="true" rippleColor="#c3c3c3" rippleRadius="50.0" style="-fx-background-color: #1e90ff;" text="Dashboard" textFill="WHITE" textOverrun="CLIP">
+               <font>
+                  <Font name="Poppins Bold" size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MFXButton>
+         </children>
       </HBox>
    </children>
 </AnchorPane>

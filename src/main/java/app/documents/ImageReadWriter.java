@@ -18,11 +18,11 @@ import java.io.IOException;
 
 public class ImageReadWriter {
     static ErrorLogger log = new ErrorLogger();
-    public static final String absolutePath = "C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\uploads";
-    public static final File defaultImageName = new File("C:\\Users\\Druglord\\Documents\\FinSuit\\src\\main\\resources\\app\\images\\profile.png");
+    public static final String absolutePath = "/src/main/resources/app/uploads";
+    public static final File defaultImageName = new File("src/main/resources/app/images/profile.png");
     static final long STANDARD_IMAGE_SIZE = (300 * 1024);
 
-    public static void saveImageToDestination(String imageName, @NotNull ImageView uploadedImage ){
+    public static void saveImageToDestination(String imageName, @NotNull ImageView uploadedImage ) throws FileNotFoundException {
         Image selectedImage = uploadedImage.getImage();
         File destinationFolder = new File(absolutePath);
         if (selectedImage != null) {

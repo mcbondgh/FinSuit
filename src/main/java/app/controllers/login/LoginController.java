@@ -6,44 +6,55 @@ import app.models.MainModel;
 import app.repositories.users.UsersData;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXProgressBar;
+import javafx.animation.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import org.checkerframework.checker.units.qual.K;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoginController extends MainModel implements Initializable{
 
+//    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
     AppStages APP_STAGES = new AppStages();
 
 
     /*******************************************************************************************************************
      *********************************************** FXML NODE EJECTION
      ********************************************************************************************************************/
-    @FXML private Label appNameHeader, resetPasswordLink;
+    @FXML private Label appNameHeader;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private MFXButton loginButton, closeButton;
-    @FXML private Pane loginIndicator;
+    @FXML private Label loginIndicator;
     @FXML private ImageView logoViewer;
+    @FXML private Hyperlink resetPasswordLink, activateButton;
+    @FXML private MFXProgressBar progressBar;
+    @FXML private VBox loadingPane;
 
 
     /*******************************************************************************************************************
      *********************************************** TRUE OR FALSE STATEMENTS
      ********************************************************************************************************************/
-
-
 
     /*******************************************************************************************************************
      *********************************************** IMPLEMENTATION OF OTHER METHODS.
@@ -67,20 +78,53 @@ public class LoginController extends MainModel implements Initializable{
 //        }
     }
 
+
     /*******************************************************************************************************************
      *********************************************** ACTION EVENT METHODS
      ********************************************************************************************************************/
     void buttonClickEvent() {
         loginButton.setOnAction(event -> {
-            loginIndicator.setVisible(true);
+//            loginIndicator.setVisible(true);
             try {
-                AppController.activeUserPlaceHolder = Objects.equals(usernameField.getText(), "") ? "Admin" : usernameField.getText();                ;
-                AppStages.MainStage();
-                loginButton.getScene().getWindow().hide();
-            } catch (IOException e) {throw new RuntimeException(e);}
+                String username = usernameField.getText();
+                String password = passwordField.getText();
+                AuthenticateUserLogins authenticateUserLogins = new AuthenticateUserLogins(username, password);
+                UsersData usersData = authenticateUserLogins.getDetails();
+
+                if(!Objects.equals(usersData.getUsername(), null)) {
+                    AppController.activeUserPlaceHolder = usersData.getUsername();
+                    AppController.rolePlaceholder = usersData.getRole();
+                    loginIndicator.setVisible(true);
+                    loginIndicator.setStyle("-fx-background-color:green");
+                    loginIndicator.setText("✔ Authentication successful");
+                    //show homepage after user successful login and hide the login page.
+                    AppStages.MainStage();
+                    loginButton.getScene().getWindow().hide();
+
+                    int userId = getUserIdByName(usersData.getUsername());
+                    byte roleId = (byte) getRoleIdByName(usersData.getRole());
+                    recordUserLogin(userId, roleId);
+                } else {
+                    loginIndicator.setVisible(true);
+                }
+            } catch (Exception e) {
+                loginIndicator.setVisible(true);
+//                throw new RuntimeException(e);
+            }
+
         });
+
         closeButton.setOnAction(event -> {
-            System.exit(0);
+            Platform.exit();
+//            System.exit(0);
+        });
+
+        resetPasswordLink.setOnAction(actionEvent -> {
+            try {
+                AppStages.passwordResetStage().showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 

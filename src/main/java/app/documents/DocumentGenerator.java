@@ -4,41 +4,36 @@ import app.errorLogger.ErrorLogger;
 import app.models.MainModel;
 import app.repositories.business.BusinessInfoEntity;
 import app.repositories.documents.ReceiptsEntity;
+import app.repositories.loans.AssignedSupervisors;
 import app.repositories.loans.CollectionSheetEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
 import app.repositories.transactions.TransactionsEntity;
-import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.colors.Color;
-import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfObject;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.draw.DottedLine;
-import com.itextpdf.kernel.pdf.colorspace.PdfColorSpace;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.BorderCollapsePropertyValue;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
-import com.itextpdf.text.BadElementException;
-import com.sun.mail.iap.ByteArray;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BackgroundFill;
+import com.itextpdf.layout.*;
+import com.itextpdf.layout.property.*;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.*;
+
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -46,7 +41,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Locale;
+
 
 public class DocumentGenerator {
 
@@ -56,14 +51,15 @@ public class DocumentGenerator {
 
     public DocumentGenerator() {
     }
-    
+
+
     /*
     THE PURPOSE OF THIS CLASS IS TO ENABLE US GENERATE ALL REQUIRED DOCUMENT FORMAT ie excel, word, ppt and pdf FOR
     OUR APPLICATION. WE ARE GOING TO DEFILE CUSTOM METHODS THAT WOULD REPRESENT EVERY DOCUMENT BASED ON ITS
     FUNCTIONALITY. ie receipts, reports, excel files AND OTHER RELATED DOCUMENTS.
      */
 
-    Div documentHeader() throws BadElementException, IOException {
+    Div documentHeader() throws IOException {
         Div container = new Div();
         Div parentContainer = new Div();
         //GET BUSINESS CREDENTIALS FOR THE LETTER HEAD.
@@ -73,7 +69,7 @@ public class DocumentGenerator {
         String digitalAddress = "";
         Image image = null;
 
-        Table table = new Table(2);
+       Table table = new Table(2);
         table.useAllAvailableWidth();
         table.setBorder(Border.NO_BORDER);
 
@@ -84,7 +80,6 @@ public class DocumentGenerator {
             email = data.getEmail();
             digitalAddress = data.getDigital();
             image = new Image(ImageDataFactory.create(data.getLogo()));
-            image.setHeight(50);
 
         }
         //CREATE A PARAGRAPH TO HOLD THE VARIOUS TEXTS IN THE LETTER HEAD...
@@ -106,6 +101,7 @@ public class DocumentGenerator {
         parentContainer.add(headerSection);
         return parentContainer;
     }
+
 
     StringBuilder excelDocumentHeader() {
         StringBuilder builder = new StringBuilder();
@@ -139,21 +135,21 @@ public class DocumentGenerator {
             String todayDate = LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
 
             //Create Table Cells
-           table.addHeaderCell(new Cell(0, 6).add(new Paragraph("YOUR DAILY TRANSACTION LOGS").setBold()).setTextAlignment(TextAlignment.CENTER));
-           table.addHeaderCell(new Cell(0, 3).add(new Paragraph("CASHIER NAME")).setBold().setVerticalAlignment(VerticalAlignment.MIDDLE));
-           table.addHeaderCell(new Cell(0, 3).add(new Paragraph(cashierName)));
-           table.addHeaderCell(new Cell(0, 3).add(new Paragraph("DATE")).setBold().setVerticalAlignment(VerticalAlignment.MIDDLE));
-           table.addHeaderCell(new Cell(0, 3).add(new Paragraph(todayDate)));
-           table.addHeaderCell(new Paragraph("NO.").setBold());
-           table.addHeaderCell(new Paragraph("TRANSACTION ID").setBold());
-           table.addHeaderCell(new Paragraph("TRANSACTION TYPE").setBold());
-           table.addHeaderCell(new Paragraph("PAYMENT METHOD").setBold());
-           table.addHeaderCell(new Paragraph("AMOUNT").setBold());
-           table.addHeaderCell(new Paragraph("TIME").setBold());
+            table.addHeaderCell(new Cell(0, 6).add(new Paragraph("YOUR DAILY TRANSACTION LOGS").setBold()).setTextAlignment(TextAlignment.CENTER));
+            table.addHeaderCell(new Cell(0, 3).add(new Paragraph("CASHIER NAME")).setBold().setVerticalAlignment(VerticalAlignment.MIDDLE));
+            table.addHeaderCell(new Cell(0, 3).add(new Paragraph(cashierName)));
+            table.addHeaderCell(new Cell(0, 3).add(new Paragraph("DATE")).setBold().setVerticalAlignment(VerticalAlignment.MIDDLE));
+            table.addHeaderCell(new Cell(0, 3).add(new Paragraph(todayDate)));
+            table.addHeaderCell(new Paragraph("NO.").setBold());
+            table.addHeaderCell(new Paragraph("TRANSACTION ID").setBold());
+            table.addHeaderCell(new Paragraph("TRANSACTION TYPE").setBold());
+            table.addHeaderCell(new Paragraph("PAYMENT METHOD").setBold());
+            table.addHeaderCell(new Paragraph("AMOUNT").setBold());
+            table.addHeaderCell(new Paragraph("TIME").setBold());
 
-           NumberFormat numberFormat = NumberFormat.getInstance();
+            NumberFormat numberFormat = NumberFormat.getInstance();
 
-           //iterate through the table and get each value for the table
+            //iterate through the table and get each value for the table
             for(TransactionsEntity item : tableView.getItems()) {
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getId()))));
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getTransaction_id()))));
@@ -254,7 +250,7 @@ public class DocumentGenerator {
 
 
     /*******************************************************************************************************************
-    *************************************** ACCOUNT CREATION API *************************************************
+     *************************************** ACCOUNT CREATION API *************************************************
      ******************************************************************************************************************/
     public File createDirectoryIfNotExist() {
         File path = new File(System.getProperty("user.home") + File.separator + "Desktop");
@@ -307,8 +303,6 @@ public class DocumentGenerator {
             document.close();
         }catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (BadElementException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -325,7 +319,7 @@ public class DocumentGenerator {
 
             CellStyle sheetHeaderStyle = workbook.createCellStyle();
             sheetHeaderStyle.setFont(font);
-            sheetHeaderStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+            ((CellStyle) sheetHeaderStyle).setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
             sheetHeaderStyle.setBorderBottom(BorderStyle.DASHED);
 
             //Lets create the header rows for the table cells with their various names.
@@ -440,7 +434,7 @@ public class DocumentGenerator {
             NumberFormat formatValue = NumberFormat.getInstance();
 
             Table table = new Table(6).useAllAvailableWidth();
-            table.addCell(new Cell(0, 6).add(new Paragraph("YOUR LOAN REPAYMENT SCHEDULE").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));//row 0
+            table.addCell(new com.itextpdf.layout.element.Cell(0, 6).add(new Paragraph("YOUR LOAN REPAYMENT SCHEDULE").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER)));//row 0
             table.addCell(new Cell(0, 4).add(new Paragraph("CUSTOMER FULL NAME").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 1
             table.addCell(new Cell(0, 2).add(new Paragraph(documentName).setTextAlignment(TextAlignment.CENTER))); //row 1
             table.addCell(new Cell(0, 4).add(new Paragraph("LOAN AMOUNT (PRINCIPAL + INTEREST)").setBold().setFontSize(10).setTextAlignment(TextAlignment.CENTER))); //row 2
@@ -549,7 +543,7 @@ public class DocumentGenerator {
             nameAndDateRow.createCell(3).setCellValue("COLLECTION DATE");
             nameAndDateRowData.createCell(3).setCellValue(collectionDate);
 
-           int tableLength = entityTableView.getColumns().size();
+            int tableLength = entityTableView.getColumns().size();
             for (int i = 0; i < tableLength; i++) {
                 tableHeaders.createCell(i).setCellValue(entityTableView.getColumns().get(i).getText());
             }
@@ -641,6 +635,53 @@ public class DocumentGenerator {
         return status;
     }
 
+    public int exportAssignedSupervisorTable(String documentName, TableView<AssignedSupervisors> tableView) {
+        int status = 200;
+        try {
+            File receiptFolder = new File(createDirectoryIfNotExist().getPath() + File.separator + "Assigned Supervisors file\\");
+            if (!receiptFolder.exists()) {
+                receiptFolder.mkdir();
+            }
+            File pdfFile = new File(receiptFolder, documentName.concat(".pdf"));
+            PdfWriter pdfWriter = new PdfWriter(pdfFile);
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+
+            Document document = new Document(pdfDocument, PageSize.A4);
+
+            Table table = new Table(tableView.getVisibleLeafColumns().size());
+            table.useAllAvailableWidth();
+            table.setBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
+
+            Paragraph supervisorLabel = new Paragraph("Supervisor's Name").setBold().setFontSize(10);
+            Paragraph supervisorName = new Paragraph(documentName.toUpperCase()).setBold().setFontSize(10);
+            Paragraph footer = new Paragraph("Generated Date: "+LocalDateTime.now()).setFontSize(8);
+
+            table.addHeaderCell(new Cell(0, 3).add(supervisorLabel));
+            table.addHeaderCell(new Cell(0, 4).add(supervisorName));
+
+
+            tableView.getVisibleLeafColumns().forEach(item -> {
+                table.addCell(new Cell().add(new Paragraph(item.getText())).setBold().setFontSize(8));
+            });
+            for (AssignedSupervisors item : tableView.getItems()) {
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getCounter())).setFontSize(9)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getCustomerName())).setFontSize(9)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getMobileNumber())).setFontSize(9)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getLoanNumber())).setFontSize(9)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getLoanStatus())).setFontSize(9)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getRepayment())).setFontSize(9)));
+                table.addCell(new Cell().add(new Paragraph(String.valueOf(item.getTotalPayment())).setFontSize(9)));
+            }
+
+            document.add(documentHeader()).add(table).add(new Div().add(footer));
+            document.close();
+            return status;
+        }catch (Exception e){
+            errorLogger.logMessage(e.getLocalizedMessage(), "exportAssignedSupervisorsTable", className);
+            status = 400;
+        }
+        return status;
+    }
 
 
 }// end of class...

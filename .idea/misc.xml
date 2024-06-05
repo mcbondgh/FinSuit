@@ -1,10 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/pdfa-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/itext7-core-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/svg-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/io-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/pdftest-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/sign-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/styled-xml-parser-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/kernel-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/font-asian-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/root-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/barcodes-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/hyph-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/forms-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/layout-7.1.4.pom" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/barcodes-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/font-asian-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/layout-7.1.4.pom" />
+        <option value="$PROJECT_DIR$/../iText7-Core-7.1.4/pdfa-7.1.4.pom" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">

@@ -15,16 +15,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="600.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.resource.ManageUsersController">
    <children>
       <Pane fx:id="addEmployeePane" prefHeight="563.0" prefWidth="1114.0" style="-fx-background-color: #f6fbff;">
          <children>
             <Pane fx:id="usersPanel" layoutX="43.0" layoutY="21.0" prefHeight="498.0" prefWidth="347.0" style="-fx-background-color: #fff; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;">
                <children>
-                  <Pane layoutX="1.0" layoutY="1.0" prefHeight="50.0" prefWidth="345.0" style="-fx-background-color: #2478b2; -fx-background-radius: 5 5 0 0;">
+                  <Pane layoutX="1.0" layoutY="1.0" prefHeight="50.0" prefWidth="345.0" style="-fx-background-color: #eee; -fx-background-radius: 5 5 0 0;">
                      <children>
-                        <Label layoutX="114.0" layoutY="14.0" text="MANAGE USERS" textFill="WHITE">
+                        <Label layoutX="114.0" layoutY="14.0" text="MANAGE USERS" textFill="#828282">
                            <font>
                               <Font name="Poppins Bold" size="15.0" />
                            </font>
@@ -63,10 +62,13 @@
                      </opaqueInsets>
                   </Label>
                   <Separator layoutX="1.0" layoutY="439.0" prefHeight="0.0" prefWidth="345.0" />
-                  <MFXButton fx:id="addNewUserButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="70.0" layoutY="455.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="➕ADD" textFill="WHITE" wrapText="true">
+                  <MFXButton fx:id="addNewUserButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="70.0" layoutY="455.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #278c8f;" text="➕ADD" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="Poppins Bold" size="9.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </MFXButton>
                   <MFXButton fx:id="cancelButton" depthLevel="LEVEL1" layoutX="169.0" layoutY="455.0" prefHeight="30.0" prefWidth="85.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #eee; -fx-border-color: #ddd; -fx-border-radius: 5;" text="❌ CANCEL">
                      <cursor>
@@ -125,10 +127,13 @@
                         <TableColumn fx:id="removeColumn" prefWidth="78.6666259765625" style="-fx-text-fill: #be0606; -fx-alignment: center;" text="ACTION" />
                      </columns>
                   </MFXLegacyTableView>
-                  <MFXButton fx:id="saveButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="551.0" layoutY="454.0" prefHeight="30.0" prefWidth="108.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #2478b2;" text="🔄 UPDATE" textFill="WHITE" wrapText="true">
+                  <MFXButton fx:id="saveButton" defaultButton="true" depthLevel="LEVEL1" disable="true" layoutX="551.0" layoutY="454.0" prefHeight="30.0" prefWidth="108.0" rippleAnimationSpeed="4.0" style="-fx-background-color: #278c8f;" text="🔄 UPDATE" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="Poppins Bold" size="9.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </MFXButton>
                </children>
             </Pane>

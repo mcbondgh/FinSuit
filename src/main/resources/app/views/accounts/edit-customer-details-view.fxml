@@ -419,7 +419,7 @@
             </Pane>
             <Pane layoutX="11.0" layoutY="23.0" prefHeight="48.0" prefWidth="1173.0" style="-fx-background-color: #d8ecff; -fx-background-radius: 10 10 0 0;">
                <children>
-                  <JFXCheckBox fx:id="editCheckBox" checkedColor="#f40000" layoutX="34.0" layoutY="12.0" text="ENABLE EDIT" textFill="#f00000">
+                  <JFXCheckBox fx:id="editCheckBox" accessibleText="edit_biodata" checkedColor="#f40000" layoutX="34.0" layoutY="12.0" text="ENABLE EDIT" textFill="#f00000">
                      <font>
                         <Font name="Poppins Bold" size="15.0" />
                      </font>

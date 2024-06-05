@@ -421,7 +421,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
     }
 
     @FXML private void saveButtonClicked() throws IOException {
-        int currentUserId = getUserIdByName(AppController.activeUserPlaceHolder);
+        int ACTIVE_USER_ID = getUserIdByName(AppController.activeUserPlaceHolder);
         String loanNumber = loanNumberLabel.getText();
         String loanType = loanTypeSelector.getValue();
         double loanAmount = Double.parseDouble(loanRequestField.getText());
@@ -504,7 +504,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
             customerRepository.setContact_person_place_of_work(placeOfWork);
             customerRepository.setInstitution_address(institutionAddress);
             customerRepository.setRelationship_to_applicant(contactRelationshipType);
-            customerRepository.setCreated_by(currentUserId);
+            customerRepository.setCreated_by(ACTIVE_USER_ID);
             customerRepository.setAgentId(AGENT_ID.get());
 
             applicationEntity.setLoan_no(loanNumber);
@@ -533,8 +533,14 @@ public class LoanApplicationController extends LoansModel implements Initializab
             applicationEntity.setGuranter_institution_address(guarantorInstitutionAdd);
             applicationEntity.setGuranter_income(guarantorNetSalary);
 
+            String accountType = "Loan Account";
+            String accountNumber = SpecialMethods.generateAccountNumber(totalCustomersCount() +1);
+
+
             int flag = applyForLoan(applicationEntity, customerRepository);
-            flag += createLoan( totalCustomersCount(), loanNumber, loanType, loanAmount, loanPurpose, currentUserId);
+
+            CustomerAccountsDataRepository accountsDataRepository = new CustomerAccountsDataRepository(totalCustomersCount(), accountType, accountNumber, ACTIVE_USER_ID);
+            flag += createLoan(totalCustomersCount(), loanNumber, loanType, loanAmount, loanPurpose, ACTIVE_USER_ID, accountsDataRepository);
 
             String message = new MessageBuilders().loanApplicationMessageBuilder(firstName.concat(" ").concat(lastName), loanNumber, loanType, loanAmount);
             try {
@@ -544,7 +550,7 @@ public class LoanApplicationController extends LoansModel implements Initializab
                 logsEntity.setTitle("Loan Application");
                 logsEntity.setMessage(message);
                 logsEntity.setStatus(statusValue);
-                logsEntity.setSent_by(currentUserId);
+                logsEntity.setSent_by(ACTIVE_USER_ID);
                 new MessagesModel().logNotificationMessages(logsEntity);
             }catch (Exception e) {
                 new MessagesModel().logNotificationMessages(logsEntity);
