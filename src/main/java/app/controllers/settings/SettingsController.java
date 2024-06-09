@@ -16,14 +16,17 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXCheckbox;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView;
-import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import net.synedra.validatorfx.Validator;
@@ -33,9 +36,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.security.Permission;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -242,7 +243,6 @@ public class SettingsController extends SettingModel implements Initializable{
 
     }
 
-
     @FXML void checkMessagesTitleName() {
         String value = messageTitleField.getText().toUpperCase();
         for (Object title : templateListView.getItems()) {
@@ -388,13 +388,10 @@ public class SettingsController extends SettingModel implements Initializable{
     @FXML private ComboBox<String> roleSelector;
     @FXML private MFXButton savePermissionButton;
     @FXML private MFXLegacyTableView<PermissionsEntity> permissionsTable;
-    @FXML private TableView<PermissionsEntity> modulesTable;
+    @FXML private GridPane viewGridPane;
     @FXML private MFXScrollPane scrollPane;
-
-    @FXML private TableColumn<PermissionsEntity, Integer> viewIndex;
-    @FXML private TableColumn<PermissionsEntity, String> viewItemColumn;
-    @FXML private TableColumn<PermissionsEntity, String> viewDescriptionColumn;
-    @FXML private TableColumn<PermissionsEntity, MFXCheckbox> viewButtonColumn;
+    @FXML private CheckBox dashboardViewSelector,financeViewSelector, transactionViewSelector, customersViewSelector;
+    @FXML private CheckBox reportViewSelector,resourceViewSelector, messageViewSelector, settingsViewSelector, loansViewSelector;
 
     @FXML private TableColumn<PermissionsEntity, Integer> accessIndexColumn;
     @FXML private TableColumn<PermissionsEntity, String> accessNameColumn;
@@ -410,18 +407,95 @@ public class SettingsController extends SettingModel implements Initializable{
     }
 
     private void populateViewFields() {
-        viewIndex.setCellValueFactory(new PropertyValueFactory<>("id"));
-        viewItemColumn.setCellValueFactory(new PropertyValueFactory<>("module_name"));
-        viewDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        viewButtonColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
-        modulesTable.getItems().clear();
-        modulesTable.setItems(getAppModules());
-
         accessIndexColumn.setCellValueFactory(new PropertyValueFactory<>("operation_id"));
-        accessNameColumn.setCellValueFactory(new PropertyValueFactory<>("operationName"));
-        accessDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("operationDescription"));
+        accessNameColumn.setCellValueFactory(new PropertyValueFactory<>("operation_name"));
+        accessDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("descriptions"));
         accessButtonColumn.setCellValueFactory(new PropertyValueFactory<>("checkbox"));
         permissionsTable.setItems(getAllPermissions());
+    }
+
+    //this method when invoked shall get the status for each selected role item from the database.
+    void getModuleStatusByRoleName() {
+        int ROLE_ID = getRoleIdByName(roleSelector.getValue());
+        int tableSize = permissionsTable.getItems().size();
+        int gridSize = viewGridPane.getChildren().size();
+        ObservableList<PermissionsEntity> moduleData = getModuleControlList(ROLE_ID);
+        for (int i = 0; i <gridSize; i++) {
+            String text = viewGridPane.getChildren().get(i).getAccessibleText();
+            String module = moduleData.get(i).getModule_name();
+            if (Objects.equals(text, module)){
+                CheckBox check = (CheckBox) viewGridPane.getChildren().get(i);
+                check.setSelected(moduleData.get(i).isAllowModule());
+            }
+
+        }
+
+        ObservableList<PermissionsEntity> accessData = getAccessControlList(ROLE_ID);
+        for (int i = 0; i < tableSize; i++) {
+            boolean status = accessData.get(i).isAllowPermission();
+            int dataId = accessData.get(i).getPermission_id();
+            int tableId = permissionsTable.getItems().get(i).getPermission_id();
+            if (Objects.equals(dataId, tableId)) {
+                permissionsTable.getItems().get(i).setAllowPermission(status);
+            }
+        }
+
+//        ArrayList<String> gridList = new ArrayList<>();
+//        int gridSize = viewGridPane.getChildren().size();
+//        for (int i = 0; i < gridSize; i++) {
+//            CheckBox checkBox = (CheckBox) viewGridPane.getChildren().get(i);
+//            gridList.add(viewGridPane.getChildren().get(i).getAccessibleText());
+//            for (int j = 0; j < gridSize; j++) {
+//                String textName = gridList.get(i);
+//                if (Objects.equals(textName, getAppModules().get(j).getAlias())) {
+//                    checkBox.setSelected(getAppModules().get(j).getAllowed());
+//                }
+//            }
+//        }
+//         ObservableList<PermissionsEntity> accessControlList = getAccessControlList(ROLE_ID);
+    }
+
+    int getAccessControlSelectedPermissions() {
+        String roleName = roleSelector.getValue();
+        int ROLE_ID = getRoleIdByName(roleName);
+        int USER_ID = getUserIdByName(ACTIVE_USER);
+        int gridSize = viewGridPane.getChildren().size();
+        int tableSize = permissionsTable.getItems().size();
+        PermissionsEntity permissions = new PermissionsEntity();
+        AtomicInteger counter = new AtomicInteger(0);
+
+        //iterate through the grid and get all selected VIEW CHECKBOXES
+        for (int i = 0; i < gridSize; i++) {
+            CheckBox checkbox = (CheckBox) viewGridPane.getChildren().get(i);
+            boolean status = checkbox.isSelected();
+            String name = getAppModules().get(i).getModule_name();
+            permissions.setModule_name(name);
+            permissions.setAllowModule(status);
+            permissions.setRole_id(ROLE_ID);
+            if (countDuplicateKeysInModulesTable(name, ROLE_ID) > 0) {
+                counter.getAndAdd(updateModuleControlTable(status, name, ROLE_ID));
+            } else {
+                counter.getAndAdd(saveModuleControlVariables(permissions));
+            }
+        }
+
+        //iterate through the PERMISSIONS TABLE and get all selected CHECKBOXES
+        for (PermissionsEntity item : permissionsTable.getItems()) {
+            int itemId = item.getOperation_id();
+            boolean allowed = item.getCheckbox().isSelected();
+            permissions.setRole_id(ROLE_ID);
+            permissions.setOperation_id(itemId);
+            permissions.setModified_by(USER_ID);
+            permissions.setAllowPermission(allowed);
+
+            if (countDuplicateKeysInAccessControlTable(itemId, ROLE_ID) > 0) {
+                counter.getAndAdd(updateAccessControlTableOnDuplicateKeys(allowed, itemId, ROLE_ID));
+            }else {
+                counter.getAndAdd(saveAccessControlPermissions(permissions));
+            }
+
+        }
+        return counter.get();
     }
 
 
@@ -429,38 +503,27 @@ public class SettingsController extends SettingModel implements Initializable{
     void actionEventMethodsImplementationForRolesAndPermission() {
         //enable or disable tables when item upon item selected.
         roleSelector.setOnAction(actionEvent ->  {
-
+            savePermissionButton.setDisable(false);
+            getModuleStatusByRoleName();
         });
 
         savePermissionButton.setOnAction(actionEvent -> {
             //Get variables by based on selected role
-            String roleName = roleSelector.getValue();
-            int ROLE_ID = getRoleIdByName(roleName);
-            int USER_ID = getUserIdByName(ACTIVE_USER);
+            savePermissionButton.setDisable(true);
             AtomicInteger counter = new AtomicInteger(0);
+            String roleName = roleSelector.getValue();
 
             UserNotification NOTIFICATION = new UserNotification();
-            PermissionsEntity entity;
             UserAlerts ALERTS = new UserAlerts("SAVE DATA", "Do you want to save your selected access control permissions for the '" + roleName + "' role?",
                     "Please confirm your action to SAVE else CANCEL to abort.");
             if (ALERTS.confirmationAlert()) {
-                //iterate through all the tables and get their corresponding states
-                for (PermissionsEntity item : modulesTable.getItems()) {
-                    for (PermissionsEntity data : permissionsTable.getItems()) {
-                        int moduleId = item.getId();
-                        int permissionId = data.getOperation_id();
-                        boolean status = data.getCheckbox().isSelected();
-//                        System.out.println("module id " + item.getId() + " Role Id " + ROLE_ID + " Permission Id " +
-//                                data.getOperation_id() + " Allow Permission " + data.getCheckbox().isSelected() + " User Id " + USER_ID);
-                        entity = new PermissionsEntity(moduleId, ROLE_ID, permissionId, status, USER_ID);
-                        counter.set(saveAccessControlPermissions(entity));
-                    }
-                }
+                counter.set(getAccessControlSelectedPermissions());
                 if (counter.get() > 0) {
+                    System.out.println(counter.get());
+                    savePermissionButton.setDisable(false);
                     NOTIFICATION.successNotification("ACCESS CONTROL SAVED", "Nice you have successfully saved permission privilege");
                 } else {
                     NOTIFICATION.errorNotification("FAILED OPERATION", "Sorry your action was unsuccessful during the process.");
-
                 }
             }
         });

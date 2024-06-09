@@ -26,6 +26,7 @@ module app.finsuit {
     requires io;
     requires kernel;
     requires slf4j.api;
+    requires kotlin.stdlib;
 //    requires step.library.kw.excel;
 
     opens app to javafx.fxml;

@@ -9,9 +9,8 @@ public class AppStarter extends Application {
     @Override
     public void start(Stage stage){
         try {
-            AppStages.LoginStage();
-        }catch (Exception e) {
-            e.printStackTrace();
+            AppStages.mainStage();
+        }catch (Exception ignore) {
            AppStages.databaseFailedStage().show();
         }
     }

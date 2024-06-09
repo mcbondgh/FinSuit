@@ -232,7 +232,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab id="send_sms_tab" fx:id="smsTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Send Messages">
+            <Tab id="send_sms_tab" fx:id="smsTab" disable="true" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="Send Messages">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>
@@ -443,7 +443,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab id="topup_tab" fx:id="topUpTab" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="To Up SMS">
+            <Tab id="topup_tab" fx:id="topUpTab" disable="true" style="-fx-font-family: roboto; -fx-font-size: 14px; -fx-background-color: #fff;" text="To Up SMS">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #f6fbff;">
                      <children>

@@ -1598,7 +1598,8 @@ public class MainModel extends DbConnection {
     public ObservableList<PermissionsEntity> getAppModules() {
         ObservableList<PermissionsEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT * FROM finsuit.modules ORDER BY id ASC;";
+            String query = "SELECT * FROM finsuit.modules;";
+//            id, module_name, alias, descriptions, is_active
             resultSet = getConnection().createStatement().executeQuery(query);
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -1618,14 +1619,30 @@ public class MainModel extends DbConnection {
             String query = "SELECT * FROM finsuit.permissions ORDER BY operation_id ASC;";
             resultSet = getConnection().createStatement().executeQuery(query);
             while(resultSet.next()) {
-//                operation_id, module_id, operation_name, alias, description, is_active
+//              operation_id, module_id, operation_name, alias, description, is_active
                 int id = resultSet.getInt("operation_id");
-                int moduleId = resultSet.getInt("module_id");
+                int module_id = resultSet.getInt("module_id");
                 String name = resultSet.getString("operation_name");
                 String alias = resultSet.getString("alias");
                 String desc = resultSet.getString("description");
                 boolean status = resultSet.getBoolean("is_active");
-                data.add(new PermissionsEntity(id, moduleId, name,alias, desc, status));
+                data.add(new PermissionsEntity(id, module_id, name,alias, desc, status));
+            }
+        }catch (SQLException ignore){}
+        return data;
+    }
+
+    public ObservableList<PermissionsEntity> getModuleControlList(int getRoleId) {
+        ObservableList<PermissionsEntity> data = new ObservableStack<>();
+        try {
+            String query = "SELECT * FROM module_control WHERE role_id = '"+getRoleId+"'";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                int role = resultSet.getInt("role_id");
+                String name = resultSet.getString("module_name");
+                boolean status = resultSet.getBoolean("is_allowed");
+                data.add(new PermissionsEntity(role, name, status));
             }
         }catch (SQLException ignore){}
         return data;
@@ -1634,18 +1651,14 @@ public class MainModel extends DbConnection {
     public ObservableList<PermissionsEntity> getAccessControlList(int getRoleId) {
         ObservableList<PermissionsEntity> data = new ObservableStack<>();
         try {
-            String query = "SELECT * FROM finsuit.access_control WHERE role_id = '"+getRoleId+"';";
-            resultSet = getConnection().createStatement().executeQuery(query);
+            String query = "SELECT * FROM access_control WHERE role_id = '"+getRoleId+"';";
+            preparedStatement = getConnection().prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-//               control_id, module_id, role_id, permission_id, is_allowed, date_modified, modified_by
-                int id = resultSet.getInt("control_id");
-                int moduleId = resultSet.getInt("module_id");
-                int roleId = resultSet.getInt("role_id");
+                int role = resultSet.getInt("role_id");
                 int permissionId = resultSet.getInt("permission_id");
                 boolean allowed = resultSet.getBoolean("is_allowed");
-                int userId = resultSet.getInt("modified_by");
-                data.add(new PermissionsEntity(moduleId, roleId, permissionId, allowed, userId));
-
+                data.add(new PermissionsEntity(role, permissionId, allowed));
             }
         }catch (SQLException ignore){}
         return data;

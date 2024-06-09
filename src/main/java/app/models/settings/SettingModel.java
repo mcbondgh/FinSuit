@@ -86,27 +86,96 @@ public class SettingModel extends MainModel {
         }catch (Exception ignore) {}
     }
 
+    protected int countDuplicateKeysInModulesTable(String name, int role_id) {
+       try {
+           String query = "SELECT COUNT(*) FROM module_control \n" +
+                   "WHERE module_name = '"+name+"' AND role_id = '"+role_id+"';";
+           resultSet = getConnection().createStatement().executeQuery(query);
+           if (resultSet.next()) {
+               return resultSet.getInt(1);
+           }
+       }catch (SQLException ignore) {}
+        return 0;
+    }
+
+    protected int countDuplicateKeysInAccessControlTable(int permissionId, int role_id) {
+        try {
+            String query = "SELECT COUNT(*) FROM access_control\n" +
+                    "WHERE role_id = '"+role_id+"' AND permission_id ='" +permissionId+"';";
+            resultSet = getConnection().createStatement().executeQuery(query);
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        }catch (SQLException ignore) {}
+        return 0;
+    }
+
+    protected int updateAccessControlTableOnDuplicateKeys(boolean value, int permissionId, int roleId) {
+        try {
+            String qu  = """
+                    UPDATE access_control
+                    SET is_allowed = ?
+                    WHERE role_id = ? AND permission_id = ?;
+                    """;
+            preparedStatement = getConnection().prepareStatement(qu);
+            preparedStatement.setBoolean(1, value);
+            preparedStatement.setInt(2, roleId);
+            preparedStatement.setInt(3, permissionId);
+            return preparedStatement.executeUpdate();
+        }catch (SQLException ignore){}
+        return 0;
+    }
+
+    protected int updateModuleControlTable(boolean value, String name, int roleId) {
+        try {
+            String qu  = """
+                    UPDATE module_control SET is_allowed = ?
+                    WHERE module_name = ? AND role_id = ?;
+                    """;
+            preparedStatement = getConnection().prepareStatement(qu);
+            preparedStatement.setBoolean(1, value);
+            preparedStatement.setString(2, name);
+            preparedStatement.setInt(3, roleId);
+            return preparedStatement.executeUpdate();
+        }catch (SQLException ignore){}
+        return 0;
+    }
+
+    protected int saveModuleControlVariables(PermissionsEntity entity) {
+        try {
+            String query = """
+                    INSERT INTO module_control(module_name, role_id, is_allowed)
+                    VALUES(?, ?, ?)
+                    """;
+            preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setString(1, entity.getModule_name());
+            preparedStatement.setInt(2, entity.getRole_id());
+            preparedStatement.setBoolean(3, entity.isAllowModule());
+            return preparedStatement.executeUpdate();
+
+        }catch (SQLException e) {e.printStackTrace();}
+        return 0;
+    }
+
     protected int saveAccessControlPermissions(PermissionsEntity entity) {
         try {
-            //control_id, module_id, role_id, permission_id, is_allowed, date_modified, modified_by
+            //control_id, role_id, permission_id, is_allowed, date_modified, modified_by
             String query = """
-                        INSERT INTO access_control(module_id, role_id, permission_id, is_allowed, modified_by)
-                        VALUES(?, ?, ?, ?, ?)
+                        INSERT INTO access_control(role_id, permission_id, is_allowed, modified_by)
+                        VALUES(?, ?, ?, ?)
                         ON DUPLICATE KEY\s
                         UPDATE\s
                         permission_id = ?,
-                        is_allowed = ?,
-                        modified_by = ?;
+                        is_allowed = ?
                     """;
             preparedStatement = getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, entity.getModule_id() );
-            preparedStatement.setInt(2, entity.getRoleId());
-            preparedStatement.setInt(3, entity.getOperation_id());
-            preparedStatement.setBoolean(4, entity.getAllowed());
-            preparedStatement.setInt(5, entity.getModified_by());
-            preparedStatement.setInt(6, entity.getOperation_id());
-            preparedStatement.setBoolean(7, entity.getAllowed());
-            preparedStatement.setInt(8, entity.getModified_by());
+            preparedStatement.setInt(1, entity.getRole_id());
+            preparedStatement.setInt(2, entity.getOperation_id());
+            preparedStatement.setBoolean(3, entity.isAllowPermission());
+            preparedStatement.setInt(4, entity.getModified_by());
+            preparedStatement.setInt(5, entity.getOperation_id());
+            preparedStatement.setBoolean(6, entity.isAllowPermission());
+
             return preparedStatement.executeUpdate();
         }catch (SQLException ex) {ex.printStackTrace();}
 

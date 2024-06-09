@@ -8,6 +8,7 @@ import app.repositories.loans.AssignedSupervisors;
 import app.repositories.loans.CollectionSheetEntity;
 import app.repositories.loans.LoanScheduleEntity;
 import app.repositories.loans.ScheduleTableValues;
+import app.repositories.reports.LoanApplicationReportEntity;
 import app.repositories.transactions.TransactionsEntity;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.geom.PageSize;
@@ -413,6 +414,66 @@ public class DocumentGenerator {
             workbook.write(outputStream);
 
             workbook.close();
+            return statusCode;
+        }catch (Exception e){
+            statusCode = 404;
+            e.printStackTrace();};
+        return statusCode;
+    }
+
+    public int generateLoanApplicationReport(String docName,TableView<LoanApplicationReportEntity> tableView) {
+        int statusCode = 200;
+        try {
+            Workbook workbook = new HSSFWorkbook();
+            Sheet sheet = workbook.createSheet(docName);
+
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setFontName("poppins medium");
+
+            CellStyle sheetHeaderStyle = workbook.createCellStyle();
+            sheetHeaderStyle.setFont(font);
+            sheetHeaderStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+            sheetHeaderStyle.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+
+            //CREATE HEADER
+            int tableSize = tableView.getVisibleLeafColumns().size();
+            Row tableHeaderRows = sheet.createRow(0);
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, tableSize-1));
+            tableHeaderRows.createCell(0).setCellValue("LOAN APPLICATION REPORT");
+            tableHeaderRows.setHeight((short) 600);
+            tableHeaderRows.setRowStyle(sheetHeaderStyle);
+
+            //CREATE TABLE ROW FOR THE TABLE COLUMNS
+            Row columnHeaders = sheet.createRow(1);
+            for (int x = 0; x < tableSize; x++) {
+                String columnNames = tableView.getVisibleLeafColumns().get(x).getText();
+                columnHeaders.createCell(x).setCellValue(columnNames);
+            }
+
+            //FILL TABLE WITH TABLE DATA
+            int dataSize = tableView.getItems().size();
+            for (int i = 0; i < dataSize; i++) {
+                Row row = sheet.createRow(2 + i);
+                row.createCell(0).setCellValue(tableView.getItems().get(i).getFullname());
+                row.createCell(1).setCellValue(tableView.getItems().get(i).getLoan_no());
+                row.createCell(2).setCellValue(tableView.getItems().get(i).getApplication_status());
+                row.createCell(3).setCellValue(tableView.getItems().get(i).getApproved_amount());
+                row.createCell(4).setCellValue(tableView.getItems().get(i).getRepayment_amount());
+                row.createCell(5).setCellValue(tableView.getItems().get(i).getTotal_payment());
+                row.createCell(6).setCellValue(tableView.getItems().get(i).getSuper_name());
+            }
+
+            File directoryPath = new File(createDirectoryIfNotExist().getPath() + File.separator + "Reports" + File.separator);
+            if (!directoryPath.exists()) {
+                directoryPath.mkdir();
+            }
+            File file = new File(directoryPath, docName.concat(".xlsx"));
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+
+            workbook.close();
+            outputStream.close();
             return statusCode;
         }catch (Exception e){
             statusCode = 404;

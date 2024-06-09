@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class AppStages {
     UserAlerts ALERTS;
-    public static void MainStage() throws IOException {
+    public static void mainStage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AppStarter.class.getResource("main-window.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 //        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());

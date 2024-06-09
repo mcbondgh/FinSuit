@@ -288,14 +288,24 @@ CREATE TABLE IF NOT EXISTS permissions(
 
 CREATE TABLE IF NOT EXISTS operation(
 	operation_id INT PRIMARY KEY AUTO_INCREMENT,
-    module_id INT,
+    module_status BOOLEAN,
     operation_name VARCHAR(50),
     alias VARCHAR(50),
     description VARCHAR(255),
     FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS module_control(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    module_id INT UNIQUE,
+    role_id TINYINT,
+    is_allowd BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
 
+ALTER TABLE access_control
+CHANGE module_id module_status BOOLEAN DEFAULT 0;
 
 ALTER TABLE customer_data ADD COLUMN agent_id INT;
 ALTER TABLE customer_data ADD FOREIGN KEY fk_customer_agent 

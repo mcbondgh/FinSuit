@@ -7,30 +7,20 @@ import app.repositories.users.UsersData;
 import app.stages.AppStages;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
-import javafx.animation.*;
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
-import org.checkerframework.checker.units.qual.K;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoginController extends MainModel implements Initializable{
 
@@ -98,7 +88,7 @@ public class LoginController extends MainModel implements Initializable{
                     loginIndicator.setStyle("-fx-background-color:green");
                     loginIndicator.setText("✔ Authentication successful");
                     //show homepage after user successful login and hide the login page.
-                    AppStages.MainStage();
+                    AppStages.mainStage();
                     loginButton.getScene().getWindow().hide();
 
                     int userId = getUserIdByName(usersData.getUsername());
