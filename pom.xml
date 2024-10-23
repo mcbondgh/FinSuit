@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>app</groupId>
     <artifactId>FinSuit</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>FinSuit</name>
+    <version>1.3</version>
+    <name>FinSuit Gh</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.9.2</junit.version>
@@ -19,6 +19,11 @@
             <version>1.2.3</version>
             <type>pom</type>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.kordamp.desktoppanefx</groupId>-->
+<!--            <artifactId>desktoppanefx-core</artifactId>-->
+<!--            <version></version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>

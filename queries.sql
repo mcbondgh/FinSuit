@@ -277,11 +277,11 @@ CREATE TABLE IF NOT EXISTS modules(
 
 CREATE TABLE IF NOT EXISTS permissions(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-    module_id INT NOT NULL COMMENT 'Holds the ID to a perticular MODULE or VIEW',
-    operation_id INT NOT NULL COMMENT 'Holds the id to a specific operation in the system',
-    role_id INT NOT NULL comment'Holds the ID to the specific role that can perform this opetaion',
+    module_id INT COMMENT 'Holds the ID to a perticular MODULE or VIEW',
+    operation_id INT COMMENT 'Holds the id to a specific operation in the system',
+    role_id INT comment'Holds the ID to the specific role that can perform this opetaion',
     is_allowed BOOLEAN DEFAULT FALSE comment 'holds a YES OR NO BOOLEAN VALUE that determins in a perticular role is permitted to have access to a view or operation',
-	FOREIGN KEY (modules) REFERENCES modules(id) ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (operation_id) REFERENCES operation(operation_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
